@@ -4,7 +4,7 @@
 set -e
 
 # Configuration
-REPO_URL="${AUTOMA_REPO_URL:-https://github.com/username/project-management-automation.git}"
+REPO_URL="${AUTOMA_REPO_URL:-git@github.com:davidl71/project-management-automation.git}"
 BRANCH="${AUTOMA_BRANCH:-main}"
 VERSION="${AUTOMA_VERSION:-}"
 

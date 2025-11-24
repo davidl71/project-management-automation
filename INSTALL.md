@@ -59,14 +59,14 @@ pip install -e .
 **Best for**: Distribution to multiple machines, version control
 
 ```bash
-# Install from Git repository
-pip install git+https://github.com/username/project-management-automation.git
+# Install from private repository (SSH - recommended)
+pip install git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.0
 
-# Install specific version
-pip install git+https://github.com/username/project-management-automation.git@v0.1.0
+# Install from private repository (HTTPS with token)
+pip install git+https://token@github.com/davidl71/project-management-automation.git@v0.1.0
 
-# Install from branch
-pip install git+https://github.com/username/project-management-automation.git@main
+# Install latest from branch
+pip install git+ssh://git@github.com/davidl71/project-management-automation.git@main
 ```
 
 **Benefits:**
@@ -76,8 +76,8 @@ pip install git+https://github.com/username/project-management-automation.git@ma
 
 **Helper script:**
 ```bash
-export AUTOMA_REPO_URL="https://github.com/username/project-management-automation.git"
-export AUTOMA_BRANCH="main"
+export AUTOMA_REPO_URL="git@github.com:davidl71/project-management-automation.git"
+export AUTOMA_VERSION="v0.1.0"
 ./scripts/install_from_git.sh
 ```
 

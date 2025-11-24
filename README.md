@@ -155,20 +155,20 @@ Or use the helper script:
 ### Option 2: Install from Git Repository
 
 ```bash
-# From public repository
-pip install git+https://github.com/username/project-management-automation.git
+# From private repository (SSH - recommended)
+pip install git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.0
 
-# From private repository (with authentication)
-pip install git+https://token@github.com/username/project-management-automation.git
+# From private repository (HTTPS with token)
+pip install git+https://token@github.com/davidl71/project-management-automation.git@v0.1.0
 
-# Specific version
-pip install git+https://github.com/username/project-management-automation.git@v0.1.0
+# Latest from main branch
+pip install git+ssh://git@github.com/davidl71/project-management-automation.git@main
 ```
 
 Or use the helper script:
 ```bash
-export AUTOMA_REPO_URL="https://github.com/username/project-management-automation.git"
-export AUTOMA_BRANCH="main"
+export AUTOMA_REPO_URL="git@github.com:davidl71/project-management-automation.git"
+export AUTOMA_VERSION="v0.1.0"
 ./scripts/install_from_git.sh
 ```
 
