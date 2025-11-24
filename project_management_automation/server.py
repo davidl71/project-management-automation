@@ -1157,8 +1157,12 @@ if mcp:
             )
 
     # Main entry point for FastMCP
-    if __name__ == "__main__":
-        mcp.run()
+def main():
+    """Entry point for MCP server"""
+    mcp.run()
+
+if __name__ == "__main__":
+    main()
 elif stdio_server_instance:
     # Register resources for stdio server
     try:
