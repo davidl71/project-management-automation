@@ -38,7 +38,3 @@ project-management-automation = "project_management_automation.server:main"
 
 [tool.setuptools.packages.find]
 include = ["project_management_automation*"]
-
-[tool.setuptools]
-packages = ["project_management_automation"]
-include-package-data = true
