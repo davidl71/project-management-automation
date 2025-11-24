@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 dependencies = [
-    "mcp>=0.1.0",
+    "fastmcp>=2.0.0",
     "pydantic>=2.0.0",
 ]
 
