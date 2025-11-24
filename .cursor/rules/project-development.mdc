@@ -1,0 +1,180 @@
+# Project Management Automation - Development Rules
+
+This document provides development guidelines and conventions for the Project Management Automation MCP Server.
+
+## Project Overview
+
+**Type**: Python MCP Server
+**Purpose**: Expose project management automation tools via Model Context Protocol
+**Package Name**: `project-management-automation-mcp`
+**MCP Server Identifier**: `automa`
+
+## Code Style
+
+- **Python Version**: >= 3.9
+- **Code Formatter**: Black (default configuration)
+- **Linter**: Ruff
+- **Type Checking**: mypy (strict mode recommended)
+- **Testing**: pytest with pytest-mock
+
+## Development Workflow
+
+### 1. Setup Development Environment
+
+```bash
+# Install in editable mode with dev dependencies
+pip install -e '.[dev]'
+```
+
+### 2. Running Tests
+
+```bash
+# Run all tests
+pytest tests/ -v
+
+# Run specific test file
+pytest tests/test_tools.py -v
+
+# Run with coverage
+pytest tests/ --cov=project_management_automation --cov-report=html
+```
+
+### 3. Code Quality Checks
+
+```bash
+# Format code
+black .
+
+# Type check
+mypy .
+
+# Lint
+ruff check .
+```
+
+### 4. Testing MCP Server
+
+```bash
+# Run server directly for testing
+python3 -m project_management_automation.server
+```
+
+## Project Structure
+
+```
+project-management-automation/
+├── project_management_automation/  # Main package
+│   ├── server.py                   # MCP server entry point
+│   ├── tools/                      # Tool implementations
+│   ├── resources/                  # Resource handlers
+│   └── scripts/                    # Automation scripts
+├── tests/                          # Test suite
+├── docs/                           # Documentation
+└── pyproject.toml                  # Package configuration
+```
+
+## Tool Development Guidelines
+
+### Adding New Tools
+
+1. **Create tool implementation** in `tools/` directory
+2. **Register tool** in `server.py` using FastMCP decorator
+3. **Write tests** in `tests/test_tools.py`
+4. **Document** tool in README.md and USAGE.md
+
+### Tool Pattern
+
+```python
+from fastmcp import FastMCP
+
+mcp = FastMCP("automa")
+
+@mcp.tool()
+async def my_new_tool(
+    param1: str,
+    param2: Optional[int] = None
+) -> dict:
+    """
+    Tool description.
+    
+    Args:
+        param1: Description
+        param2: Optional description
+        
+    Returns:
+        dict: Result with success/data or error
+    """
+    try:
+        # Tool logic
+        result = {"success": True, "data": {...}}
+        return result
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+```
+
+## Error Handling
+
+All tools should use centralized error handling via `error_handler.py`:
+
+```python
+from project_management_automation.error_handler import handle_error
+
+try:
+    # Tool logic
+    pass
+except Exception as e:
+    return handle_error("TOOL_ERROR", str(e))
+```
+
+## Testing Requirements
+
+- **Unit Tests**: All tools must have unit tests
+- **Integration Tests**: Test MCP server integration
+- **Mocking**: Use pytest-mock for external dependencies
+- **Coverage**: Aim for 80%+ code coverage
+
+## Documentation
+
+- **Code Comments**: Use docstrings for all public functions
+- **Type Hints**: Required for all function parameters and returns
+- **README**: Keep README.md updated with installation and usage
+- **USAGE.md**: Document all available tools and resources
+
+## Dependencies
+
+### Required
+- `fastmcp>=2.0.0` - FastMCP framework
+- `pydantic>=2.0.0` - Data validation
+
+### Dev Dependencies
+- `pytest>=7.0` - Testing framework
+- `pytest-mock>=3.10.0` - Mocking utilities
+- `black>=23.0` - Code formatter
+- `mypy>=1.0` - Type checker
+- `ruff>=0.1.0` - Linter
+
+## MCP Server Configuration
+
+When developing, you may want to configure complementary MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "tractatus_thinking": {
+      "command": "npx",
+      "args": ["-y", "tractatus-thinking-mcp"]
+    },
+    "sequential_thinking": {
+      "command": "python3",
+      "args": ["-m", "sequential_thinking"]
+    }
+  }
+}
+```
+
+## Related Documentation
+
+- `README.md` - Project overview and installation
+- `USAGE.md` - Tool usage guide
+- `DEPENDENCIES.md` - Complementary MCP servers
+- `CONTRIBUTING.md` - Contribution guidelines

@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "description": "Project-specific commands for Project Management Automation MCP Server development",
+  "commands": [
+    {
+      "name": "install:dev",
+      "description": "Install package in editable mode for development",
+      "command": "pip install -e .",
+      "category": "setup"
+    },
+    {
+      "name": "install:dev-full",
+      "description": "Install package with all dev dependencies",
+      "command": "pip install -e '.[dev]'",
+      "category": "setup"
+    },
+    {
+      "name": "test:run",
+      "description": "Run all tests with pytest",
+      "command": "pytest tests/ -v",
+      "category": "test"
+    },
+    {
+      "name": "test:watch",
+      "description": "Run tests in watch mode",
+      "command": "pytest-watch tests/",
+      "category": "test"
+    },
+    {
+      "name": "lint:run",
+      "description": "Run all linters (black, mypy, ruff)",
+      "command": "black . --check && mypy . && ruff check .",
+      "category": "quality"
+    },
+    {
+      "name": "lint:fix",
+      "description": "Auto-fix linting issues",
+      "command": "black . && ruff check . --fix",
+      "category": "quality"
+    },
+    {
+      "name": "format:code",
+      "description": "Format code with black",
+      "command": "black .",
+      "category": "format"
+    },
+    {
+      "name": "typecheck",
+      "description": "Run type checking with mypy",
+      "command": "mypy .",
+      "category": "quality"
+    },
+    {
+      "name": "server:test",
+      "description": "Test MCP server locally",
+      "command": "python3 -m project_management_automation.server",
+      "category": "test"
+    },
+    {
+      "name": "build:install-local",
+      "description": "Build and install locally using helper script",
+      "command": "./scripts/build_and_install_local.sh",
+      "category": "setup"
+    },
+    {
+      "name": "docs:check",
+      "description": "Check documentation for broken links and issues",
+      "command": "echo 'Use check_documentation_health_tool via MCP'",
+      "category": "docs"
+    }
+  ]
+}
