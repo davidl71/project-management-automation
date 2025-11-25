@@ -274,6 +274,8 @@ try:
         from tools.nightly_task_automation import run_nightly_task_automation
         from tools.batch_task_approval import batch_approve_tasks
         from tools.working_copy_health import check_working_copy_health
+        from tools.run_tests import run_tests
+        from tools.test_coverage import analyze_test_coverage
         from tools.task_clarification_resolution import (
             resolve_task_clarification,
             resolve_multiple_clarifications,
@@ -303,7 +305,7 @@ def register_tools():
                     "status": "operational",
                     "version": "0.1.7",
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 20 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 22 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
@@ -929,6 +931,64 @@ if mcp:
                     }, indent=2)
 
             return setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
+
+        @mcp.tool()
+        def run_tests(
+            test_path: Optional[str] = None,
+            test_framework: str = "auto",
+            verbose: bool = True,
+            coverage: bool = False,
+            output_path: Optional[str] = None
+        ) -> str:
+            """
+            [HINT: Test runner. Returns test results, pass/fail counts, coverage file if enabled.]
+
+            Execute test suites with flexible options for pytest, unittest, and ctest.
+
+            Args:
+                test_path: Path to test file/directory (default: tests/)
+                test_framework: pytest, unittest, ctest, or auto (default: auto)
+                verbose: Show detailed output (default: true)
+                coverage: Generate coverage report (default: false)
+                output_path: Path for test results (default: test-results/)
+
+            Returns:
+                JSON string with test execution results including:
+                - Framework used
+                - Tests run/passed/failed/skipped
+                - Duration
+                - Output file path
+                - Coverage file path (if enabled)
+            """
+            return run_tests(test_path, test_framework, verbose, coverage, output_path)
+
+        @mcp.tool()
+        def analyze_test_coverage(
+            coverage_file: Optional[str] = None,
+            min_coverage: int = 80,
+            output_path: Optional[str] = None,
+            format: str = "html"
+        ) -> str:
+            """
+            [HINT: Coverage analysis. Returns coverage percentage, gaps, report path, threshold status.]
+
+            Generate coverage reports and identify gaps in test coverage.
+
+            Args:
+                coverage_file: Path to coverage file (default: auto-detect)
+                min_coverage: Minimum coverage threshold (default: 80)
+                output_path: Path for coverage report (default: coverage-report/)
+                format: Report format: html, json, or terminal (default: html)
+
+            Returns:
+                JSON string with coverage analysis results including:
+                - Total coverage percentage
+                - Total/covered lines
+                - Whether threshold is met
+                - Report path
+                - List of files with low coverage (gaps)
+            """
+            return analyze_test_coverage(coverage_file, min_coverage, output_path, format)
 
         @mcp.tool()
         def simplify_rules(

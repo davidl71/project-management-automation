@@ -179,6 +179,22 @@ def get_tools_list_resource() -> str:
                     "priority": "low",
                     "wraps": "RulesSimplifier",
                     "parameters": ["rule_files", "dry_run", "output_dir"]
+                },
+                {
+                    "name": "run_tests",
+                    "description": "Execute test suites with flexible options for pytest, unittest, and ctest",
+                    "category": "testing",
+                    "priority": "high",
+                    "wraps": "TestRunner",
+                    "parameters": ["test_path", "test_framework", "verbose", "coverage", "output_path"]
+                },
+                {
+                    "name": "analyze_test_coverage",
+                    "description": "Generate coverage reports and identify gaps in test coverage",
+                    "category": "testing",
+                    "priority": "high",
+                    "wraps": "TestCoverageAnalyzer",
+                    "parameters": ["coverage_file", "min_coverage", "output_path", "format"]
                 }
             ],
             "categories": {
@@ -188,7 +204,8 @@ def get_tools_list_resource() -> str:
                 "security": 1,
                 "automation": 4,
                 "review": 1,
-                "maintenance": 1
+                "maintenance": 1,
+                "testing": 2
             },
             "priorities": {
                 "system": 1,
@@ -196,7 +213,7 @@ def get_tools_list_resource() -> str:
                 "medium": 13,
                 "low": 1
             },
-            "total_tools": 20,
+            "total_tools": 22,
             "timestamp": datetime.now().isoformat()
         }
 

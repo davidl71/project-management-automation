@@ -411,6 +411,87 @@
         "dependencies"
       ],
       "level": 0
+    },
+    {
+      "id": "f789741d-cf84-4331-9b95-deec31b8578c",
+      "name": "Implement run_tests tool for Exarp",
+      "details": "Create run_tests MCP tool to execute test suites with flexible options. Support pytest, unittest, and ctest frameworks with auto-detection. Generate JUnit XML reports and return pass/fail counts.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:06:12.477Z",
+      "updatedAt": "2025-11-25T08:07:23.248Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "in-progress",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase1"
+      ],
+      "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "c757651b-5f99-45e1-9a5e-d5fc01bcc2c8",
+      "name": "Implement analyze_test_coverage tool for Exarp",
+      "details": "Create analyze_test_coverage MCP tool to generate coverage reports and identify gaps. Parse coverage.py, gcov, lcov formats. Generate HTML reports and compare against thresholds.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:06:15.246Z",
+      "updatedAt": "2025-11-25T08:08:39.022Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "in-progress",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase2"
+      ],
+      "estimatedHours": 5,
+      "level": 0
+    },
+    {
+      "id": "98da663e-bfc6-4ff1-a7f7-8e73a7ea55bf",
+      "name": "Implement suggest_test_cases tool for Exarp",
+      "details": "Create suggest_test_cases MCP tool to suggest test cases based on code analysis. Analyze function signatures, identify edge cases, suggest parameter combinations, and generate test templates.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:06:17.918Z",
+      "updatedAt": "2025-11-25T08:06:17.918Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase3",
+        "ai"
+      ],
+      "estimatedHours": 6,
+      "level": 0
+    },
+    {
+      "id": "cb760617-2368-4edc-aeab-cde5b68fe387",
+      "name": "Implement validate_test_structure tool for Exarp",
+      "details": "Create validate_test_structure MCP tool to validate test organization and patterns. Check naming conventions, validate organization, check for missing test files, and validate test patterns.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:06:20.469Z",
+      "updatedAt": "2025-11-25T08:06:20.469Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase4"
+      ],
+      "estimatedHours": 4,
+      "level": 0
     }
   ],
   "subtasks": [],
