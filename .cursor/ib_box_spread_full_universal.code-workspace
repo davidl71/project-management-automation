@@ -1,0 +1,81 @@
+{
+	"folders": [
+		{
+			"path": "../../ib_box_spread_full_universal"
+		},
+		{
+			"path": ".."
+		}
+	],
+  "settings": {
+    "files.associations": {
+      "*.h": "cpp",
+      "*.hpp": "cpp",
+      "*.cpp": "cpp",
+      "*.cc": "cpp",
+      "CMakeLists.txt": "cmake",
+      "*.cmake": "cmake",
+      "**/third_party/**/*.java": "plaintext",
+      "*.go": "plaintext",
+      "*.kt": "plaintext",
+      "*.kts": "plaintext",
+      "*.dart": "plaintext",
+      "*.cs": "plaintext",
+      "*.php": "plaintext",
+      "*.rb": "plaintext",
+      "*.scala": "plaintext",
+      "*.clj": "plaintext",
+      "*.cljs": "plaintext",
+      "*.ex": "plaintext",
+      "*.exs": "plaintext",
+      "*.erl": "plaintext",
+      "*.hrl": "plaintext",
+      "*.hs": "plaintext",
+      "*.ml": "plaintext",
+      "*.mli": "plaintext",
+      "*.fs": "plaintext",
+      "*.fsi": "plaintext",
+      "*.fsx": "plaintext",
+      "*.R": "plaintext",
+      "*.r": "plaintext",
+      "*.m": "plaintext",
+      "*.lua": "plaintext",
+      "*.pl": "plaintext",
+      "*.pm": "plaintext",
+      "*.vb": "plaintext",
+      "*.ps1": "plaintext",
+      "*.tf": "plaintext",
+      "*.tfvars": "plaintext",
+      "*.cbl": "plaintext",
+      "*.cob": "plaintext",
+      "*.cobol": "plaintext",
+      "*.rpgle": "plaintext",
+      "*.rpg": "plaintext",
+      "*.clle": "plaintext",
+      "*.jcl": "plaintext",
+      "*.pli": "plaintext",
+      "*.asm": "plaintext",
+      "*.hlasm": "plaintext",
+      "*.rexx": "plaintext",
+      "*.rex": "plaintext"
+    },
+    "cmake.loggingLevel": "info",
+    "cmake.autoSelectActiveFolder": true,
+    "jupyter.askForKernelRestart": false,
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "extensions.ignoreRecommendations": false,
+    "extensions.showRecommendationsOnlyOnDemand": false,
+    "php.validate.enable": false,
+    "terminal.integrated.env.osx": {
+      "PYTHONPATH": "${workspaceFolder}/python"
+    },
+    "terminal.integrated.env.windows": {
+      "PYTHONPATH": "${workspaceFolder}/python"
+    },
+    "terminal.integrated.env.linux": {
+      "PYTHONPATH": "${workspaceFolder}/python"
+    },
+    "git.ignoreLimitWarning": true,
+    "github.gitProtocol": "ssh"
+  }
+}

@@ -3,7 +3,6 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_PYTHON="${SCRIPT_DIR}/venv/bin/python3"
-SERVER_SCRIPT="${SCRIPT_DIR}/server.py"
 
 # Check if venv exists
 if [ ! -f "$VENV_PYTHON" ]; then
@@ -11,5 +10,6 @@ if [ ! -f "$VENV_PYTHON" ]; then
     exit 1
 fi
 
-# Run server with venv Python
-exec "$VENV_PYTHON" "$SERVER_SCRIPT" "$@"
+# Run server as module from package
+cd "$SCRIPT_DIR"
+exec "$VENV_PYTHON" -m project_management_automation.server "$@"

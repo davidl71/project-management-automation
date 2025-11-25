@@ -34,45 +34,26 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from functools import wraps
 
-# Configure logging first (before any logger usage)
-# CRITICAL: For MCP stdio servers, stdout is EXCLUSIVELY for JSON-RPC messages
-# All logging MUST go to stderr to avoid breaking the MCP protocol
-# - All logs (INFO/WARNING/ERROR) → stderr (doesn't break JSON-RPC protocol)
-# - MCP framework logs → suppressed (set to WARNING level)
+# Version - keep in sync with pyproject.toml
+__version__ = "0.1.7"
 
-# Suppress MCP framework logs - set to WARNING to hide INFO messages
-# This prevents "Processing request of type X" from appearing as errors
-logging.getLogger("mcp").setLevel(logging.WARNING)
-logging.getLogger("mcp.server").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.lowlevel").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.lowlevel.server").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.stdio").setLevel(logging.WARNING)
-logging.getLogger("fastmcp").setLevel(logging.WARNING)
+# Use FastMCP's logging utility (outputs to stderr with Rich formatting)
+# This is MCP-compatible: stdout = JSON-RPC only, stderr = logging
+try:
+    from fastmcp.utilities.logging import get_logger
+    logger = get_logger("exarp")
+    logger.setLevel(logging.INFO)
+except ImportError:
+    # Fallback to standard logging if FastMCP not available
+    logger = logging.getLogger(__name__)
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
 
-# CRITICAL: For MCP stdio servers, stdout is reserved EXCLUSIVELY for JSON-RPC messages
-# All logging MUST go to stderr to avoid breaking the protocol
-# MCP protocol requires: stdout = JSON-RPC only, stderr = logging/debug output
-
-# Create a single stderr handler for all logging
-stderr_handler = logging.StreamHandler(sys.stderr)
-stderr_handler.setLevel(logging.INFO)
-stderr_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
-
-# Configure root logger - only stderr handler (no stdout logging)
-root_logger = logging.getLogger()
-root_logger.setLevel(logging.INFO)
-root_logger.handlers = []  # Clear any existing handlers
-root_logger.addHandler(stderr_handler)
-
-# Re-apply MCP logger suppression after handler setup
-logging.getLogger("mcp").setLevel(logging.WARNING)
-logging.getLogger("mcp.server").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.lowlevel").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.lowlevel.server").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.stdio").setLevel(logging.WARNING)
-logging.getLogger("fastmcp").setLevel(logging.WARNING)
-
-logger = logging.getLogger(__name__)
+# Suppress noisy MCP framework logs
+for log_name in ["mcp", "mcp.server", "mcp.server.lowlevel", "mcp.server.stdio", "fastmcp"]:
+    logging.getLogger(log_name).setLevel(logging.WARNING)
 
 # Robust project root detection
 def _find_project_root(start_path: Path) -> Path:
@@ -132,7 +113,6 @@ try:
         )
 
     ERROR_HANDLING_AVAILABLE = True
-    logger.info("Error handling module loaded successfully")
 except ImportError as e:
     ERROR_HANDLING_AVAILABLE = False
     logger.warning(f"Error handling module not available - using basic error handling: {e}")
@@ -151,7 +131,6 @@ try:
     USE_STDIO = False
     Server = None
     stdio_server = None
-    logger.info("FastMCP available from mcp package - using FastMCP server")
 except ImportError:
     try:
         # Try FastMCP from separate fastmcp package
@@ -162,7 +141,6 @@ except ImportError:
         USE_STDIO = False
         Server = None
         stdio_server = None
-        logger.info("FastMCP available from fastmcp package - using FastMCP server")
     except ImportError:
         try:
             from mcp.server import Server
@@ -221,9 +199,9 @@ if MCP_AVAILABLE:
 
     # Log initialization after suppressing FastMCP output
     if not USE_STDIO and FastMCP and mcp:
-        logger.info("FastMCP server initialized")
+        pass  # Version info logged after banner in main()
     elif USE_STDIO and Server and stdio_server_instance:
-        logger.info("Stdio server initialized")
+        pass  # Version info logged after banner
 
     # Re-apply logger suppression after initialization (in case FastMCP added new loggers)
     logging.getLogger("mcp").setLevel(logging.WARNING)
@@ -253,9 +231,22 @@ try:
         from .tools.pwa_review import review_pwa_config
         from .tools.external_tool_hints import add_external_tool_hints
         from .tools.daily_automation import run_daily_automation
+        from .tools.ci_cd_validation import validate_ci_cd_workflow
         from .tools.git_hooks import setup_git_hooks
         from .tools.pattern_triggers import setup_pattern_triggers
         from .tools.simplify_rules import simplify_rules
+        from .tools.nightly_task_automation import run_nightly_task_automation
+        from .tools.batch_task_approval import batch_approve_tasks
+        from .tools.working_copy_health import check_working_copy_health
+        from .tools.run_tests import run_tests
+        from .tools.test_coverage import analyze_test_coverage
+        from .tools.sprint_automation import sprint_automation
+        from .tools.task_clarification_resolution import (
+            resolve_task_clarification,
+            resolve_multiple_clarifications,
+            list_tasks_awaiting_clarification
+        )
+        TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
         from tools.docs_health import check_documentation_health
@@ -1276,7 +1267,39 @@ if mcp:
     # Main entry point for FastMCP
 def main():
     """Entry point for MCP server"""
-    mcp.run()
+    import sys
+    
+    # Print our own banner to stderr (MCP-compatible)
+    tools_count = 23 if TOOLS_AVAILABLE else 1  # Known tool count
+    resources_ok = RESOURCES_AVAILABLE if 'RESOURCES_AVAILABLE' in globals() else False
+    
+    version_str = f"{__version__}"
+    tools_str = f"{tools_count}"
+    resources_str = "Available" if resources_ok else "Unavailable"
+    
+    banner = f"""
+╭────────────────────────────────────────────────────────╮
+│                                                        │
+│    ███████╗██╗  ██╗ █████╗ ██████╗ ██████╗             │
+│    ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔══██╗            │
+│    █████╗   ╚███╔╝ ███████║██████╔╝██████╔╝            │
+│    ██╔══╝   ██╔██╗ ██╔══██║██╔══██╗██╔═══╝             │
+│    ███████╗██╔╝ ██╗██║  ██║██║  ██║██║                 │
+│    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝                 │
+│                                                        │
+│    Project Management Automation MCP Server            │
+│                                                        │
+│    Version:    {version_str:<39}│
+│    Tools:      {tools_str:<39}│
+│    Resources:  {resources_str:<39}│
+│    Transport:  STDIO                                   │
+│                                                        │
+╰────────────────────────────────────────────────────────╯
+"""
+    print(banner, file=sys.stderr)
+    
+    # Run server without FastMCP's banner
+    mcp.run(show_banner=False)
 
 if __name__ == "__main__":
     main()

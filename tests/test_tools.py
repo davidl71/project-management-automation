@@ -45,14 +45,14 @@ class TestDocumentationHealthTool:
 
         # Mock project root finder
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-            # Call tool
-            result = check_documentation_health(output_path="test_report.md", create_tasks=True)
-            result_data = json.loads(result)
+        # Call tool
+        result = check_documentation_health(output_path="test_report.md", create_tasks=True)
+        result_data = json.loads(result)
 
-            # Assertions
-            assert result_data['success'] is True
-            assert result_data['data']['health_score'] == 85
-            assert result_data['data']['report_path'] is not None
+        # Assertions
+        assert result_data['success'] is True
+        assert result_data['data']['health_score'] == 85
+        assert result_data['data']['report_path'] is not None
 
     @patch('project_management_automation.scripts.automate_docs_health_v2.DocumentationHealthAnalyzerV2')
     def test_check_documentation_health_error(self, mock_analyzer_class):
@@ -64,13 +64,13 @@ class TestDocumentationHealthTool:
 
         # Mock project root finder
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-            # Call tool
-            result = check_documentation_health()
-            result_data = json.loads(result)
+        # Call tool
+        result = check_documentation_health()
+        result_data = json.loads(result)
 
-            # Assertions
-            assert result_data['success'] is False
-            assert 'error' in result_data
+        # Assertions
+        assert result_data['success'] is False
+        assert 'error' in result_data
 
 
 class TestTodo2AlignmentTool:
@@ -102,13 +102,13 @@ class TestTodo2AlignmentTool:
             mock_todo2_path = Mock()
             mock_todo2_path.exists.return_value = False
             mock_path.return_value = mock_todo2_path
-            
-            # Call tool
-            result = analyze_todo2_alignment(create_followup_tasks=True)
-            result_data = json.loads(result)
 
-            # Assertions
-            assert result_data['success'] is True
+        # Call tool
+        result = analyze_todo2_alignment(create_followup_tasks=True)
+        result_data = json.loads(result)
+
+        # Assertions
+        assert result_data['success'] is True
             assert 'data' in result_data
 
 
@@ -154,14 +154,14 @@ class TestDuplicateDetectionTool:
             mock_todo2_path = Mock()
             mock_todo2_path.exists.return_value = False
             mock_path.return_value = mock_todo2_path
-            
-            # Call tool
-            result = detect_duplicate_tasks(similarity_threshold=0.85, auto_fix=False)
-            result_data = json.loads(result)
 
-            # Assertions
-            assert result_data['success'] is True
-            assert result_data['data']['total_duplicates_found'] == 0
+        # Call tool
+        result = detect_duplicate_tasks(similarity_threshold=0.85, auto_fix=False)
+        result_data = json.loads(result)
+
+        # Assertions
+        assert result_data['success'] is True
+        assert result_data['data']['total_duplicates_found'] == 0
 
 
 class TestDependencySecurityTool:
@@ -202,8 +202,8 @@ class TestDependencySecurityTool:
             # Mock json.loads to return a valid config
             with patch.object(json_module, 'loads', return_value={'python': {}, 'rust': {}, 'npm': {}}):
                 # Call tool - will fail on file not found, but that's okay for test
-                result = scan_dependency_security(languages=['python'])
-                result_data = json.loads(result)
+        result = scan_dependency_security(languages=['python'])
+        result_data = json.loads(result)
 
                 # May fail or succeed depending on file existence
                 assert 'success' in result_data or 'error' in result_data
