@@ -102,8 +102,11 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             with open(self.todo2_path, 'r') as f:
                 data = json.load(f)
                 return data.get('todos', [])
+        except FileNotFoundError:
+            logger.info("No Todo2 state file found - no tasks to analyze")
+            return []
         except Exception as e:
-            logger.error(f"Error loading Todo2 tasks: {e}")
+            logger.warning(f"Could not load Todo2 tasks: {e}")
             return []
 
     def _analyze_task_alignment(self, tasks: List[Dict]) -> Dict:

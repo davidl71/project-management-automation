@@ -165,8 +165,11 @@ class TodoSyncAutomation(IntelligentAutomationBase):
                     task['source'] = 'todo2'
 
                 return tasks
+        except FileNotFoundError:
+            logger.info("No Todo2 state file found - no tasks to sync")
+            return []
         except Exception as e:
-            logger.error(f"Error loading Todo2 tasks: {e}")
+            logger.warning(f"Could not load Todo2 tasks: {e}")
             return []
 
     def _find_matches(self, shared_todos: List[Dict], todo2_tasks: List[Dict]) -> List[Dict]:
