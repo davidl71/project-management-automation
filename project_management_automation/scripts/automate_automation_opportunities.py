@@ -37,7 +37,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
-        super().__init__(config, "Automation Opportunity Finder"), project_root)
+        super().__init__(config, "Automation Opportunity Finder", project_root)
         self.scripts_path = self.project_root / 'scripts'
         self.docs_path = self.project_root / 'docs'
         self.opportunities = []

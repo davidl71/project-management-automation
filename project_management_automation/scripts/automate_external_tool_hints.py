@@ -54,7 +54,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
-        super().__init__(config, "External Tool Hints Automation"), project_root)
+        super().__init__(config, "External Tool Hints Automation", project_root)
         self.docs_path = self.project_root / 'docs'
         self.pattern_guide_path = self.project_root / 'docs' / 'DOCUMENTATION_EXTERNAL_TOOL_HINTS.md'
 

@@ -38,7 +38,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
-        super().__init__(config, "Shared TODO Table Synchronization"), project_root)
+        super().__init__(config, "Shared TODO Table Synchronization", project_root)
         self.shared_todo_path = self.project_root / 'agents' / 'shared' / 'TODO_OVERVIEW.md'
         self.todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         self.sync_history_path = self.project_root / 'scripts' / '.todo_sync_history.json'

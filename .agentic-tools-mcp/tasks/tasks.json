@@ -358,6 +358,59 @@
       ],
       "estimatedHours": 3,
       "level": 0
+    },
+    {
+      "id": "f9a83c81-81c3-4b08-a9c7-9a7ee57842a2",
+      "name": "Fix remaining test failures in test_tools_expanded.py",
+      "details": "Fix 14 remaining test failures in test_tools_expanded.py:\n\n1. Server Status Tool - Test via MCP server instance instead of direct import\n2. PWA Review Tool - Mock PWAAnalyzer.analyze() method instead of run()\n3. CI/CD Validation Tool - Add pyyaml to test dependencies or improve yaml mocking\n4. Batch Task Approval Tool - Fix Path mocking for script path resolution\n5. Nightly Task Automation Tool - Fix socket module mocking (use 'socket' not 'tools.nightly_task_automation.socket')\n6. Working Copy Health Tool - Handle both dict and JSON string return types\n7-14. Other tool tests - Improve subprocess and Path mocking\n\nPriority: Medium\nEstimated: 3 hours",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T07:45:19.006Z",
+      "updatedAt": "2025-11-25T07:45:19.006Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "test-fixes",
+        "mocking"
+      ],
+      "level": 0
+    },
+    {
+      "id": "fa24fae5-c4fb-4530-8d82-c6c51491018a",
+      "name": "Add missing tool tests for 4 untested tools",
+      "details": "Add tests for tools that don't have corresponding automation scripts or use subprocess directly:\n\n1. server_status - Test via MCP server registration\n2. Tools using subprocess directly - Improve test coverage\n3. Tools without IntelligentAutomationBase - Add appropriate tests\n\nPriority: Medium\nEstimated: 2 hours",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T07:45:22.751Z",
+      "updatedAt": "2025-11-25T07:45:22.751Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "test-coverage",
+        "tools"
+      ],
+      "level": 0
+    },
+    {
+      "id": "08dbbe0e-676f-4b0d-a276-a5f1bc5a2d38",
+      "name": "Add pyyaml to test dependencies",
+      "details": "Add pyyaml to test dependencies (requirements-test.txt or pyproject.toml test dependencies) to fix CI/CD validation tool test.\n\nPriority: Low\nEstimated: 15 minutes",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T07:45:25.899Z",
+      "updatedAt": "2025-11-25T07:45:25.899Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "dependencies"
+      ],
+      "level": 0
     }
   ],
   "subtasks": [],
