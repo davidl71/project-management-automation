@@ -48,6 +48,8 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             ],
             force=True
         )
+        # Support both agentic-tools MCP format (preferred) and legacy Todo2 format
+        self.agentic_tools_path = self.project_root / '.agentic-tools-mcp' / 'tasks' / 'tasks.json'
         self.todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         self.docs_path = self.project_root / 'docs'
         self.strategy_framework_path = self.docs_path / 'INVESTMENT_STRATEGY_FRAMEWORK.md'
@@ -96,17 +98,60 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
         return analysis
 
+    def _normalize_priority(self, priority) -> str:
+        """Normalize priority to text format (high/medium/low/critical)."""
+        if isinstance(priority, int):
+            # agentic-tools uses 1-10 scale
+            if priority >= 10:
+                return 'critical'
+            elif priority >= 8:
+                return 'high'
+            elif priority >= 5:
+                return 'medium'
+            else:
+                return 'low'
+        elif isinstance(priority, str):
+            return priority.lower()
+        return 'medium'
+    
+    def _normalize_task(self, task: Dict) -> Dict:
+        """Normalize agentic-tools task format to expected format."""
+        return {
+            'id': task.get('id', 'unknown'),
+            'content': task.get('name', task.get('content', '')),
+            'long_description': task.get('details', task.get('long_description', '')),
+            'priority': self._normalize_priority(task.get('priority', 5)),
+            'status': task.get('status', 'pending').replace('-', '_'),  # in-progress -> in_progress
+            'tags': task.get('tags', []),
+            'completed': task.get('completed', False),
+        }
+
     def _load_todo2_tasks(self) -> List[Dict]:
-        """Load Todo2 tasks."""
+        """Load tasks from agentic-tools MCP (preferred) or legacy Todo2 format."""
+        # Try agentic-tools MCP format first (preferred)
+        if self.agentic_tools_path.exists():
+            try:
+                with open(self.agentic_tools_path, 'r') as f:
+                    data = json.load(f)
+                    raw_tasks = data.get('tasks', [])
+                    tasks = [self._normalize_task(t) for t in raw_tasks]
+                    logger.info(f"Loaded {len(tasks)} tasks from agentic-tools MCP")
+                    return tasks
+            except Exception as e:
+                logger.warning(f"Could not load agentic-tools tasks: {e}")
+        
+        # Fall back to legacy Todo2 format
         try:
             with open(self.todo2_path, 'r') as f:
                 data = json.load(f)
-                return data.get('todos', [])
+                tasks = data.get('todos', [])
+                logger.info(f"Loaded {len(tasks)} tasks from legacy Todo2 format")
+                return tasks
         except FileNotFoundError:
-            logger.info("No Todo2 state file found - no tasks to analyze")
+            logger.info("No task files found - no tasks to analyze")
             return []
         except Exception as e:
-            logger.warning(f"Could not load Todo2 tasks: {e}")
+            logger.warning(f"Could not load tasks: {e}")
             return []
 
     def _analyze_task_alignment(self, tasks: List[Dict]) -> Dict:
