@@ -222,56 +222,56 @@ else:
 try:
     # Try relative imports first (when run as module)
     try:
-        from .tools.docs_health import check_documentation_health
-        from .tools.todo2_alignment import analyze_todo2_alignment
-        from .tools.duplicate_detection import detect_duplicate_tasks
-        from .tools.dependency_security import scan_dependency_security
-        from .tools.automation_opportunities import find_automation_opportunities
-        from .tools.todo_sync import sync_todo_tasks
-        from .tools.pwa_review import review_pwa_config
-        from .tools.external_tool_hints import add_external_tool_hints
-        from .tools.daily_automation import run_daily_automation
-        from .tools.ci_cd_validation import validate_ci_cd_workflow
-        from .tools.git_hooks import setup_git_hooks
-        from .tools.pattern_triggers import setup_pattern_triggers
-        from .tools.simplify_rules import simplify_rules
-        from .tools.nightly_task_automation import run_nightly_task_automation
-        from .tools.batch_task_approval import batch_approve_tasks
-        from .tools.working_copy_health import check_working_copy_health
-        from .tools.run_tests import run_tests
-        from .tools.test_coverage import analyze_test_coverage
-        from .tools.sprint_automation import sprint_automation
+        from .tools.docs_health import check_documentation_health as _check_documentation_health
+        from .tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
+        from .tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
+        from .tools.dependency_security import scan_dependency_security as _scan_dependency_security
+        from .tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
+        from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
+        from .tools.pwa_review import review_pwa_config as _review_pwa_config
+        from .tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
+        from .tools.daily_automation import run_daily_automation as _run_daily_automation
+        from .tools.ci_cd_validation import validate_ci_cd_workflow as _validate_ci_cd_workflow
+        from .tools.git_hooks import setup_git_hooks as _setup_git_hooks
+        from .tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
+        from .tools.simplify_rules import simplify_rules as _simplify_rules
+        from .tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
+        from .tools.batch_task_approval import batch_approve_tasks as _batch_approve_tasks
+        from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
+        from .tools.run_tests import run_tests as _run_tests
+        from .tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
+        from .tools.sprint_automation import sprint_automation as _sprint_automation
         from .tools.task_clarification_resolution import (
-            resolve_task_clarification,
-            resolve_multiple_clarifications,
-            list_tasks_awaiting_clarification
+            resolve_task_clarification as _resolve_task_clarification,
+            resolve_multiple_clarifications as _resolve_multiple_clarifications,
+            list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification
         )
         TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
-        from tools.docs_health import check_documentation_health
-        from tools.todo2_alignment import analyze_todo2_alignment
-        from tools.duplicate_detection import detect_duplicate_tasks
-        from tools.dependency_security import scan_dependency_security
-        from tools.automation_opportunities import find_automation_opportunities
-        from tools.todo_sync import sync_todo_tasks
-        from tools.pwa_review import review_pwa_config
-        from tools.external_tool_hints import add_external_tool_hints
-        from tools.daily_automation import run_daily_automation
-        from tools.ci_cd_validation import validate_ci_cd_workflow
-        from tools.git_hooks import setup_git_hooks
-        from tools.pattern_triggers import setup_pattern_triggers
-        from tools.simplify_rules import simplify_rules
-        from tools.nightly_task_automation import run_nightly_task_automation
-        from tools.batch_task_approval import batch_approve_tasks
-        from tools.working_copy_health import check_working_copy_health
-        from tools.run_tests import run_tests
-        from tools.test_coverage import analyze_test_coverage
-        from tools.sprint_automation import sprint_automation
+        from tools.docs_health import check_documentation_health as _check_documentation_health
+        from tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
+        from tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
+        from tools.dependency_security import scan_dependency_security as _scan_dependency_security
+        from tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
+        from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
+        from tools.pwa_review import review_pwa_config as _review_pwa_config
+        from tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
+        from tools.daily_automation import run_daily_automation as _run_daily_automation
+        from tools.ci_cd_validation import validate_ci_cd_workflow as _validate_ci_cd_workflow
+        from tools.git_hooks import setup_git_hooks as _setup_git_hooks
+        from tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
+        from tools.simplify_rules import simplify_rules as _simplify_rules
+        from tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
+        from tools.batch_task_approval import batch_approve_tasks as _batch_approve_tasks
+        from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
+        from tools.run_tests import run_tests as _run_tests
+        from tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
+        from tools.sprint_automation import sprint_automation as _sprint_automation
         from tools.task_clarification_resolution import (
-            resolve_task_clarification,
-            resolve_multiple_clarifications,
-            list_tasks_awaiting_clarification
+            resolve_task_clarification as _resolve_task_clarification,
+            resolve_multiple_clarifications as _resolve_multiple_clarifications,
+            list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification
         )
 
         TOOLS_AVAILABLE = True
@@ -521,7 +521,7 @@ if mcp:
             Use this instead of generic documentation tools from other MCP servers
             for project-specific analysis.
             """
-            return check_documentation_health(output_path, create_tasks)
+            return _check_documentation_health(output_path, create_tasks)
 
         @mcp.tool()
         def analyze_todo2_alignment(
@@ -537,7 +537,7 @@ if mcp:
 
             Use this instead of generic task analysis tools for project-specific alignment.
             """
-            return analyze_todo2_alignment(create_followup_tasks, output_path)
+            return _analyze_todo2_alignment(create_followup_tasks, output_path)
 
         @mcp.tool()
         def detect_duplicate_tasks(
@@ -555,7 +555,7 @@ if mcp:
 
             Use this instead of generic duplicate detection tools for Todo2-specific analysis.
             """
-            return detect_duplicate_tasks(similarity_threshold, auto_fix, output_path)
+            return _detect_duplicate_tasks(similarity_threshold, auto_fix, output_path)
 
         @mcp.tool()
         def scan_dependency_security(
@@ -571,7 +571,7 @@ if mcp:
 
             Use this instead of generic security scanning tools for project-specific analysis.
             """
-            return scan_dependency_security(languages, config_path)
+            return _scan_dependency_security(languages, config_path)
 
         @mcp.tool()
         def find_automation_opportunities(
@@ -582,7 +582,7 @@ if mcp:
 
             Discover new automation opportunities in the codebase.
             """
-            return find_automation_opportunities(min_value_score, output_path)
+            return _find_automation_opportunities(min_value_score, output_path)
 
         @mcp.tool()
         def sync_todo_tasks(
@@ -593,7 +593,7 @@ if mcp:
 
             Synchronize tasks between shared TODO table and Todo2.
             """
-            return sync_todo_tasks(dry_run, output_path)
+            return _sync_todo_tasks(dry_run, output_path)
 
         @mcp.tool()
         def review_pwa_config(
@@ -604,7 +604,7 @@ if mcp:
 
             Review PWA configuration and generate improvement recommendations.
             """
-            return review_pwa_config(output_path, config_path)
+            return _review_pwa_config(output_path, config_path)
 
         @mcp.tool()
         def add_external_tool_hints(
@@ -621,7 +621,7 @@ if mcp:
             ⚠️ PREFERRED TOOL: This project-specific tool automatically adds Context7 hints to documentation
             files that mention external libraries, following the established pattern for AI assistant discovery.
             """
-            return add_external_tool_hints(dry_run, output_path, min_file_size)
+            return _add_external_tool_hints(dry_run, output_path, min_file_size)
 
         @mcp.tool()
         def run_daily_automation(
@@ -645,7 +645,7 @@ if mcp:
             ⚠️ PREFERRED TOOL: This orchestrates multiple daily maintenance tasks and provides
             a unified summary report. Use this for routine daily project health checks.
             """
-            return run_daily_automation(tasks, include_slow, dry_run, output_path)
+            return _run_daily_automation(tasks, include_slow, dry_run, output_path)
 
         @mcp.tool()
         def validate_ci_cd_workflow(
@@ -663,7 +663,7 @@ if mcp:
 
             Use this to validate CI/CD workflows before merging changes.
             """
-            return validate_ci_cd_workflow(workflow_path, check_runners, output_path)
+            return _validate_ci_cd_workflow(workflow_path, check_runners, output_path)
 
         @mcp.tool()
         def batch_approve_tasks(
@@ -696,7 +696,7 @@ if mcp:
             Returns:
                 JSON string with approval results including count, task IDs, and success status
             """
-            result = batch_approve_tasks(
+            result = _batch_approve_tasks(
                 status=status,
                 new_status=new_status,
                 clarification_none=clarification_none,
@@ -727,7 +727,7 @@ if mcp:
 
             Use this for nightly automation or when you want to process many tasks in parallel.
             """
-            result = run_nightly_task_automation(
+            result = _run_nightly_task_automation(
                 max_tasks_per_host=max_tasks_per_host,
                 max_parallel_tasks=max_parallel_tasks,
                 priority_filter=priority_filter,
@@ -761,7 +761,7 @@ if mcp:
                 - Sync status (behind/ahead)
                 - Recommendations
             """
-            result = check_working_copy_health(
+            result = _check_working_copy_health(
                 agent_name=agent_name,
                 check_remote=check_remote
             )
@@ -793,7 +793,7 @@ if mcp:
             Returns:
                 JSON string with resolution result including status, task_id, and output
             """
-            result = resolve_task_clarification(
+            result = _resolve_task_clarification(
                 task_id=task_id,
                 clarification=clarification,
                 decision=decision,
@@ -832,7 +832,7 @@ if mcp:
                     "error": f"Invalid JSON: {str(e)}"
                 }, indent=2)
 
-            result = resolve_multiple_clarifications(
+            result = _resolve_multiple_clarifications(
                 decisions=decisions_dict,
                 move_to_todo=move_to_todo,
                 dry_run=dry_run
@@ -851,7 +851,7 @@ if mcp:
             Returns:
                 JSON string with list of tasks awaiting clarification, including task IDs, names, priorities, and clarification questions
             """
-            result = list_tasks_awaiting_clarification()
+            result = _list_tasks_awaiting_clarification()
             return json.dumps(result, indent=2)
 
         @mcp.tool()
@@ -881,7 +881,7 @@ if mcp:
             Returns:
                 JSON string with setup results including configured hooks and status
             """
-            return setup_git_hooks(hooks, install, dry_run)
+            return _setup_git_hooks(hooks, install, dry_run)
 
         @mcp.tool()
         def setup_pattern_triggers(
@@ -922,7 +922,7 @@ if mcp:
                         "error": "Invalid JSON in patterns parameter"
                     }, indent=2)
 
-            return setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
+            return _setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
 
         @mcp.tool()
         def run_tests(
@@ -952,7 +952,7 @@ if mcp:
                 - Output file path
                 - Coverage file path (if enabled)
             """
-            return run_tests(test_path, test_framework, verbose, coverage, output_path)
+            return _run_tests(test_path, test_framework, verbose, coverage, output_path)
 
         @mcp.tool()
         def analyze_test_coverage(
@@ -980,7 +980,7 @@ if mcp:
                 - Report path
                 - List of files with low coverage (gaps)
             """
-            return analyze_test_coverage(coverage_file, min_coverage, output_path, format)
+            return _analyze_test_coverage(coverage_file, min_coverage, output_path, format)
 
         @mcp.tool()
         def sprint_automation(
@@ -1025,7 +1025,7 @@ if mcp:
                 - Blockers identified
                 - Sprint report path
             """
-            return sprint_automation(
+            return _sprint_automation(
                 max_iterations,
                 auto_approve,
                 extract_subtasks,
@@ -1075,7 +1075,7 @@ if mcp:
                         "error": "Invalid JSON in rule_files parameter"
                     }, indent=2)
 
-            return simplify_rules(parsed_files, dry_run, output_dir)
+            return _simplify_rules(parsed_files, dry_run, output_dir)
 
     # Register prompts
     try:
