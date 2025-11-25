@@ -37,4 +37,9 @@ addopts = "-v --tb=short"
 project-management-automation = "project_management_automation.server:main"
 
 [tool.setuptools.packages.find]
-include = ["project_management_automation*"]
+include = ["project_management_automation*", "tools", "resources"]
+exclude = ["tests*", "*test*", "test_*"]
+
+# Include prompts.py and error_handler.py as modules (exclude root server.py and __init__.py)
+[tool.setuptools]
+py-modules = ["prompts", "error_handler"]
