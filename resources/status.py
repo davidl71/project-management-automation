@@ -38,16 +38,17 @@ def get_status_resource() -> str:
 
         status = {
             "server": "project-management-automation",
-            "version": "0.1.0",
+            "version": "0.1.6",
             "status": "operational",
             "mcp_available": True,  # Assumed if resource is being called
             "tools_available": tools_available,
             "error_handling_available": error_handler_available,
             "timestamp": datetime.now().isoformat(),
             "tools": {
-                "total": 8 if tools_available else 1,
-                "high_priority": 4 if tools_available else 0,
-                "medium_priority": 3 if tools_available else 0,
+                "total": 20 if tools_available else 1,
+                "high_priority": 5 if tools_available else 0,
+                "medium_priority": 13 if tools_available else 0,
+                "low_priority": 1 if tools_available else 0,
                 "available": [
                     "server_status",
                     "check_documentation_health_tool",
@@ -56,7 +57,19 @@ def get_status_resource() -> str:
                     "scan_dependency_security_tool",
                     "find_automation_opportunities_tool",
                     "sync_todo_tasks_tool",
-                    "review_pwa_config_tool"
+                    "review_pwa_config_tool",
+                    "add_external_tool_hints_tool",
+                    "run_daily_automation_tool",
+                    "validate_ci_cd_workflow_tool",
+                    "batch_approve_tasks_tool",
+                    "run_nightly_task_automation_tool",
+                    "check_working_copy_health_tool",
+                    "resolve_task_clarification_tool",
+                    "resolve_multiple_clarifications_tool",
+                    "list_tasks_awaiting_clarification_tool",
+                    "setup_git_hooks_tool",
+                    "setup_pattern_triggers_tool",
+                    "simplify_rules_tool"
                 ] if tools_available else ["server_status"]
             }
         }

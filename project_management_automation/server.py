@@ -301,8 +301,9 @@ def register_tools():
             return json.dumps(
                 {
                     "status": "operational",
-                    "version": "0.1.0",
+                    "version": "0.1.6",
                     "tools_available": TOOLS_AVAILABLE,
+                    "total_tools": 20 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
