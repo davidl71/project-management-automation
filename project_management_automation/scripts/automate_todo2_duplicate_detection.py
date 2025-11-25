@@ -38,7 +38,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
-        super().__init__(config, "Todo2 Duplicate Detection"), project_root)
+        super().__init__(config, "Todo2 Duplicate Detection", project_root)
         self.todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         self.output_path = self.project_root / config.get('output_path', 'docs/TODO2_DUPLICATE_DETECTION_REPORT.md')
         self.similarity_threshold = config.get('similarity_threshold', 0.85)
