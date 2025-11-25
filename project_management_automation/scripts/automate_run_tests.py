@@ -283,6 +283,60 @@ class TestRunner(IntelligentAutomationBase):
         
         return results
 
+    def _generate_insights(self, analysis_results: Dict) -> str:
+        """Generate insights from test results."""
+        insights = []
+        
+        results = analysis_results.get('results', {})
+        framework = results.get('framework', 'unknown')
+        tests_run = results.get('tests_run', 0)
+        tests_passed = results.get('tests_passed', 0)
+        tests_failed = results.get('tests_failed', 0)
+        status = results.get('status', 'unknown')
+        
+        insights.append(f"**Test Execution ({framework}):** {tests_run} tests run")
+        insights.append(f"- Passed: {tests_passed}")
+        insights.append(f"- Failed: {tests_failed}")
+        
+        if status == 'success':
+            insights.append("✅ All tests passed!")
+        elif status == 'failed':
+            insights.append(f"⚠️ {tests_failed} test(s) failed")
+        
+        return '\n'.join(insights)
+
+    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+        """Generate test execution report."""
+        results = analysis_results.get('results', {})
+        report_lines = [
+            "# Test Execution Report",
+            "",
+            f"*Generated: {datetime.now().isoformat()}*",
+            "",
+            "## Summary",
+            "",
+            f"- **Framework:** {results.get('framework', 'unknown')}",
+            f"- **Tests Run:** {results.get('tests_run', 0)}",
+            f"- **Tests Passed:** {results.get('tests_passed', 0)}",
+            f"- **Tests Failed:** {results.get('tests_failed', 0)}",
+            f"- **Tests Skipped:** {results.get('tests_skipped', 0)}",
+            f"- **Duration:** {results.get('duration', 0):.2f}s",
+            f"- **Status:** {results.get('status', 'unknown')}",
+            "",
+            "## Insights",
+            "",
+            insights,
+            ""
+        ]
+        
+        if results.get('output_file'):
+            report_lines.append(f"**Output File:** {results['output_file']}")
+        
+        if results.get('coverage_file'):
+            report_lines.append(f"**Coverage File:** {results['coverage_file']}")
+        
+        return '\n'.join(report_lines)
+
     def _format_findings(self, analysis_results: Dict) -> str:
         """Format test results."""
         return json.dumps(analysis_results, indent=2)

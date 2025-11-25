@@ -1,0 +1,22 @@
+{
+  "runs": [
+    {
+      "timestamp": "2025-11-25T10:25:52.632442",
+      "health_score": 22.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 0
+    },
+    {
+      "timestamp": "2025-11-25T10:27:13.808911",
+      "health_score": 22.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 0
+    }
+  ]
+}

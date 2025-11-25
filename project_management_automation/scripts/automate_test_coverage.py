@@ -94,7 +94,7 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
             coverage_data = self._parse_coverage_py(coverage_file)
         
         # Generate report
-        report_path = self._generate_report(coverage_data)
+        report_path = self._generate_coverage_report_file(coverage_data)
         
         # Identify gaps
         gaps = self._identify_gaps(coverage_data)
@@ -215,7 +215,7 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
             logger.error(f"Failed to parse coverage.py: {e}")
             return {'format': 'coverage.py', 'error': str(e)}
 
-    def _generate_report(self, coverage_data: Dict) -> Path:
+    def _generate_coverage_report_file(self, coverage_data: Dict) -> Path:
         """Generate coverage report."""
         if self.format == 'html':
             return self._generate_html_report(coverage_data)
@@ -351,6 +351,73 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
         gaps.sort(key=lambda x: x['coverage'])
         
         return gaps
+
+    def _generate_insights(self, analysis_results: Dict) -> str:
+        """Generate insights from coverage analysis."""
+        insights = []
+        
+        results = analysis_results.get('results', {})
+        coverage_data = results.get('coverage_data', {})
+        total_coverage = coverage_data.get('total_coverage', 0)
+        min_coverage = self.min_coverage
+        meets_threshold = results.get('meets_threshold', False)
+        gaps = results.get('gaps', [])
+        
+        insights.append(f"**Test Coverage: {total_coverage:.1f}%**")
+        insights.append(f"- Minimum Threshold: {min_coverage}%")
+        
+        if meets_threshold:
+            insights.append("✅ Coverage meets threshold!")
+        else:
+            insights.append(f"⚠️ Coverage below threshold (gap: {min_coverage - total_coverage:.1f}%)")
+        
+        if gaps:
+            insights.append(f"⚠️ {len(gaps)} files have low coverage")
+            top_gaps = sorted(gaps, key=lambda x: x.get('coverage', 100))[:5]
+            for gap in top_gaps:
+                insights.append(f"  - {gap.get('filename', 'Unknown')}: {gap.get('coverage', 0):.1f}%")
+        
+        return '\n'.join(insights)
+
+    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+        """Generate coverage report."""
+        results = analysis_results.get('results', {})
+        coverage_data = results.get('coverage_data', {})
+        report_path = results.get('report_path', '')
+        
+        report_lines = [
+            "# Test Coverage Report",
+            "",
+            f"*Generated: {datetime.now().isoformat()}*",
+            "",
+            "## Summary",
+            "",
+            f"- **Total Coverage:** {coverage_data.get('total_coverage', 0):.1f}%",
+            f"- **Total Lines:** {coverage_data.get('total_lines', 0)}",
+            f"- **Covered Lines:** {coverage_data.get('covered_lines', 0)}",
+            f"- **Minimum Threshold:** {self.min_coverage}%",
+            f"- **Meets Threshold:** {'✅ Yes' if results.get('meets_threshold', False) else '❌ No'}",
+            "",
+            "## Insights",
+            "",
+            insights,
+            ""
+        ]
+        
+        if report_path:
+            report_lines.append(f"**Report File:** {report_path}")
+        
+        gaps = results.get('gaps', [])
+        if gaps:
+            report_lines.extend([
+                "",
+                "## Coverage Gaps",
+                ""
+            ])
+            for gap in gaps[:10]:
+                report_lines.append(f"- **{gap.get('filename', 'Unknown')}**: {gap.get('coverage', 0):.1f}% ({gap.get('missing', 0)} lines missing)")
+        
+        return '\n'.join(report_lines)
 
     def _format_findings(self, analysis_results: Dict) -> str:
         """Format coverage analysis results."""
