@@ -127,32 +127,30 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         }
 
     def _load_todo2_tasks(self) -> List[Dict]:
-        """Load tasks from agentic-tools MCP (preferred) or legacy Todo2 format."""
-        # Try agentic-tools MCP format first (preferred)
-        if self.agentic_tools_path.exists():
-            try:
-                with open(self.agentic_tools_path, 'r') as f:
-                    data = json.load(f)
-                    raw_tasks = data.get('tasks', [])
-                    tasks = [self._normalize_task(t) for t in raw_tasks]
-                    logger.info(f"Loaded {len(tasks)} tasks from agentic-tools MCP")
-                    return tasks
-            except Exception as e:
-                logger.warning(f"Could not load agentic-tools tasks: {e}")
+        """Load tasks from agentic-tools MCP (preferred) or legacy Todo2 format.
         
-        # Fall back to legacy Todo2 format
-        try:
-            with open(self.todo2_path, 'r') as f:
-                data = json.load(f)
-                tasks = data.get('todos', [])
-                logger.info(f"Loaded {len(tasks)} tasks from legacy Todo2 format")
-                return tasks
-        except FileNotFoundError:
-            logger.info("No task files found - no tasks to analyze")
-            return []
-        except Exception as e:
-            logger.warning(f"Could not load tasks: {e}")
-            return []
+        Uses retry logic to handle race conditions when another MCP server
+        is writing to the tasks file.
+        """
+        from .base.mcp_client import load_json_with_retry
+        
+        # Try agentic-tools MCP format first (preferred) with retry
+        data = load_json_with_retry(self.agentic_tools_path, default=None)
+        if data is not None:
+            raw_tasks = data.get('tasks', [])
+            tasks = [self._normalize_task(t) for t in raw_tasks]
+            logger.info(f"Loaded {len(tasks)} tasks from agentic-tools MCP")
+            return tasks
+        
+        # Fall back to legacy Todo2 format with retry
+        data = load_json_with_retry(self.todo2_path, default=None)
+        if data is not None:
+            tasks = data.get('todos', [])
+            logger.info(f"Loaded {len(tasks)} tasks from legacy Todo2 format")
+            return tasks
+        
+        logger.info("No task files found - no tasks to analyze")
+        return []
 
     def _analyze_task_alignment(self, tasks: List[Dict]) -> Dict:
         """Analyze task alignment."""
