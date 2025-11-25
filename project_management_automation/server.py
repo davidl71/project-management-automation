@@ -276,6 +276,7 @@ try:
         from tools.working_copy_health import check_working_copy_health
         from tools.run_tests import run_tests
         from tools.test_coverage import analyze_test_coverage
+        from tools.sprint_automation import sprint_automation
         from tools.task_clarification_resolution import (
             resolve_task_clarification,
             resolve_multiple_clarifications,
@@ -305,7 +306,7 @@ def register_tools():
                     "status": "operational",
                     "version": "0.1.7",
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 22 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 23 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
@@ -989,6 +990,61 @@ if mcp:
                 - List of files with low coverage (gaps)
             """
             return analyze_test_coverage(coverage_file, min_coverage, output_path, format)
+
+        @mcp.tool()
+        def sprint_automation(
+            max_iterations: int = 10,
+            auto_approve: bool = True,
+            extract_subtasks: bool = True,
+            run_analysis_tools: bool = True,
+            run_testing_tools: bool = True,
+            priority_filter: Optional[str] = None,
+            tag_filter: Optional[List[str]] = None,
+            dry_run: bool = False,
+            output_path: Optional[str] = None
+        ) -> str:
+            """
+            [HINT: Sprint automation. Returns subtasks extracted, tasks processed, wishlists, blockers, report path.]
+
+            Systematically sprint through project processing all background-capable tasks with minimal prompts.
+
+            ⚠️ PREFERRED TOOL: Comprehensive sprint automation that orchestrates all Exarp tools to maximize
+            autonomous task processing. Extracts subtasks, auto-approves safe tasks, runs analysis/testing tools,
+            generates AI/human wishlists, identifies human contribution opportunities, and processes background tasks.
+
+            Args:
+                max_iterations: Maximum sprint iterations (default: 10)
+                auto_approve: Auto-approve tasks without clarification (default: true)
+                extract_subtasks: Extract subtasks from parent tasks (default: true)
+                run_analysis_tools: Run docs health, alignment, duplicates (default: true)
+                run_testing_tools: Run tests and coverage (default: true)
+                priority_filter: Only process high/medium/low priority (optional)
+                tag_filter: Only process tasks with specific tags (optional)
+                dry_run: Preview mode without making changes (default: false)
+                output_path: Path for sprint report (default: docs/SPRINT_AUTOMATION_REPORT.md)
+
+            Returns:
+                JSON string with sprint results including:
+                - Subtasks extracted
+                - Tasks auto-approved/processed
+                - Analysis and testing results
+                - AI wishlist (tasks AI wants to work on)
+                - Human wishlist (from external sources)
+                - Human contribution opportunities
+                - Blockers identified
+                - Sprint report path
+            """
+            return sprint_automation(
+                max_iterations,
+                auto_approve,
+                extract_subtasks,
+                run_analysis_tools,
+                run_testing_tools,
+                priority_filter,
+                tag_filter,
+                dry_run,
+                output_path
+            )
 
         @mcp.tool()
         def simplify_rules(

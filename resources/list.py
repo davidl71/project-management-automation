@@ -195,6 +195,14 @@ def get_tools_list_resource() -> str:
                     "priority": "high",
                     "wraps": "TestCoverageAnalyzer",
                     "parameters": ["coverage_file", "min_coverage", "output_path", "format"]
+                },
+                {
+                    "name": "sprint_automation",
+                    "description": "Systematically sprint through project processing all background-capable tasks. Extracts subtasks, auto-approves safe tasks, runs analysis/testing tools, generates wishlists, and identifies blockers.",
+                    "category": "automation",
+                    "priority": "high",
+                    "wraps": "SprintAutomation",
+                    "parameters": ["max_iterations", "auto_approve", "extract_subtasks", "run_analysis_tools", "run_testing_tools", "priority_filter", "tag_filter", "dry_run", "output_path"]
                 }
             ],
             "categories": {
@@ -213,7 +221,7 @@ def get_tools_list_resource() -> str:
                 "medium": 13,
                 "low": 1
             },
-            "total_tools": 22,
+            "total_tools": 23,
             "timestamp": datetime.now().isoformat()
         }
 

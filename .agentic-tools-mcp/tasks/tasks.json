@@ -417,12 +417,12 @@
       "name": "Implement run_tests tool for Exarp",
       "details": "Create run_tests MCP tool to execute test suites with flexible options. Support pytest, unittest, and ctest frameworks with auto-detection. Generate JUnit XML reports and return pass/fail counts.",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
-      "completed": false,
+      "completed": true,
       "createdAt": "2025-11-25T08:06:12.477Z",
-      "updatedAt": "2025-11-25T08:07:23.248Z",
+      "updatedAt": "2025-11-25T08:10:12.510Z",
       "dependsOn": [],
       "priority": 9,
-      "status": "in-progress",
+      "status": "done",
       "tags": [
         "testing",
         "exarp",
@@ -437,12 +437,12 @@
       "name": "Implement analyze_test_coverage tool for Exarp",
       "details": "Create analyze_test_coverage MCP tool to generate coverage reports and identify gaps. Parse coverage.py, gcov, lcov formats. Generate HTML reports and compare against thresholds.",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
-      "completed": false,
+      "completed": true,
       "createdAt": "2025-11-25T08:06:15.246Z",
-      "updatedAt": "2025-11-25T08:08:39.022Z",
+      "updatedAt": "2025-11-25T08:10:14.000Z",
       "dependsOn": [],
       "priority": 8,
-      "status": "in-progress",
+      "status": "done",
       "tags": [
         "testing",
         "exarp",
@@ -491,6 +491,88 @@
         "phase4"
       ],
       "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "d213337c-5aba-4c3f-abfd-1ecee9833b5c",
+      "name": "Implement sprint_automation tool for Exarp",
+      "details": "Create sprint_automation MCP tool to systematically process all background-capable tasks with minimal prompts. Extract subtasks, auto-approve safe tasks, run analysis/testing tools, process background tasks, and identify blockers.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:31.683Z",
+      "updatedAt": "2025-11-25T08:18:53.521Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "in-progress",
+      "tags": [
+        "sprint",
+        "automation",
+        "exarp",
+        "implementation",
+        "orchestration"
+      ],
+      "estimatedHours": 8,
+      "level": 0
+    },
+    {
+      "id": "ce4d9c05-8dd6-4085-9076-80971046c572",
+      "name": "Add human contribution suggestion feature to sprint_automation",
+      "details": "Add feature to identify tasks better handled by humans (design decisions, user preferences, strategy, creative work). Generate suggestions for human contributions and integrate into sprint report.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:33.922Z",
+      "updatedAt": "2025-11-25T08:18:33.922Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "sprint",
+        "human-contribution",
+        "ai-wishlist",
+        "exarp"
+      ],
+      "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "8257e637-48fe-4e1f-a268-f9b88d708786",
+      "name": "Add AI wishlist generation to sprint_automation",
+      "details": "Add feature for sprint_automation to generate its own wishlist of tasks it wants to work on (based on automation opportunities, test coverage gaps, documentation needs, etc.). Store wishlist in structured format.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:36.113Z",
+      "updatedAt": "2025-11-25T08:18:36.113Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "sprint",
+        "ai-wishlist",
+        "automation",
+        "exarp"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "6a420472-b6ba-4f69-a10d-9465a2bfc468",
+      "name": "Add human wishlist parsing to sprint_automation",
+      "details": "Add feature to parse human wishlists from external sources: git commit messages, plain text files (WISHLIST.md, TODO.md, etc.), code comments, and issue trackers. Integrate human wishlist with AI wishlist for unified task prioritization.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:38.353Z",
+      "updatedAt": "2025-11-25T08:18:38.353Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "sprint",
+        "human-wishlist",
+        "parsing",
+        "git",
+        "exarp"
+      ],
+      "estimatedHours": 5,
       "level": 0
     }
   ],
