@@ -1,0 +1,367 @@
+{
+  "projects": [
+    {
+      "id": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "name": "Exarp - Project Management Automation MCP Server",
+      "description": "MCP server for project management automation tools (Enochian: Spirit of Air - Communication). Provides documentation health, task alignment, duplicate detection, security scanning, and automation opportunities.",
+      "createdAt": "2025-11-25T00:07:04.116Z",
+      "updatedAt": "2025-11-25T00:07:04.116Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "99e386f1-613f-46c9-ac70-844f8a8fb251",
+      "name": "Tag and build package v0.1.5",
+      "details": "Tag and build fresh package for project-management-automation repository.\n\n**Completed:**\n- Bumped version from 0.1.4 to 0.1.5 in pyproject.toml\n- Created git tag v0.1.5 with release notes\n- Built source distribution (.tar.gz) and wheel (.whl)\n- Pushed tag to remote repository\n\n**Package files created:**\n- project_management_automation_mcp-0.1.5-py3-none-any.whl (68 KB)\n- project_management_automation_mcp-0.1.5.tar.gz (59 KB)\n\n**Release includes:**\n- 72 EXARP documentation files moved from ib_box_spread_full_universal\n- .cursor configuration directory with development commands and rules\n- Repository structure cleanup complete",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T00:07:19.810Z",
+      "updatedAt": "2025-11-25T00:07:19.810Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "done",
+      "tags": [
+        "packaging",
+        "release",
+        "v0.1.5"
+      ],
+      "level": 0
+    },
+    {
+      "id": "c9630040-7860-4f84-9a2a-10d2ee24adc0",
+      "name": "Fix license format deprecation warning in pyproject.toml",
+      "details": "Fix setuptools deprecation warning about license format in pyproject.toml.\n\n**Fixed:**\nChanged from deprecated TOML table format:\n  license = {text = \"MIT\"}\n\nTo SPDX string format:\n  license = \"MIT\"\n\n**Benefits:**\n- Eliminates deprecation warnings during package build\n- Ensures compatibility with setuptools>=77.0.0 requirements\n- Build now completes without license format warnings\n\n**Status:** Completed and pushed to repository",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T00:07:22.506Z",
+      "updatedAt": "2025-11-25T00:07:22.506Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "packaging",
+        "pyproject.toml",
+        "deprecation-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "5ac9a82a-48c8-4fa1-a8e0-8e8ce683b22e",
+      "name": "Add MCP client library dependency for agentic-tools integration",
+      "details": "🎯 **Objective:** Add MCP client library dependency to enable calling agentic-tools MCP server programmatically\n\n📋 **Acceptance Criteria:**\n- `mcp>=1.0.0` added to `pyproject.toml` dependencies\n- MCP client library installed and verified\n- Documentation updated with dependency information\n- Version compatibility verified\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Dependency addition, installation verification, documentation update\n- **Excluded:** Actual MCP client implementation (separate task)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Add `mcp = \"^1.0.0\"` to `[project.dependencies]` in `pyproject.toml`\n- Verify package installation works\n- Check for compatibility with Python 3.9+\n- Document MCP client library usage\n\n📁 **Files/Components:**\n- Update: `pyproject.toml` (add mcp dependency)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark dependency added)\n- Create: `docs/MCP_CLIENT_LIBRARY.md` (optional documentation)\n\n🧪 **Testing Requirements:**\n- Verify `pip install -e .` installs mcp package\n- Test import: `from mcp import ClientSession, StdioServerParameters`\n- Verify package version meets requirements\n- Test basic MCP client connection (optional)\n\n⚠️ **Edge Cases:**\n- Python version compatibility\n- Dependency conflicts with existing packages\n- Installation failures on different systems\n\n📚 **Dependencies:** None (foundation task)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:09.865Z",
+      "updatedAt": "2025-11-25T01:11:09.865Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "infrastructure"
+      ],
+      "estimatedHours": 1,
+      "level": 0
+    },
+    {
+      "id": "d8863dae-ee14-403c-8be5-eb03dda95e7b",
+      "name": "Extend MCPClient class with agentic-tools MCP support",
+      "details": "🎯 **Objective:** Extend existing MCPClient class to support agentic-tools MCP server calls (list_todos, create_task, update_task, etc.)\n\n📋 **Acceptance Criteria:**\n- `MCPClient` class extended with agentic-tools methods\n- Async methods implemented: `list_todos()`, `create_task()`, `update_task()`, `get_task()`, `delete_task()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Fallback to file access for backward compatibility\n- Unit tests created for all methods\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool migration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (simple vs advanced)\n\n🔧 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for agentic-tools\n- Implement async/await patterns throughout\n- Add connection pooling (singleton pattern or connection manager)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support project ID detection from project root\n\n📁 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_agentic_tools.py` (unit tests)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark infrastructure complete)\n\n🧪 **Testing Requirements:**\n- Test `list_todos()` with valid project ID\n- Test `create_task()` creates task successfully\n- Test `update_task()` updates task correctly\n- Test error handling when MCP unavailable\n- Test fallback to file access works\n- Test connection pooling efficiency\n\n⚠️ **Edge Cases:**\n- MCP server not available (fallback needed)\n- Invalid project ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n📚 **Dependencies:** Task 1 (MCP client dependency must be added first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:14.969Z",
+      "updatedAt": "2025-11-25T01:11:14.969Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "infrastructure",
+        "async"
+      ],
+      "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "44d2e835-7843-4b61-a212-3443230267b0",
+      "name": "Migrate duplicate detection tool to use agentic-tools MCP",
+      "details": "🎯 **Objective:** Replace direct file access in duplicate detection tool with agentic-tools MCP calls\n\n📋 **Acceptance Criteria:**\n- `tools/duplicate_detection.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_duplicate_detection.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (auto-fix remains as file write for now)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n📁 **Files/Components:**\n- Update: `tools/duplicate_detection.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_duplicate_detection.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n🧪 **Testing Requirements:**\n- Test duplicate detection works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n⚠️ **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n📚 **Dependencies:** Task 2 (MCPClient extension must be complete)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:21.127Z",
+      "updatedAt": "2025-11-25T01:11:21.127Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "migration",
+        "duplicate-detection"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2",
+      "name": "Migrate task alignment tool to use agentic-tools MCP",
+      "details": "🎯 **Objective:** Replace direct file access in task alignment tool with agentic-tools MCP calls\n\n📋 **Acceptance Criteria:**\n- `tools/todo2_alignment.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_alignment_v2.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (task creation remains as file write for now)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n📁 **Files/Components:**\n- Update: `tools/todo2_alignment.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_alignment_v2.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n🧪 **Testing Requirements:**\n- Test task alignment works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n⚠️ **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n📚 **Dependencies:** Task 2 (MCPClient extension must be complete)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:25.126Z",
+      "updatedAt": "2025-11-25T01:11:25.126Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "migration",
+        "task-alignment"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "9520ff3a-13b8-4b46-9b8d-d004fde12989",
+      "name": "Remove file access fallbacks after full migration",
+      "details": "🎯 **Objective:** Remove all direct file access code and fallbacks after successful MCP migration\n\n📋 **Acceptance Criteria:**\n- All direct file I/O code removed from tools\n- All fallback to file access removed\n- Codebase only uses agentic-tools MCP for Todo2 operations\n- Documentation updated to reflect MCP-only approach\n- Tests updated to remove file-based tests\n- Cleanup complete with no leftover file access code\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Code removal, test cleanup, documentation updates\n- **Excluded:** MCP implementation code (keep that)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Remove all `.todo2/state.todo2.json` file reads/writes\n- Remove fallback logic that uses file access\n- Remove file-based test fixtures\n- Update documentation to reflect MCP-only approach\n- Update error messages to reflect MCP requirement\n- Ensure all tools work correctly without file fallback\n\n📁 **Files/Components:**\n- Update: All tool files (remove file access code)\n- Update: Base class (remove file access code)\n- Update: Tests (remove file-based tests)\n- Update: Documentation (reflect MCP-only approach)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark migration complete)\n\n🧪 **Testing Requirements:**\n- Verify all tools work without file fallback\n- Test error handling when MCP unavailable (proper error messages)\n- Verify no file access code remains\n- Test cleanup doesn't break functionality\n- Verify documentation is accurate\n\n⚠️ **Edge Cases:**\n- MCP server unavailable (proper error messages, no fallback)\n- Missing project ID (proper error handling)\n- Invalid MCP responses (error handling)\n\n📚 **Dependencies:** Tasks 3-5 (all read/write operations must be migrated first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:37.750Z",
+      "updatedAt": "2025-11-25T01:11:37.750Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "cleanup",
+        "finalization"
+      ],
+      "estimatedHours": 1,
+      "level": 0
+    },
+    {
+      "id": "918e4218-f9d2-4032-991f-6c1e2823ad6e",
+      "name": "Migrate write operations to use agentic-tools MCP",
+      "details": "🎯 **Objective:** Replace direct file writes with agentic-tools MCP calls (create_task, update_task, delete_task)\n\n📋 **Acceptance Criteria:**\n- `tools/nightly_task_automation.py` uses `update_task()` instead of file write\n- `tools/task_clarification_resolution.py` uses `update_task()` instead of file write\n- `tools/batch_task_approval.py` uses `update_task()` for batch operations\n- Base class uses `create_task()` for task creation\n- All file writes replaced with MCP calls\n- Error handling with fallback to file access\n\n🚫 **Scope:** Write operations migration, batch operations, error handling\n\n🔧 **Technical Requirements:**\n- Replace file writes with `mcp_client.create_task()`, `update_task()`, `delete_task()`\n- Add async/await where needed\n- Implement batch operations for multiple updates\n- Implement fallback to file access if MCP fails\n\n📁 **Files:** Update tools (nightly_task_automation, task_clarification_resolution, batch_task_approval), base class\n\n🧪 **Testing:** Test task creation/updates work, batch operations, fallback, error handling\n\n📚 **Dependencies:** Task 2 (MCPClient extension), Tasks 3-4 (read operations should be migrated first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:43.669Z",
+      "updatedAt": "2025-11-25T01:11:43.669Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "migration",
+        "write-operations"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "3c1addeb-e2dd-4fec-8c22-36914e9d2b73",
+      "name": "Extend MCPClient class with Context7 MCP support",
+      "details": "🎯 **Objective:** Extend existing MCPClient class to support Context7 MCP server calls (resolve-library-id, get-library-docs)\n\n📋 **Acceptance Criteria:**\n- `MCPClient` class extended with Context7 methods\n- Async methods implemented: `resolve_library_id()`, `get_library_docs()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Helper methods for common operations\n- Unit tests created for all methods\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool integration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (reuse agentic-tools session or separate)\n\n🔧 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for Context7\n- Implement async/await patterns throughout\n- Add connection pooling (reuse agentic-tools session or separate)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support mode parameter (code/info) for get-library-docs\n\n📁 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_context7.py` (unit tests)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark infrastructure complete)\n\n🧪 **Testing Requirements:**\n- Test `resolve_library_id()` with valid library names\n- Test `get_library_docs()` with valid library IDs\n- Test error handling when MCP unavailable\n- Test connection pooling efficiency\n- Test retry logic on failures\n\n⚠️ **Edge Cases:**\n- MCP server not available (error handling)\n- Invalid library name/ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n📚 **Dependencies:** Task 1 from agentic-tools integration (MCP client dependency must be added first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:24.596Z",
+      "updatedAt": "2025-11-25T01:13:24.596Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "infrastructure",
+        "async"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "d2824509-031b-495c-8a8d-46e087d35421",
+      "name": "Integrate Context7 verification into documentation health tool",
+      "details": "🎯 **Objective:** Add Context7 verification step to documentation health tool to verify external library references\n\n📋 **Acceptance Criteria:**\n- `tools/docs_health.py` uses Context7 to verify external library references\n- `project_management_automation/scripts/automate_docs_health_v2.py` includes Context7 verification\n- External library references verified via Context7\n- Documentation currency checked (library exists, docs available)\n- Verification results included in health report\n- Error handling when Context7 unavailable (graceful degradation)\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification step, report enhancement, error handling\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Verification strategy (all refs or sampling)\n\n🔧 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Use `mcp_client.get_library_docs()` to check documentation availability\n- Add verification results to health report\n- Graceful degradation if Context7 unavailable (skip verification, warn)\n- Include verified/unverified counts in report\n\n📁 **Files/Components:**\n- Update: `tools/docs_health.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_docs_health_v2.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n🧪 **Testing Requirements:**\n- Test verification works with valid libraries\n- Test verification fails gracefully with invalid libraries\n- Test graceful degradation when Context7 unavailable\n- Test verification results appear in report\n- Test performance impact is acceptable\n\n⚠️ **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (error handling)\n- Network timeouts (retry logic)\n- Large number of references (performance)\n\n📚 **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:28.678Z",
+      "updatedAt": "2025-11-25T01:13:28.678Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "documentation-health",
+        "verification"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "8306d84e-db17-40be-8f5d-8dd7bd7b59da",
+      "name": "Integrate Context7 verification into external tool hints tool",
+      "details": "🎯 **Objective:** Use Context7 to verify libraries exist before adding external tool hints to documentation\n\n📋 **Acceptance Criteria:**\n- `tools/external_tool_hints.py` verifies libraries exist via Context7 before adding hints\n- `project_management_automation/scripts/automate_external_tool_hints.py` includes Context7 verification\n- Only add hints for verified libraries\n- Report skipped libraries (not found in Context7)\n- Error handling when Context7 unavailable (skip verification, add hints anyway)\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification, hint filtering, reporting\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Only add hints for verified libraries\n- Include verification status in report\n- Graceful degradation if Context7 unavailable (add hints anyway, warn)\n- Report verified/skipped counts\n\n📁 **Files/Components:**\n- Update: `tools/external_tool_hints.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_external_tool_hints.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n🧪 **Testing Requirements:**\n- Test hints only added for verified libraries\n- Test invalid libraries are skipped\n- Test graceful degradation when Context7 unavailable\n- Test verification status appears in report\n- Test performance impact is acceptable\n\n⚠️ **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (skip, report)\n- Network timeouts (retry logic)\n- Large number of libraries (performance)\n\n📚 **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:32.887Z",
+      "updatedAt": "2025-11-25T01:13:32.887Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "external-tool-hints",
+        "verification"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "ea7d35b1-f26e-4452-b4b6-26225269288b",
+      "name": "Integrate Context7 best practices into dependency security tool",
+      "details": "🎯 **Objective:** Use Context7 to get current security best practices for dependencies during security scanning\n\n📋 **Acceptance Criteria:**\n- `tools/dependency_security.py` uses Context7 to get security best practices\n- `project_management_automation/scripts/automate_dependency_security.py` includes Context7 integration\n- Security best practices retrieved for scanned dependencies\n- Best practices included in security report\n- Error handling when Context7 unavailable (skip best practices, scan continues)\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 integration, best practices retrieval, report enhancement\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Which dependencies to query (all or only vulnerable)\n\n🔧 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to get library IDs\n- Use `mcp_client.get_library_docs()` with topic=\"security best practices\" and mode=\"info\"\n- Include best practices in security report\n- Graceful degradation if Context7 unavailable (skip best practices, warn)\n- Query Context7 for top dependencies or only vulnerable ones\n\n📁 **Files/Components:**\n- Update: `tools/dependency_security.py` (add Context7 integration)\n- Update: `project_management_automation/scripts/automate_dependency_security.py` (integrate Context7)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n🧪 **Testing Requirements:**\n- Test best practices retrieved for dependencies\n- Test best practices included in report\n- Test graceful degradation when Context7 unavailable\n- Test performance impact is acceptable\n- Test with various dependency types (Python, Rust, npm)\n\n⚠️ **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Dependencies not found in Context7 (skip, continue)\n- Network timeouts (retry logic)\n- Large number of dependencies (performance, batching)\n\n📚 **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:38.148Z",
+      "updatedAt": "2025-11-25T01:13:38.148Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "dependency-security",
+        "best-practices"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e",
+      "name": "Extend MCPClient class with Sequential Thinking MCP support",
+      "details": "Replace simplified fallback with full Sequential Thinking MCP integration. Support all operations: start, add_step, refine, navigate, export. Use mcp library's stdio_client and ClientSession. Implement async/await patterns, connection pooling, error handling, and retry logic. Create unit tests for all operations. Update mcp_client.py and add tests/test_mcp_client_sequential_thinking.py.\n\nDependencies: MCP client dependency task from agentic-tools integration must be completed first.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:14.911Z",
+      "updatedAt": "2025-11-25T01:17:14.911Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "infrastructure",
+        "async"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "8e63aa74-5a3e-4419-8389-7452eb3b2339",
+      "name": "Integrate Sequential Thinking into documentation health tool",
+      "details": "Add Sequential Thinking workflow generation to documentation health tool. Use mcp_client.call_sequential_thinking() to create step-by-step fix workflows for identified issues. Export workflows in markdown format and include in health report. Implement graceful degradation when Sequential Thinking unavailable (skip workflow, warn). Update tools/docs_health.py and automate_docs_health_v2.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:17.420Z",
+      "updatedAt": "2025-11-25T01:17:17.420Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "documentation-health",
+        "workflow-generation"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "70d51598-ad43-41e2-826a-65279c482a7e",
+      "name": "Integrate Sequential Thinking into task alignment tool",
+      "details": "Add Sequential Thinking workflow generation to task alignment tool. Use mcp_client.call_sequential_thinking() to create step-by-step realignment workflows for misaligned tasks. Export workflows in markdown format and include in alignment report. Implement graceful degradation when Sequential Thinking unavailable. Update tools/todo2_alignment.py and automate_todo2_alignment_v2.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:19.056Z",
+      "updatedAt": "2025-11-25T01:17:19.056Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "task-alignment",
+        "workflow-generation"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "decff4b4-e571-42a4-bfe2-4c42fb34c5a0",
+      "name": "Integrate Sequential Thinking into duplicate detection tool",
+      "details": "Add Sequential Thinking workflow generation to duplicate detection tool. Use mcp_client.call_sequential_thinking() to create step-by-step consolidation workflows for duplicate task groups. Export workflows in markdown format and include in duplicate detection report. Implement graceful degradation when Sequential Thinking unavailable. Update tools/duplicate_detection.py and automate_todo2_duplicate_detection.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:21.001Z",
+      "updatedAt": "2025-11-25T01:17:21.001Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "duplicate-detection",
+        "workflow-generation"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "49ba9ba6-f370-46b2-a066-3ae46d8a9f28",
+      "name": "Integrate Sequential Thinking into automation opportunities tool",
+      "details": "Add Sequential Thinking workflow generation to automation opportunities tool. Use mcp_client.call_sequential_thinking() to create step-by-step implementation plans for high-value opportunities. Export workflows in markdown format and include in automation opportunities report. Implement graceful degradation when Sequential Thinking unavailable. Option to create workflows for all opportunities or only high-value ones. Update tools/automation_opportunities.py and automate_automation_opportunities.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:23.415Z",
+      "updatedAt": "2025-11-25T01:17:23.415Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "automation-opportunities",
+        "workflow-generation"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    }
+  ],
+  "subtasks": [],
+  "migration": {
+    "version": "1.8.1"
+  }
+}

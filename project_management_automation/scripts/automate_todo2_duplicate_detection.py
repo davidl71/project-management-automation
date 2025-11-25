@@ -101,6 +101,26 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
 
         logger.info(f"Found {total_duplicates} duplicate issues")
 
+        # Apply auto-fix if enabled
+        if self.auto_fix and total_duplicates > 0:
+            fix_results = self._apply_auto_fix(tasks)
+            results['auto_fix_applied'] = fix_results['applied']
+            results['tasks_removed'] = fix_results['tasks_removed']
+            results['tasks_merged'] = fix_results['tasks_merged']
+            results['dependencies_updated'] = fix_results['dependencies_updated']
+            if fix_results['applied']:
+                logger.info(f"Auto-fix applied: {fix_results['tasks_removed']} tasks removed, {fix_results['tasks_merged']} tasks merged")
+            # Store in self.results for access by wrapper
+            self.results['auto_fix_applied'] = fix_results['applied']
+            self.results['tasks_removed'] = fix_results['tasks_removed']
+            self.results['tasks_merged'] = fix_results['tasks_merged']
+            self.results['dependencies_updated'] = fix_results['dependencies_updated']
+        else:
+            results['auto_fix_applied'] = False
+            results['tasks_removed'] = 0
+            results['tasks_merged'] = 0
+            results['dependencies_updated'] = 0
+
         # Store in results for reporting
         results['duplicates_found'] = total_duplicates
         return results
@@ -238,6 +258,208 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                     'name': task.get('name', ''),
                     'dependencies': deps
                 })
+
+    def _apply_auto_fix(self, tasks: List[Dict]) -> Dict:
+        """Apply auto-fix to consolidate duplicates."""
+        tasks_removed = 0
+        tasks_merged = 0
+        dependencies_updated = 0
+        tasks_to_remove = set()
+        tasks_to_keep = {}  # Map: keep_id -> task dict
+
+        # Load current state
+        try:
+            with open(self.todo2_path, 'r') as f:
+                state = json.load(f)
+        except Exception as e:
+            logger.error(f"Failed to load Todo2 state: {e}")
+            return {'applied': False, 'tasks_removed': 0, 'tasks_merged': 0, 'dependencies_updated': 0}
+
+        current_tasks = state.get('todos', [])
+
+        # Process exact name matches
+        for match in self.duplicates['exact_name_matches']:
+            match_tasks = match['tasks']
+            # Keep the "best" task (prefer "In Progress" > most comments > most recent)
+            best_task = self._select_best_task(match_tasks, current_tasks)
+            best_id = best_task['id']
+            tasks_to_keep[best_id] = best_task
+
+            # Mark others for removal and merge their data
+            for task in match_tasks:
+                if task['id'] != best_id:
+                    tasks_to_remove.add(task['id'])
+                    self._merge_task_data(best_id, task['id'], current_tasks)
+                    tasks_merged += 1
+
+        # Process similar name matches (only if very similar, threshold >= 0.95)
+        for match in self.duplicates['similar_name_matches']:
+            if match['similarity'] >= 0.95:  # Only very similar tasks
+                match_tasks = match['tasks']
+                task1_id = match_tasks[0]['id']
+                task2_id = match_tasks[1]['id']
+
+                # Skip if already processed
+                if task1_id in tasks_to_remove or task2_id in tasks_to_remove:
+                    continue
+
+                # Select best task
+                task1 = next((t for t in current_tasks if t['id'] == task1_id), None)
+                task2 = next((t for t in current_tasks if t['id'] == task2_id), None)
+                if not task1 or not task2:
+                    continue
+
+                best_task = self._select_best_task([task1, task2], current_tasks)
+                best_id = best_task['id']
+                tasks_to_keep[best_id] = best_task
+
+                # Remove the other
+                other_id = task2_id if best_id == task1_id else task1_id
+                tasks_to_remove.add(other_id)
+                self._merge_task_data(best_id, other_id, current_tasks)
+                tasks_merged += 1
+
+        # Fix self-dependencies
+        for self_dep in self.duplicates['self_dependencies']:
+            task_id = self_dep['id']
+            task = next((t for t in current_tasks if t['id'] == task_id), None)
+            if task:
+                deps = task.get('dependencies', [])
+                if task_id in deps:
+                    deps.remove(task_id)
+                    task['dependencies'] = deps
+                    dependencies_updated += 1
+
+        # Update dependencies: replace references to removed tasks with kept tasks
+        id_mapping = {}  # Map: removed_id -> kept_id (for exact name matches)
+        for match in self.duplicates['exact_name_matches']:
+            match_tasks = match['tasks']
+            best_id = self._select_best_task(match_tasks, current_tasks)['id']
+            for task in match_tasks:
+                if task['id'] != best_id:
+                    id_mapping[task['id']] = best_id
+
+        for task in current_tasks:
+            deps = task.get('dependencies', [])
+            updated = False
+            new_deps = []
+            for dep_id in deps:
+                if dep_id in tasks_to_remove:
+                    # Map to kept task if available
+                    if dep_id in id_mapping:
+                        new_deps.append(id_mapping[dep_id])
+                        updated = True
+                        dependencies_updated += 1
+                    # Otherwise, skip (remove) this dependency
+                else:
+                    # Keep dependency
+                    new_deps.append(dep_id)
+
+            if updated:
+                task['dependencies'] = list(set(new_deps))  # Remove duplicates
+                task['lastModified'] = datetime.now().isoformat()
+
+        # Remove duplicate tasks
+        current_tasks = [t for t in current_tasks if t['id'] not in tasks_to_remove]
+        tasks_removed = len(tasks_to_remove)
+
+        # Update state
+        state['todos'] = current_tasks
+        state['lastModified'] = datetime.now().isoformat()
+
+        # Save state
+        try:
+            with open(self.todo2_path, 'w') as f:
+                json.dump(state, f, indent=2)
+            logger.info(f"Todo2 state updated: {tasks_removed} tasks removed")
+            return {
+                'applied': True,
+                'tasks_removed': tasks_removed,
+                'tasks_merged': tasks_merged,
+                'dependencies_updated': dependencies_updated
+            }
+        except Exception as e:
+            logger.error(f"Failed to save Todo2 state: {e}")
+            return {'applied': False, 'tasks_removed': 0, 'tasks_merged': 0, 'dependencies_updated': 0}
+
+    def _select_best_task(self, tasks: List[Dict], all_tasks: List[Dict]) -> Dict:
+        """Select the best task to keep from a list of duplicates."""
+        # Get full task data
+        full_tasks = []
+        for task in tasks:
+            full_task = next((t for t in all_tasks if t['id'] == task['id']), None)
+            if full_task:
+                full_tasks.append(full_task)
+
+        if not full_tasks:
+            return tasks[0]
+
+        # Priority: In Progress > most comments > most recent > first
+        def score_task(task):
+            score = 0
+            status = task.get('status', '').lower()
+            if status == 'in progress':
+                score += 1000
+            elif status == 'done':
+                score += 100
+            elif status == 'review':
+                score += 50
+
+            # Count comments
+            comments = task.get('comments', [])
+            score += len(comments) * 10
+
+            # Recency bonus (more recent = higher score)
+            last_modified = task.get('lastModified', task.get('created', ''))
+            if last_modified:
+                try:
+                    from datetime import datetime
+                    dt = datetime.fromisoformat(last_modified.replace('Z', '+00:00'))
+                    # Days since epoch (more recent = higher number)
+                    score += (dt - datetime(1970, 1, 1)).days
+                except:
+                    pass
+
+            return score
+
+        return max(full_tasks, key=score_task)
+
+    def _merge_task_data(self, keep_id: str, remove_id: str, all_tasks: List[Dict]):
+        """Merge data from removed task into kept task."""
+        keep_task = next((t for t in all_tasks if t['id'] == keep_id), None)
+        remove_task = next((t for t in all_tasks if t['id'] == remove_id), None)
+
+        if not keep_task or not remove_task:
+            return
+
+        # Merge dependencies
+        keep_deps = set(keep_task.get('dependencies', []))
+        remove_deps = set(remove_task.get('dependencies', []))
+        keep_deps.update(remove_deps)
+        keep_deps.discard(keep_id)  # Remove self-reference
+        keep_deps.discard(remove_id)  # Remove reference to removed task
+        keep_task['dependencies'] = list(keep_deps)
+
+        # Merge comments (add note about merge)
+        keep_comments = keep_task.get('comments', [])
+        remove_comments = remove_task.get('comments', [])
+        merge_comment = {
+            'type': 'note',
+            'content': f"Merged with duplicate task {remove_id}: {remove_task.get('name', '')}",
+            'created': datetime.now().isoformat()
+        }
+        keep_comments.append(merge_comment)
+        keep_comments.extend(remove_comments)
+        keep_task['comments'] = keep_comments
+
+        # Merge tags
+        keep_tags = set(keep_task.get('tags', []))
+        remove_tags = set(remove_task.get('tags', []))
+        keep_tags.update(remove_tags)
+        keep_task['tags'] = list(keep_tags)
+
+        # Update last modified
+        keep_task['lastModified'] = datetime.now().isoformat()
 
     def _generate_insights(self, analysis_results: Dict) -> str:
         """Generate insights from duplicate detection results."""

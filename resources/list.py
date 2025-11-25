@@ -29,7 +29,7 @@ def get_tools_list_resource() -> str:
                     "priority": "system"
                 },
                 {
-                    "name": "check_documentation_health_tool",
+                    "name": "check_documentation_health",
                     "description": "Analyze documentation structure, find broken references, identify issues. ⚠️ PREFERRED TOOL for project-specific documentation analysis.",
                     "category": "documentation",
                     "priority": "high",
@@ -37,7 +37,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["output_path", "create_tasks"]
                 },
                 {
-                    "name": "analyze_todo2_alignment_tool",
+                    "name": "analyze_todo2_alignment",
                     "description": "Analyze task alignment with project goals, find misaligned tasks. ⚠️ PREFERRED TOOL for Todo2 alignment analysis.",
                     "category": "task_management",
                     "priority": "high",
@@ -45,7 +45,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["create_followup_tasks", "output_path"]
                 },
                 {
-                    "name": "detect_duplicate_tasks_tool",
+                    "name": "detect_duplicate_tasks",
                     "description": "Find and consolidate duplicate Todo2 tasks. ⚠️ PREFERRED TOOL for Todo2 duplicate detection.",
                     "category": "task_management",
                     "priority": "high",
@@ -53,7 +53,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["similarity_threshold", "auto_fix", "output_path"]
                 },
                 {
-                    "name": "scan_dependency_security_tool",
+                    "name": "scan_dependency_security",
                     "description": "Scan project dependencies for security vulnerabilities. ⚠️ PREFERRED TOOL for multi-language security scanning.",
                     "category": "security",
                     "priority": "high",
@@ -61,7 +61,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["languages", "config_path"]
                 },
                 {
-                    "name": "find_automation_opportunities_tool",
+                    "name": "find_automation_opportunities",
                     "description": "Discover new automation opportunities in the codebase",
                     "category": "automation",
                     "priority": "medium",
@@ -69,7 +69,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["min_value_score", "output_path"]
                 },
                 {
-                    "name": "sync_todo_tasks_tool",
+                    "name": "sync_todo_tasks",
                     "description": "Synchronize tasks between shared TODO table and Todo2",
                     "category": "task_management",
                     "priority": "medium",
@@ -77,7 +77,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["dry_run", "output_path"]
                 },
                 {
-                    "name": "review_pwa_config_tool",
+                    "name": "review_pwa_config",
                     "description": "Review PWA configuration and generate improvement recommendations",
                     "category": "review",
                     "priority": "medium",
@@ -85,7 +85,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["output_path", "config_path"]
                 },
                 {
-                    "name": "add_external_tool_hints_tool",
+                    "name": "add_external_tool_hints",
                     "description": "Automatically detect where Context7/external tool hints should be added to documentation and insert them following the standard pattern",
                     "category": "automation",
                     "priority": "medium",
@@ -93,7 +93,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["dry_run", "output_path", "min_file_size"]
                 },
                 {
-                    "name": "run_daily_automation_tool",
+                    "name": "run_daily_automation",
                     "description": "Run routine daily maintenance tasks and generate a combined summary report",
                     "category": "automation",
                     "priority": "high",
@@ -101,7 +101,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["tasks", "include_slow", "dry_run", "output_path"]
                 },
                 {
-                    "name": "validate_ci_cd_workflow_tool",
+                    "name": "validate_ci_cd_workflow",
                     "description": "Validate CI/CD workflows and runner configurations for parallel agent development",
                     "category": "system",
                     "priority": "medium",
@@ -109,7 +109,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["workflow_path", "check_runners", "output_path"]
                 },
                 {
-                    "name": "batch_approve_tasks_tool",
+                    "name": "batch_approve_tasks",
                     "description": "Batch approve TODO2 tasks that don't need clarification, moving them from Review to Todo status",
                     "category": "task_management",
                     "priority": "high",
@@ -117,7 +117,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["status", "new_status", "clarification_none", "filter_tag", "task_ids", "dry_run"]
                 },
                 {
-                    "name": "run_nightly_task_automation_tool",
+                    "name": "run_nightly_task_automation",
                     "description": "Automatically execute background-capable TODO2 tasks in parallel across multiple hosts. Moves interactive tasks to Review status",
                     "category": "automation",
                     "priority": "high",
@@ -125,7 +125,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["max_tasks_per_host", "max_parallel_tasks", "priority_filter", "tag_filter", "dry_run"]
                 },
                 {
-                    "name": "check_working_copy_health_tool",
+                    "name": "check_working_copy_health",
                     "description": "Check git working copy status across all agents and runners",
                     "category": "system",
                     "priority": "medium",
@@ -133,7 +133,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["agent_name", "check_remote"]
                 },
                 {
-                    "name": "resolve_task_clarification_tool",
+                    "name": "resolve_task_clarification",
                     "description": "Resolve a single task clarification by updating the task description with your decision",
                     "category": "task_management",
                     "priority": "medium",
@@ -141,7 +141,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["task_id", "clarification", "decision", "move_to_todo", "dry_run"]
                 },
                 {
-                    "name": "resolve_multiple_clarifications_tool",
+                    "name": "resolve_multiple_clarifications",
                     "description": "Resolve multiple task clarifications from a JSON string of decisions",
                     "category": "task_management",
                     "priority": "medium",
@@ -149,7 +149,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["decisions", "move_to_todo", "dry_run"]
                 },
                 {
-                    "name": "list_tasks_awaiting_clarification_tool",
+                    "name": "list_tasks_awaiting_clarification",
                     "description": "List all tasks in Review status that are awaiting clarification/decisions",
                     "category": "task_management",
                     "priority": "medium",
@@ -157,7 +157,7 @@ def get_tools_list_resource() -> str:
                     "parameters": []
                 },
                 {
-                    "name": "setup_git_hooks_tool",
+                    "name": "setup_git_hooks",
                     "description": "Setup git hooks for automatic automation tool execution",
                     "category": "system",
                     "priority": "medium",
@@ -165,7 +165,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["hooks", "install", "dry_run"]
                 },
                 {
-                    "name": "setup_pattern_triggers_tool",
+                    "name": "setup_pattern_triggers",
                     "description": "Setup pattern-based automation triggers for automatic tool execution",
                     "category": "automation",
                     "priority": "medium",
@@ -173,7 +173,7 @@ def get_tools_list_resource() -> str:
                     "parameters": ["patterns", "config_path", "install", "dry_run"]
                 },
                 {
-                    "name": "simplify_rules_tool",
+                    "name": "simplify_rules",
                     "description": "Automatically simplify rules based on automation capabilities",
                     "category": "maintenance",
                     "priority": "low",

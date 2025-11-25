@@ -37,7 +37,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
-        super().__init__(config, "Dependency Security Scan"), project_root)
+        super().__init__(config, "Dependency Security Scan", project_root)
         self.config = config
         self.scan_configs = config.get('scan_configs', {})
         self.severity_levels = config.get('severity_levels', {})

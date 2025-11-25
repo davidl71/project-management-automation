@@ -512,7 +512,7 @@ if mcp:
     if TOOLS_AVAILABLE:
 
         @mcp.tool()
-        def check_documentation_health_tool(
+        def check_documentation_health(
             output_path: Optional[str] = None, create_tasks: bool = True
         ) -> str:
             """
@@ -530,7 +530,7 @@ if mcp:
             return check_documentation_health(output_path, create_tasks)
 
         @mcp.tool()
-        def analyze_todo2_alignment_tool(
+        def analyze_todo2_alignment(
             create_followup_tasks: bool = True, output_path: Optional[str] = None
         ) -> str:
             """
@@ -546,7 +546,7 @@ if mcp:
             return analyze_todo2_alignment(create_followup_tasks, output_path)
 
         @mcp.tool()
-        def detect_duplicate_tasks_tool(
+        def detect_duplicate_tasks(
             similarity_threshold: float = 0.85,
             auto_fix: bool = False,
             output_path: Optional[str] = None,
@@ -564,7 +564,7 @@ if mcp:
             return detect_duplicate_tasks(similarity_threshold, auto_fix, output_path)
 
         @mcp.tool()
-        def scan_dependency_security_tool(
+        def scan_dependency_security(
             languages: Optional[List[str]] = None, config_path: Optional[str] = None
         ) -> str:
             """
@@ -580,7 +580,7 @@ if mcp:
             return scan_dependency_security(languages, config_path)
 
         @mcp.tool()
-        def find_automation_opportunities_tool(
+        def find_automation_opportunities(
             min_value_score: float = 0.7, output_path: Optional[str] = None
         ) -> str:
             """
@@ -591,7 +591,7 @@ if mcp:
             return find_automation_opportunities(min_value_score, output_path)
 
         @mcp.tool()
-        def sync_todo_tasks_tool(
+        def sync_todo_tasks(
             dry_run: bool = False, output_path: Optional[str] = None
         ) -> str:
             """
@@ -602,7 +602,7 @@ if mcp:
             return sync_todo_tasks(dry_run, output_path)
 
         @mcp.tool()
-        def review_pwa_config_tool(
+        def review_pwa_config(
             output_path: Optional[str] = None, config_path: Optional[str] = None
         ) -> str:
             """
@@ -613,7 +613,7 @@ if mcp:
             return review_pwa_config(output_path, config_path)
 
         @mcp.tool()
-        def add_external_tool_hints_tool(
+        def add_external_tool_hints(
             dry_run: bool = False,
             output_path: Optional[str] = None,
             min_file_size: int = 50
@@ -630,7 +630,7 @@ if mcp:
             return add_external_tool_hints(dry_run, output_path, min_file_size)
 
         @mcp.tool()
-        def run_daily_automation_tool(
+        def run_daily_automation(
             tasks: Optional[List[str]] = None,
             include_slow: bool = False,
             dry_run: bool = False,
@@ -654,7 +654,7 @@ if mcp:
             return run_daily_automation(tasks, include_slow, dry_run, output_path)
 
         @mcp.tool()
-        def validate_ci_cd_workflow_tool(
+        def validate_ci_cd_workflow(
             workflow_path: Optional[str] = None,
             check_runners: bool = True,
             output_path: Optional[str] = None
@@ -672,7 +672,7 @@ if mcp:
             return validate_ci_cd_workflow(workflow_path, check_runners, output_path)
 
         @mcp.tool()
-        def batch_approve_tasks_tool(
+        def batch_approve_tasks(
             status: str = "Review",
             new_status: str = "Todo",
             clarification_none: bool = True,
@@ -713,7 +713,7 @@ if mcp:
             return json.dumps(result, indent=2)
 
         @mcp.tool()
-        def run_nightly_task_automation_tool(
+        def run_nightly_task_automation(
             max_tasks_per_host: int = 5,
             max_parallel_tasks: int = 10,
             priority_filter: Optional[str] = None,
@@ -743,7 +743,7 @@ if mcp:
             return json.dumps(result, indent=2)
 
         @mcp.tool()
-        def check_working_copy_health_tool(
+        def check_working_copy_health(
             agent_name: Optional[str] = None,
             check_remote: bool = True
         ) -> str:
@@ -774,7 +774,7 @@ if mcp:
             return json.dumps(result, indent=2)
 
         @mcp.tool()
-        def resolve_task_clarification_tool(
+        def resolve_task_clarification(
             task_id: str,
             clarification: str,
             decision: str,
@@ -809,7 +809,7 @@ if mcp:
             return json.dumps(result, indent=2)
 
         @mcp.tool()
-        def resolve_multiple_clarifications_tool(
+        def resolve_multiple_clarifications(
             decisions: str,
             move_to_todo: bool = True,
             dry_run: bool = False
@@ -846,7 +846,7 @@ if mcp:
             return json.dumps(result, indent=2)
 
         @mcp.tool()
-        def list_tasks_awaiting_clarification_tool() -> str:
+        def list_tasks_awaiting_clarification() -> str:
             """
             [HINT: List tasks needing clarification. Returns all tasks in Review status with their clarification questions.]
 
@@ -861,7 +861,7 @@ if mcp:
             return json.dumps(result, indent=2)
 
         @mcp.tool()
-        def setup_git_hooks_tool(
+        def setup_git_hooks(
             hooks: Optional[List[str]] = None,
             install: bool = True,
             dry_run: bool = False
@@ -890,7 +890,7 @@ if mcp:
             return setup_git_hooks(hooks, install, dry_run)
 
         @mcp.tool()
-        def setup_pattern_triggers_tool(
+        def setup_pattern_triggers(
             patterns: Optional[str] = None,
             config_path: Optional[str] = None,
             install: bool = True,
@@ -931,7 +931,7 @@ if mcp:
             return setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
 
         @mcp.tool()
-        def simplify_rules_tool(
+        def simplify_rules(
             rule_files: Optional[str] = None,
             dry_run: bool = True,
             output_dir: Optional[str] = None
