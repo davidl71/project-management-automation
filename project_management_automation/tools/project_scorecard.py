@@ -13,18 +13,22 @@ from typing import Any
 
 from ..utils import find_project_root
 
-# Optional: Pistis Sophia daily wisdom
+# Optional: Multi-source wisdom system
 try:
-    from .pistis_sophia_quotes import (
-        get_daily_wisdom, 
-        format_wisdom_ascii, 
-        format_wisdom_markdown,
-        check_first_run_and_prompt
+    from .wisdom_sources import (
+        get_wisdom,
+        format_wisdom_text,
+        load_config as load_wisdom_config,
+        save_config as save_wisdom_config,
+        list_available_sources,
     )
     WISDOM_AVAILABLE = True
 except ImportError:
     WISDOM_AVAILABLE = False
-    check_first_run_and_prompt = lambda: None
+    get_wisdom = lambda x, **kwargs: None
+    format_wisdom_text = lambda x: ""
+    load_wisdom_config = lambda: {"disabled": True}
+    list_available_sources = lambda: []
 
 
 def generate_project_scorecard(
@@ -716,16 +720,24 @@ def _format_text(data: dict) -> str:
     
     lines.append("\n" + "=" * 70)
     
-    # Add Pistis Sophia wisdom if available
+    # Add daily wisdom if available and enabled
     if WISDOM_AVAILABLE:
-        # Check for first run
-        first_run_msg = check_first_run_and_prompt()
-        if first_run_msg:
-            lines.append(first_run_msg)
-        
-        wisdom = get_daily_wisdom(data['overall_score'])
-        if wisdom:
-            lines.append(format_wisdom_ascii(wisdom))
+        wisdom_config = load_wisdom_config()
+        if not wisdom_config.get("disabled"):
+            # Check for first run
+            project_root = find_project_root()
+            marker_file = project_root / '.exarp_wisdom_seen'
+            if not marker_file.exists():
+                try:
+                    from datetime import datetime
+                    marker_file.write_text(f"First seen: {datetime.now().isoformat()}\n")
+                    lines.append(_first_run_wisdom_prompt())
+                except:
+                    pass
+            
+            wisdom = get_wisdom(data['overall_score'])
+            if wisdom:
+                lines.append(format_wisdom_text(wisdom))
     
     return "\n".join(lines)
 
@@ -783,11 +795,69 @@ def _format_markdown(data: dict) -> str:
             icon = {'critical': '🔴', 'high': '🟠', 'medium': '🟡'}.get(rec['priority'], '•')
             lines.append(f"- {icon} **{rec['area']}:** {rec['action']} ({rec['impact']})")
     
-    # Add Pistis Sophia wisdom if available
+    # Add daily wisdom if available and enabled
     if WISDOM_AVAILABLE:
-        wisdom = get_daily_wisdom(data['overall_score'])
-        if wisdom:
-            lines.append(format_wisdom_markdown(wisdom))
+        wisdom_config = load_wisdom_config()
+        if not wisdom_config.get("disabled"):
+            wisdom = get_wisdom(data['overall_score'])
+            if wisdom:
+                lines.append(_format_wisdom_markdown(wisdom))
     
     return "\n".join(lines)
+
+
+def _first_run_wisdom_prompt() -> str:
+    """First-run message introducing the wisdom feature."""
+    sources = list_available_sources() if WISDOM_AVAILABLE else []
+    source_list = ", ".join([s['id'] for s in sources[:5]]) + "..." if len(sources) > 5 else ", ".join([s['id'] for s in sources])
+    
+    return f"""
+┌──────────────────────────────────────────────────────────────────────┐
+│  ✨ NEW FEATURE: Daily Wisdom from Public Domain Texts               │
+├──────────────────────────────────────────────────────────────────────┤
+│  Exarp now includes inspirational quotes matched to your project's   │
+│  health status. Multiple wisdom sources are available:               │
+│                                                                      │
+│  📚 Sources: {source_list:<52} │
+│                                                                      │
+│  Change source: export EXARP_WISDOM_SOURCE=<source>                  │
+│  Example:       EXARP_WISDOM_SOURCE=bofh  (tech humor)               │
+│                 EXARP_WISDOM_SOURCE=stoic (resilience)               │
+│                 EXARP_WISDOM_SOURCE=tao   (balance)                  │
+│                                                                      │
+│  To disable: export EXARP_DISABLE_WISDOM=1                           │
+│              or create .exarp_no_wisdom file in project root         │
+└──────────────────────────────────────────────────────────────────────┘
+"""
+
+
+def _format_wisdom_markdown(wisdom: dict) -> str:
+    """Format wisdom as Markdown."""
+    if wisdom is None:
+        return ""
+    
+    return f"""
+---
+
+### {wisdom.get('wisdom_icon', '📜')} {wisdom.get('wisdom_source', 'Daily Wisdom')}
+
+**Project Status:** {wisdom.get('aeon_level', 'Unknown')}
+
+> *"{wisdom.get('quote', '')}"*
+> 
+> — {wisdom.get('source', '')}
+
+💡 **{wisdom.get('encouragement', '')}**
+
+<details>
+<summary>ℹ️ About this quote</summary>
+
+- **Health Score:** {wisdom.get('health_score', 0):.1f}%
+- **Change source:** `EXARP_WISDOM_SOURCE=bofh|tao|stoic|bible|murphy|...`
+- **Disable:** `export EXARP_DISABLE_WISDOM=1` or create `.exarp_no_wisdom` file.
+
+</details>
+
+---
+"""
 
