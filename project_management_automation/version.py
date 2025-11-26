@@ -26,7 +26,7 @@ from typing import Dict, Optional, Tuple
 
 # Base version - increment this for releases
 # Format: MAJOR.MINOR.PATCH
-BASE_VERSION = "0.1.16"
+BASE_VERSION = "0.1.17"
 
 
 def get_epoch() -> int:
@@ -267,8 +267,8 @@ def update_base_version(new_version: str) -> bool:
     
     # Replace BASE_VERSION
     new_content = re.sub(
-        r'BASE_VERSION = "[^"]+"',
-        f'BASE_VERSION = "{new_version}"',
+        r'BASE_VERSION = "0.1.17"]+"',
+        f'BASE_VERSION = "0.1.17"',
         content
     )
     
