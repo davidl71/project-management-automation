@@ -134,6 +134,110 @@ Run these tools weekly:
 
 This maintains project health and keeps systems in sync."""
 
+# Daily Workflow Prompts
+
+DAILY_CHECKIN = """Daily check-in workflow for project health monitoring.
+
+Run these tools every morning (5 min):
+1. server_status - Verify server is operational
+2. list_tasks_awaiting_clarification - Identify any blockers needing decisions
+3. check_working_copy_health - Verify Git status across agents
+
+This gives you a quick overview of project state before starting work.
+
+For automated daily maintenance, use run_daily_automation_tool which handles:
+- Documentation health checks
+- Task alignment verification
+- Duplicate detection"""
+
+# Sprint Workflow Prompts
+
+SPRINT_START = """Sprint start workflow for preparing a clean backlog.
+
+Run these tools at the beginning of each sprint:
+1. detect_duplicate_tasks_tool - Clean up duplicate tasks
+2. analyze_todo2_alignment_tool - Ensure tasks align with goals
+3. batch_approve_tasks_tool - Queue ready tasks for automation
+4. list_tasks_awaiting_clarification - Identify blocked tasks
+
+This ensures a clean, prioritized backlog before starting sprint work."""
+
+SPRINT_END = """Sprint end workflow for quality assurance and documentation.
+
+Run these tools at the end of each sprint:
+1. run_tests_tool with coverage=true - Verify test coverage
+2. analyze_test_coverage_tool - Identify coverage gaps
+3. check_documentation_health_tool - Ensure docs are updated
+4. scan_dependency_security_tool - Security check before release
+
+This ensures quality standards are met before sprint completion."""
+
+# Task Review Workflow
+
+TASK_REVIEW = """Comprehensive task review workflow for backlog hygiene.
+
+Run monthly or after major project changes:
+1. detect_duplicate_tasks_tool - Find and merge duplicates
+2. analyze_todo2_alignment_tool - Check task-goal alignment  
+3. list_tasks_awaiting_clarification - Review blocked tasks
+4. Review manually for obsolete/stale tasks
+5. batch_approve_tasks_tool - Queue reviewed tasks
+
+Categories to evaluate:
+- Duplicates → Merge or remove
+- Misaligned → Re-scope or cancel
+- Obsolete → Cancel if work already done
+- Stale (>30 days) → Review priority or cancel
+- Blocked → Resolve dependencies
+
+Future: review_task_relevance_tool and infer_task_completion_tool will automate steps 4."""
+
+# Project Health Prompt
+
+PROJECT_HEALTH = """Comprehensive project health assessment.
+
+Run these tools for a full health check:
+1. server_status - Server operational status
+2. check_documentation_health_tool - Documentation score
+3. run_tests_tool coverage=true - Test results and coverage
+4. analyze_test_coverage_tool - Coverage gap analysis
+5. scan_dependency_security_tool - Security vulnerabilities
+6. validate_ci_cd_workflow_tool - CI/CD pipeline status
+7. analyze_todo2_alignment_tool - Task alignment with goals
+
+This provides a complete picture of:
+- Code quality (tests, coverage)
+- Documentation health
+- Security posture
+- CI/CD reliability
+- Project management state
+
+Use this before major releases or quarterly reviews."""
+
+# Automation Setup Prompt
+
+AUTOMATION_SETUP = """One-time automation setup workflow.
+
+Run these tools to enable automated project management:
+
+1. setup_git_hooks_tool - Configure automatic checks on commits
+   - pre-commit: docs health, security scan (blocking)
+   - pre-push: task alignment, comprehensive security (blocking)
+   - post-commit: automation discovery (non-blocking)
+   - post-merge: duplicate detection, task sync (non-blocking)
+
+2. setup_pattern_triggers_tool - Configure file change triggers
+   - docs/**/*.md → documentation health check
+   - src/**/*.py → run tests
+   - requirements.txt → security scan
+
+3. Configure cron jobs (manual):
+   - Daily: run_daily_automation
+   - Weekly: scan_dependency_security
+   - See scripts/cron/*.sh for examples
+
+After setup, Exarp will automatically maintain project health."""
+
 # Prompt Metadata
 
 PROMPTS = {
@@ -205,6 +309,37 @@ PROMPTS = {
     "weekly_maintenance": {
         "name": "Weekly Maintenance Workflow",
         "description": WEEKLY_MAINTENANCE,
+        "arguments": []
+    },
+    # New workflow prompts
+    "daily_checkin": {
+        "name": "Daily Check-in Workflow",
+        "description": DAILY_CHECKIN,
+        "arguments": []
+    },
+    "sprint_start": {
+        "name": "Sprint Start Workflow",
+        "description": SPRINT_START,
+        "arguments": []
+    },
+    "sprint_end": {
+        "name": "Sprint End Workflow",
+        "description": SPRINT_END,
+        "arguments": []
+    },
+    "task_review": {
+        "name": "Task Review Workflow",
+        "description": TASK_REVIEW,
+        "arguments": []
+    },
+    "project_health": {
+        "name": "Project Health Assessment",
+        "description": PROJECT_HEALTH,
+        "arguments": []
+    },
+    "automation_setup": {
+        "name": "Automation Setup Workflow",
+        "description": AUTOMATION_SETUP,
         "arguments": []
     },
 }

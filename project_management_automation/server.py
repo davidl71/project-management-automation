@@ -1096,6 +1096,13 @@ if mcp:
                 PRE_SPRINT_CLEANUP,
                 POST_IMPLEMENTATION_REVIEW,
                 WEEKLY_MAINTENANCE,
+                # New workflow prompts
+                DAILY_CHECKIN,
+                SPRINT_START,
+                SPRINT_END,
+                TASK_REVIEW,
+                PROJECT_HEALTH,
+                AUTOMATION_SETUP,
             )
         except ImportError:
             # Fallback to absolute imports (when run as script)
@@ -1114,6 +1121,13 @@ if mcp:
                 PRE_SPRINT_CLEANUP,
                 POST_IMPLEMENTATION_REVIEW,
                 WEEKLY_MAINTENANCE,
+                # New workflow prompts
+                DAILY_CHECKIN,
+                SPRINT_START,
+                SPRINT_END,
+                TASK_REVIEW,
+                PROJECT_HEALTH,
+                AUTOMATION_SETUP,
             )
 
         @mcp.prompt()
@@ -1186,8 +1200,39 @@ if mcp:
             """Weekly maintenance workflow: docs, duplicates, security, sync."""
             return WEEKLY_MAINTENANCE
 
+        # New workflow prompts
+        @mcp.prompt()
+        def daily_checkin() -> str:
+            """Daily check-in workflow: server status, blockers, git health."""
+            return DAILY_CHECKIN
+
+        @mcp.prompt()
+        def sprint_start() -> str:
+            """Sprint start workflow: clean backlog, align tasks, queue work."""
+            return SPRINT_START
+
+        @mcp.prompt()
+        def sprint_end() -> str:
+            """Sprint end workflow: test coverage, docs, security check."""
+            return SPRINT_END
+
+        @mcp.prompt()
+        def task_review() -> str:
+            """Comprehensive task review: duplicates, alignment, staleness."""
+            return TASK_REVIEW
+
+        @mcp.prompt()
+        def project_health() -> str:
+            """Full project health assessment: code, docs, security, CI/CD."""
+            return PROJECT_HEALTH
+
+        @mcp.prompt()
+        def automation_setup() -> str:
+            """One-time automation setup: git hooks, triggers, cron."""
+            return AUTOMATION_SETUP
+
         PROMPTS_AVAILABLE = True
-        logger.info("Registered 14 prompts successfully")
+        logger.info("Registered 20 prompts successfully")
     except ImportError as e:
         PROMPTS_AVAILABLE = False
         logger.warning(f"Prompts not available: {e}")
