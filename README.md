@@ -1,203 +1,145 @@
-# Project Management Automation MCP Server
+# Exarp
 
-**Version:** 0.1.0
-**Status:** Phase 1 Complete - Core Framework Ready
-**License:** [MIT License](LICENSE)
-**MCP Server Name:** `exarp` (configured in `.cursor/mcp.json`)
+**MCP Server for Project Management Automation**
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+[![PyPI version](https://badge.fury.io/py/exarp.svg)](https://pypi.org/project/exarp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Overview
-
-MCP server exposing project management automation tools built on `IntelligentAutomationBase`. Provides AI assistants with access to documentation health checks, Todo2 analysis, duplicate detection, security scanning, and more.
-
-**Note**: This server is configured as **"exarp"** in Cursor's MCP configuration (`.cursor/mcp.json`). The directory name is `project-management-automation`, but it's accessible via the "exarp" identifier in Cursor.
-
-## Complementary MCP Servers
-
-The Exarp server works best when used alongside these complementary MCP servers:
-
-- **`tractatus_thinking`** - For structural analysis and logical decomposition of complex problems
-  - Use BEFORE Exarp tools to understand WHAT needs to be analyzed
-  - Breaks down concepts into atomic components
-  - Reveals multiplicative dependencies
-
-- **`sequential_thinking`** - For converting structural understanding into implementation workflows
-  - Use AFTER tractatus_thinking analysis to plan HOW to proceed
-  - Converts Exarp analysis results into actionable steps
-  - Creates step-by-step implementation plans
-
-**Recommended Workflow:**
-1. Use **tractatus_thinking** to understand the structure of a problem
-2. Use **Exarp** tools to analyze and automate project management tasks
-3. Use **sequential_thinking** to convert analysis results into implementation workflows
-
-See `.cursor/rules/tractatus-thinking.mdc` and `.cursor/rules/sequential-thinking.mdc` for detailed usage guidelines.
-
-## Phase 1 Status
-
-✅ **Core Framework:** Complete
-✅ **Package Configuration:** Complete
-✅ **Error Handling:** Complete
-⏳ **Tool Implementation:** Phase 2
-⏳ **Resource Handlers:** Phase 3
-⏳ **Testing:** Phase 4
-
-## Installation
+## Install
 
 ```bash
-cd project-management-automation
-pip install -e .
+pip install exarp
 ```
 
-Or install MCP dependency:
-```bash
-pip install mcp
-```
-
-## Structure
-
-```
-project-management-automation/
-├── __init__.py
-├── server.py              # Main MCP server (Phase 1 complete)
-├── error_handler.py       # Error handling & logging (Phase 1 complete)
-├── tools/                 # Tool implementations (Phase 2)
-│   ├── __init__.py
-│   ├── docs_health.py
-│   ├── todo2_alignment.py
-│   └── ...
-├── resources/             # Resource handlers (Phase 3)
-│   ├── __init__.py
-│   ├── status.py
-│   └── ...
-└── pyproject.toml         # Package config (Phase 1 complete)
-```
-
-## Usage
-
-### Running the Server
+## Quick Start
 
 ```bash
+# Run the MCP server
+exarp
+
+# Or use aliases
+pma
 python -m project_management_automation.server
 ```
 
-### MCP Configuration
+## MCP Client Configuration
 
-Add to `.cursor/mcp.json` as **"exarp"**:
+Add to your MCP client config (Cursor, Claude Desktop, VS Code):
 
 ```json
 {
   "mcpServers": {
     "exarp": {
-      "command": "/path/to/project-management-automation/run_server.sh",
-      "args": [],
-      "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
+      "command": "exarp",
+      "args": []
     }
   }
 }
 ```
 
-**Note**: Replace `/path/to/` with your actual installation path.
+## Features
 
-**Note**: The server is configured with the identifier "exarp" for easier reference in Cursor prompts and documentation.
+### 🏥 Project Health
+| Tool | Description |
+|------|-------------|
+| `server_status` | Server status, version, tools count |
+| `project_scorecard` | Comprehensive health metrics (codebase, tests, tasks, docs, security) |
+| `project_overview` | One-page summary (text, markdown, HTML, slides) |
 
-## Tools (Phase 2)
+### 📚 Documentation
+| Tool | Description |
+|------|-------------|
+| `check_documentation_health` | Analyze docs, find broken links, validate formatting |
+| `add_external_tool_hints` | Add Context7 hints to documentation |
 
-Will expose:
-- `check_documentation_health` - Analyze docs, find broken refs
-- `analyze_todo2_alignment` - Check task alignment
-- `detect_duplicate_tasks` - Find duplicate tasks
-- `scan_dependency_security` - Security vulnerability scan
-- `find_automation_opportunities` - Discover new automations
-- `sync_todo_tasks` - Sync tasks across systems
-- `review_pwa_config` - Validate PWA setup
+### ✅ Task Management
+| Tool | Description |
+|------|-------------|
+| `analyze_todo2_alignment` | Check task alignment with PROJECT_GOALS.md |
+| `detect_duplicate_tasks` | Find and merge duplicate tasks |
+| `consolidate_tags` | Standardize task tags |
+| `task_hierarchy_analyzer` | Recommend task hierarchies |
+| `batch_approve_tasks` | Batch approve tasks without clarification needed |
+| `sync_todo_tasks` | Sync between TODO table and Todo2 |
 
-## Resources (Phase 3)
+### 🔒 Security
+| Tool | Description |
+|------|-------------|
+| `scan_dependency_security` | Scan Python/Rust/npm for vulnerabilities |
 
-Will expose:
-- `automation://status` - Server status
-- `automation://history` - Execution history
-- `automation://list` - Available tools
+### 🤖 Automation
+| Tool | Description |
+|------|-------------|
+| `run_daily_automation` | Daily maintenance (docs, alignment, duplicates) |
+| `run_nightly_task_automation` | Execute background tasks in parallel |
+| `sprint_automation` | Full sprint with subtask extraction |
+| `find_automation_opportunities` | Discover automation candidates |
 
-## Error Handling
+### 🔧 CI/CD & Git
+| Tool | Description |
+|------|-------------|
+| `validate_ci_cd_workflow` | Validate GitHub Actions workflows |
+| `setup_git_hooks` | Configure pre-commit/pre-push hooks |
+| `setup_pattern_triggers` | File/git/task pattern automation |
+| `check_working_copy_health` | Git status across agents |
 
-Centralized error handling via `error_handler.py`:
-- Standard error codes
-- Structured error responses
-- Execution logging
-- Graceful degradation
+### 🧪 Testing
+| Tool | Description |
+|------|-------------|
+| `run_tests` | Execute pytest/unittest/ctest |
+| `analyze_test_coverage` | Coverage reports and gap analysis |
 
-## Development
+## ZSH Plugin
 
-### Phase 1 Complete ✅
-- Core server framework
-- Package configuration
-- Error handling infrastructure
-
-### Next Steps (Phase 2)
-- Implement tool wrappers
-- Register tools with MCP server
-- Test tool execution
-
-## Installation
-
-### Option 1: Local Development (Editable Install)
-
-```bash
-cd project-management-automation
-pip install -e .
-```
-
-Or use the helper script:
-```bash
-./scripts/build_and_install_local.sh
-```
-
-### Option 2: Install from Git Repository
+For shell integration with context-aware project health:
 
 ```bash
-# From private repository (SSH - recommended)
-pip install git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.0
+# Add to ~/.zshrc
+source /path/to/exarp.plugin.zsh
 
-# From private repository (HTTPS with token)
-pip install git+https://token@github.com/davidl71/project-management-automation.git@v0.1.0
-
-# Latest from main branch
-pip install git+ssh://git@github.com/davidl71/project-management-automation.git@main
+# Commands
+xl   # Quick context (no Python needed)
+xc   # Full context with score
+xs   # Project scorecard
+xo   # Project overview
+xt   # List pending tasks
+xp   # Scan for projects
+motd # Daily wisdom
 ```
 
-Or use the helper script:
+See `shell/exarp.plugin.zsh` for full documentation.
+
+## Daily Wisdom
+
+Exarp includes optional daily wisdom quotes based on project health:
+
 ```bash
-export EXARP_REPO_URL="git@github.com:davidl71/project-management-automation.git"
-export EXARP_VERSION="v0.1.0"
-./scripts/install_from_git.sh
+# Configure source
+export EXARP_WISDOM_SOURCE=stoic  # or: bofh, tao, bible, murphy, shakespeare, sefaria
+
+# Disable
+export EXARP_WISDOM_DISABLED=1
 ```
 
-### Option 3: PyPI (Future)
+## Man Pages
 
 ```bash
-pip install project-management-automation-mcp
+man exarp       # MCP server documentation
+man exarp-zsh   # ZSH plugin documentation
 ```
 
-**Note**: Currently using private/local repository. PyPI publication planned for future release.
+## Requirements
 
-See [PRIVATE_REPOSITORY_SETUP.md](docs/PRIVATE_REPOSITORY_SETUP.md) for detailed setup instructions.
+- Python 3.9+
+- FastMCP 2.0+
+- Pydantic 2.0+
 
-## Dependencies
+## Links
 
-The Exarp server works best with complementary MCP servers:
-- **tractatus_thinking** - For structural analysis (use BEFORE Exarp)
-- **sequential_thinking** - For implementation workflows (use AFTER Exarp)
-
-See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed integration guide.
+- **PyPI**: https://pypi.org/project/exarp/
+- **GitHub**: https://github.com/davidl71/project-management-automation
+- **Issues**: https://github.com/davidl71/project-management-automation/issues
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## References
-
-- [Dependencies](DEPENDENCIES.md) - Complementary MCP servers
-- [Sprint Automation Proposal](docs/SPRINT_AUTOMATION_PROPOSAL.md)
-- [Testing Tools Proposal](docs/TESTING_TOOLS_PROPOSAL.md)
+MIT License - see [LICENSE](LICENSE)
