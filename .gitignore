@@ -26,6 +26,7 @@ venv/
 env/
 ENV/
 .venv
+.build-env/
 
 # IDE
 .vscode/
@@ -52,6 +53,10 @@ Thumbs.db
 *.bak
 *.tmp
 .history/
+
+# Local task data - kept tracked for project task sharing
+# .agentic-tools-mcp/
+# .todo2/
 
 
 # OpenMemory - IDE/Assistant specific rules
