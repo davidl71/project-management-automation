@@ -303,8 +303,8 @@ Configuration: See `.github/workflows/exarp-checks.yml`
 - Never log sensitive information
 - **Automated checks**: Dependency security scanning runs automatically via exarp
 - **Manual override**: Use `scan_dependency_security_tool` for on-demand scans
-- Always use paper trading port (7497) for testing
-- Gate live trading behind explicit configuration flags
+- Always use test port for testing
+- Gate production behind explicit configuration flags
 - Validate all configuration before use
 ```
 

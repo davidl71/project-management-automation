@@ -94,7 +94,7 @@ async def get_todo2_tasks():
             # List tasks
             result = await session.list_tools()
             tasks = await session.call_tool("list_todos", {
-                "project_id": "davidl71/ib_box_spread_full_universal"
+                "project_id": "davidl71/project-management-automation"
             })
             return tasks
 ```

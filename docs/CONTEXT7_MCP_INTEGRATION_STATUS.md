@@ -17,7 +17,7 @@
 ### ✅ What's Available
 
 **Context7 MCP Server**: `@upstash/context7-mcp`  
-**Configuration**: Configured in main `ib_box_spread_full_universal` project  
+**Configuration**: Configured in main `project-management-automation` project  
 **Status**: ✅ **Working** - Successfully called `resolve-library-id` and `get-library-docs`
 
 ### ❌ What's Missing

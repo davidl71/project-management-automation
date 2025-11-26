@@ -48,7 +48,7 @@
     "args": [
       "-y",
       "@modelcontextprotocol/server-filesystem",
-      "/Volumes/SSD1_APFS/ib_box_spread_full_universal"
+      "/Volumes/SSD1_APFS/project-management-automation"
     ],
     "description": "File system operations for reading, writing, and managing project files"
   }

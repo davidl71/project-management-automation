@@ -243,7 +243,7 @@ sprint_automation(
 - Test Coverage: 78% (below 80% threshold)
 
 ## Blockers
-1. T-123: Design decision needed (multi-broker architecture)
+1. T-123: Design decision needed (multi-service architecture)
 2. T-124: User preference required (UI framework choice)
 3. T-125: Clarification needed (API rate limits)
 

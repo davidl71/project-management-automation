@@ -27,7 +27,7 @@ The server is configured in `.cursor/mcp.json`:
 {
   "mcpServers": {
     "exarp": {
-      "command": "/Users/davidl/Projects/Trading/ib_box_spread_full_universal/mcp-servers/project-management-automation/run_server.sh",
+      "command": ".//run_server.sh",
       "args": [],
       "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
     }

@@ -203,7 +203,7 @@ async def _load_todo2_tasks(self) -> List[Dict]:
     mcp_client = get_mcp_client(self.project_root)
     
     # Get project ID from config or detect from project root
-    project_id = self._get_project_id()  # e.g., "davidl71/ib_box_spread_full_universal"
+    project_id = self._get_project_id()  # e.g., "davidl71/project-management-automation"
     
     tasks = await mcp_client.list_todos(project_id)
     return tasks

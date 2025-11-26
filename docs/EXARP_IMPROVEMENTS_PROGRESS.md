@@ -17,7 +17,7 @@
   - Never use hardcoded absolute paths
   - Never use deprecated APIs
   - Never modify third-party code directly
-  - Never skip tests for critical trading/risk code
+  - Never skip tests for critical critical code
 - ✅ Updated "Before Committing" section to reference exarp automation
 - ✅ Updated command references to use `.cursor/commands.json` format
 - ✅ Added references to automation documentation

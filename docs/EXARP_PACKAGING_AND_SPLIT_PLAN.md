@@ -20,7 +20,7 @@
 ### Existing Split Tasks
 - **T-302**: Extract MCP servers repository (mentioned in PROJECT_SPLIT_TODO2_PLAN.md)
 - **Status**: Not yet implemented
-- **Target**: `trading-mcp-servers` or `project-management-automation` repository
+- **Target**: `mcp-servers` or `project-management-automation` repository
 
 ### Multi-Machine Usage
 - User needs exarp on multiple machines

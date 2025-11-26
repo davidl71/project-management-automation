@@ -17,7 +17,7 @@
 ### ✅ What's Available
 
 **Sequential Thinking MCP Server**: `@modelcontextprotocol/server-sequential-thinking`  
-**Configuration**: Configured in main `ib_box_spread_full_universal` project (global config)  
+**Configuration**: Configured in main `project-management-automation` project (global config)  
 **Status**: ✅ **Configured** - Available but not integrated programmatically
 
 ### ❌ What's Missing
