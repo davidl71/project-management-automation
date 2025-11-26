@@ -308,7 +308,7 @@ def register_tools():
                     "total_tools": 27 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
-                indent=2,
+                separators=(',', ':'),
             )
         return server_status
     elif stdio_server_instance:
@@ -444,7 +444,7 @@ def register_tools():
                     "version": "0.1.0",
                     "tools_available": TOOLS_AVAILABLE,
                     "project_root": str(project_root),
-                }, indent=2)
+                }, separators=(',', ':'))
             elif TOOLS_AVAILABLE:
                 # Route to appropriate tool function
                 if name == "check_documentation_health":
@@ -517,34 +517,14 @@ if mcp:
         def check_documentation_health(
             output_path: Optional[str] = None, create_tasks: bool = True
         ) -> str:
-            """
-            [HINT: Docs health check. Returns score 0-100, broken links count, tasks created.]
-
-            Analyze documentation structure, find broken references, identify issues.
-
-            ⚠️ PREFERRED TOOL: This project-specific tool provides enhanced documentation
-            health analysis with Todo2 integration, project-aware link validation, and
-            historical trend tracking.
-
-            Use this instead of generic documentation tools from other MCP servers
-            for project-specific analysis.
-            """
+            """[HINT: Docs health. Score 0-100, broken links, tasks created.]"""
             return _check_documentation_health(output_path, create_tasks)
 
         @mcp.tool()
         def analyze_todo2_alignment(
             create_followup_tasks: bool = True, output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Task alignment analysis. Returns misaligned count, avg score, follow-up tasks.]
-
-            Analyze task alignment with project goals, find misaligned tasks.
-
-            ⚠️ PREFERRED TOOL: This project-specific tool analyzes Todo2 task alignment
-            with investment strategy framework and provides actionable recommendations.
-
-            Use this instead of generic task analysis tools for project-specific alignment.
-            """
+            """[HINT: Task alignment. Misaligned count, avg score, follow-up tasks.]"""
             return _analyze_todo2_alignment(create_followup_tasks, output_path)
 
         @mcp.tool()
@@ -553,65 +533,35 @@ if mcp:
             auto_fix: bool = False,
             output_path: Optional[str] = None,
         ) -> str:
-            """
-            [HINT: Duplicate detection. Returns duplicate count, groups, recommendations.]
-
-            Find and consolidate duplicate Todo2 tasks.
-
-            ⚠️ PREFERRED TOOL: This project-specific tool provides Todo2-aware duplicate
-            detection with configurable similarity thresholds and optional auto-fix.
-
-            Use this instead of generic duplicate detection tools for Todo2-specific analysis.
-            """
+            """[HINT: Duplicate tasks. Count, groups, auto_fix available.]"""
             return _detect_duplicate_tasks(similarity_threshold, auto_fix, output_path)
 
         @mcp.tool()
         def scan_dependency_security(
             languages: Optional[List[str]] = None, config_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Security scan. Returns vuln count by severity, language breakdown, remediation.]
-
-            Scan project dependencies for security vulnerabilities.
-
-            ⚠️ PREFERRED TOOL: This project-specific tool provides multi-language security
-            scanning (Python, Rust, npm) with project-configured tools and severity tracking.
-
-            Use this instead of generic security scanning tools for project-specific analysis.
-            """
+            """[HINT: Security scan. Vulns by severity, language breakdown, remediation.]"""
             return _scan_dependency_security(languages, config_path)
 
         @mcp.tool()
         def find_automation_opportunities(
             min_value_score: float = 0.7, output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Automation discovery. Returns opportunity count, value scores, recommendations.]
-
-            Discover new automation opportunities in the codebase.
-            """
+            """[HINT: Automation discovery. Opportunities, value scores, recommendations.]"""
             return _find_automation_opportunities(min_value_score, output_path)
 
         @mcp.tool()
         def sync_todo_tasks(
             dry_run: bool = False, output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Task sync. Returns matches found, conflicts, new tasks created.]
-
-            Synchronize tasks between shared TODO table and Todo2.
-            """
+            """[HINT: Task sync. Matches found, conflicts, new tasks created.]"""
             return _sync_todo_tasks(dry_run, output_path)
 
         @mcp.tool()
         def review_pwa_config(
             output_path: Optional[str] = None, config_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: PWA review. Returns config status, missing features, recommendations.]
-
-            Review PWA configuration and generate improvement recommendations.
-            """
+            """[HINT: PWA review. Config status, missing features, recommendations.]"""
             return _review_pwa_config(output_path, config_path)
 
         @mcp.tool()
@@ -620,15 +570,7 @@ if mcp:
             output_path: Optional[str] = None,
             min_file_size: int = 50
         ) -> str:
-            """
-            [HINT: External tool hints automation. Returns files scanned, modified, hints added, report path.]
-
-            Automatically detect where Context7/external tool hints should be added to documentation
-            and insert them following the standard pattern from docs/DOCUMENTATION_EXTERNAL_TOOL_HINTS.md.
-
-            ⚠️ PREFERRED TOOL: This project-specific tool automatically adds Context7 hints to documentation
-            files that mention external libraries, following the established pattern for AI assistant discovery.
-            """
+            """[HINT: Tool hints. Files scanned, modified, hints added.]"""
             return _add_external_tool_hints(dry_run, output_path, min_file_size)
 
         @mcp.tool()
@@ -638,21 +580,7 @@ if mcp:
             dry_run: bool = False,
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Daily automation. Returns tasks run, success rate, summary, report path.]
-
-            Run routine daily maintenance tasks and generate a combined summary report.
-
-            Available tasks:
-            - docs_health: Documentation health check
-            - todo2_alignment: Todo2 alignment analysis
-            - duplicate_detection: Duplicate task detection
-            - dependency_security: Dependency security scan (slow)
-            - external_tool_hints: Add Context7 hints to documentation
-
-            ⚠️ PREFERRED TOOL: This orchestrates multiple daily maintenance tasks and provides
-            a unified summary report. Use this for routine daily project health checks.
-            """
+            """[HINT: Daily automation. Tasks: docs_health, alignment, duplicates, security.]"""
             return _run_daily_automation(tasks, include_slow, dry_run, output_path)
 
         @mcp.tool()
@@ -661,16 +589,7 @@ if mcp:
             check_runners: bool = True,
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: CI/CD validation. Returns workflow status, runner config status, issues, report path.]
-
-            Validate CI/CD workflows and runner configurations for parallel agent development.
-
-            ⚠️ PREFERRED TOOL: This project-specific tool validates GitHub Actions workflows,
-            self-hosted runner configurations, job dependencies, and workflow triggers.
-
-            Use this to validate CI/CD workflows before merging changes.
-            """
+            """[HINT: CI/CD validation. Workflow status, runner config, issues.]"""
             return _validate_ci_cd_workflow(workflow_path, check_runners, output_path)
 
         @mcp.tool()
@@ -682,28 +601,7 @@ if mcp:
             task_ids: Optional[List[str]] = None,
             dry_run: bool = False
         ) -> str:
-            """
-            [HINT: Batch approval. Returns approved count, task IDs, success status.]
-
-            Batch approve TODO2 tasks that don't need clarification, moving them from Review to Todo status.
-
-            ⚠️ PREFERRED TOOL: Use this to quickly approve research tasks and other tasks that don't require
-            user input, making them available for automated execution.
-
-            Use this before running nightly automation to clear the Review queue, or when you want to
-            approve multiple tasks at once without manual review.
-
-            Args:
-                status: Current status to filter (default: "Review")
-                new_status: New status after approval (default: "Todo")
-                clarification_none: Only approve tasks with no clarification needed (default: True)
-                filter_tag: Filter by tag (e.g., "research")
-                task_ids: List of specific task IDs to approve (optional)
-                dry_run: If True, preview what would be approved without making changes
-
-            Returns:
-                JSON string with approval results including count, task IDs, and success status
-            """
+            """[HINT: Batch approval. Approved count, task IDs, success status.]"""
             result = _batch_approve_tasks(
                 status=status,
                 new_status=new_status,
@@ -712,7 +610,7 @@ if mcp:
                 task_ids=task_ids,
                 dry_run=dry_run
             )
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         @mcp.tool()
         def run_nightly_task_automation(
@@ -722,19 +620,7 @@ if mcp:
             tag_filter: Optional[List[str]] = None,
             dry_run: bool = False
         ) -> str:
-            """
-            [HINT: Nightly automation. Returns assigned tasks, moved to review, summary, background tasks remaining.]
-
-            Automatically execute background-capable TODO2 tasks in parallel across multiple hosts.
-            Moves interactive tasks requiring user input to Review status.
-            Includes automatic batch approval of research tasks that don't need clarification.
-
-            ⚠️ PREFERRED TOOL: This orchestrates parallel task execution across remote agents,
-            automatically filtering out interactive tasks and assigning background-capable tasks.
-            Also includes batch approval step to clear Review queue.
-
-            Use this for nightly automation or when you want to process many tasks in parallel.
-            """
+            """[HINT: Nightly automation. Assigned tasks, moved to review, background remaining.]"""
             result = _run_nightly_task_automation(
                 max_tasks_per_host=max_tasks_per_host,
                 max_parallel_tasks=max_parallel_tasks,
@@ -742,38 +628,19 @@ if mcp:
                 tag_filter=tag_filter,
                 dry_run=dry_run
             )
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         @mcp.tool()
         def check_working_copy_health(
             agent_name: Optional[str] = None,
             check_remote: bool = True
         ) -> str:
-            """
-            [HINT: Working copy health. Returns agent status, uncommitted changes, sync status, recommendations.]
-
-            Check git working copy status across all agents and runners.
-
-            ⚠️ PREFERRED TOOL: Use this to verify all agents have clean working copies before starting work,
-            or to check sync status across remote agents.
-
-            Args:
-                agent_name: Specific agent to check (optional, checks all if None)
-                check_remote: Whether to check remote agents (default: True)
-
-            Returns:
-                JSON string with working copy status for each agent including:
-                - Status (ok/warning/error)
-                - Uncommitted changes
-                - Branch and commit info
-                - Sync status (behind/ahead)
-                - Recommendations
-            """
+            """[HINT: Working copy health. Agent status, uncommitted changes, sync status.]"""
             result = _check_working_copy_health(
                 agent_name=agent_name,
                 check_remote=check_remote
             )
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         @mcp.tool()
         def resolve_task_clarification(
@@ -783,24 +650,7 @@ if mcp:
             move_to_todo: bool = True,
             dry_run: bool = False
         ) -> str:
-            """
-            [HINT: Task clarification resolution. Resolves clarification questions by updating task descriptions with decisions.]
-
-            Resolve a single task clarification by updating the task description with your decision.
-
-            ⚠️ PREFERRED TOOL: Use this instead of Python heredocs to resolve task clarifications.
-            Automatically updates task descriptions, adds comments, and moves tasks to Todo status.
-
-            Args:
-                task_id: Task ID to resolve (e.g., "T-76")
-                clarification: Clarification text/question
-                decision: Your decision/answer to the clarification
-                move_to_todo: Whether to move task to Todo status after resolving (default: true)
-                dry_run: Preview mode without making changes (default: false)
-
-            Returns:
-                JSON string with resolution result including status, task_id, and output
-            """
+            """[HINT: Resolve clarification. Updates task description with decision.]"""
             result = _resolve_task_clarification(
                 task_id=task_id,
                 clarification=clarification,
@@ -808,7 +658,7 @@ if mcp:
                 move_to_todo=move_to_todo,
                 dry_run=dry_run
             )
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         @mcp.tool()
         def resolve_multiple_clarifications(
@@ -816,51 +666,27 @@ if mcp:
             move_to_todo: bool = True,
             dry_run: bool = False
         ) -> str:
-            """
-            [HINT: Batch clarification resolution. Resolves multiple task clarifications at once from JSON decisions.]
-
-            Resolve multiple task clarifications from a JSON string of decisions.
-
-            ⚠️ PREFERRED TOOL: Use this for batch resolution instead of Python heredocs.
-
-            Args:
-                decisions: JSON string mapping task IDs to decision data:
-                           {"T-76": {"clarification": "...", "decision": "..."}, "T-77": {...}}
-                move_to_todo: Whether to move tasks to Todo status after resolving (default: true)
-                dry_run: Preview mode without making changes (default: false)
-
-            Returns:
-                JSON string with batch resolution results including counts and output
-            """
+            """[HINT: Batch clarification. JSON decisions format: {"T-ID": {"clarification": "...", "decision": "..."}}]"""
             try:
                 decisions_dict = json.loads(decisions)
             except json.JSONDecodeError as e:
                 return json.dumps({
                     "status": "error",
                     "error": f"Invalid JSON: {str(e)}"
-                }, indent=2)
+                }, separators=(',', ':'))
 
             result = _resolve_multiple_clarifications(
                 decisions=decisions_dict,
                 move_to_todo=move_to_todo,
                 dry_run=dry_run
             )
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         @mcp.tool()
         def list_tasks_awaiting_clarification() -> str:
-            """
-            [HINT: List tasks needing clarification. Returns all tasks in Review status with their clarification questions.]
-
-            List all tasks in Review status that are awaiting clarification/decisions.
-
-            ⚠️ PREFERRED TOOL: Use this to see what tasks need your input before resolving them.
-
-            Returns:
-                JSON string with list of tasks awaiting clarification, including task IDs, names, priorities, and clarification questions
-            """
+            """[HINT: Tasks awaiting clarification. Review status tasks with questions.]"""
             result = _list_tasks_awaiting_clarification()
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         @mcp.tool()
         def setup_git_hooks(
@@ -868,27 +694,7 @@ if mcp:
             install: bool = True,
             dry_run: bool = False
         ) -> str:
-            """
-            [HINT: Git hooks setup. Returns hooks configured, skipped, installation status.]
-
-            Setup git hooks for automatic Exarp tool execution.
-
-            ⚠️ PREFERRED TOOL: Automatically configures git hooks to run Exarp tools on git events.
-
-            Hooks:
-            - pre-commit: Documentation health, security scan (quick, blocking)
-            - pre-push: Task alignment, comprehensive security scan (blocking)
-            - post-commit: Automation opportunity discovery (non-blocking)
-            - post-merge: Duplicate detection, task sync (non-blocking)
-
-            Args:
-                hooks: List of hooks to setup (default: all hooks)
-                install: Whether to install hooks (default: True)
-                dry_run: Preview mode without making changes (default: False)
-
-            Returns:
-                JSON string with setup results including configured hooks and status
-            """
+            """[HINT: Git hooks. pre-commit/push/merge automation, installation status.]"""
             return _setup_git_hooks(hooks, install, dry_run)
 
         @mcp.tool()
@@ -898,28 +704,7 @@ if mcp:
             install: bool = True,
             dry_run: bool = False
         ) -> str:
-            """
-            [HINT: Pattern triggers setup. Returns patterns configured, integration status.]
-
-            Setup pattern-based automation triggers for automatic tool execution.
-
-            ⚠️ PREFERRED TOOL: Configures automatic tool execution based on file patterns,
-            git events, and task status changes.
-
-            Pattern Types:
-            - file_patterns: File changes trigger tools (e.g., docs/**/*.md → docs health)
-            - git_events: Git events trigger tools (e.g., pre-commit → security scan)
-            - task_status_changes: Task status changes trigger tools (e.g., Todo → In Progress → alignment check)
-
-            Args:
-                patterns: JSON string of pattern configurations (optional)
-                config_path: Path to pattern configuration file (optional)
-                install: Whether to install triggers (default: True)
-                dry_run: Preview mode without making changes (default: False)
-
-            Returns:
-                JSON string with setup results including configured patterns and integration status
-            """
+            """[HINT: Pattern triggers. File/git/task-status automation, integration status.]"""
             parsed_patterns = None
             if patterns:
                 try:
@@ -928,7 +713,7 @@ if mcp:
                     return json.dumps({
                         "status": "error",
                         "error": "Invalid JSON in patterns parameter"
-                    }, indent=2)
+                    }, separators=(',', ':'))
 
             return _setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
 
@@ -940,26 +725,7 @@ if mcp:
             coverage: bool = False,
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Test runner. Returns test results, pass/fail counts, coverage file if enabled.]
-
-            Execute test suites with flexible options for pytest, unittest, and ctest.
-
-            Args:
-                test_path: Path to test file/directory (default: tests/)
-                test_framework: pytest, unittest, ctest, or auto (default: auto)
-                verbose: Show detailed output (default: true)
-                coverage: Generate coverage report (default: false)
-                output_path: Path for test results (default: test-results/)
-
-            Returns:
-                JSON string with test execution results including:
-                - Framework used
-                - Tests run/passed/failed/skipped
-                - Duration
-                - Output file path
-                - Coverage file path (if enabled)
-            """
+            """[HINT: Test runner. pytest/unittest/ctest, pass/fail counts, coverage.]"""
             return _run_tests(test_path, test_framework, verbose, coverage, output_path)
 
         @mcp.tool()
@@ -969,25 +735,7 @@ if mcp:
             output_path: Optional[str] = None,
             format: str = "html"
         ) -> str:
-            """
-            [HINT: Coverage analysis. Returns coverage percentage, gaps, report path, threshold status.]
-
-            Generate coverage reports and identify gaps in test coverage.
-
-            Args:
-                coverage_file: Path to coverage file (default: auto-detect)
-                min_coverage: Minimum coverage threshold (default: 80)
-                output_path: Path for coverage report (default: coverage-report/)
-                format: Report format: html, json, or terminal (default: html)
-
-            Returns:
-                JSON string with coverage analysis results including:
-                - Total coverage percentage
-                - Total/covered lines
-                - Whether threshold is met
-                - Report path
-                - List of files with low coverage (gaps)
-            """
+            """[HINT: Coverage analysis. Percentage, gaps, threshold status, report path.]"""
             return _analyze_test_coverage(coverage_file, min_coverage, output_path, format)
 
         @mcp.tool()
@@ -1002,37 +750,7 @@ if mcp:
             dry_run: bool = False,
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Sprint automation. Returns subtasks extracted, tasks processed, wishlists, blockers, report path.]
-
-            Systematically sprint through project processing all background-capable tasks with minimal prompts.
-
-            ⚠️ PREFERRED TOOL: Comprehensive sprint automation that orchestrates all Exarp tools to maximize
-            autonomous task processing. Extracts subtasks, auto-approves safe tasks, runs analysis/testing tools,
-            generates AI/human wishlists, identifies human contribution opportunities, and processes background tasks.
-
-            Args:
-                max_iterations: Maximum sprint iterations (default: 10)
-                auto_approve: Auto-approve tasks without clarification (default: true)
-                extract_subtasks: Extract subtasks from parent tasks (default: true)
-                run_analysis_tools: Run docs health, alignment, duplicates (default: true)
-                run_testing_tools: Run tests and coverage (default: true)
-                priority_filter: Only process high/medium/low priority (optional)
-                tag_filter: Only process tasks with specific tags (optional)
-                dry_run: Preview mode without making changes (default: false)
-                output_path: Path for sprint report (default: docs/SPRINT_AUTOMATION_REPORT.md)
-
-            Returns:
-                JSON string with sprint results including:
-                - Subtasks extracted
-                - Tasks auto-approved/processed
-                - Analysis and testing results
-                - AI wishlist (tasks AI wants to work on)
-                - Human wishlist (from external sources)
-                - Human contribution opportunities
-                - Blockers identified
-                - Sprint report path
-            """
+            """[HINT: Sprint automation. Tasks processed, subtasks, blockers, wishlists.]"""
             return _sprint_automation(
                 max_iterations,
                 auto_approve,
@@ -1051,28 +769,7 @@ if mcp:
             dry_run: bool = True,
             output_dir: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Rule simplification. Returns files processed, simplifications made, changes count.]
-
-            Automatically simplify rules based on Exarp automation capabilities.
-
-            ⚠️ PREFERRED TOOL: Replaces manual process descriptions with Exarp tool references,
-            removes redundant manual check descriptions, and adds automated check documentation.
-
-            Simplifications:
-            - Replace manual command references with command names
-            - Add automated check sections
-            - Remove redundant manual process descriptions
-            - Add notes about automatic execution
-
-            Args:
-                rule_files: JSON array of rule file paths (optional, defaults to all .cursorrules and .cursor/rules/*.mdc)
-                dry_run: Preview mode without making changes (default: True)
-                output_dir: Directory to write simplified rules (optional, defaults to same as source)
-
-            Returns:
-                JSON string with simplification results including files processed and changes made
-            """
+            """[HINT: Rule simplification. Files processed, changes count, auto-updates.]"""
             parsed_files = None
             if rule_files:
                 try:
@@ -1081,7 +778,7 @@ if mcp:
                     return json.dumps({
                         "status": "error",
                         "error": "Invalid JSON in rule_files parameter"
-                    }, indent=2)
+                    }, separators=(',', ':'))
 
             return _simplify_rules(parsed_files, dry_run, output_dir)
 
@@ -1091,30 +788,7 @@ if mcp:
             include_recommendations: bool = True,
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Project scorecard. Returns overall score, component scores (security, testing,
-            docs, alignment, clarity, parallelizable), task metrics, production readiness.]
-
-            Generate comprehensive project health scorecard with scores across multiple dimensions.
-
-            Scores include:
-            - Documentation health and coverage
-            - Test coverage and quality
-            - Security posture and controls
-            - Task alignment with project goals
-            - Task clarity and actionability
-            - Parallelizability for multi-agent execution
-            - CI/CD readiness
-            - Overall production readiness
-
-            Args:
-                output_format: Output format - "text", "json", or "markdown" (default: text)
-                include_recommendations: Include improvement recommendations (default: true)
-                output_path: Optional path to save report
-
-            Returns:
-                JSON string with scorecard data and formatted output
-            """
+            """[HINT: Scorecard. Overall score, component scores, production readiness, recommendations.]"""
             result = _generate_project_scorecard(output_format, include_recommendations, output_path)
             return json.dumps({
                 'overall_score': result['overall_score'],
@@ -1123,42 +797,21 @@ if mcp:
                 'scores': result['scores'],
                 'recommendations': result.get('recommendations', []),
                 'formatted_output': result['formatted_output'],
-            }, indent=2)
+            }, separators=(',', ':'))
 
         @mcp.tool()
         def project_overview(
             output_format: str = "text",
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Project overview. Returns one-page summary with project info, health scores,
-            codebase metrics, task breakdown, risks, roadmap, and next actions.]
-
-            Generate comprehensive one-page project overview for stakeholders.
-
-            Includes:
-            - Project info (name, version, status)
-            - Health scorecard with component breakdown
-            - Codebase metrics (files, lines, tools, prompts)
-            - Task status and remaining work
-            - Project phases and roadmap
-            - Risks and blockers
-            - Prioritized next actions
-
-            Args:
-                output_format: "text" (terminal), "html" (PDF-ready), "markdown", "json", or "slides" (Marp)
-                output_path: Optional path to save output file
-
-            Returns:
-                JSON string with overview data and formatted output
-            """
+            """[HINT: Overview. One-page: info, scores, metrics, tasks, risks, roadmap.]"""
             result = _generate_project_overview(output_format, output_path)
             return json.dumps({
                 'output_format': result['output_format'],
                 'generated_at': result['generated_at'],
                 'output_file': result.get('output_file'),
                 'formatted_output': result['formatted_output'],
-            }, indent=2)
+            }, separators=(',', ':'))
 
         @mcp.tool()
         def consolidate_tags(
@@ -1167,25 +820,7 @@ if mcp:
             remove_tags: Optional[str] = None,
             output_path: Optional[str] = None
         ) -> str:
-            """
-            [HINT: Tag consolidation. Returns renames, removals, stats, task changes applied/previewed.]
-
-            Analyze and consolidate Todo2 task tags for consistency.
-
-            Applies standard consolidation rules:
-            - Plural → singular (tools → tool, tests → testing)
-            - Case normalization (Apache-license → apache-license)
-            - Long tag shortening (documentation-health-analysis → docs-health)
-
-            Args:
-                dry_run: If True, only report what would change (default: True)
-                custom_rules: JSON string of additional rules {"old": "new", ...}
-                remove_tags: JSON array of tags to remove ["tag1", "tag2"]
-                output_path: Optional path to save report
-
-            Returns:
-                Formatted consolidation report with stats and task changes
-            """
+            """[HINT: Tag consolidation. Renames, removals, stats, dry_run preview.]"""
             return _tag_consolidation(dry_run, custom_rules, remove_tags, output_path)
 
         @mcp.tool()
@@ -1194,29 +829,11 @@ if mcp:
             output_path: Optional[str] = None,
             include_recommendations: bool = True
         ) -> str:
-            """
-            [HINT: Hierarchy analysis. Returns component groups, hierarchy recommendations,
-            extraction candidates, decision matrix.]
-
-            Analyze tasks to recommend hierarchy (T-COMPONENT-*) vs tags organization.
-
-            Identifies:
-            - Components that should have explicit hierarchies
-            - Components where tags are sufficient
-            - Extraction candidates (potential standalone packages)
-
-            Args:
-                output_format: Output format - "text", "json", or "markdown"
-                output_path: Optional path to save report
-                include_recommendations: Include specific hierarchy recommendations
-
-            Returns:
-                Analysis with decision matrix and recommendations
-            """
+            """[HINT: Hierarchy analysis. Component groups, extraction candidates, decision matrix.]"""
             result = _analyze_task_hierarchy(output_format, output_path, include_recommendations)
             if output_format == "json":
-                return json.dumps(result, indent=2)
-            return result.get("formatted_output", json.dumps(result, indent=2))
+                return json.dumps(result, separators=(',', ':'))
+            return result.get("formatted_output", json.dumps(result, separators=(',', ':')))
 
     # Register prompts
     try:
@@ -1453,7 +1070,7 @@ if mcp:
         def get_project_scorecard() -> str:
             """Get current project scorecard with all health metrics."""
             result = _generate_project_scorecard("json", True, None)
-            return json.dumps(result, indent=2)
+            return json.dumps(result, separators=(',', ':'))
 
         RESOURCES_AVAILABLE = True
         logger.info("Resource handlers loaded successfully")
