@@ -303,6 +303,185 @@ Use this for:
 - Release readiness checks
 - Project health dashboards"""
 
+# ═══════════════════════════════════════════════════════════════════════════
+# PERSONA-BASED WORKFLOWS
+# ═══════════════════════════════════════════════════════════════════════════
+
+PERSONA_DEVELOPER = """Developer daily workflow for writing quality code.
+
+**Morning Checkin (~2 min):**
+1. project_scorecard_tool - Quick health check
+2. list_tasks_awaiting_clarification_tool - Any blockers?
+
+**Before Committing:**
+- check_documentation_health_tool (if you touched docs)
+- Git pre-commit hook runs: complexity + security check
+
+**Before PR/Push:**
+- analyze_todo2_alignment_tool - Is work aligned with goals?
+- Git pre-push hook runs: full security scan + tests
+
+**Weekly Self-Review (~10 min):**
+- project_scorecard_tool with tier="quick" - With complexity metrics
+- consolidate_tags_tool dry_run=true - Tag hygiene
+
+**Key Targets:**
+- Cyclomatic Complexity: <10 per function
+- Test Coverage: >80%
+- Bandit Findings: 0 high/critical
+- Cycle Time: <3 days avg"""
+
+PERSONA_PROJECT_MANAGER = """Project Manager workflow for delivery tracking.
+
+**Daily Standup Prep (~3 min):**
+1. project_scorecard_tool - Overall health
+2. list_tasks_awaiting_clarification_tool - What needs decisions?
+
+**Sprint Planning (~15 min):**
+1. project_overview_tool output_format="markdown" - Current state
+2. detect_duplicate_tasks_tool - Clean up backlog
+3. analyze_todo2_alignment_tool - Prioritize aligned work
+
+**Sprint Retrospective (~20 min):**
+1. project_scorecard_tool tier="deep" - Full analysis
+   Review: Cycle time, First pass yield, Estimation accuracy
+
+**Weekly Status Report (~5 min):**
+- project_overview_tool output_format="html" output_path="docs/WEEKLY_STATUS.html"
+
+**Key Metrics:**
+- Task Completion %: Per sprint goal
+- Blocked Tasks: Target 0
+- Cycle Time: Should be consistent
+- First Pass Yield: >85%
+- Dependency Health: No cycles"""
+
+PERSONA_CODE_REVIEWER = """Code Reviewer workflow for quality gates.
+
+**Pre-Review Check (~1 min):**
+- project_scorecard_tool tier="quick" - Changed since main?
+
+**During Review:**
+For complexity concerns:
+  radon cc <changed_files> -s
+
+For security concerns:
+  bandit -r <changed_files>
+
+For architecture concerns:
+  project_scorecard_tool tier="deep" - Full coupling/cohesion
+
+**Review Checklist:**
+- [ ] Complexity acceptable? (CC < 10)
+- [ ] Tests added/updated?
+- [ ] No security issues? (Bandit clean)
+- [ ] Documentation updated?
+- [ ] No dead code introduced?
+
+**Key Targets:**
+- Cyclomatic Complexity: <10 new, <15 existing
+- Comment Density: 10-30%
+- Bandit Findings: 0 in new code"""
+
+PERSONA_EXECUTIVE = """Executive/Stakeholder workflow for strategic view.
+
+**Weekly Check (~2 min):**
+- project_overview_tool output_format="html"
+  One-page summary: health, risks, progress, blockers
+
+**Monthly Review (~10 min):**
+- project_scorecard_tool tier="deep" output_format="markdown"
+  Review GQM goal achievement
+
+**Executive Dashboard Metrics:**
+| Metric | What It Tells You |
+|--------|-------------------|
+| Health Score (0-100) | Overall project health |
+| Goal Alignment % | Building the right things? |
+| Security Score | Risk exposure |
+| Velocity Trend | Speeding up or slowing? |
+| Tech Debt Score | Long-term sustainability |
+
+**Quarterly Strategy (~30 min):**
+- project_scorecard_tool tier="deep"
+  Review: Uniqueness, Architecture health, Security posture"""
+
+PERSONA_SECURITY_ENGINEER = """Security Engineer workflow for risk management.
+
+**Daily Scan (~5 min):**
+- scan_dependency_security_tool - Dependency vulnerabilities
+
+**Weekly Deep Scan (~15 min):**
+1. scan_dependency_security_tool - Dependencies
+2. Run: bandit -r project_management_automation/ -f json
+3. project_scorecard_tool - Security score trend
+
+**Security Audit (~1 hour):**
+- project_scorecard_tool tier="deep"
+  Review: All Bandit findings, Dependency tree, Security hotspots
+
+**Key Targets:**
+- Critical Vulns: 0
+- High Vulns: 0
+- Bandit High/Critical: 0
+- Security Score: >90%"""
+
+PERSONA_ARCHITECT = """Architect workflow for system design.
+
+**Weekly Architecture Review (~15 min):**
+- project_scorecard_tool tier="deep"
+  Focus: Coupling matrix, Cohesion scores, Distance from Main Sequence
+
+**Before Major Changes:**
+1. project_scorecard_tool tier="deep" output_path="before_change.json"
+2. [Make changes]
+3. project_scorecard_tool tier="deep" output_path="after_change.json"
+4. Compare architecture impact
+
+**Tech Debt Prioritization (~30 min):**
+- project_scorecard_tool tier="deep"
+  Review: High complexity, Dead code, Coupling hotspots
+
+**Key Targets:**
+- Avg Cyclomatic Complexity: <5
+- Max Complexity: <15
+- Distance from Main Sequence: <0.3
+- Dead Code %: <5%"""
+
+PERSONA_QA_ENGINEER = """QA Engineer workflow for quality assurance.
+
+**Daily Testing Status (~3 min):**
+1. run_tests_tool - Run test suite
+2. analyze_test_coverage_tool - Coverage report
+
+**Sprint Testing Review (~20 min):**
+- project_scorecard_tool tier="quick"
+  Review: Test coverage %, Test ratio, Failing tests
+
+**Defect Analysis (~30 min):**
+When ODC implemented:
+- Review defect type distribution
+- Trigger analysis (where are bugs found?)
+- Impact distribution
+
+**Key Targets:**
+- Test Coverage: >80%
+- Tests Passing: 100%
+- Defect Density: <5 per KLOC
+- First Pass Yield: >85%"""
+
+PERSONA_TECH_WRITER = """Technical Writer workflow for documentation.
+
+**Weekly Doc Health (~5 min):**
+- check_documentation_health_tool - Full docs analysis
+  Check: Broken links, Stale documents, Missing docs
+
+**Key Targets:**
+- Broken Links: 0
+- Stale Docs (>30 days): 0
+- Comment Density: 10-30%
+- Docstring Coverage: >90%"""
+
 # Prompt Metadata
 
 PROMPTS = {
@@ -415,6 +594,47 @@ PROMPTS = {
     "project_overview": {
         "name": "Project Overview",
         "description": PROJECT_OVERVIEW,
+        "arguments": []
+    },
+    # Persona-based workflows
+    "persona_developer": {
+        "name": "Developer Workflow",
+        "description": PERSONA_DEVELOPER,
+        "arguments": []
+    },
+    "persona_project_manager": {
+        "name": "Project Manager Workflow",
+        "description": PERSONA_PROJECT_MANAGER,
+        "arguments": []
+    },
+    "persona_code_reviewer": {
+        "name": "Code Reviewer Workflow",
+        "description": PERSONA_CODE_REVIEWER,
+        "arguments": []
+    },
+    "persona_executive": {
+        "name": "Executive/Stakeholder Workflow",
+        "description": PERSONA_EXECUTIVE,
+        "arguments": []
+    },
+    "persona_security": {
+        "name": "Security Engineer Workflow",
+        "description": PERSONA_SECURITY_ENGINEER,
+        "arguments": []
+    },
+    "persona_architect": {
+        "name": "Architect Workflow",
+        "description": PERSONA_ARCHITECT,
+        "arguments": []
+    },
+    "persona_qa": {
+        "name": "QA Engineer Workflow",
+        "description": PERSONA_QA_ENGINEER,
+        "arguments": []
+    },
+    "persona_tech_writer": {
+        "name": "Technical Writer Workflow",
+        "description": PERSONA_TECH_WRITER,
         "arguments": []
     },
 }

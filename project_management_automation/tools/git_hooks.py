@@ -40,7 +40,8 @@ def setup_git_hooks(
     Returns:
         JSON string with setup results
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    # Path: tools/git_hooks.py → tools → project_management_automation → project-management-automation
+    project_root = Path(__file__).parent.parent.parent
     hooks_dir = project_root / ".git" / "hooks"
 
     if not hooks_dir.exists():

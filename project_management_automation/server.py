@@ -248,6 +248,7 @@ try:
         )
         from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         from .tools.project_overview import generate_project_overview as _generate_project_overview
+        from .tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
         TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
@@ -277,6 +278,7 @@ try:
         )
         from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         from tools.project_overview import generate_project_overview as _generate_project_overview
+        from tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -301,7 +303,7 @@ def register_tools():
                     "status": "operational",
                     "version": "0.1.7",
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 25 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 26 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
@@ -1155,6 +1157,34 @@ if mcp:
                 'output_file': result.get('output_file'),
                 'formatted_output': result['formatted_output'],
             }, indent=2)
+
+        @mcp.tool()
+        def consolidate_tags(
+            dry_run: bool = True,
+            custom_rules: Optional[str] = None,
+            remove_tags: Optional[str] = None,
+            output_path: Optional[str] = None
+        ) -> str:
+            """
+            [HINT: Tag consolidation. Returns renames, removals, stats, task changes applied/previewed.]
+
+            Analyze and consolidate Todo2 task tags for consistency.
+
+            Applies standard consolidation rules:
+            - Plural → singular (tools → tool, tests → testing)
+            - Case normalization (Apache-license → apache-license)
+            - Long tag shortening (documentation-health-analysis → docs-health)
+
+            Args:
+                dry_run: If True, only report what would change (default: True)
+                custom_rules: JSON string of additional rules {"old": "new", ...}
+                remove_tags: JSON array of tags to remove ["tag1", "tag2"]
+                output_path: Optional path to save report
+
+            Returns:
+                Formatted consolidation report with stats and task changes
+            """
+            return _tag_consolidation(dry_run, custom_rules, remove_tags, output_path)
 
     # Register prompts
     try:

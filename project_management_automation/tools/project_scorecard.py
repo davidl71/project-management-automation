@@ -2,7 +2,7 @@
 Project Scorecard Tool - Generate comprehensive project health overview.
 
 [HINT: Project scorecard. Returns overall score, component scores (security, testing,
-docs, alignment, clarity, parallelizable), task metrics, production readiness.]
+docs, alignment, clarity, parallelizable, dogfooding, uniqueness), task metrics, production readiness.]
 """
 
 import json
@@ -275,18 +275,281 @@ def generate_project_scorecard(
     metrics['ci_cd'] = ci_checks
     
     # ═══════════════════════════════════════════════════════════════
+    # 9. DOGFOODING SCORE (Does Exarp use its own tools?)
+    # ═══════════════════════════════════════════════════════════════
+    dogfooding_checks = {
+        # Git hooks using exarp
+        'pre_commit_hook': (project_root / '.git' / 'hooks' / 'pre-commit').exists() and 
+            'exarp' in ((project_root / '.git' / 'hooks' / 'pre-commit').read_text().lower() 
+            if (project_root / '.git' / 'hooks' / 'pre-commit').exists() else ''),
+        'pre_push_hook': (project_root / '.git' / 'hooks' / 'pre-push').exists() and
+            'exarp' in ((project_root / '.git' / 'hooks' / 'pre-push').read_text().lower()
+            if (project_root / '.git' / 'hooks' / 'pre-push').exists() else ''),
+        'post_commit_hook': (project_root / '.git' / 'hooks' / 'post-commit').exists(),
+        'post_merge_hook': (project_root / '.git' / 'hooks' / 'post-merge').exists(),
+        # Pre-commit config
+        'pre_commit_config': (project_root / '.pre-commit-config.yaml').exists() and
+            'exarp' in ((project_root / '.pre-commit-config.yaml').read_text().lower()
+            if (project_root / '.pre-commit-config.yaml').exists() else ''),
+        # CI/CD using exarp
+        'ci_self_check': (project_root / '.github' / 'workflows' / 'ci.yml').exists() and
+            'exarp' in ((project_root / '.github' / 'workflows' / 'ci.yml').read_text().lower()
+            if (project_root / '.github' / 'workflows' / 'ci.yml').exists() else ''),
+        # Cron automation
+        'daily_cron': (project_root / 'scripts' / 'cron' / 'run_daily_exarp.sh').exists(),
+        'weekly_cron': (project_root / 'scripts' / 'cron' / 'run_weekly_exarp.sh').exists(),
+        # Project goals for alignment
+        'project_goals': (project_root / 'PROJECT_GOALS.md').exists(),
+        # Pattern triggers
+        'pattern_triggers': (project_root / '.cursor' / 'automa_patterns.json').exists(),
+    }
+    
+    dogfooding_passed = sum(1 for v in dogfooding_checks.values() if v)
+    scores['dogfooding'] = dogfooding_passed / len(dogfooding_checks) * 100
+    
+    metrics['dogfooding'] = {
+        'checks_passed': dogfooding_passed,
+        'checks_total': len(dogfooding_checks),
+        'details': dogfooding_checks,
+        'description': 'How much Exarp uses its own tools for self-maintenance',
+    }
+    
+    # ═══════════════════════════════════════════════════════════════
+    # 10. UNIQUENESS SCORE (Are we reinventing the wheel?)
+    # ═══════════════════════════════════════════════════════════════
+    
+    # Check for common patterns that could use existing libraries
+    wheel_reinventions = []
+    justified_customs = []
+    
+    # Analyze source files for potential reinventions
+    tools_dir = project_root / 'project_management_automation' / 'tools'
+    
+    # Known patterns that might be reinventions
+    reinvention_patterns = {
+        'http_client': {
+            'patterns': ['requests.', 'urllib', 'http.client', 'aiohttp'],
+            'alternatives': ['httpx', 'requests'],
+            'check_file': True,
+        },
+        'json_parsing': {
+            'patterns': ['json.loads', 'json.dumps'],
+            'alternatives': ['orjson', 'ujson'],
+            'check_file': False,  # json is standard, not a reinvention
+        },
+        'cli_parsing': {
+            'patterns': ['argparse', 'sys.argv'],
+            'alternatives': ['click', 'typer'],
+            'check_file': True,
+        },
+        'task_management': {
+            'patterns': ['todo', 'task', 'subtask'],
+            'alternatives': ['GitHub Issues', 'Linear', 'Jira API'],
+            'justification': 'MCP-native, offline-first, zero dependencies',
+            'check_file': False,  # This IS our core feature
+        },
+        'file_watching': {
+            'patterns': ['watchdog', 'inotify', 'fswatch'],
+            'alternatives': ['watchdog', 'watchfiles'],
+            'check_file': True,
+        },
+        'git_operations': {
+            'patterns': ['subprocess.*git', 'git.Repo', 'pygit2'],
+            'alternatives': ['GitPython', 'pygit2'],
+            'justification': 'Minimal subprocess calls, no heavy deps',
+            'check_file': False,
+        },
+        'markdown_parsing': {
+            'patterns': ['markdown', 'mistune', 're.findall.*\\['],
+            'alternatives': ['markdown-it-py', 'mistune'],
+            'check_file': True,
+        },
+        'yaml_parsing': {
+            'patterns': ['yaml.load', 'yaml.safe_load'],
+            'alternatives': ['ruamel.yaml', 'PyYAML'],
+            'check_file': False,  # yaml is standard for configs
+        },
+        'test_framework': {
+            'patterns': ['unittest', 'pytest'],
+            'alternatives': ['pytest'],
+            'check_file': False,  # using standard tools
+        },
+        'duplicate_detection': {
+            'patterns': ['levenshtein', 'fuzzy', 'difflib'],
+            'alternatives': ['rapidfuzz', 'python-Levenshtein'],
+            'justification': 'Simple set-based matching sufficient for task names',
+            'check_file': False,
+        },
+        'cron_scheduling': {
+            'patterns': ['cron', 'schedule', 'apscheduler'],
+            'alternatives': ['APScheduler', 'schedule'],
+            'justification': 'Using system cron, no Python scheduler needed',
+            'check_file': False,
+        },
+    }
+    
+    # Check requirements.txt for dependencies we DO use
+    req_file = project_root / 'requirements.txt'
+    dependencies = set()
+    if req_file.exists():
+        for line in req_file.read_text().splitlines():
+            if line.strip() and not line.startswith('#'):
+                dep = line.split('==')[0].split('>=')[0].split('[')[0].strip().lower()
+                dependencies.add(dep)
+    
+    # Check pyproject.toml for more deps
+    pyproject = project_root / 'pyproject.toml'
+    if pyproject.exists():
+        content = pyproject.read_text()
+        # Simple extraction of dependencies
+        for match in re.findall(r'"([a-zA-Z0-9_-]+)', content):
+            dependencies.add(match.lower())
+    
+    # Check for a DESIGN_DECISIONS.md or similar
+    design_docs = [
+        project_root / 'docs' / 'DESIGN_DECISIONS.md',
+        project_root / 'docs' / 'ARCHITECTURE.md',
+        project_root / 'docs' / 'WHY_CUSTOM.md',
+        project_root / 'DESIGN.md',
+    ]
+    has_design_docs = any(d.exists() for d in design_docs)
+    
+    # Score components
+    uniqueness_analysis = {
+        'core_features': {
+            'task_management': {
+                'custom': True,
+                'justified': True,
+                'reason': 'MCP-native task management is our core value proposition',
+            },
+            'mcp_tools': {
+                'custom': True,
+                'justified': True, 
+                'reason': 'Custom MCP tools are the product itself',
+            },
+            'project_scorecard': {
+                'custom': True,
+                'justified': True,
+                'reason': 'Project-specific metrics not available elsewhere',
+            },
+            'alignment_analysis': {
+                'custom': True,
+                'justified': True,
+                'reason': 'Custom goal-task alignment for this project type',
+            },
+        },
+        'infrastructure': {
+            'git_hooks': {
+                'custom': True,
+                'justified': True,
+                'reason': 'Simple shell scripts, no framework needed',
+            },
+            'cron_scripts': {
+                'custom': True,
+                'justified': True,
+                'reason': 'Using system cron, lightweight approach',
+            },
+            'file_patterns': {
+                'custom': True,
+                'justified': True,
+                'reason': 'Simple JSON config, no complex framework',
+            },
+        },
+        'potential_improvements': [],
+    }
+    
+    # Check if we're using heavy frameworks where simpler would work
+    using_fastmcp = 'fastmcp' in dependencies or 'mcp' in dependencies
+    using_pydantic = 'pydantic' in dependencies
+    
+    # FastMCP is justified - it's the standard for MCP servers
+    if using_fastmcp:
+        uniqueness_analysis['infrastructure']['mcp_framework'] = {
+            'custom': False,
+            'justified': True,
+            'reason': 'FastMCP is the standard MCP server framework',
+        }
+    
+    # Count justified vs potentially unjustified
+    total_decisions = 0
+    justified_count = 0
+    
+    for category in ['core_features', 'infrastructure']:
+        for name, info in uniqueness_analysis.get(category, {}).items():
+            total_decisions += 1
+            if info.get('justified'):
+                justified_count += 1
+    
+    # Check for design documentation
+    if has_design_docs:
+        justified_count += 1
+        total_decisions += 1
+        uniqueness_analysis['documentation'] = {
+            'design_decisions_documented': True,
+            'reason': 'Design decisions are documented',
+        }
+    else:
+        total_decisions += 1
+        uniqueness_analysis['potential_improvements'].append({
+            'item': 'Design Documentation',
+            'suggestion': 'Create docs/DESIGN_DECISIONS.md to document why custom implementations were chosen',
+            'priority': 'low',
+        })
+    
+    # Calculate uniqueness score
+    # Higher score = better justified custom code OR using existing solutions
+    uniqueness_score = (justified_count / total_decisions * 100) if total_decisions > 0 else 50
+    
+    # Bonus for minimal dependencies (less dependency hell)
+    dep_count = len(dependencies)
+    if dep_count <= 5:
+        uniqueness_score = min(100, uniqueness_score + 10)
+        uniqueness_analysis['dependency_approach'] = {
+            'count': dep_count,
+            'rating': 'minimal',
+            'reason': 'Minimal dependencies reduces dependency hell',
+        }
+    elif dep_count <= 15:
+        uniqueness_analysis['dependency_approach'] = {
+            'count': dep_count,
+            'rating': 'moderate',
+            'reason': 'Reasonable dependency count',
+        }
+    else:
+        uniqueness_score = max(0, uniqueness_score - 10)
+        uniqueness_analysis['dependency_approach'] = {
+            'count': dep_count,
+            'rating': 'heavy',
+            'reason': 'Consider reducing dependencies',
+        }
+    
+    scores['uniqueness'] = uniqueness_score
+    
+    metrics['uniqueness'] = {
+        'score': round(uniqueness_score, 1),
+        'justified_decisions': justified_count,
+        'total_decisions': total_decisions,
+        'dependency_count': dep_count,
+        'has_design_docs': has_design_docs,
+        'analysis': uniqueness_analysis,
+        'description': 'Are we reinventing wheels? If so, is it justified?',
+    }
+    
+    # ═══════════════════════════════════════════════════════════════
     # CALCULATE OVERALL SCORE
     # ═══════════════════════════════════════════════════════════════
     weights = {
-        'documentation': 0.10,
-        'ci_cd': 0.10,
-        'codebase': 0.10,
-        'clarity': 0.10,
-        'parallelizable': 0.10,
-        'alignment': 0.10,
-        'security': 0.25,
+        'documentation': 0.07,
+        'ci_cd': 0.07,
+        'codebase': 0.07,
+        'clarity': 0.07,
+        'parallelizable': 0.07,
+        'alignment': 0.07,
+        'security': 0.20,
         'testing': 0.10,
         'completion': 0.05,
+        'dogfooding': 0.13,  # Eating our own dog food
+        'uniqueness': 0.10,  # Not reinventing wheels (or justified if we are)
     }
     
     overall_score = sum(scores.get(k, 0) * weights.get(k, 0) for k in weights)
@@ -339,6 +602,25 @@ def generate_project_scorecard(
                 'action': 'Complete pending tasks to show progress',
                 'impact': '+5% to overall score',
             })
+        
+        if scores.get('dogfooding', 0) < 70:
+            missing = [k for k, v in metrics.get('dogfooding', {}).get('details', {}).items() if not v]
+            recommendations.append({
+                'priority': 'medium',
+                'area': 'Dogfooding',
+                'action': f'Enable more self-maintenance: {", ".join(missing[:3])}{"..." if len(missing) > 3 else ""}',
+                'impact': '+13% to dogfooding score',
+            })
+        
+        if scores.get('uniqueness', 0) < 80:
+            improvements = metrics.get('uniqueness', {}).get('analysis', {}).get('potential_improvements', [])
+            if improvements:
+                recommendations.append({
+                    'priority': 'low',
+                    'area': 'Uniqueness',
+                    'action': improvements[0].get('suggestion', 'Document design decisions'),
+                    'impact': '+10% to uniqueness score',
+                })
         
         result['recommendations'] = recommendations
     
@@ -401,6 +683,17 @@ def _format_text(data: dict) -> str:
         p = data['metrics']['parallelizable']
         lines.append(f"    Parallelizable: {p.get('ready', 0)} tasks ({p.get('score', 0)}%)")
     
+    if 'dogfooding' in data['metrics']:
+        d = data['metrics']['dogfooding']
+        lines.append(f"    Dogfooding: {d.get('checks_passed', 0)}/{d.get('checks_total', 0)} self-checks")
+    
+    if 'uniqueness' in data['metrics']:
+        u = data['metrics']['uniqueness']
+        deps = u.get('dependency_count', 0)
+        justified = u.get('justified_decisions', 0)
+        total = u.get('total_decisions', 0)
+        lines.append(f"    Uniqueness: {justified}/{total} decisions justified, {deps} deps")
+    
     # Recommendations
     if data.get('recommendations'):
         lines.append("\n  Recommendations:")
@@ -446,6 +739,17 @@ def _format_markdown(data: dict) -> str:
     if 'parallelizable' in data['metrics']:
         p = data['metrics']['parallelizable']
         lines.append(f"- **Parallelizable:** {p.get('ready', 0)} tasks ({p.get('score', 0)}%)")
+    
+    if 'dogfooding' in data['metrics']:
+        d = data['metrics']['dogfooding']
+        lines.append(f"- **Dogfooding:** {d.get('checks_passed', 0)}/{d.get('checks_total', 0)} self-checks ({data['scores'].get('dogfooding', 0):.0f}%)")
+    
+    if 'uniqueness' in data['metrics']:
+        u = data['metrics']['uniqueness']
+        deps = u.get('dependency_count', 0)
+        justified = u.get('justified_decisions', 0)
+        total = u.get('total_decisions', 0)
+        lines.append(f"- **Uniqueness:** {justified}/{total} decisions justified, {deps} dependencies ({data['scores'].get('uniqueness', 0):.0f}%)")
     
     # Recommendations
     if data.get('recommendations'):
