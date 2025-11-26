@@ -615,7 +615,7 @@ pip install exarp-automation-mcp[graph-analysis-advanced]
 
 - [Optimization Integration](EXARP_OPTIMIZATION_INTEGRATION.md) - Optimization libraries
 - [Self-Improvement Strategy](EXARP_SELF_IMPROVEMENT.md) - Using Exarp on itself
-- [Tool Status](TOOLS_STATUS.md) - Available tools
+- Tool Status - Available tools
 
 ---
 

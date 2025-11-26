@@ -679,7 +679,7 @@ class GoogleSheetsAdapter:
 
 - [Task Management Integration](EXARP_TASK_MANAGEMENT_INTEGRATION.md) - General task management integration
 - [RAG Integration](EXARP_RAG_INTEGRATION.md) - Semantic analysis for better task understanding
-- [Tool Status](TOOLS_STATUS.md) - Available tools
+- Tool Status - Available tools
 
 ---
 

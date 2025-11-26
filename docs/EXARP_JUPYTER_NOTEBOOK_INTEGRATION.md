@@ -803,8 +803,8 @@ class NotebookTaskExtractor:
 ## Related Documentation
 
 - [Task Management Integration](EXARP_TASK_MANAGEMENT_INTEGRATION.md) - Task extraction and sync
-- [Documentation Health](TOOLS_STATUS.md) - Documentation analysis
-- [Automation Opportunities](TOOLS_STATUS.md) - Automation workflows
+- Documentation Health Tool - Documentation analysis
+- Automation Opportunities Tool - Automation workflows
 
 ---
 

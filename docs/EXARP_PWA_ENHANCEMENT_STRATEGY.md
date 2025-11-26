@@ -617,7 +617,7 @@ class EnhancedPWAAnalyzer:
 ## Related Documentation
 
 - [Jupyter Notebook Integration](EXARP_JUPYTER_NOTEBOOK_INTEGRATION.md) - Notebook analysis and automation
-- [PWA Review Tool](TOOLS_STATUS.md) - Current PWA review capabilities
+- PWA Review Tool - Current PWA review capabilities
 - [Task Management Integration](EXARP_TASK_MANAGEMENT_INTEGRATION.md) - Task extraction from notebooks
 
 ---

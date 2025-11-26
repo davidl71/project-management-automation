@@ -552,8 +552,8 @@ def run_daily_automation_tool(
 ## Related Documentation
 
 - [Self-Improvement Strategy](EXARP_SELF_IMPROVEMENT.md) - Using Exarp on itself
-- [Tool Status](TOOLS_STATUS.md) - Available tools
-- [Usage Guide](USAGE.md) - How to use Exarp
+- Tool Status - Available tools
+- Usage Guide - How to use Exarp
 
 ---
 

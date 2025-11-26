@@ -591,7 +591,7 @@ pip install tasklib
 
 - [RAG Integration](EXARP_RAG_INTEGRATION.md) - Semantic analysis for better duplicate detection
 - [Self-Improvement Strategy](EXARP_SELF_IMPROVEMENT.md) - Using Exarp on itself
-- [Tool Status](TOOLS_STATUS.md) - Available tools
+- Tool Status - Available tools
 
 ---
 

@@ -498,9 +498,9 @@ workflow_result = run_automation_workflow_tool(
 
 ## Related Documentation
 
-- [GitHub Workflows](GITHUB_WORKFLOWS.md) - CI/CD workflows
-- [Tool Status](TOOLS_STATUS.md) - Available tools
-- [Usage Guide](USAGE.md) - How to use Exarp tools
+- GitHub Workflows - CI/CD workflows
+- Tool Status - Available tools
+- Usage Guide - How to use Exarp tools
 - [Contributing Guide](../CONTRIBUTING.md) - Development guidelines
 
 ---

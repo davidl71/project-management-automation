@@ -547,7 +547,7 @@ def sync_tasks_tool(
 - [Popular PM Tools Integration](EXARP_POPULAR_PM_TOOLS_INTEGRATION.md) - Integration strategies
 - [Task Management Integration](EXARP_TASK_MANAGEMENT_INTEGRATION.md) - Task management integration
 - [Multi-Project Aggregation](EXARP_MULTI_PROJECT_AGGREGATION.md) - Multi-project support
-- [Tool Status](TOOLS_STATUS.md) - Current tool capabilities
+- Tool Status - Current tool capabilities
 
 ---
 
