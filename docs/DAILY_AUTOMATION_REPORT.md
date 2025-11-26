@@ -1,35 +1,39 @@
 # Daily Automation Report
 
-**Date**: 2025-11-26 09:20:04
-**Mode**: APPLIED
+**Date**: 2025-11-26 09:30:26
+**Mode**: DRY RUN
 
 ## Summary
 
 - **Total Tasks**: 3
-- **Succeeded**: 0
-- **Failed**: 3
-- **Success Rate**: 0.0%
+- **Succeeded**: 3
+- **Failed**: 0
+- **Success Rate**: 100.0%
 - **Duration**: 0.00 seconds
 
 ## Task Results
 
-### ❌ Documentation Health Check
+### ✅ Documentation Health Check
 
-- **Status**: error
-- **Duration**: 0.20s
-- **Error**: /Volumes/SSD1_APFS/project-management-automation/venv/bin/python3: Relative module names not supported
+- **Status**: success
+- **Duration**: 1.06s
+- **Summary**:
+  - output: 
 
+### ✅ Todo2 Alignment Analysis
 
-### ❌ Todo2 Alignment Analysis
+- **Status**: success
+- **Duration**: 0.54s
+- **Summary**:
+  - output: 
 
-- **Status**: error
-- **Duration**: 0.20s
-- **Error**: /Volumes/SSD1_APFS/project-management-automation/venv/bin/python3: Relative module names not supported
+### ✅ Duplicate Task Detection
 
-
-### ❌ Duplicate Task Detection
-
-- **Status**: error
-- **Duration**: 0.18s
-- **Error**: /Volumes/SSD1_APFS/project-management-automation/venv/bin/python3: Relative module names not supported
+- **Status**: success
+- **Duration**: 16.65s
+- **Summary**:
+  - output: 
+✅ Duplicate detection complete!
+   Report: /Volumes/SSD1_APFS/project-management-automation/docs/TODO2_DUPLICATE_DETECTION_REPORT.md
+   Duplicates found: 0
 

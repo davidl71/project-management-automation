@@ -12,7 +12,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
@@ -196,7 +196,9 @@ class DailyAutomation:
             # Convert script path to module name
             # e.g., project_management_automation/scripts/automate_docs_health_v2.py
             #    -> project_management_automation.scripts.automate_docs_health_v2
-            module_name = str(script_path).replace('/', '.').replace('.py', '')
+            # Use the relative path from DAILY_TASKS, not the full filesystem path
+            relative_script = DAILY_TASKS[task_id]['script']
+            module_name = relative_script.replace('/', '.').replace('.py', '')
             
             # Build command - run as module
             cmd = [sys.executable, '-m', module_name]
@@ -302,6 +304,8 @@ class DailyAutomation:
 
 def main():
     """Main entry point."""
+    from project_management_automation.utils import find_project_root
+    
     parser = argparse.ArgumentParser(description='Run daily maintenance tasks')
     parser.add_argument('--tasks', nargs='+',
                        choices=list(DAILY_TASKS.keys()),
@@ -316,6 +320,8 @@ def main():
                        help='Path for report output')
 
     args = parser.parse_args()
+    
+    project_root = find_project_root()
 
     config = {
         'tasks': args.tasks,
@@ -324,7 +330,7 @@ def main():
         'output_path': args.output_path
     }
 
-    automation = DailyAutomation(config)
+    automation = DailyAutomation(config, project_root=project_root)
     results = automation.run()
 
     print(json.dumps(results, indent=2))
