@@ -13,14 +13,13 @@ from typing import Any
 
 from ..utils import find_project_root
 
-# Optional: Multi-source wisdom system
+# Optional: Multi-source wisdom system (extraction-ready subpackage)
 try:
-    from .wisdom_sources import (
+    from .wisdom import (
         get_wisdom,
-        format_wisdom_text,
+        format_text as format_wisdom_text,
         load_config as load_wisdom_config,
-        save_config as save_wisdom_config,
-        list_available_sources,
+        list_sources as list_available_sources,
     )
     WISDOM_AVAILABLE = True
 except ImportError:

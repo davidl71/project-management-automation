@@ -106,6 +106,56 @@ Exarp prioritizes:
 - **Fast** - O(n) dictionary lookup vs O(n²) fuzzy matching
 - **Human-readable** - consolidation rules are explicit
 
+### Wisdom System (Daily Quotes)
+
+**Decision:** Custom multi-source wisdom engine with extraction-ready design  
+**Alternatives Considered:** fortune-mod, quotable.io API, motivational-quotes npm  
+**Why Custom:**
+
+| Reason | Benefit |
+|--------|---------|
+| **Health-mapped** | Quotes match project status (chaos→enlightenment) |
+| **Public domain only** | No licensing concerns (Stoics, Tao, KJV Bible, etc.) |
+| **Offline-first** | Local quotes work without internet |
+| **Sefaria integration** | Live Jewish texts via free API with graceful fallback |
+| **Zero dependencies** | Pure Python, stdlib only |
+
+**Current Size:** ~1,200 lines across 3 files  
+**Extraction Threshold:** 2,500+ lines OR external demand
+
+#### Extraction-Ready Architecture
+
+The wisdom system is designed for easy extraction to standalone package:
+
+```
+project_management_automation/
+└── tools/
+    └── wisdom/                  # Subpackage (extraction-ready)
+        ├── __init__.py          # Public API: get_wisdom(), list_sources()
+        ├── sources.py           # 9 local sources (Stoic, BOFH, Tao, etc.)
+        ├── sefaria.py           # Sefaria.org API integration
+        └── pistis_sophia.py     # Original Gnostic quotes
+```
+
+**Public API (stable for extraction):**
+```python
+from wisdom import get_wisdom, list_sources
+
+wisdom = get_wisdom(health_score=75.0, source="stoic")
+# Returns: {quote, source, encouragement, wisdom_source, wisdom_icon, ...}
+
+sources = list_sources()
+# Returns: [{id, name, icon}, ...]
+```
+
+**Split Criteria (when ANY becomes true):**
+1. ☐ Someone requests standalone package
+2. ☐ Needed in another project
+3. ☐ Grows beyond 2,500 lines
+4. ☐ Requires independent release cycle
+
+**Potential Package Name:** `devwisdom` or `cli-wisdom`
+
 ---
 
 ## Justified External Dependencies
