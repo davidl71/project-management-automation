@@ -271,6 +271,18 @@ try:
         from .tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
         from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from .tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
+        from .tools.prompt_iteration_tracker import (
+            log_prompt_iteration as _log_prompt_iteration,
+            analyze_prompt_iterations as _analyze_prompt_iterations,
+        )
+        from .tools.model_recommender import (
+            recommend_model as _recommend_model,
+            list_available_models as _list_available_models,
+        )
+        from .tools.hint_catalog import (
+            list_tools as _list_tools,
+            get_tool_help as _get_tool_help,
+        )
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -313,6 +325,18 @@ try:
         from tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
         from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
+        from tools.prompt_iteration_tracker import (
+            log_prompt_iteration as _log_prompt_iteration,
+            analyze_prompt_iterations as _analyze_prompt_iterations,
+        )
+        from tools.model_recommender import (
+            recommend_model as _recommend_model,
+            list_available_models as _list_available_models,
+        )
+        from tools.hint_catalog import (
+            list_tools as _list_tools,
+            get_tool_help as _get_tool_help,
+        )
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -1074,6 +1098,89 @@ if mcp:
             "Generate Cursor rules for my Python MCP project"
             """
             return _generate_cursor_rules(rules, overwrite, analyze_only)
+
+        @mcp.tool()
+        def log_prompt_iteration(
+            prompt: str,
+            task_id: Optional[str] = None,
+            mode: Optional[str] = None,
+            outcome: Optional[str] = None,
+            iteration: int = 1
+        ) -> str:
+            """[HINT: Prompt logging. Track prompt iterations for workflow optimization.]
+
+            📊 Output: Logged entry with timestamp, prompt metadata
+            🔧 Side Effects: Writes to .cursor/prompt_history/
+            📁 Creates: Daily session logs
+            ⏱️ Typical Runtime: <1 second
+            """
+            return _log_prompt_iteration(prompt, task_id, mode, outcome, iteration)
+
+        @mcp.tool()
+        def analyze_prompt_iterations(days: int = 7) -> str:
+            """[HINT: Prompt analysis. Iteration patterns and workflow optimization insights.]
+
+            📊 Output: Statistics, patterns, and recommendations
+            🔧 Side Effects: None (read-only)
+            📁 Analyzes: .cursor/prompt_history/ logs
+            ⏱️ Typical Runtime: 1-3 seconds
+            """
+            return _analyze_prompt_iterations(days)
+
+        @mcp.tool()
+        def recommend_model(
+            task_description: Optional[str] = None,
+            task_type: Optional[str] = None,
+            optimize_for: str = "quality",
+            include_alternatives: bool = True
+        ) -> str:
+            """[HINT: Model selection. Optimal AI model for task type.]
+
+            📊 Output: Recommended model, confidence, alternatives
+            🔧 Side Effects: None (advisory only)
+            📁 Analyzes: Task description, keywords, task type
+            ⏱️ Typical Runtime: <1 second
+            """
+            return _recommend_model(task_description, task_type, optimize_for, include_alternatives)
+
+        @mcp.tool()
+        def list_available_models() -> str:
+            """[HINT: Model catalog. Lists all available models with capabilities.]
+
+            📊 Output: Model catalog with best-for, cost, speed info
+            🔧 Side Effects: None
+            ⏱️ Typical Runtime: <1 second
+            """
+            return _list_available_models()
+
+        @mcp.tool()
+        def list_tools(
+            category: Optional[str] = None,
+            persona: Optional[str] = None,
+            include_examples: bool = True
+        ) -> str:
+            """[HINT: Tool catalog. Lists all tools with rich descriptions and examples.]
+
+            📊 Output: Filtered tool catalog with usage guidance
+            🔧 Side Effects: None
+            ⏱️ Typical Runtime: <1 second
+
+            Categories: Project Health, Task Management, Code Quality,
+            Security, Planning, Workflow, Configuration
+            """
+            return _list_tools(category, persona, include_examples)
+
+        @mcp.tool()
+        def get_tool_help(tool_name: str) -> str:
+            """[HINT: Tool help. Detailed help for a specific tool with examples.]
+
+            📊 Output: Full tool documentation with examples and related tools
+            🔧 Side Effects: None
+            ⏱️ Typical Runtime: <1 second
+
+            Example: get_tool_help("project_scorecard")
+            """
+            return _get_tool_help(tool_name)
 
         @mcp.tool()
         def project_overview(output_format: str = "text", output_path: Optional[str] = None) -> str:
