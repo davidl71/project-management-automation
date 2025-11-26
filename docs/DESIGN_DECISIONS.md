@@ -156,6 +156,50 @@ sources = list_sources()
 
 **Potential Package Name:** `devwisdom` or `cli-wisdom`
 
+### Versioning Strategy
+
+**Decision:** Dynamic versioning with epoch timestamps and separate subpackage versions  
+**Alternatives Considered:** setuptools-scm, hardcoded versions, CalVer  
+**Why Custom:**
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **setuptools-scm** | Automatic from git | Requires dependency, less control |
+| **Hardcoded** | Simple | Easy to forget updates |
+| **CalVer** | Date-based | Less semantic meaning |
+| **Our Approach** | Dynamic + epoch + git info | Best of all worlds |
+
+**Version Formats (PEP 440 compliant):**
+
+```
+Release:  0.1.15                           # From git tag v0.1.15
+Dev:      0.1.15.dev1732617600+g60cfd2e    # Epoch + commit hash
+Nightly:  0.1.15.post1732617600            # For CI scheduled builds
+```
+
+**Single Source of Truth:** `version.py`
+
+```python
+# project_management_automation/version.py
+BASE_VERSION = "0.1.15"  # Bump this for releases
+__version__ = get_version()  # Dynamic based on context
+```
+
+**Intentionally Separate Versions:**
+
+| Location | Version | Reason |
+|----------|---------|--------|
+| `tools/wisdom/__init__.py` | `1.0.0` | Designed for extraction to standalone `devwisdom` package |
+
+These are **not bugs** - they're independent versioning for subpackages that will become separate projects.
+
+**Release Workflow:**
+
+```bash
+./scripts/version-bump.sh patch   # 0.1.15 → 0.1.16, commit, tag
+git push origin main --tags        # Push code and tag
+```
+
 ### Output Separation Pattern (Human vs AI)
 
 **Decision:** Custom `split_output` utility using FastMCP Context methods  

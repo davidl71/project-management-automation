@@ -89,6 +89,10 @@ __all__ = [
     "PISTIS_SOPHIA_AVAILABLE",
 ]
 
+# INTENTIONAL: Wisdom module has its own version, separate from Exarp.
+# This subpackage is designed for extraction to standalone `devwisdom` package.
+# When extracted, it will have independent versioning on PyPI.
+# See: docs/DESIGN_DECISIONS.md#wisdom-system-versioning
 __version__ = "1.0.0"
 __author__ = "Exarp Project"
 
