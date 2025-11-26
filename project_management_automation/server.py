@@ -242,6 +242,8 @@ try:
         from .tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
         from .tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
         from .tools.git_hooks import setup_git_hooks as _setup_git_hooks
+        from .tools.problems_advisor import analyze_problems_tool as _analyze_problems
+        from .tools.problems_advisor import list_problem_categories as _list_problem_categories
         from .tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
         from .tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
         from .tools.project_overview import generate_project_overview as _generate_project_overview
@@ -276,6 +278,8 @@ try:
         from tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
         from tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
         from tools.git_hooks import setup_git_hooks as _setup_git_hooks
+        from tools.problems_advisor import analyze_problems_tool as _analyze_problems
+        from tools.problems_advisor import list_problem_categories as _list_problem_categories
         from tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
         from tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
         from tools.project_overview import generate_project_overview as _generate_project_overview
@@ -653,6 +657,20 @@ if mcp:
             return _add_external_tool_hints(dry_run, output_path, min_file_size)
 
         @mcp.tool()
+        def analyze_problems(
+            problems_json: str,
+            include_hints: bool = True,
+            output_path: Optional[str] = None
+        ) -> str:
+            """[HINT: Problems advisor. Analyzes linter errors, provides resolution hints, metrics.]"""
+            return _analyze_problems(problems_json, include_hints, output_path)
+
+        @mcp.tool()
+        def list_problem_categories() -> str:
+            """[HINT: Problem categories. Shows all recognized categories with resolution strategies.]"""
+            return _list_problem_categories()
+
+        @mcp.tool()
         def run_daily_automation(
             tasks: Optional[List[str]] = None,
             include_slow: bool = False,
@@ -793,12 +811,26 @@ if mcp:
 
         # Helper for sprint automation (shared implementation)
         def _sprint_automation_impl(
-            max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
-            run_testing_tools, priority_filter, tag_filter, dry_run, output_path
+            max_iterations,
+            auto_approve,
+            extract_subtasks,
+            run_analysis_tools,
+            run_testing_tools,
+            priority_filter,
+            tag_filter,
+            dry_run,
+            output_path,
         ) -> str:
             return _sprint_automation(
-                max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
-                run_testing_tools, priority_filter, tag_filter, dry_run, output_path,
+                max_iterations,
+                auto_approve,
+                extract_subtasks,
+                run_analysis_tools,
+                run_testing_tools,
+                priority_filter,
+                tag_filter,
+                dry_run,
+                output_path,
             )
 
         @mcp.tool()
@@ -818,8 +850,15 @@ if mcp:
             Run automated sprint workflow processing tasks.
             """
             return _sprint_automation_impl(
-                max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
-                run_testing_tools, priority_filter, tag_filter, dry_run, output_path,
+                max_iterations,
+                auto_approve,
+                extract_subtasks,
+                run_analysis_tools,
+                run_testing_tools,
+                priority_filter,
+                tag_filter,
+                dry_run,
+                output_path,
             )
 
         @mcp.tool()
@@ -836,8 +875,15 @@ if mcp:
         ) -> str:
             """[DEPRECATED: Use run_sprint_automation] Alias for backward compatibility."""
             return _sprint_automation_impl(
-                max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
-                run_testing_tools, priority_filter, tag_filter, dry_run, output_path,
+                max_iterations,
+                auto_approve,
+                extract_subtasks,
+                run_analysis_tools,
+                run_testing_tools,
+                priority_filter,
+                tag_filter,
+                dry_run,
+                output_path,
             )
 
         @mcp.tool()
@@ -1620,6 +1666,7 @@ if mcp:
 def _is_mcp_mode() -> bool:
     """Detect if running in MCP mode (stdin is not a TTY or MCP env vars set)."""
     import sys
+
     # Check for explicit MCP mode
     if os.environ.get("EXARP_MCP_MODE") == "1":
         return True
@@ -1634,7 +1681,7 @@ def _is_mcp_mode() -> bool:
 
 def _print_shell_setup(shell: str = "zsh") -> None:
     """Print shell configuration that can be eval'd or sourced."""
-    setup = f'''# Exarp Shell Setup (generated by: exarp --shell-setup)
+    setup = f"""# Exarp Shell Setup (generated by: exarp --shell-setup)
 # Add to your ~/.{shell}rc or eval: eval "$(exarp --shell-setup)"
 
 # ═══════════════════════════════════════════════════════════════
@@ -1902,14 +1949,14 @@ if [[ "${{EXARP_MOTD:-0}}" != "0" ]]; then
 fi
 
 echo "✅ Exarp loaded: xl (lite) | xt (tasks) | xpl (projects) | xs/xo/xw (full)"
-'''
+"""
     print(setup)
 
 
 def _print_completions(shell: str = "zsh") -> None:
     """Print shell completions."""
     if shell == "zsh":
-        completions = '''# Exarp ZSH Completions (generated by: exarp --completions)
+        completions = """# Exarp ZSH Completions (generated by: exarp --completions)
 # Add to your ~/.zshrc or eval: eval "$(exarp --completions)"
 
 _exarp_commands() {
@@ -1940,7 +1987,7 @@ _exarp() {
 
 compdef _exarp exarp 2>/dev/null
 compdef _exarp uvx\\ exarp 2>/dev/null
-'''
+"""
     else:
         completions = f"# Completions for {shell} not yet implemented"
     print(completions)
@@ -1948,7 +1995,7 @@ compdef _exarp uvx\\ exarp 2>/dev/null
 
 def _print_aliases() -> None:
     """Print just the aliases (minimal setup without full functions)."""
-    aliases = '''# Exarp Aliases (generated by: exarp --aliases)
+    aliases = """# Exarp Aliases (generated by: exarp --aliases)
 # eval "$(exarp --aliases)"
 # Note: For caching/fallback support, use: eval "$(exarp --shell-setup)"
 
@@ -1962,14 +2009,14 @@ alias xw="uvx --from exarp python3 -c 'from project_management_automation.tools.
 
 # For full features with caching and offline fallback, use:
 #   eval "$(exarp --shell-setup)"
-'''
+"""
     print(aliases)
 
 
 def _print_usage() -> None:
     """Print usage help for interactive mode."""
     version_str = __version__
-    usage = f'''
+    usage = f"""
 ╭──────────────────────────────────────────────────────────╮
 │                                                          │
 │    ███████╗██╗  ██╗ █████╗ ██████╗ ██████╗               │
@@ -2018,15 +2065,16 @@ MCP MODE (for Cursor/AI):
 
 DOCS:
     https://github.com/davidl71/project-management-automation
-'''
+"""
     print(usage)
 
 
 def _print_banner(file=None) -> None:
     """Print MCP server banner."""
     import sys
+
     file = file or sys.stderr
-    
+
     tools_count = 25 if TOOLS_AVAILABLE else 1
     resources_ok = RESOURCES_AVAILABLE if "RESOURCES_AVAILABLE" in globals() else False
 
@@ -2060,37 +2108,37 @@ def _print_banner(file=None) -> None:
 def main():
     """Entry point for exarp - detects mode and handles CLI args."""
     import sys
-    
+
     args = sys.argv[1:]
-    
+
     # Handle CLI arguments
     if "--help" in args or "-h" in args:
         _print_usage()
         return
-    
+
     if "--version" in args or "-v" in args:
         print(f"exarp {__version__}")
         return
-    
+
     if "--shell-setup" in args or "--zshrc" in args:
         _print_shell_setup("zsh")
         return
-    
+
     if "--completions" in args:
         _print_completions("zsh")
         return
-    
+
     if "--aliases" in args:
         _print_aliases()
         return
-    
+
     # Check for explicit MCP mode or auto-detect
     if "--mcp" in args or _is_mcp_mode():
         # MCP server mode
         _print_banner()
         mcp.run(show_banner=False)
         return
-    
+
     # Interactive terminal without args - show usage
     _print_usage()
 
