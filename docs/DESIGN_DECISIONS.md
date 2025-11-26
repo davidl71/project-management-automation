@@ -156,6 +156,168 @@ sources = list_sources()
 
 **Potential Package Name:** `devwisdom` or `cli-wisdom`
 
+### Output Separation Pattern (Human vs AI)
+
+**Decision:** Custom `split_output` utility using FastMCP Context methods  
+**Alternatives Considered:** External CLI output parsers, Desktop Commander MCP, MCP Code Execution Server  
+**Why Custom (but minimal):**
+
+| Existing Tool | What It Does | What It Doesn't Do |
+|--------------|--------------|-------------------|
+| **MCP Code Execution Server** | Reduces 30K→200 tokens via sandbox | Use `ctx.info()` for human output |
+| **Desktop Commander MCP** | Terminal sessions, process mgmt | Separate human/AI output channels |
+| **CLI MCP Server** | Secure command whitelisting | Parse specific tool outputs |
+
+**Unique Value of Our Approach:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  THE PROBLEM: Token Waste in Tool Output                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Traditional tool:                                              │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  return json.dumps({                                   │    │
+│  │      "formatted_output": "══ REPORT ══\n...(500 lines)",│    │
+│  │      "data": {"score": 85, "passed": 45}                │    │
+│  │  })                                                     │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│  Result: AI consumes 500+ lines of formatted text               │
+│          Human sees JSON blob in chat                           │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  OUR APPROACH: split_output utility                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  await split_output(ctx,                                │    │
+│  │      human="══ REPORT ══\n...(500 lines)",              │    │
+│  │      ai={"score": 85, "passed": 45}                     │    │
+│  │  )                                                      │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                                                                 │
+│  Result: Human sees formatted report in client UI               │
+│          AI receives only 30 tokens of structured data          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Implementation (~30 lines):**
+
+```python
+# project_management_automation/utils/output.py
+
+from typing import Any, Optional
+import json
+
+async def split_output(
+    ctx,
+    human: str,
+    ai: Any,
+    stream_human: bool = False
+) -> dict:
+    """
+    Separate human-readable output from AI-processable data.
+    
+    Args:
+        ctx: FastMCP Context object
+        human: Formatted text for human consumption (→ ctx.info())
+        ai: Structured data for AI (→ return value)
+        stream_human: If True, stream human output line by line
+    
+    Returns:
+        The 'ai' parameter as compact JSON-ready dict
+    """
+    if stream_human and hasattr(ctx, 'info'):
+        for line in human.split('\n'):
+            await ctx.info(line)
+    elif hasattr(ctx, 'info'):
+        await ctx.info(human)
+    
+    return ai if isinstance(ai, dict) else {"result": ai}
+
+
+async def progress_wrapper(
+    ctx,
+    iterable,
+    total: Optional[int] = None,
+    desc: str = "Processing"
+):
+    """
+    Wrap an iterable with progress reporting via ctx.report_progress().
+    
+    Args:
+        ctx: FastMCP Context object
+        iterable: Items to iterate
+        total: Total count (if known)
+        desc: Description for progress
+    
+    Yields:
+        Items from iterable, reporting progress along the way
+    """
+    items = list(iterable) if total is None else iterable
+    count = total or len(items)
+    
+    for i, item in enumerate(items):
+        if hasattr(ctx, 'report_progress'):
+            await ctx.report_progress(
+                progress=i / count,
+                total=count,
+                message=f"{desc}: {i+1}/{count}"
+            )
+        yield item
+    
+    if hasattr(ctx, 'report_progress'):
+        await ctx.report_progress(progress=1.0, total=count, message=f"{desc}: Complete")
+```
+
+**Usage in Exarp Tools:**
+
+```python
+# Before (wasteful)
+@mcp.tool()
+def project_scorecard(...) -> str:
+    result = generate_scorecard()
+    return json.dumps({
+        'formatted_output': result['formatted_output'],  # 500+ lines
+        'scores': result['scores'],
+        'recommendations': result['recommendations']
+    })
+
+# After (efficient)
+@mcp.tool()
+async def project_scorecard(ctx: Context, ...) -> str:
+    result = generate_scorecard()
+    return json.dumps(await split_output(ctx,
+        human=result['formatted_output'],  # → ctx.info() (human sees)
+        ai={                                # → return (AI processes)
+            'scores': result['scores'],
+            'blockers': result.get('blockers', [])
+        }
+    ), separators=(',', ':'))
+```
+
+**Why NOT Use Existing Tools:**
+
+| Approach | Problem |
+|----------|---------|
+| Desktop Commander | Returns raw output, doesn't separate channels |
+| MCP Code Execution | Focuses on sandboxing, not output separation |
+| Custom parsers | Over-engineering; we don't need to parse pytest/ruff output |
+
+**What We're NOT Building:**
+- ❌ A command runner (use existing MCP terminal tools)
+- ❌ Output parsers for pytest/ruff/eslint (not our value-add)
+- ❌ A heavy framework (just ~30 lines of utility code)
+
+**Metrics:**
+| Metric | Before | After |
+|--------|--------|-------|
+| `project_scorecard` tokens | ~1,200 | ~100 |
+| `project_overview` tokens | ~800 | ~150 |
+| Human experience | JSON blob | Formatted report |
+
 ---
 
 ## Justified External Dependencies
