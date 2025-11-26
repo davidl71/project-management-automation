@@ -110,21 +110,41 @@ def get_prompt_alias(name: str) -> str:
 def validate_tool_name(name: str) -> Tuple[bool, str]:
     """
     Validate a tool name follows verb_object convention.
-    
+
     Returns:
         (is_valid, suggestion) - If invalid, suggestion contains recommended name
     """
     valid_prefixes = (
-        "generate_", "check_", "analyze_", "detect_", "scan_", "find_",
-        "run_", "get_", "list_", "sync_", "setup_", "validate_", "batch_",
-        "resolve_", "consult_", "save_", "recall_", "search_", "export_",
-        "fetch_", "consolidate_", "simplify_", "synthesize_", "add_",
+        "generate_",
+        "check_",
+        "analyze_",
+        "detect_",
+        "scan_",
+        "find_",
+        "run_",
+        "get_",
+        "list_",
+        "sync_",
+        "setup_",
+        "validate_",
+        "batch_",
+        "resolve_",
+        "consult_",
+        "save_",
+        "recall_",
+        "search_",
+        "export_",
+        "fetch_",
+        "consolidate_",
+        "simplify_",
+        "synthesize_",
+        "add_",
         "server_",  # Exception for server_status
     )
-    
+
     if name.startswith(valid_prefixes):
         return True, name
-    
+
     # Suggest a fix
     if "scorecard" in name:
         return False, f"generate_{name}"
@@ -146,10 +166,29 @@ def list_all_conventions() -> Dict[str, List[str]]:
         "tool_renames": list(TOOL_RENAMES.items()),
         "prompt_renames": list(PROMPT_RENAMES.items()),
         "valid_tool_prefixes": [
-            "generate_", "check_", "analyze_", "detect_", "scan_", "find_",
-            "run_", "get_", "list_", "sync_", "setup_", "validate_", "batch_",
-            "resolve_", "consult_", "save_", "recall_", "search_", "export_",
-            "fetch_", "consolidate_", "simplify_", "synthesize_", "add_",
+            "generate_",
+            "check_",
+            "analyze_",
+            "detect_",
+            "scan_",
+            "find_",
+            "run_",
+            "get_",
+            "list_",
+            "sync_",
+            "setup_",
+            "validate_",
+            "batch_",
+            "resolve_",
+            "consult_",
+            "save_",
+            "recall_",
+            "search_",
+            "export_",
+            "fetch_",
+            "consolidate_",
+            "simplify_",
+            "synthesize_",
+            "add_",
         ],
     }
-

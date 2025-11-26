@@ -1877,7 +1877,9 @@ with open('$todo_file') as f:
 count = 0
 for t in data.get('todos', []):
     if t.get('status', '').lower() in ['pending', 'in_progress', 'todo', 'in progress']:
-        print('│  • ' + t.get('content', '')[:47].ljust(47) + '│')
+        # Support both 'content' (exarp) and 'name' (todo2) formats
+        task_text = t.get('content') or t.get('name') or t.get('title') or ''
+        print('│  • ' + task_text[:47].ljust(47) + '│')
         count += 1
         if count >= $limit: break
 if count == 0: print('│  ✅ No pending tasks!                             │')
@@ -1898,10 +1900,10 @@ xpl() {{
             local name=$(_exarp_name "$subdir")
             local tasks=$(_exarp_tasks "$subdir")
             printf "│  %-30s %-17s│\\n" "${{name:0:30}}" "$tasks"
-            ((count++))
+            count=$((count + 1))
         fi
     done
-    (( count == 0 )) && echo "│  No projects found                                │"
+    [[ $count -eq 0 ]] && echo "│  No projects found                                │"
     echo "└─────────────────────────────────────────────────────┘"
     echo "  Found $count project(s)"
 }}
