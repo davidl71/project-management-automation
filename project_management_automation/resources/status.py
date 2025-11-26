@@ -38,7 +38,7 @@ def get_status_resource() -> str:
 
         status = {
             "server": "exarp",
-            "version": "0.1.6",
+            "version": "0.1.11",
             "status": "operational",
             "mcp_available": True,  # Assumed if resource is being called
             "tools_available": tools_available,

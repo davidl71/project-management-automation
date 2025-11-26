@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Optional
 from functools import wraps
 
 # Version - keep in sync with pyproject.toml
-__version__ = "0.1.8"
+__version__ = "0.1.11"
 
 # Use FastMCP's logging utility (outputs to stderr with Rich formatting)
 # This is MCP-compatible: stdout = JSON-RPC only, stderr = logging
@@ -215,9 +215,6 @@ if MCP_AVAILABLE:
     for logger_name in logging.Logger.manager.loggerDict:
         if any(x in logger_name for x in ['mcp', 'fastmcp', 'stdio']):
             logging.getLogger(logger_name).setLevel(logging.WARNING)
-else:
-    logger.warning("MCP not available - Phase 2 tools complete, install MCP to enable server")
-
 # Import automation tools (handle both relative and absolute imports)
 try:
     # Try relative imports first (when run as module)
@@ -303,7 +300,7 @@ def register_tools():
             return json.dumps(
                 {
                     "status": "operational",
-                    "version": "0.1.8",
+                    "version": __version__,
                     "tools_available": TOOLS_AVAILABLE,
                     "total_tools": 27 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
@@ -1211,8 +1208,3 @@ elif stdio_server_instance:
         except Exception as e:
             logger.error(f"Server error: {e}", exc_info=True)
             sys.exit(1)
-else:
-    logger.warning("MCP not available - Phase 2 tools complete, install MCP to enable server")
-    if __name__ == "__main__":
-        logger.info("Phase 2 tools complete (7 tools implemented). Install MCP package to run server.")
-        logger.info("Run: pip install mcp")
