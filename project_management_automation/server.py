@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Optional
 from functools import wraps
 
 # Version - keep in sync with pyproject.toml
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 # Use FastMCP's logging utility (outputs to stderr with Rich formatting)
 # This is MCP-compatible: stdout = JSON-RPC only, stderr = logging
@@ -303,7 +303,7 @@ def register_tools():
             return json.dumps(
                 {
                     "status": "operational",
-                    "version": "0.1.7",
+                    "version": "0.1.8",
                     "tools_available": TOOLS_AVAILABLE,
                     "total_tools": 27 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),

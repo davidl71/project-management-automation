@@ -318,6 +318,68 @@ async def project_scorecard(ctx: Context, ...) -> str:
 | `project_overview` tokens | ~800 | ~150 |
 | Human experience | JSON blob | Formatted report |
 
+### Data Storage Format (JSON vs YAML vs Compression)
+
+**Decision:** JSON with conditional formatting  
+**Alternatives Considered:** YAML, MessagePack, Protocol Buffers, SQLite, gzip compression  
+**Why JSON:**
+
+| Format | AI Readable | Token Efficiency | Parse Speed | Comments |
+|--------|-------------|------------------|-------------|----------|
+| **JSON (compact)** | ✅ Excellent | ✅ Best | ✅ Fastest | ❌ No |
+| **JSON (indented)** | ✅ Excellent | ⚠️ +20% | ✅ Fast | ❌ No |
+| **YAML** | ✅ Good | ✅ Good | ⚠️ 10x slower | ✅ Yes |
+| **Base64** | ❌ Gibberish | ❌ +33% | ✅ Fast | ❌ No |
+| **gzip/zstd** | ❌ Binary | ✅ -70% | ⚠️ Decompress | ❌ No |
+| **MessagePack** | ❌ Binary | ✅ -30% | ✅ Faster | ❌ No |
+
+**Format Selection by Use Case:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  USE CASE → FORMAT DECISION                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  AI Tool Response    → Compact JSON (no whitespace)             │
+│                         json.dumps(data, separators=(',',':'))  │
+│                                                                 │
+│  Git-Tracked State   → Indented JSON (readable diffs)           │
+│                         json.dump(data, f, indent=2)            │
+│                                                                 │
+│  Human Config        → YAML (comments, multiline)               │
+│                         # Supports inline documentation         │
+│                                                                 │
+│  Large Archives      → gzip JSON (storage only, not for AI)     │
+│                         Not used in Exarp currently             │
+│                                                                 │
+│  Binary/Media        → Git LFS (>50MB files)                    │
+│                         Not needed for current task sizes       │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Anti-Patterns (Never Do):**
+
+| Pattern | Problem |
+|---------|---------|
+| Base64 for AI | +33% size, AI sees gibberish |
+| Minified keys (`id`→`i`) | AI loses semantic understanding |
+| Hash references | Requires lookup table, breaks context |
+| Compression for AI responses | Binary output, AI can't read |
+| YAML for programmatic data | Ambiguity (`yes`→`true`, `no`→`false`) |
+
+**Bloat Prevention (Implemented):**
+
+```python
+# _format_findings() in intelligent_automation_base.py
+- Lists >10 items → "[N items - see logs]"
+- Items >5KB → truncated  
+- Total comment → max 10KB
+- Uses compact JSON (no indentation)
+```
+
+**Result:** Todo2 file reduced from 60MB → 594KB (-99%)
+
 ---
 
 ## Justified External Dependencies

@@ -86,7 +86,7 @@ def _get_project_info(project_root: Path) -> dict:
     """Get project metadata from pyproject.toml and git."""
     info = {
         'name': 'Exarp MCP Server',
-        'version': '0.1.7',
+        'version': '0.1.8',
         'description': 'Project Management Automation MCP Server',
         'type': 'MCP Server',
         'status': 'Active Development',
