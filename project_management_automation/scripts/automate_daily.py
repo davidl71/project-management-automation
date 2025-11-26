@@ -25,35 +25,35 @@ logger = logging.getLogger(__name__)
 DAILY_TASKS = {
     'docs_health': {
         'name': 'Documentation Health Check',
-        'script': 'scripts/automate_docs_health_v2.py',
+        'script': 'project_management_automation/scripts/automate_docs_health_v2.py',
         'mcp_tool': 'check_documentation_health',
         'quick': True,
         'description': 'Monitor documentation quality and structure'
     },
     'todo2_alignment': {
         'name': 'Todo2 Alignment Analysis',
-        'script': 'scripts/automate_todo2_alignment_v2.py',
+        'script': 'project_management_automation/scripts/automate_todo2_alignment_v2.py',
         'mcp_tool': 'analyze_todo2_alignment',
         'quick': True,
         'description': 'Ensure tasks align with project strategy'
     },
     'duplicate_detection': {
         'name': 'Duplicate Task Detection',
-        'script': 'scripts/automate_todo2_duplicate_detection.py',
+        'script': 'project_management_automation/scripts/automate_todo2_duplicate_detection.py',
         'mcp_tool': 'detect_duplicate_tasks',
         'quick': True,
         'description': 'Detect and report duplicate tasks'
     },
     'dependency_security': {
         'name': 'Dependency Security Scan',
-        'script': 'scripts/automate_dependency_security.py',
+        'script': 'project_management_automation/scripts/automate_dependency_security.py',
         'mcp_tool': 'scan_dependency_security',
         'quick': False,
         'description': 'Check for vulnerable dependencies'
     },
     'external_tool_hints': {
         'name': 'External Tool Hints',
-        'script': 'scripts/automate_external_tool_hints.py',
+        'script': 'project_management_automation/scripts/automate_external_tool_hints.py',
         'mcp_tool': 'add_external_tool_hints',
         'quick': True,
         'description': 'Add Context7 hints to documentation'
@@ -189,12 +189,17 @@ class DailyAutomation:
             }
 
     def _run_script(self, script_path: Path, task_id: str) -> Dict[str, Any]:
-        """Run a Python script."""
+        """Run a Python script as a module."""
         import subprocess
 
         try:
-            # Build command
-            cmd = [sys.executable, str(script_path)]
+            # Convert script path to module name
+            # e.g., project_management_automation/scripts/automate_docs_health_v2.py
+            #    -> project_management_automation.scripts.automate_docs_health_v2
+            module_name = str(script_path).replace('/', '.').replace('.py', '')
+            
+            # Build command - run as module
+            cmd = [sys.executable, '-m', module_name]
 
             if self.dry_run:
                 cmd.append('--dry-run')

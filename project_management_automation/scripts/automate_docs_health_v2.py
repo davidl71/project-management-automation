@@ -443,7 +443,10 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
 def load_config(config_path: Optional[Path] = None) -> Dict:
     """Load configuration."""
     if config_path is None:
-        config_path = project_root / 'scripts' / 'docs_health_config.json'
+        # Find project root
+        from project_management_automation.utils import find_project_root
+        project_root = find_project_root(Path(__file__).parent.parent.parent)
+        config_path = project_root / 'project_management_automation' / 'scripts' / 'docs_health_config.json'
 
     default_config = {
         'stale_threshold_days': 90,
@@ -468,8 +471,12 @@ def main():
     parser.add_argument('--output', type=Path, help='Output path for report')
     args = parser.parse_args()
 
+    # Find project root
+    from project_management_automation.utils import find_project_root
+    project_root = find_project_root(Path(__file__).parent.parent.parent)
+
     config = load_config(args.config)
-    analyzer = DocumentationHealthAnalyzerV2(config)
+    analyzer = DocumentationHealthAnalyzerV2(config, project_root)
 
     try:
         results = analyzer.run()
