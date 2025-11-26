@@ -3,9 +3,16 @@
     {
       "id": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "name": "Exarp - Project Management Automation MCP Server",
-      "description": "MCP server for project management automation tools (Enochian: Spirit of Air - Communication). Provides documentation health, task alignment, duplicate detection, security scanning, and automation opportunities.",
+      "description": "MCP server for project management automation tools (Enochian: Spirit of Air - Communication). Provides documentation health, task alignment, duplicate detection, security scanning, and automation opportunities.\n\n## Subprojects\n- **DevRadio** (d4b08b19-e05e-409a-a492-b88058de273b) - Automated developer broadcasting station for project updates, music, and alerts. Future fork candidate.",
       "createdAt": "2025-11-25T00:07:04.116Z",
-      "updatedAt": "2025-11-25T00:07:04.116Z"
+      "updatedAt": "2025-11-26T10:17:56.408Z"
+    },
+    {
+      "id": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "name": "DevRadio - Automated Developer Broadcasting Station",
+      "description": "🎙️ FUTURE FORK PROJECT - Automated developer radio/TV station for project updates, music, and alerts. Streams to YouTube Live with AI-generated content, royalty-free music, and real-time project notifications. Designed as standalone subproject for future extraction.\n\n## Fork-Ready Design\n- Self-contained module structure\n- Independent configuration\n- Documented APIs and interfaces\n- Separate dependency management\n\n## Core Features\n- 24/7 YouTube Live streaming\n- AI podcast generation (Podcastfy/Ollama)\n- Royalty-free music integration\n- Project update narration (TTS)\n- Alert system for user interaction\n- Legal compliance framework\n\n## Related Memory IDs\n- Research: 55d4f7f4-ed03-474f-a4c7-46ad33b23116\n- Legal Approach: 62c5d97b-da81-4651-b91e-b82bc37cae71",
+      "createdAt": "2025-11-26T10:10:51.936Z",
+      "updatedAt": "2025-11-26T10:10:51.936Z"
     }
   ],
   "tasks": [
@@ -48,7 +55,7 @@
     {
       "id": "5ac9a82a-48c8-4fa1-a8e0-8e8ce683b22e",
       "name": "Add MCP client library dependency for agentic-tools integration",
-      "details": "\ud83c\udfaf **Objective:** Add MCP client library dependency to enable calling agentic-tools MCP server programmatically\n\n\ud83d\udccb **Acceptance Criteria:**\n- `mcp>=1.0.0` added to `pyproject.toml` dependencies\n- MCP client library installed and verified\n- Documentation updated with dependency information\n- Version compatibility verified\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Dependency addition, installation verification, documentation update\n- **Excluded:** Actual MCP client implementation (separate task)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Add `mcp = \"^1.0.0\"` to `[project.dependencies]` in `pyproject.toml`\n- Verify package installation works\n- Check for compatibility with Python 3.9+\n- Document MCP client library usage\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `pyproject.toml` (add mcp dependency)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark dependency added)\n- Create: `docs/MCP_CLIENT_LIBRARY.md` (optional documentation)\n\n\ud83e\uddea **Testing Requirements:**\n- Verify `pip install -e .` installs mcp package\n- Test import: `from mcp import ClientSession, StdioServerParameters`\n- Verify package version meets requirements\n- Test basic MCP client connection (optional)\n\n\u26a0\ufe0f **Edge Cases:**\n- Python version compatibility\n- Dependency conflicts with existing packages\n- Installation failures on different systems\n\n\ud83d\udcda **Dependencies:** None (foundation task)",
+      "details": "🎯 **Objective:** Add MCP client library dependency to enable calling agentic-tools MCP server programmatically\n\n📋 **Acceptance Criteria:**\n- `mcp>=1.0.0` added to `pyproject.toml` dependencies\n- MCP client library installed and verified\n- Documentation updated with dependency information\n- Version compatibility verified\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Dependency addition, installation verification, documentation update\n- **Excluded:** Actual MCP client implementation (separate task)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Add `mcp = \"^1.0.0\"` to `[project.dependencies]` in `pyproject.toml`\n- Verify package installation works\n- Check for compatibility with Python 3.9+\n- Document MCP client library usage\n\n📁 **Files/Components:**\n- Update: `pyproject.toml` (add mcp dependency)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark dependency added)\n- Create: `docs/MCP_CLIENT_LIBRARY.md` (optional documentation)\n\n🧪 **Testing Requirements:**\n- Verify `pip install -e .` installs mcp package\n- Test import: `from mcp import ClientSession, StdioServerParameters`\n- Verify package version meets requirements\n- Test basic MCP client connection (optional)\n\n⚠️ **Edge Cases:**\n- Python version compatibility\n- Dependency conflicts with existing packages\n- Installation failures on different systems\n\n📚 **Dependencies:** None (foundation task)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:11:09.865Z",
@@ -68,7 +75,7 @@
     {
       "id": "d8863dae-ee14-403c-8be5-eb03dda95e7b",
       "name": "Extend MCPClient class with agentic-tools MCP support",
-      "details": "\ud83c\udfaf **Objective:** Extend existing MCPClient class to support agentic-tools MCP server calls (list_todos, create_task, update_task, etc.)\n\n\ud83d\udccb **Acceptance Criteria:**\n- `MCPClient` class extended with agentic-tools methods\n- Async methods implemented: `list_todos()`, `create_task()`, `update_task()`, `get_task()`, `delete_task()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Fallback to file access for backward compatibility\n- Unit tests created for all methods\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool migration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (simple vs advanced)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for agentic-tools\n- Implement async/await patterns throughout\n- Add connection pooling (singleton pattern or connection manager)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support project ID detection from project root\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_agentic_tools.py` (unit tests)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark infrastructure complete)\n\n\ud83e\uddea **Testing Requirements:**\n- Test `list_todos()` with valid project ID\n- Test `create_task()` creates task successfully\n- Test `update_task()` updates task correctly\n- Test error handling when MCP unavailable\n- Test fallback to file access works\n- Test connection pooling efficiency\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server not available (fallback needed)\n- Invalid project ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n\ud83d\udcda **Dependencies:** Task 1 (MCP client dependency must be added first)",
+      "details": "🎯 **Objective:** Extend existing MCPClient class to support agentic-tools MCP server calls (list_todos, create_task, update_task, etc.)\n\n📋 **Acceptance Criteria:**\n- `MCPClient` class extended with agentic-tools methods\n- Async methods implemented: `list_todos()`, `create_task()`, `update_task()`, `get_task()`, `delete_task()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Fallback to file access for backward compatibility\n- Unit tests created for all methods\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool migration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (simple vs advanced)\n\n🔧 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for agentic-tools\n- Implement async/await patterns throughout\n- Add connection pooling (singleton pattern or connection manager)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support project ID detection from project root\n\n📁 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_agentic_tools.py` (unit tests)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark infrastructure complete)\n\n🧪 **Testing Requirements:**\n- Test `list_todos()` with valid project ID\n- Test `create_task()` creates task successfully\n- Test `update_task()` updates task correctly\n- Test error handling when MCP unavailable\n- Test fallback to file access works\n- Test connection pooling efficiency\n\n⚠️ **Edge Cases:**\n- MCP server not available (fallback needed)\n- Invalid project ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n📚 **Dependencies:** Task 1 (MCP client dependency must be added first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:11:14.969Z",
@@ -89,7 +96,7 @@
     {
       "id": "44d2e835-7843-4b61-a212-3443230267b0",
       "name": "Migrate duplicate detection tool to use agentic-tools MCP",
-      "details": "\ud83c\udfaf **Objective:** Replace direct file access in duplicate detection tool with agentic-tools MCP calls\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/duplicate_detection.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_duplicate_detection.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (auto-fix remains as file write for now)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/duplicate_detection.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_duplicate_detection.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test duplicate detection works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n\ud83d\udcda **Dependencies:** Task 2 (MCPClient extension must be complete)",
+      "details": "🎯 **Objective:** Replace direct file access in duplicate detection tool with agentic-tools MCP calls\n\n📋 **Acceptance Criteria:**\n- `tools/duplicate_detection.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_duplicate_detection.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (auto-fix remains as file write for now)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n📁 **Files/Components:**\n- Update: `tools/duplicate_detection.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_duplicate_detection.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n🧪 **Testing Requirements:**\n- Test duplicate detection works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n⚠️ **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n📚 **Dependencies:** Task 2 (MCPClient extension must be complete)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:11:21.127Z",
@@ -110,7 +117,7 @@
     {
       "id": "39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2",
       "name": "Migrate task alignment tool to use agentic-tools MCP",
-      "details": "\ud83c\udfaf **Objective:** Replace direct file access in task alignment tool with agentic-tools MCP calls\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/todo2_alignment.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_alignment_v2.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (task creation remains as file write for now)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/todo2_alignment.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_alignment_v2.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test task alignment works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n\ud83d\udcda **Dependencies:** Task 2 (MCPClient extension must be complete)",
+      "details": "🎯 **Objective:** Replace direct file access in task alignment tool with agentic-tools MCP calls\n\n📋 **Acceptance Criteria:**\n- `tools/todo2_alignment.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_alignment_v2.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (task creation remains as file write for now)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n📁 **Files/Components:**\n- Update: `tools/todo2_alignment.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_alignment_v2.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n🧪 **Testing Requirements:**\n- Test task alignment works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n⚠️ **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n📚 **Dependencies:** Task 2 (MCPClient extension must be complete)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:11:25.126Z",
@@ -131,7 +138,7 @@
     {
       "id": "9520ff3a-13b8-4b46-9b8d-d004fde12989",
       "name": "Remove file access fallbacks after full migration",
-      "details": "\ud83c\udfaf **Objective:** Remove all direct file access code and fallbacks after successful MCP migration\n\n\ud83d\udccb **Acceptance Criteria:**\n- All direct file I/O code removed from tools\n- All fallback to file access removed\n- Codebase only uses agentic-tools MCP for Todo2 operations\n- Documentation updated to reflect MCP-only approach\n- Tests updated to remove file-based tests\n- Cleanup complete with no leftover file access code\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Code removal, test cleanup, documentation updates\n- **Excluded:** MCP implementation code (keep that)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Remove all `.todo2/state.todo2.json` file reads/writes\n- Remove fallback logic that uses file access\n- Remove file-based test fixtures\n- Update documentation to reflect MCP-only approach\n- Update error messages to reflect MCP requirement\n- Ensure all tools work correctly without file fallback\n\n\ud83d\udcc1 **Files/Components:**\n- Update: All tool files (remove file access code)\n- Update: Base class (remove file access code)\n- Update: Tests (remove file-based tests)\n- Update: Documentation (reflect MCP-only approach)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark migration complete)\n\n\ud83e\uddea **Testing Requirements:**\n- Verify all tools work without file fallback\n- Test error handling when MCP unavailable (proper error messages)\n- Verify no file access code remains\n- Test cleanup doesn't break functionality\n- Verify documentation is accurate\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server unavailable (proper error messages, no fallback)\n- Missing project ID (proper error handling)\n- Invalid MCP responses (error handling)\n\n\ud83d\udcda **Dependencies:** Tasks 3-5 (all read/write operations must be migrated first)",
+      "details": "🎯 **Objective:** Remove all direct file access code and fallbacks after successful MCP migration\n\n📋 **Acceptance Criteria:**\n- All direct file I/O code removed from tools\n- All fallback to file access removed\n- Codebase only uses agentic-tools MCP for Todo2 operations\n- Documentation updated to reflect MCP-only approach\n- Tests updated to remove file-based tests\n- Cleanup complete with no leftover file access code\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Code removal, test cleanup, documentation updates\n- **Excluded:** MCP implementation code (keep that)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Remove all `.todo2/state.todo2.json` file reads/writes\n- Remove fallback logic that uses file access\n- Remove file-based test fixtures\n- Update documentation to reflect MCP-only approach\n- Update error messages to reflect MCP requirement\n- Ensure all tools work correctly without file fallback\n\n📁 **Files/Components:**\n- Update: All tool files (remove file access code)\n- Update: Base class (remove file access code)\n- Update: Tests (remove file-based tests)\n- Update: Documentation (reflect MCP-only approach)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark migration complete)\n\n🧪 **Testing Requirements:**\n- Verify all tools work without file fallback\n- Test error handling when MCP unavailable (proper error messages)\n- Verify no file access code remains\n- Test cleanup doesn't break functionality\n- Verify documentation is accurate\n\n⚠️ **Edge Cases:**\n- MCP server unavailable (proper error messages, no fallback)\n- Missing project ID (proper error handling)\n- Invalid MCP responses (error handling)\n\n📚 **Dependencies:** Tasks 3-5 (all read/write operations must be migrated first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:11:37.750Z",
@@ -152,7 +159,7 @@
     {
       "id": "918e4218-f9d2-4032-991f-6c1e2823ad6e",
       "name": "Migrate write operations to use agentic-tools MCP",
-      "details": "\ud83c\udfaf **Objective:** Replace direct file writes with agentic-tools MCP calls (create_task, update_task, delete_task)\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/nightly_task_automation.py` uses `update_task()` instead of file write\n- `tools/task_clarification_resolution.py` uses `update_task()` instead of file write\n- `tools/batch_task_approval.py` uses `update_task()` for batch operations\n- Base class uses `create_task()` for task creation\n- All file writes replaced with MCP calls\n- Error handling with fallback to file access\n\n\ud83d\udeab **Scope:** Write operations migration, batch operations, error handling\n\n\ud83d\udd27 **Technical Requirements:**\n- Replace file writes with `mcp_client.create_task()`, `update_task()`, `delete_task()`\n- Add async/await where needed\n- Implement batch operations for multiple updates\n- Implement fallback to file access if MCP fails\n\n\ud83d\udcc1 **Files:** Update tools (nightly_task_automation, task_clarification_resolution, batch_task_approval), base class\n\n\ud83e\uddea **Testing:** Test task creation/updates work, batch operations, fallback, error handling\n\n\ud83d\udcda **Dependencies:** Task 2 (MCPClient extension), Tasks 3-4 (read operations should be migrated first)",
+      "details": "🎯 **Objective:** Replace direct file writes with agentic-tools MCP calls (create_task, update_task, delete_task)\n\n📋 **Acceptance Criteria:**\n- `tools/nightly_task_automation.py` uses `update_task()` instead of file write\n- `tools/task_clarification_resolution.py` uses `update_task()` instead of file write\n- `tools/batch_task_approval.py` uses `update_task()` for batch operations\n- Base class uses `create_task()` for task creation\n- All file writes replaced with MCP calls\n- Error handling with fallback to file access\n\n🚫 **Scope:** Write operations migration, batch operations, error handling\n\n🔧 **Technical Requirements:**\n- Replace file writes with `mcp_client.create_task()`, `update_task()`, `delete_task()`\n- Add async/await where needed\n- Implement batch operations for multiple updates\n- Implement fallback to file access if MCP fails\n\n📁 **Files:** Update tools (nightly_task_automation, task_clarification_resolution, batch_task_approval), base class\n\n🧪 **Testing:** Test task creation/updates work, batch operations, fallback, error handling\n\n📚 **Dependencies:** Task 2 (MCPClient extension), Tasks 3-4 (read operations should be migrated first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:11:43.669Z",
@@ -173,7 +180,7 @@
     {
       "id": "3c1addeb-e2dd-4fec-8c22-36914e9d2b73",
       "name": "Extend MCPClient class with Context7 MCP support",
-      "details": "\ud83c\udfaf **Objective:** Extend existing MCPClient class to support Context7 MCP server calls (resolve-library-id, get-library-docs)\n\n\ud83d\udccb **Acceptance Criteria:**\n- `MCPClient` class extended with Context7 methods\n- Async methods implemented: `resolve_library_id()`, `get_library_docs()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Helper methods for common operations\n- Unit tests created for all methods\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool integration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (reuse agentic-tools session or separate)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for Context7\n- Implement async/await patterns throughout\n- Add connection pooling (reuse agentic-tools session or separate)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support mode parameter (code/info) for get-library-docs\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_context7.py` (unit tests)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark infrastructure complete)\n\n\ud83e\uddea **Testing Requirements:**\n- Test `resolve_library_id()` with valid library names\n- Test `get_library_docs()` with valid library IDs\n- Test error handling when MCP unavailable\n- Test connection pooling efficiency\n- Test retry logic on failures\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server not available (error handling)\n- Invalid library name/ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n\ud83d\udcda **Dependencies:** Task 1 from agentic-tools integration (MCP client dependency must be added first)",
+      "details": "🎯 **Objective:** Extend existing MCPClient class to support Context7 MCP server calls (resolve-library-id, get-library-docs)\n\n📋 **Acceptance Criteria:**\n- `MCPClient` class extended with Context7 methods\n- Async methods implemented: `resolve_library_id()`, `get_library_docs()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Helper methods for common operations\n- Unit tests created for all methods\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool integration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (reuse agentic-tools session or separate)\n\n🔧 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for Context7\n- Implement async/await patterns throughout\n- Add connection pooling (reuse agentic-tools session or separate)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support mode parameter (code/info) for get-library-docs\n\n📁 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_context7.py` (unit tests)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark infrastructure complete)\n\n🧪 **Testing Requirements:**\n- Test `resolve_library_id()` with valid library names\n- Test `get_library_docs()` with valid library IDs\n- Test error handling when MCP unavailable\n- Test connection pooling efficiency\n- Test retry logic on failures\n\n⚠️ **Edge Cases:**\n- MCP server not available (error handling)\n- Invalid library name/ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n📚 **Dependencies:** Task 1 from agentic-tools integration (MCP client dependency must be added first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:13:24.596Z",
@@ -194,7 +201,7 @@
     {
       "id": "d2824509-031b-495c-8a8d-46e087d35421",
       "name": "Integrate Context7 verification into documentation health tool",
-      "details": "\ud83c\udfaf **Objective:** Add Context7 verification step to documentation health tool to verify external library references\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/docs_health.py` uses Context7 to verify external library references\n- `project_management_automation/scripts/automate_docs_health_v2.py` includes Context7 verification\n- External library references verified via Context7\n- Documentation currency checked (library exists, docs available)\n- Verification results included in health report\n- Error handling when Context7 unavailable (graceful degradation)\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification step, report enhancement, error handling\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Verification strategy (all refs or sampling)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Use `mcp_client.get_library_docs()` to check documentation availability\n- Add verification results to health report\n- Graceful degradation if Context7 unavailable (skip verification, warn)\n- Include verified/unverified counts in report\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/docs_health.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_docs_health_v2.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test verification works with valid libraries\n- Test verification fails gracefully with invalid libraries\n- Test graceful degradation when Context7 unavailable\n- Test verification results appear in report\n- Test performance impact is acceptable\n\n\u26a0\ufe0f **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (error handling)\n- Network timeouts (retry logic)\n- Large number of references (performance)\n\n\ud83d\udcda **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "details": "🎯 **Objective:** Add Context7 verification step to documentation health tool to verify external library references\n\n📋 **Acceptance Criteria:**\n- `tools/docs_health.py` uses Context7 to verify external library references\n- `project_management_automation/scripts/automate_docs_health_v2.py` includes Context7 verification\n- External library references verified via Context7\n- Documentation currency checked (library exists, docs available)\n- Verification results included in health report\n- Error handling when Context7 unavailable (graceful degradation)\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification step, report enhancement, error handling\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Verification strategy (all refs or sampling)\n\n🔧 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Use `mcp_client.get_library_docs()` to check documentation availability\n- Add verification results to health report\n- Graceful degradation if Context7 unavailable (skip verification, warn)\n- Include verified/unverified counts in report\n\n📁 **Files/Components:**\n- Update: `tools/docs_health.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_docs_health_v2.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n🧪 **Testing Requirements:**\n- Test verification works with valid libraries\n- Test verification fails gracefully with invalid libraries\n- Test graceful degradation when Context7 unavailable\n- Test verification results appear in report\n- Test performance impact is acceptable\n\n⚠️ **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (error handling)\n- Network timeouts (retry logic)\n- Large number of references (performance)\n\n📚 **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:13:28.678Z",
@@ -215,7 +222,7 @@
     {
       "id": "8306d84e-db17-40be-8f5d-8dd7bd7b59da",
       "name": "Integrate Context7 verification into external tool hints tool",
-      "details": "\ud83c\udfaf **Objective:** Use Context7 to verify libraries exist before adding external tool hints to documentation\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/external_tool_hints.py` verifies libraries exist via Context7 before adding hints\n- `project_management_automation/scripts/automate_external_tool_hints.py` includes Context7 verification\n- Only add hints for verified libraries\n- Report skipped libraries (not found in Context7)\n- Error handling when Context7 unavailable (skip verification, add hints anyway)\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification, hint filtering, reporting\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Only add hints for verified libraries\n- Include verification status in report\n- Graceful degradation if Context7 unavailable (add hints anyway, warn)\n- Report verified/skipped counts\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/external_tool_hints.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_external_tool_hints.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test hints only added for verified libraries\n- Test invalid libraries are skipped\n- Test graceful degradation when Context7 unavailable\n- Test verification status appears in report\n- Test performance impact is acceptable\n\n\u26a0\ufe0f **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (skip, report)\n- Network timeouts (retry logic)\n- Large number of libraries (performance)\n\n\ud83d\udcda **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "details": "🎯 **Objective:** Use Context7 to verify libraries exist before adding external tool hints to documentation\n\n📋 **Acceptance Criteria:**\n- `tools/external_tool_hints.py` verifies libraries exist via Context7 before adding hints\n- `project_management_automation/scripts/automate_external_tool_hints.py` includes Context7 verification\n- Only add hints for verified libraries\n- Report skipped libraries (not found in Context7)\n- Error handling when Context7 unavailable (skip verification, add hints anyway)\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification, hint filtering, reporting\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Only add hints for verified libraries\n- Include verification status in report\n- Graceful degradation if Context7 unavailable (add hints anyway, warn)\n- Report verified/skipped counts\n\n📁 **Files/Components:**\n- Update: `tools/external_tool_hints.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_external_tool_hints.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n🧪 **Testing Requirements:**\n- Test hints only added for verified libraries\n- Test invalid libraries are skipped\n- Test graceful degradation when Context7 unavailable\n- Test verification status appears in report\n- Test performance impact is acceptable\n\n⚠️ **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (skip, report)\n- Network timeouts (retry logic)\n- Large number of libraries (performance)\n\n📚 **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:13:32.887Z",
@@ -236,7 +243,7 @@
     {
       "id": "ea7d35b1-f26e-4452-b4b6-26225269288b",
       "name": "Integrate Context7 best practices into dependency security tool",
-      "details": "\ud83c\udfaf **Objective:** Use Context7 to get current security best practices for dependencies during security scanning\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/dependency_security.py` uses Context7 to get security best practices\n- `project_management_automation/scripts/automate_dependency_security.py` includes Context7 integration\n- Security best practices retrieved for scanned dependencies\n- Best practices included in security report\n- Error handling when Context7 unavailable (skip best practices, scan continues)\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 integration, best practices retrieval, report enhancement\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Which dependencies to query (all or only vulnerable)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to get library IDs\n- Use `mcp_client.get_library_docs()` with topic=\"security best practices\" and mode=\"info\"\n- Include best practices in security report\n- Graceful degradation if Context7 unavailable (skip best practices, warn)\n- Query Context7 for top dependencies or only vulnerable ones\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/dependency_security.py` (add Context7 integration)\n- Update: `project_management_automation/scripts/automate_dependency_security.py` (integrate Context7)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test best practices retrieved for dependencies\n- Test best practices included in report\n- Test graceful degradation when Context7 unavailable\n- Test performance impact is acceptable\n- Test with various dependency types (Python, Rust, npm)\n\n\u26a0\ufe0f **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Dependencies not found in Context7 (skip, continue)\n- Network timeouts (retry logic)\n- Large number of dependencies (performance, batching)\n\n\ud83d\udcda **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "details": "🎯 **Objective:** Use Context7 to get current security best practices for dependencies during security scanning\n\n📋 **Acceptance Criteria:**\n- `tools/dependency_security.py` uses Context7 to get security best practices\n- `project_management_automation/scripts/automate_dependency_security.py` includes Context7 integration\n- Security best practices retrieved for scanned dependencies\n- Best practices included in security report\n- Error handling when Context7 unavailable (skip best practices, scan continues)\n\n🚫 **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 integration, best practices retrieval, report enhancement\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Which dependencies to query (all or only vulnerable)\n\n🔧 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to get library IDs\n- Use `mcp_client.get_library_docs()` with topic=\"security best practices\" and mode=\"info\"\n- Include best practices in security report\n- Graceful degradation if Context7 unavailable (skip best practices, warn)\n- Query Context7 for top dependencies or only vulnerable ones\n\n📁 **Files/Components:**\n- Update: `tools/dependency_security.py` (add Context7 integration)\n- Update: `project_management_automation/scripts/automate_dependency_security.py` (integrate Context7)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n🧪 **Testing Requirements:**\n- Test best practices retrieved for dependencies\n- Test best practices included in report\n- Test graceful degradation when Context7 unavailable\n- Test performance impact is acceptable\n- Test with various dependency types (Python, Rust, npm)\n\n⚠️ **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Dependencies not found in Context7 (skip, continue)\n- Network timeouts (retry logic)\n- Large number of dependencies (performance, batching)\n\n📚 **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-25T01:13:38.148Z",
@@ -574,6 +581,431 @@
       ],
       "estimatedHours": 5,
       "level": 0
+    },
+    {
+      "id": "b6f31367-5d1a-47cf-ade6-3fd47f51baed",
+      "name": "Phase 0: Project Structure & Fork Preparation",
+      "details": "Set up the DevRadio subproject with a structure designed for future extraction as a standalone repository.\n\n## Deliverables\n- Dedicated directory structure under `subprojects/devradio/`\n- Independent package.json/requirements.txt\n- Standalone configuration system\n- README with fork instructions\n- Interface documentation for parent project integration\n\n## Fork Extraction Checklist\n- [ ] All imports use relative paths within subproject\n- [ ] Configuration is environment-variable based\n- [ ] No hard dependencies on parent project internals\n- [ ] Clear API boundaries documented\n- [ ] License file included",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:11:14.287Z",
+      "updatedAt": "2025-11-26T10:11:14.287Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "infrastructure",
+        "fork-ready",
+        "phase-0"
+      ],
+      "level": 0
+    },
+    {
+      "id": "4283d335-227c-45ef-80c3-10f30fbd3ef2",
+      "name": "Phase 1: Infrastructure & Streaming MVP",
+      "details": "Set up the core streaming infrastructure with minimal viable functionality.\n\n## Goals\n- Working YouTube Live stream from cloud server\n- Basic audio/video output\n- Manual content for testing\n\n## Cost Target: $0/month (Oracle Cloud Free or GitHub Actions)",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:11:20.343Z",
+      "updatedAt": "2025-11-26T10:12:30.784Z",
+      "dependsOn": [
+        "b6f31367-5d1a-47cf-ade6-3fd47f51baed"
+      ],
+      "priority": 7,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "infrastructure",
+        "mvp",
+        "phase-1"
+      ],
+      "level": 0
+    },
+    {
+      "id": "db580001-3ad7-4bc8-9eec-ffc351cf9e56",
+      "name": "Phase 2: Content Generation & Automation",
+      "details": "Implement automated content generation pipeline using AI tools.\n\n## Goals\n- Podcastfy integration for podcast generation\n- TTS for narration (Coqui/local)\n- GitHub Actions for scheduled content\n- Music playlist automation\n\n## Cost Target: $0-4/month",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:11:25.745Z",
+      "updatedAt": "2025-11-26T10:12:43.303Z",
+      "dependsOn": [
+        "4283d335-227c-45ef-80c3-10f30fbd3ef2"
+      ],
+      "priority": 6,
+      "complexity": 7,
+      "status": "pending",
+      "tags": [
+        "automation",
+        "ai",
+        "phase-2"
+      ],
+      "level": 0
+    },
+    {
+      "id": "f9dc1fd2-9006-4629-b2a8-3f0aafd39d87",
+      "name": "Phase 3: Alert System & Project Integration",
+      "details": "Implement user interaction alerts and integrate with project management tools.\n\n## Goals\n- Alert triggers from EXARP tools\n- Priority-based notification system\n- Audio cues for different alert types\n- Real-time webhook integration\n\n## Alert Types\n- Task clarification needed\n- CI/CD approval required\n- Security vulnerabilities\n- Blocked tasks",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:11:40.525Z",
+      "updatedAt": "2025-11-26T10:12:56.189Z",
+      "dependsOn": [
+        "db580001-3ad7-4bc8-9eec-ffc351cf9e56"
+      ],
+      "priority": 5,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "alerts",
+        "integration",
+        "phase-3"
+      ],
+      "level": 0
+    },
+    {
+      "id": "597b4756-7443-41c4-9255-e0757f465102",
+      "name": "Phase 4: Music & Audio Production",
+      "details": "Implement professional music integration and audio production.\n\n## Goals\n- Music library management\n- Audio mixing (FFmpeg/pydub)\n- Volume ducking for announcements\n- Distinct alert sounds\n- Optional: Commercial music service integration\n\n## Cost Target: $0-15/month (optional Epidemic Sound)",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:11:47.008Z",
+      "updatedAt": "2025-11-26T10:13:08.090Z",
+      "dependsOn": [
+        "4283d335-227c-45ef-80c3-10f30fbd3ef2"
+      ],
+      "priority": 4,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "audio",
+        "music",
+        "phase-4"
+      ],
+      "level": 0
+    },
+    {
+      "id": "23b4ca71-c0d7-4b2f-8969-878dbb05c8cc",
+      "name": "Phase 5: Legal Compliance & Documentation",
+      "details": "Implement all legal compliance requirements and documentation.\n\n## Goals\n- MUSIC_CREDITS.md template and automation\n- CONTENT_INVENTORY.md management\n- AI disclosure system\n- Attribution automation\n- Monthly audit workflow\n- SPDX license compliance\n\n## Reference\n- Legal Approach Memory: 62c5d97b-da81-4651-b91e-b82bc37cae71",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:11:59.445Z",
+      "updatedAt": "2025-11-26T10:11:59.445Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "legal",
+        "compliance",
+        "documentation",
+        "phase-5"
+      ],
+      "level": 0
+    },
+    {
+      "id": "228acccb-e006-4592-92a8-4248618a485f",
+      "name": "Phase 6: Polish & Scale",
+      "details": "Final polish, visual enhancements, and scaling options.\n\n## Goals\n- Visual overlays for YouTube stream\n- On-screen credits rotation\n- Multi-platform streaming (Twitch, etc.)\n- Interactive features (chat integration)\n- Video content generation\n- ElevenLabs TTS upgrade (optional)\n\n## Cost Target: $15-30/month (fully featured)",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "completed": false,
+      "createdAt": "2025-11-26T10:12:11.422Z",
+      "updatedAt": "2025-11-26T10:13:21.968Z",
+      "dependsOn": [
+        "f9dc1fd2-9006-4629-b2a8-3f0aafd39d87",
+        "597b4756-7443-41c4-9255-e0757f465102",
+        "23b4ca71-c0d7-4b2f-8969-878dbb05c8cc"
+      ],
+      "priority": 3,
+      "complexity": 7,
+      "status": "pending",
+      "tags": [
+        "polish",
+        "scale",
+        "phase-6"
+      ],
+      "level": 0
+    },
+    {
+      "id": "d1755e1b-ef0c-4983-ba40-ec051c75f9d6",
+      "name": "Create subprojects/devradio/ directory structure",
+      "details": "Create the fork-ready directory structure:\n```\nsubprojects/devradio/\n├── src/\n│   ├── streaming/      # FFmpeg/RTMP handling\n│   ├── content/        # Podcast generation\n│   ├── audio/          # Music mixing, TTS\n│   ├── alerts/         # Alert system\n│   └── integrations/   # YouTube API, webhooks\n├── config/\n├── docs/\n├── tests/\n├── scripts/\n├── requirements.txt\n├── README.md\n├── LICENSE\n└── FORK_INSTRUCTIONS.md\n```",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "b6f31367-5d1a-47cf-ade6-3fd47f51baed",
+      "completed": false,
+      "createdAt": "2025-11-26T10:13:45.389Z",
+      "updatedAt": "2025-11-26T10:13:45.389Z",
+      "dependsOn": [],
+      "priority": 9,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "structure",
+        "fork-ready"
+      ],
+      "level": 1
+    },
+    {
+      "id": "284f0313-6477-4be5-9230-22d6a221def3",
+      "name": "Create independent configuration system",
+      "details": "Create environment-variable based configuration that works both within parent project and standalone:\n- config.py with env var loading\n- .env.example template\n- Config validation\n- Sensible defaults for standalone operation",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "b6f31367-5d1a-47cf-ade6-3fd47f51baed",
+      "completed": false,
+      "createdAt": "2025-11-26T10:13:57.186Z",
+      "updatedAt": "2025-11-26T10:13:57.186Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "config",
+        "fork-ready"
+      ],
+      "level": 1
+    },
+    {
+      "id": "563434ca-c691-4415-9734-1d8f5db8785c",
+      "name": "Write FORK_INSTRUCTIONS.md",
+      "details": "Document how to extract DevRadio as standalone project:\n- Step-by-step fork process\n- Required environment variables\n- Dependencies to install\n- Integration points to configure\n- What to remove (parent project refs)\n- Testing standalone operation",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "b6f31367-5d1a-47cf-ade6-3fd47f51baed",
+      "completed": false,
+      "createdAt": "2025-11-26T10:14:03.511Z",
+      "updatedAt": "2025-11-26T10:14:03.511Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "documentation",
+        "fork-ready"
+      ],
+      "level": 1
+    },
+    {
+      "id": "8010c892-9c2f-46b2-a158-88adff9497dc",
+      "name": "Define API interface for parent project integration",
+      "details": "Create clean interface layer that parent project uses:\n- Abstract base classes for integrations\n- Event hooks for alerts\n- Data source interfaces\n- Clear separation of concerns\n\nThis allows parent to integrate without DevRadio depending on parent internals.",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "b6f31367-5d1a-47cf-ade6-3fd47f51baed",
+      "completed": false,
+      "createdAt": "2025-11-26T10:14:15.109Z",
+      "updatedAt": "2025-11-26T10:14:15.109Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "api",
+        "architecture",
+        "fork-ready"
+      ],
+      "level": 1
+    },
+    {
+      "id": "f580f1d5-4490-4bd0-a708-3e53f5960e24",
+      "name": "Sign up for Oracle Cloud Always Free",
+      "details": "Create Oracle Cloud account and provision Always Free resources:\n- 4 ARM Ampere A1 OCPUs\n- 24 GB RAM\n- 200 GB storage\n- Configure networking/firewall for RTMP egress\n\nFallback: Hetzner CAX11 (~$4/mo) if Oracle approval fails.",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "4283d335-227c-45ef-80c3-10f30fbd3ef2",
+      "completed": false,
+      "createdAt": "2025-11-26T10:14:45.047Z",
+      "updatedAt": "2025-11-26T10:14:45.047Z",
+      "dependsOn": [],
+      "priority": 9,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "infrastructure",
+        "cloud"
+      ],
+      "level": 1
+    },
+    {
+      "id": "8c81bee2-f873-4ecf-bed5-6ed660e04493",
+      "name": "Set up YouTube channel and enable live streaming",
+      "details": "Prepare YouTube for 24/7 streaming:\n- Verify YouTube account\n- Enable live streaming (24hr wait for first-time)\n- Obtain stream key\n- Configure stream settings (quality, latency)\n- Set up test broadcast",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "4283d335-227c-45ef-80c3-10f30fbd3ef2",
+      "completed": false,
+      "createdAt": "2025-11-26T10:15:03.857Z",
+      "updatedAt": "2025-11-26T10:15:03.857Z",
+      "dependsOn": [],
+      "priority": 9,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "youtube",
+        "streaming"
+      ],
+      "level": 1
+    },
+    {
+      "id": "d10e97fe-8671-4676-bbdb-e422734f0d7a",
+      "name": "Install and configure FFmpeg for RTMP streaming",
+      "details": "Set up FFmpeg for continuous streaming:\n- Install FFmpeg on cloud VM\n- Configure RTMP output to YouTube\n- Create systemd service for auto-restart\n- Test stream stability\n- Document FFmpeg command for playlist loop",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "4283d335-227c-45ef-80c3-10f30fbd3ef2",
+      "completed": false,
+      "createdAt": "2025-11-26T10:15:15.220Z",
+      "updatedAt": "2025-11-26T10:15:15.220Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "ffmpeg",
+        "streaming"
+      ],
+      "level": 1
+    },
+    {
+      "id": "5313e18c-8f15-4acc-895e-4b876188bbf9",
+      "name": "Integrate YouTube Data API v3",
+      "details": "Set up programmatic YouTube control:\n- Create Google Cloud project\n- Enable YouTube Data API v3\n- Generate OAuth credentials\n- Implement liveBroadcasts management\n- Test starting/stopping streams via API",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "4283d335-227c-45ef-80c3-10f30fbd3ef2",
+      "completed": false,
+      "createdAt": "2025-11-26T10:15:27.523Z",
+      "updatedAt": "2025-11-26T10:15:27.523Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "youtube",
+        "api"
+      ],
+      "level": 1
+    },
+    {
+      "id": "99dff48c-e111-4dde-a884-88c646d97188",
+      "name": "Create basic test content playlist",
+      "details": "Curate initial test content:\n- Download 5-10 royalty-free tracks from YouTube Audio Library\n- Create simple test video/audio files\n- Set up playlist rotation\n- Test 24hr continuous playback",
+      "projectId": "d4b08b19-e05e-409a-a492-b88058de273b",
+      "parentId": "4283d335-227c-45ef-80c3-10f30fbd3ef2",
+      "completed": false,
+      "createdAt": "2025-11-26T10:15:33.283Z",
+      "updatedAt": "2025-11-26T10:15:33.283Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "content",
+        "testing"
+      ],
+      "level": 1
+    },
+    {
+      "id": "0054adcf-e06a-41b9-81be-79a31a521166",
+      "name": "Implement AI Session Memory System with MCP Resources",
+      "details": "🎯 **Objective:** Create persistent AI session memory system using agentic-tools memories, exposed as MCP resources for passive context awareness.\n\n## Overview\nEnable AI sessions to save/retrieve memories for session continuity, task context, debug history, and user preferences. Expose memories as browsable MCP resources.\n\n## Memory Categories\n- **debug** - Error solutions, workarounds, root causes\n- **research** - Pre-implementation findings, approach comparisons\n- **architecture** - Component relationships, hidden dependencies\n- **preference** - User coding style, workflow preferences\n- **insight** - Sprint patterns, blockers, optimizations\n\n## MCP Resources to Create\n```\nautomation://memories                    → All memories\nautomation://memories/category/{cat}     → By category\nautomation://memories/task/{task_id}     → Linked to task\nautomation://memories/recent             → Last 24h\nautomation://memories/session/{date}     → Daily summaries\n```\n\n## MCP Tools to Create\n- `save_session_insight` - Save discovery + auto-link to current task\n- `recall_task_context` - Get memories related to a task\n- `generate_session_summary` - AI-generated end-of-session learnings\n\n## Integration Points\n- Synergy with advisor consultation logs\n- Cross-reference with Todo2 tasks\n- Enable podcast export of combined wisdom + memories\n\n## Files to Create/Update\n- Create: `resources/memories.py`\n- Update: `server.py` (register resources)\n- Create: `tools/session_memory.py`\n- Update: `docs/AI_SESSION_MEMORY.md`\n\n## Acceptance Criteria\n- [ ] Memories persist to `.exarp/memories/`\n- [ ] Resources browsable via MCP\n- [ ] Tools create/search/link memories\n- [ ] Integration with advisor logs\n- [ ] Tests for all components",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-26T10:25:12.723Z",
+      "updatedAt": "2025-11-26T10:25:12.723Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 7,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "memories",
+        "resources",
+        "ai-session"
+      ],
+      "estimatedHours": 12,
+      "level": 0
+    },
+    {
+      "id": "21bdddfc-9652-45b9-b4c9-0fb2c467f412",
+      "name": "Create resources/memories.py with memory resource handlers",
+      "details": "Create MCP resource handlers for AI session memories.\n\n## Resources to Implement\n- `automation://memories` - List all memories\n- `automation://memories/category/{category}` - Filter by category\n- `automation://memories/task/{task_id}` - Linked to specific task\n- `automation://memories/recent` - Last 24 hours\n- `automation://memories/session/{date}` - Daily session summaries\n\n## Storage Format\n```python\n{\n    \"id\": \"uuid\",\n    \"title\": \"Debug: Import error fix\",\n    \"content\": \"Fixed by adding __init__.py\",\n    \"category\": \"debug\",\n    \"linked_tasks\": [\"T-xxx\"],\n    \"created_at\": \"ISO timestamp\",\n    \"session_date\": \"2025-11-26\"\n}\n```\n\n## Advisor: 🔮 Enochian (Architecture)\n\"Behold the face of your God, the beginning of comfort.\" - Find joy in revealing hidden patterns.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
+      "completed": false,
+      "createdAt": "2025-11-26T10:25:55.794Z",
+      "updatedAt": "2025-11-26T10:25:55.794Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "resources",
+        "mcp",
+        "architecture"
+      ],
+      "estimatedHours": 3,
+      "level": 1
+    },
+    {
+      "id": "26940192-b78a-4bb9-888a-45b3e1588701",
+      "name": "Create tools/session_memory.py with memory tools",
+      "details": "Create MCP tools for AI session memory management.\n\n## Tools to Implement\n1. **save_session_insight** - Save discovery with auto-linking\n   - category (debug/research/architecture/preference/insight)\n   - content (the insight)\n   - task_id (optional - auto-link to task)\n   \n2. **recall_task_context** - Get memories for a task\n   - task_id\n   - include_related (bool)\n   \n3. **generate_session_summary** - AI-generated end-of-session\n   - date (optional, defaults to today)\n\n## Advisor: 🎓 Confucius (Documentation)\n\"Choose a job you love, and you will never have to work a day in your life.\" - Passion sustains.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
+      "completed": false,
+      "createdAt": "2025-11-26T10:26:07.577Z",
+      "updatedAt": "2025-11-26T10:26:07.577Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "tools",
+        "mcp",
+        "implementation"
+      ],
+      "estimatedHours": 4,
+      "level": 1
+    },
+    {
+      "id": "6270519e-66a8-4cbb-bb6d-8b794ce0138f",
+      "name": "Integrate memories with advisor consultation logs",
+      "details": "Create synergy between AI memories and advisor consultation logs.\n\n## Integration Points\n- Cross-reference memories with consultation timestamps\n- Combined export for podcast generation\n- Unified \"session history\" view\n- Link wisdom received to outcomes achieved\n\n## Combined Resource\n`automation://wisdom` - Merged view of:\n- Advisor consultations (what wisdom was given)\n- AI memories (what was learned)\n- Task completions (what was achieved)\n\n## Advisor: ☯️ Tao (Alignment)\n\"Knowing others is intelligence; knowing yourself is true wisdom.\" - Know your strengths and limits.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
+      "completed": false,
+      "createdAt": "2025-11-26T10:26:20.869Z",
+      "updatedAt": "2025-11-26T10:26:20.869Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "advisor",
+        "alignment"
+      ],
+      "estimatedHours": 3,
+      "level": 1
+    },
+    {
+      "id": "775f6dff-4bcb-4d7f-a25b-b362453d75da",
+      "name": "Write documentation and tests for memory system",
+      "details": "Create comprehensive documentation and tests for AI Memory System.\n\n## Documentation\n- Create `docs/AI_SESSION_MEMORY.md`\n- Add memory tools to EXARP tool list\n- Document resource URIs and formats\n- Include usage examples\n\n## Tests\n- Unit tests for memory storage/retrieval\n- Resource handler tests\n- Tool integration tests\n- Advisor integration tests\n\n## Advisor: 🎭 Shakespeare (Uniqueness)\n\"Though she be but little, she is fierce.\" - Small teams can be powerful.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
+      "completed": false,
+      "createdAt": "2025-11-26T10:26:33.277Z",
+      "updatedAt": "2025-11-26T10:26:33.277Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "documentation",
+        "testing",
+        "quality"
+      ],
+      "estimatedHours": 2,
+      "level": 1
     }
   ],
   "subtasks": [],
