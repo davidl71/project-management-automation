@@ -10,7 +10,7 @@
 ### Local Development (Recommended for Testing)
 
 ```bash
-cd mcp-servers/project-management-automation
+cd project-management-automation
 pip install -e .
 ```
 
@@ -38,7 +38,7 @@ pip install git+https://github.com/username/project-management-automation.git@v0
 **Best for**: Local development and testing
 
 ```bash
-cd mcp-servers/project-management-automation
+cd project-management-automation
 pip install -e .
 ```
 
@@ -76,8 +76,8 @@ pip install git+ssh://git@github.com/davidl71/project-management-automation.git@
 
 **Helper script:**
 ```bash
-export AUTOMA_REPO_URL="git@github.com:davidl71/project-management-automation.git"
-export AUTOMA_VERSION="v0.1.0"
+export EXARP_REPO_URL="git@github.com:davidl71/project-management-automation.git"
+export EXARP_VERSION="v0.1.0"
 ./scripts/install_from_git.sh
 ```
 
@@ -133,7 +133,7 @@ After installation, configure Cursor's `.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "project-management-automation": {
+    "exarp": {
       "command": "python3",
       "args": ["-m", "project_management_automation.server"]
     }

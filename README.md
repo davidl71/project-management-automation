@@ -46,7 +46,7 @@ See `.cursor/rules/tractatus-thinking.mdc` and `.cursor/rules/sequential-thinkin
 ## Installation
 
 ```bash
-cd mcp-servers/project-management-automation
+cd project-management-automation
 pip install -e .
 ```
 
@@ -90,13 +90,15 @@ Add to `.cursor/mcp.json` as **"exarp"**:
 {
   "mcpServers": {
     "exarp": {
-      "command": "/Users/davidl/Projects/Trading/ib_box_spread_full_universal/mcp-servers/project-management-automation/run_server.sh",
+      "command": "/path/to/project-management-automation/run_server.sh",
       "args": [],
       "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
     }
   }
 }
 ```
+
+**Note**: Replace `/path/to/` with your actual installation path.
 
 **Note**: The server is configured with the identifier "exarp" for easier reference in Cursor prompts and documentation.
 
@@ -143,7 +145,7 @@ Centralized error handling via `error_handler.py`:
 ### Option 1: Local Development (Editable Install)
 
 ```bash
-cd mcp-servers/project-management-automation
+cd project-management-automation
 pip install -e .
 ```
 

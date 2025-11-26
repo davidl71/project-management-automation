@@ -39,10 +39,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 Cursor's MCP configuration **requires absolute paths** for the `command` field. This means:
 
 - Each agent/server needs its own path in `.cursor/mcp.json`
-- The path will be different on different machines:
-  - macOS: `/Users/davidl/Projects/Trading/ib_box_spread_full_universal/...`
-  - Ubuntu: `/home/david/ib_box_spread_full_universal/...`
-  - Other servers: Different paths
+- The path will be different on different machines depending on installation location
 
 ### Solution: Sync Script
 
@@ -81,7 +78,7 @@ If you need to configure manually, use this format:
 {
   "mcpServers": {
     "exarp": {
-      "command": "/absolute/path/to/project/mcp-servers/project-management-automation/run_server.sh",
+      "command": "/path/to/project-management-automation/run_server.sh",
       "args": [],
       "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
     }
@@ -89,7 +86,7 @@ If you need to configure manually, use this format:
 }
 ```
 
-**Important**: Replace `/absolute/path/to/project` with the actual absolute path on that server.
+**Important**: Replace `/path/to/project-management-automation` with the actual absolute path on that server.
 
 ## Path Detection Logic
 
@@ -116,7 +113,7 @@ After setup, verify portability:
 2. **Check shell script**:
    ```bash
    cd /any/directory
-   /path/to/project/mcp-servers/project-management-automation/run_server.sh --help
+   /path/to/project-management-automation/run_server.sh --help
    # Should work from any directory
    ```
 
@@ -135,7 +132,7 @@ After setup, verify portability:
 **Solution**:
 1. Run the sync script: `python3 scripts/sync_mcp_config_agents.py`
 2. Verify the path in `.cursor/mcp.json` is absolute and correct
-3. Check that `run_server.sh` is executable: `chmod +x mcp-servers/project-management-automation/run_server.sh`
+3. Check that `run_server.sh` is executable: `chmod +x project-management-automation/run_server.sh`
 
 ### Wrong Project Root Detected
 
@@ -151,9 +148,9 @@ After setup, verify portability:
 **Problem**: `run_server.sh` can't find venv
 
 **Solution**:
-1. Create virtual environment: `cd mcp-servers/project-management-automation && python3 -m venv venv`
+1. Create virtual environment: `cd project-management-automation && python3 -m venv venv`
 2. Install dependencies: `venv/bin/pip install -e .`
-3. Verify venv exists: `ls mcp-servers/project-management-automation/venv/bin/python3`
+3. Verify venv exists: `ls project-management-automation/venv/bin/python3`
 
 ## Summary
 

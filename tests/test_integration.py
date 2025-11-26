@@ -141,7 +141,7 @@ class TestMCPConfiguration:
         # Try multiple possible locations for project root
         possible_roots = [
             Path(__file__).parent.parent,  # project-management-automation
-            Path(__file__).parent.parent.parent / 'ib_box_spread_full_universal',  # Main project
+            # Additional project roots can be added here if needed
         ]
         
         mcp_config = None
@@ -180,7 +180,7 @@ class TestMCPConfiguration:
         # Try multiple possible locations for project root
         possible_roots = [
             Path(__file__).parent.parent,  # project-management-automation
-            Path(__file__).parent.parent.parent / 'ib_box_spread_full_universal',  # Main project
+            # Additional project roots can be added here if needed
         ]
         
         mcp_config = None

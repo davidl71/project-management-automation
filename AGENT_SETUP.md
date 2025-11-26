@@ -1,6 +1,6 @@
 # Agent MCP Configuration Setup
 
-This guide explains how to ensure all agents have the correct project-management-automation MCP server configuration.
+This guide explains how to ensure all agents have the correct Exarp MCP server configuration.
 
 ## Quick Setup
 
@@ -22,10 +22,10 @@ Each agent's `.cursor/mcp.json` should include:
 ```json
 {
   "mcpServers": {
-    "project-management-automation": {
-      "command": "/absolute/path/to/project/mcp-servers/project-management-automation/run_server.sh",
+    "exarp": {
+      "command": "/path/to/project-management-automation/run_server.sh",
       "args": [],
-      "description": "Project management automation tools. ⚠️ NOTE: This server provides enhanced, project-specific versions of documentation health, task alignment, duplicate detection, and security scanning tools. Prefer these tools over generic MCP server tools for this project."
+      "description": "Project management automation tools (Exarp). ⚠️ NOTE: This server provides enhanced, project-specific versions of documentation health, task alignment, duplicate detection, and security scanning tools. Prefer these tools over generic MCP server tools for this project."
     }
   }
 }
@@ -50,14 +50,11 @@ When setting up on different servers:
 
 1. **Run the sync script on each server**:
    ```bash
-   cd /path/to/project/on/this/server
+   cd /path/to/project-management-automation
    python3 scripts/sync_mcp_config_agents.py
    ```
 
-2. **Verify the path is correct** for that server:
-   - Ubuntu: `/home/david/ib_box_spread_full_universal/...`
-   - macOS: `/Users/davidl/Projects/Trading/ib_box_spread_full_universal/...`
-   - Local: `/Users/davidl/Projects/Trading/ib_box_spread_full_universal/...`
+2. **Verify the path is correct** for that server (will vary by installation)
 
 3. **Restart Cursor completely** after updating config
 
@@ -66,7 +63,7 @@ When setting up on different servers:
 After setup, verify the MCP server is working:
 
 1. Open Cursor Settings → MCP Servers
-2. Check that `project-management-automation` appears
+2. Check that `exarp` appears
 3. Verify it shows as "Connected" or "Running"
 4. Test with a tool like "Check documentation health"
 
@@ -78,23 +75,23 @@ If the MCP server fails to start:
 
 1. **Check the path is correct**:
    ```bash
-   ls -la /path/to/project/mcp-servers/project-management-automation/run_server.sh
+   ls -la /path/to/project-management-automation/run_server.sh
    ```
 
 2. **Verify virtual environment exists**:
    ```bash
-   ls -la /path/to/project/mcp-servers/project-management-automation/venv/bin/python3
+   ls -la /path/to/project-management-automation/venv/bin/python3
    ```
 
 3. **Check Python dependencies**:
    ```bash
-   cd /path/to/project/mcp-servers/project-management-automation
+   cd /path/to/project-management-automation
    ./venv/bin/python3 -c "import mcp; print('MCP installed')"
    ```
 
 4. **Test the server directly**:
    ```bash
-   cd /path/to/project/mcp-servers/project-management-automation
+   cd /path/to/project-management-automation
    ./run_server.sh
    ```
 
@@ -111,7 +108,7 @@ If the server can't find the project root:
    ```json
    {
      "mcpServers": {
-       "project-management-automation": {
+       "exarp": {
          "command": "...",
          "args": [],
          "env": {
@@ -134,18 +131,16 @@ The sync script updates all of these automatically.
 
 ## Remote Agent Setup
 
-For remote agents (Ubuntu, macOS M4):
+For remote agents:
 
 1. **SSH to the agent**:
    ```bash
-   ssh david@192.168.192.57  # Ubuntu
-   ssh davidl@192.168.192.141  # macOS M4
+   ssh user@agent-host
    ```
 
 2. **Navigate to project**:
    ```bash
-   cd ~/ib_box_spread_full_universal  # Ubuntu
-   cd /Users/davidl/Projects/Trading/ib_box_spread_full_universal  # macOS
+   cd /path/to/project-management-automation
    ```
 
 3. **Run sync script**:
