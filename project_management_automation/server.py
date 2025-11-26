@@ -454,7 +454,7 @@ def register_tools():
             if name == "server_status":
                 result = json.dumps({
                     "status": "operational",
-                    "version": "0.1.0",
+                    "version": __version__,
                     "tools_available": TOOLS_AVAILABLE,
                     "project_root": str(project_root),
                 }, separators=(',', ':'))

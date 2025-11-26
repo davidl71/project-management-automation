@@ -10,6 +10,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
 
+from ..version import __version__
+
 logger = logging.getLogger(__name__)
 
 
@@ -38,7 +40,7 @@ def get_status_resource() -> str:
 
         status = {
             "server": "exarp",
-            "version": "0.1.12",
+            "version": __version__,
             "status": "operational",
             "mcp_available": True,  # Assumed if resource is being called
             "tools_available": tools_available,
