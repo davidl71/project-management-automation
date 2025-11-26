@@ -1,33 +1,6 @@
 {
   "runs": [
     {
-      "timestamp": "2025-11-26T09:23:36.908698",
-      "health_score": 24.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
-      "timestamp": "2025-11-26T09:24:36.962124",
-      "health_score": 24.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
-      "timestamp": "2025-11-26T09:25:05.585453",
-      "health_score": 22.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
       "timestamp": "2025-11-26T09:30:09.286285",
       "health_score": 22.0,
       "link_validation": {
@@ -446,6 +419,33 @@
       "health_score": 11.0,
       "link_validation": {
         "broken": 2
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-27T01:39:07.165594",
+      "health_score": 78.0,
+      "link_validation": {
+        "broken": 2
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-27T01:39:08.650007",
+      "health_score": 83.0,
+      "link_validation": {
+        "broken": 2
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-27T01:40:02.368598",
+      "health_score": 82.0,
+      "link_validation": {
+        "broken": 0
       },
       "format_errors": 0,
       "stale_files": 15

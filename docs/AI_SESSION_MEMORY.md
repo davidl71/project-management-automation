@@ -214,9 +214,8 @@ Always link memories to tasks when relevant:
 
 ## Related Documentation
 
-- [Trusted Advisor System](./ADVISOR_SYSTEM.md) - Wisdom sources
 - [EXARP MCP Integration](./EXARP_MCP_INTEGRATION_ANALYSIS.md) - MCP architecture
-- [Project Scorecard](./PROJECT_SCORECARD.md) - Health metrics
+- [Project Overview](./PROJECT_OVERVIEW.md) - Project overview and health metrics
 
 ---
 
