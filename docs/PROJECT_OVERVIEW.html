@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>project-management-automation-mcp - Project Overview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .header .subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background: rgba(51, 65, 85, 0.5);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .card h3 {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        .score-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#eab308 251.64000000000001deg, #374151 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .score-inner {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #1e293b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #eab308;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .metric:last-child { border-bottom: none; }
+        .metric-label { color: #94a3b8; }
+        .metric-value { font-weight: 600; }
+        .progress-bar {
+            height: 8px;
+            background: #374151;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .phase {
+            margin-bottom: 1rem;
+        }
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+        .risk {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+        .risk-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .risk-critical { background: #ef4444; }
+        .risk-high { background: #eab308; }
+        .risk-medium { background: #22c55e; }
+        .action {
+            padding: 0.75rem;
+            background: rgba(96, 165, 250, 0.1);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #60a5fa;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        @media print {
+            body { background: white; color: #1e293b; padding: 1rem; }
+            .container { box-shadow: none; background: white; }
+            .card { background: #f8fafc; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ project-management-automation-mcp</h1>
+            <p class="subtitle">Project Overview • November 26, 2025</p>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>📊 Health Score</h3>
+                <div class="score-ring">
+                    <div class="score-inner">
+                        <span class="score-value">70%</span>
+                        <span style="font-size: 0.75rem; color: #64748b;">In Dev</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📁 Codebase</h3>
+                <div class="metric">
+                    <span class="metric-label">Python Files</span>
+                    <span class="metric-value">62</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Lines of Code</span>
+                    <span class="metric-value">17,519</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">MCP Tools</span>
+                    <span class="metric-value">22</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Prompts</span>
+                    <span class="metric-value">22</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>📋 Task Status</h3>
+                <div class="metric">
+                    <span class="metric-label">Total Tasks</span>
+                    <span class="metric-value">155</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Pending</span>
+                    <span class="metric-value">114</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Remaining Work</span>
+                    <span class="metric-value">248h</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🚧 Project Phases</h3>
+                
+                <div class="phase">
+                    <div class="phase-header">
+                        <span>Phase 1: Core Tools</span>
+                        <span>100%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%; background: #22c55e;"></div>
+                    </div>
+                </div>
+                
+                <div class="phase">
+                    <div class="phase-header">
+                        <span>Phase 2: Automation</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%; background: #60a5fa;"></div>
+                    </div>
+                </div>
+                
+                <div class="phase">
+                    <div class="phase-header">
+                        <span>Phase 3: Security</span>
+                        <span>30%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%; background: #60a5fa;"></div>
+                    </div>
+                </div>
+                
+                <div class="phase">
+                    <div class="phase-header">
+                        <span>Phase 4: Production</span>
+                        <span>0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%; background: #374151;"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>⚠️ Risks & Blockers</h3>
+                
+                <div class="risk">
+                    <div class="risk-dot risk-critical"></div>
+                    <span>No rate limiting</span>
+                </div>
+                
+            </div>
+            
+            <div class="card">
+                <h3>🎯 Next Actions</h3>
+                
+                <div class="action">
+                    Extend MCPClient class with agentic-tools MCP supp <span style="color: #64748b;">(4h)</span>
+                </div>
+                
+                <div class="action">
+                    Migrate duplicate detection tool to use agentic-to <span style="color: #64748b;">(2h)</span>
+                </div>
+                
+                <div class="action">
+                    Migrate task alignment tool to use agentic-tools M <span style="color: #64748b;">(2h)</span>
+                </div>
+                
+                <div class="action">
+                    Remove file access fallbacks after full migration <span style="color: #64748b;">(1h)</span>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="footer">
+            Generated by Exarp MCP Server • v0.1.7
+        </div>
+    </div>
+</body>
+</html>

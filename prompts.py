@@ -240,6 +240,37 @@ After setup, Exarp will automatically maintain project health."""
 
 # Project Scorecard Prompt
 
+PROJECT_OVERVIEW = """Generate a one-page project overview for stakeholders.
+
+Run the project_overview tool to get a comprehensive summary:
+
+Sections included:
+- Project Info: name, version, type, status
+- Health Scorecard: overall score + component breakdown
+- Codebase Metrics: files, lines, tools, prompts
+- Task Status: total, pending, remaining work
+- Project Phases: progress on each phase
+- Risks & Blockers: critical issues to address
+- Next Actions: prioritized tasks with estimates
+
+Output formats:
+- output_format="text" - Terminal-friendly ASCII (default)
+- output_format="html" - Styled HTML page (print to PDF via Cmd+P)
+- output_format="markdown" - For GitHub/documentation
+- output_format="slides" - Marp markdown (convert with marp-cli)
+- output_format="json" - Structured data
+
+Save to file:
+- output_path="docs/OVERVIEW.html" - Save HTML
+- output_path="docs/OVERVIEW.md" - Save Markdown
+
+Use this for:
+- Stakeholder updates
+- Team standups
+- Sprint reviews
+- Documentation
+- Dashboards"""
+
 PROJECT_SCORECARD = """Generate a comprehensive project health scorecard.
 
 Run the project_scorecard tool to get a complete assessment across all dimensions:
@@ -379,6 +410,11 @@ PROMPTS = {
     "project_scorecard": {
         "name": "Project Scorecard",
         "description": PROJECT_SCORECARD,
+        "arguments": []
+    },
+    "project_overview": {
+        "name": "Project Overview",
+        "description": PROJECT_OVERVIEW,
         "arguments": []
     },
 }

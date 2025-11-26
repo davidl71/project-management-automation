@@ -247,6 +247,7 @@ try:
             list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification
         )
         from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
+        from .tools.project_overview import generate_project_overview as _generate_project_overview
         TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
@@ -275,6 +276,7 @@ try:
             list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification
         )
         from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
+        from tools.project_overview import generate_project_overview as _generate_project_overview
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -299,7 +301,7 @@ def register_tools():
                     "status": "operational",
                     "version": "0.1.7",
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 24 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 25 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
@@ -1119,6 +1121,41 @@ if mcp:
                 'formatted_output': result['formatted_output'],
             }, indent=2)
 
+        @mcp.tool()
+        def project_overview(
+            output_format: str = "text",
+            output_path: Optional[str] = None
+        ) -> str:
+            """
+            [HINT: Project overview. Returns one-page summary with project info, health scores,
+            codebase metrics, task breakdown, risks, roadmap, and next actions.]
+
+            Generate comprehensive one-page project overview for stakeholders.
+
+            Includes:
+            - Project info (name, version, status)
+            - Health scorecard with component breakdown
+            - Codebase metrics (files, lines, tools, prompts)
+            - Task status and remaining work
+            - Project phases and roadmap
+            - Risks and blockers
+            - Prioritized next actions
+
+            Args:
+                output_format: "text" (terminal), "html" (PDF-ready), "markdown", "json", or "slides" (Marp)
+                output_path: Optional path to save output file
+
+            Returns:
+                JSON string with overview data and formatted output
+            """
+            result = _generate_project_overview(output_format, output_path)
+            return json.dumps({
+                'output_format': result['output_format'],
+                'generated_at': result['generated_at'],
+                'output_file': result.get('output_file'),
+                'formatted_output': result['formatted_output'],
+            }, indent=2)
+
     # Register prompts
     try:
         # Try relative imports first (when run as module)
@@ -1146,6 +1183,7 @@ if mcp:
                 PROJECT_HEALTH,
                 AUTOMATION_SETUP,
                 PROJECT_SCORECARD,
+                PROJECT_OVERVIEW,
             )
         except ImportError:
             # Fallback to absolute imports (when run as script)
@@ -1172,6 +1210,7 @@ if mcp:
                 PROJECT_HEALTH,
                 AUTOMATION_SETUP,
                 PROJECT_SCORECARD,
+                PROJECT_OVERVIEW,
             )
 
         @mcp.prompt()
@@ -1280,8 +1319,13 @@ if mcp:
             """Generate comprehensive project health scorecard with all metrics."""
             return PROJECT_SCORECARD
 
+        @mcp.prompt()
+        def overview() -> str:
+            """Generate one-page project overview for stakeholders."""
+            return PROJECT_OVERVIEW
+
         PROMPTS_AVAILABLE = True
-        logger.info("Registered 21 prompts successfully")
+        logger.info("Registered 22 prompts successfully")
     except ImportError as e:
         PROMPTS_AVAILABLE = False
         logger.warning(f"Prompts not available: {e}")
@@ -1370,7 +1414,7 @@ def main():
     import sys
     
     # Print our own banner to stderr (MCP-compatible)
-    tools_count = 24 if TOOLS_AVAILABLE else 1  # Known tool count
+    tools_count = 25 if TOOLS_AVAILABLE else 1  # Known tool count
     resources_ok = RESOURCES_AVAILABLE if 'RESOURCES_AVAILABLE' in globals() else False
     
     version_str = f"{__version__}"
