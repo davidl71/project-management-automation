@@ -110,6 +110,13 @@ exclude cspell.json
 exclude setup.sh
 exclude run_server.sh
 exclude exarp-switch.sh
+exclude notebooklm-config.json
+exclude podcast.md
+exclude podcast_for_notebooklm.md
+
+# --- Runtime data directories ---
+prune .exarp
+prune chrome_profile_notebooklm
 
 # --- Test Files at Root ---
 exclude test_mcp_tools.py

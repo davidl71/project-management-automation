@@ -114,6 +114,28 @@ METRIC_ADVISORS = {
         "rationale": "The Tao of Programming teaches elegant parallel design",
         "helps_with": "Decomposition, independent task design",
     },
+    # Hebrew Advisors - Jewish wisdom traditions
+    "ethics": {
+        "advisor": "rebbe",
+        "icon": "🕎",
+        "rationale": "The Rebbe teaches ethical conduct and righteous behavior (מוסר)",
+        "helps_with": "Code ethics, proper conduct, doing the right thing",
+        "language": "hebrew",
+    },
+    "perseverance": {
+        "advisor": "tzaddik",
+        "icon": "✡️",
+        "rationale": "The Tzaddik (righteous one) demonstrates steadfast commitment",
+        "helps_with": "Persistence, staying on the righteous path, not giving up",
+        "language": "hebrew",
+    },
+    "wisdom": {
+        "advisor": "chacham",
+        "icon": "📜",
+        "rationale": "The Chacham (sage) seeks deep understanding through Torah",
+        "helps_with": "Deep analysis, seeking understanding, learning from tradition",
+        "language": "hebrew",
+    },
 }
 
 # Tool → Advisor mapping
@@ -128,6 +150,9 @@ TOOL_ADVISORS = {
     "run_tests": {"advisor": "stoic", "rationale": "Tests teach through failure"},
     "validate_ci_cd_workflow": {"advisor": "kybalion", "rationale": "CI/CD is cause and effect"},
     "dev_reload": {"advisor": "murphy", "rationale": "Hot reload because Murphy says restarts will fail at the worst time"},
+    # Hebrew advisor tools - for ethical and wisdom-focused operations
+    "ethics_check": {"advisor": "rebbe", "rationale": "Rebbe guides ethical code review and conduct"},
+    "wisdom_reflection": {"advisor": "chacham", "rationale": "Chacham provides deep wisdom for retrospectives"},
 }
 
 # Workflow Stage → Advisor mapping
@@ -173,6 +198,28 @@ STAGE_ADVISORS = {
         "icon": "🎭",
         "rationale": "Celebrate with drama and poetry!",
         "consultation_depth": "brief",
+    },
+    # Hebrew advisor stages
+    "shabbat": {
+        "advisor": "rebbe",
+        "icon": "🕎",
+        "rationale": "Shabbat is for reflection and spiritual renewal (מנוחה)",
+        "consultation_depth": "detailed",
+        "language": "hebrew",
+    },
+    "teshuvah": {
+        "advisor": "tzaddik",
+        "icon": "✡️",
+        "rationale": "Teshuvah (repentance) is for fixing past mistakes and returning to the right path",
+        "consultation_depth": "detailed",
+        "language": "hebrew",
+    },
+    "learning": {
+        "advisor": "chacham",
+        "icon": "📜",
+        "rationale": "Torah study and continuous learning (לימוד)",
+        "consultation_depth": "detailed",
+        "language": "hebrew",
     },
 }
 

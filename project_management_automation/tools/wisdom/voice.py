@@ -43,6 +43,10 @@ ADVISOR_VOICES = {
         "mystic": {"voice_id": "EXAVITQu4vr4xnSDxMaL", "name": "Bella"},  # Ethereal female
         "sage": {"voice_id": "onwK4e9ZLuTAKqWW03F9", "name": "Daniel"},  # Wise elder
         "warrior": {"voice_id": "N2lVS1w4EtoT3dr4eOWO", "name": "Callum"},  # Strong, direct
+        # Hebrew advisors - use multilingual voices
+        "rebbe": {"voice_id": "onwK4e9ZLuTAKqWW03F9", "name": "Daniel"},  # Wise, rabbinical
+        "tzaddik": {"voice_id": "pNInz6obpgDQGcFmaJgB", "name": "Adam"},  # Righteous one
+        "chacham": {"voice_id": "VR6AewLTigWG4xSOukaG", "name": "Arnold"},  # Sage, deep wisdom
         "default": {"voice_id": "21m00Tcm4TlvDq8ikWAM", "name": "Rachel"},  # Default
     },
     "edge-tts": {
@@ -55,6 +59,12 @@ ADVISOR_VOICES = {
         "mystic": "en-US-AriaNeural",
         "sage": "en-GB-ThomasNeural",
         "warrior": "en-US-DavisNeural",
+        # Hebrew advisors - Hebrew (Israel) voices
+        "rebbe": "he-IL-AvriNeural",  # Hebrew male - wise rabbi
+        "tzaddik": "he-IL-AvriNeural",  # Hebrew male - righteous
+        "chacham": "he-IL-AvriNeural",  # Hebrew male - sage
+        "hebrew": "he-IL-AvriNeural",  # Generic Hebrew male
+        "hebrew_f": "he-IL-HilaNeural",  # Hebrew female
         "default": "en-US-JennyNeural",
     },
     "pyttsx3": {
@@ -67,8 +77,21 @@ ADVISOR_VOICES = {
         "mystic": {"rate": 130},  # Ethereal
         "sage": {"rate": 135},  # Wise
         "warrior": {"rate": 170},  # Direct
+        # Hebrew advisors - slower, reverent pace
+        "rebbe": {"rate": 125},  # Thoughtful, teaching
+        "tzaddik": {"rate": 120},  # Calm, righteous
+        "chacham": {"rate": 130},  # Measured wisdom
         "default": {"rate": 150},
     },
+}
+
+# Hebrew-specific voice settings
+HEBREW_VOICES = {
+    "edge-tts": {
+        "male": "he-IL-AvriNeural",
+        "female": "he-IL-HilaNeural",
+    },
+    "note": "Hebrew TTS support via Microsoft Edge voices. For best results, use edge-tts backend.",
 }
 
 

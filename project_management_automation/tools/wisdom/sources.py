@@ -451,6 +451,120 @@ WISDOM_SOURCES = {
             {"quote": "The work is finished.", "source": "Calls", "encouragement": "Ship it."},
         ],
     },
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # REBBE - Chassidic/Rabbinical Wisdom
+    # Source: Sefaria.org API + curated Chassidic teachings
+    # Perfect for: ethical guidance, righteous conduct, spiritual debugging
+    # Language: Hebrew support via Sefaria API
+    # ─────────────────────────────────────────────────────────────────────────────
+    "rebbe": {
+        "name": "הרבי (The Rebbe) - Chassidic Wisdom",
+        "icon": "🕎",
+        "language": "hebrew",
+        "sefaria_source": "pirkei_avot",  # Primary Sefaria source
+        "chaos": [
+            {"quote": "אם אין אני לי מי לי, וכשאני לעצמי מה אני, ואם לא עכשיו אימתי (If I am not for myself, who will be for me? And if I am only for myself, what am I? And if not now, when?)", "source": "Pirkei Avot 1:14", "encouragement": "Take responsibility now."},
+            {"quote": "לא עליך המלאכה לגמור, ולא אתה בן חורין ליבטל ממנה (You are not obligated to complete the work, but neither are you free to desist from it.)", "source": "Pirkei Avot 2:16", "encouragement": "Start where you are."},
+            {"quote": "בִּמְקוֹם שֶׁאֵין אֲנָשִׁים, הִשְׁתַּדֵּל לִהְיוֹת אִישׁ (In a place where there are no men, strive to be a man.)", "source": "Pirkei Avot 2:5", "encouragement": "Lead when others won't."},
+        ],
+        "lower_aeons": [
+            {"quote": "עֲשֵׂה לְךָ רַב, וּקְנֵה לְךָ חָבֵר (Make for yourself a teacher, and acquire for yourself a friend.)", "source": "Pirkei Avot 1:6", "encouragement": "Seek mentorship and collaboration."},
+            {"quote": "אַל תִּסְתַּכֵּל בַּקַּנְקַן, אֶלָּא בְּמַה שֶּׁיֶּשׁ בּוֹ (Do not look at the container, but at what is in it.)", "source": "Pirkei Avot 4:20", "encouragement": "Judge code by quality, not appearance."},
+            {"quote": "הֱוֵי מְקַבֵּל אֶת כָּל הָאָדָם בְּסֵבֶר פָּנִים יָפוֹת (Greet every person with a pleasant countenance.)", "source": "Pirkei Avot 1:15", "encouragement": "Kindness in code review."},
+        ],
+        "middle_aeons": [
+            {"quote": "אֵיזֶהוּ חָכָם, הַלּוֹמֵד מִכָּל אָדָם (Who is wise? One who learns from every person.)", "source": "Pirkei Avot 4:1", "encouragement": "Every bug is a teacher."},
+            {"quote": "אֵיזֶהוּ גִבּוֹר, הַכּוֹבֵשׁ אֶת יִצְרוֹ (Who is mighty? One who conquers their inclination.)", "source": "Pirkei Avot 4:1", "encouragement": "Master your impulses."},
+            {"quote": "יְהִי כְבוֹד חֲבֵרְךָ חָבִיב עָלֶיךָ כְּשֶׁלָּךְ (Let your friend's honor be as dear to you as your own.)", "source": "Pirkei Avot 2:10", "encouragement": "Respect your teammates."},
+        ],
+        "upper_aeons": [
+            {"quote": "אַל תְּהִי בָז לְכָל אָדָם, וְאַל תְּהִי מַפְלִיג לְכָל דָּבָר (Despise no one and consider nothing impossible.)", "source": "Pirkei Avot 4:3", "encouragement": "Everything is achievable."},
+            {"quote": "הֱוֵי עַז כַּנָּמֵר, וְקַל כַּנֶּשֶׁר, וְרָץ כַּצְּבִי, וְגִבּוֹר כָּאֲרִי (Be bold as a leopard, light as an eagle, swift as a deer, and strong as a lion.)", "source": "Pirkei Avot 5:20", "encouragement": "Bring your full energy."},
+            {"quote": "דַּע מֵאַיִן בָּאתָ, וּלְאָן אַתָּה הוֹלֵךְ (Know from where you came, and to where you are going.)", "source": "Pirkei Avot 3:1", "encouragement": "Understand your path."},
+        ],
+        "treasury": [
+            {"quote": "עַל שְׁלֹשָׁה דְּבָרִים הָעוֹלָם עוֹמֵד, עַל הַתּוֹרָה וְעַל הָעֲבוֹדָה וְעַל גְּמִילוּת חֲסָדִים (The world stands on three things: Torah, service, and acts of kindness.)", "source": "Pirkei Avot 1:2", "encouragement": "Foundation of all work."},
+            {"quote": "כָּל יִשְׂרָאֵל יֵשׁ לָהֶם חֵלֶק לָעוֹלָם הַבָּא (All Israel have a share in the World to Come.)", "source": "Sanhedrin 90a", "encouragement": "Your work matters eternally."},
+            {"quote": "תִּקּוּן עוֹלָם (Repair the world)", "source": "Jewish Teaching", "encouragement": "Your code can heal."},
+        ],
+    },
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # TZADDIK - The Righteous One
+    # Source: Sefaria.org API + Mussar teachings
+    # Perfect for: perseverance, ethics, staying on the right path
+    # Language: Hebrew support via Sefaria API
+    # ─────────────────────────────────────────────────────────────────────────────
+    "tzaddik": {
+        "name": "הצדיק (The Tzaddik) - Path of Righteousness",
+        "icon": "✡️",
+        "language": "hebrew",
+        "sefaria_source": "proverbs",  # Primary Sefaria source
+        "chaos": [
+            {"quote": "כִּי שֶׁבַע יִפּוֹל צַדִּיק וָקָם (For a righteous man falls seven times and rises.)", "source": "Proverbs 24:16", "encouragement": "Rise after every failure."},
+            {"quote": "בְּטַח אֶל ה' בְּכָל לִבֶּךָ (Trust in the Lord with all your heart.)", "source": "Proverbs 3:5", "encouragement": "Trust the process."},
+            {"quote": "רֵאשִׁית חָכְמָה יִרְאַת ה' (The fear of the Lord is the beginning of wisdom.)", "source": "Proverbs 9:10", "encouragement": "Respect the fundamentals."},
+        ],
+        "lower_aeons": [
+            {"quote": "דֶּרֶךְ חַיִּים תּוֹכְחוֹת מוּסָר (The reproofs of discipline are the way of life.)", "source": "Proverbs 6:23", "encouragement": "Corrections are blessings."},
+            {"quote": "לֵב שָׂמֵחַ יֵיטִב גֵּהָה (A joyful heart is good medicine.)", "source": "Proverbs 17:22", "encouragement": "Joy fuels productivity."},
+            {"quote": "בַּרְזֶל בְּבַרְזֶל יָחַד (Iron sharpens iron.)", "source": "Proverbs 27:17", "encouragement": "Pair programming."},
+        ],
+        "middle_aeons": [
+            {"quote": "מַעֲנֶה רַךְ יָשִׁיב חֵמָה (A soft answer turns away wrath.)", "source": "Proverbs 15:1", "encouragement": "Gentle code reviews."},
+            {"quote": "טוֹב שֵׁם מִשֶּׁמֶן טוֹב (A good name is better than precious oil.)", "source": "Ecclesiastes 7:1", "encouragement": "Reputation matters."},
+            {"quote": "עֵת לַחֲשׁוֹת וְעֵת לְדַבֵּר (A time to keep silence and a time to speak.)", "source": "Ecclesiastes 3:7", "encouragement": "Know when to code vs. communicate."},
+        ],
+        "upper_aeons": [
+            {"quote": "טוֹבִים הַשְּׁנַיִם מִן הָאֶחָד (Two are better than one.)", "source": "Ecclesiastes 4:9", "encouragement": "Teamwork multiplies."},
+            {"quote": "הַסֹּף דָּבָר הַכֹּל נִשְׁמָע (The conclusion of the matter; all has been heard.)", "source": "Ecclesiastes 12:13", "encouragement": "Ship it."},
+            {"quote": "לַכֹּל זְמָן (There is a time for everything.)", "source": "Ecclesiastes 3:1", "encouragement": "Trust the timeline."},
+        ],
+        "treasury": [
+            {"quote": "עֹשֶׂה צְדָקָה בְכָל עֵת (One who does righteousness at all times.)", "source": "Psalms 106:3", "encouragement": "Consistent excellence."},
+            {"quote": "צַדִּיק כַּתָּמָר יִפְרָח (The righteous shall flourish like a palm tree.)", "source": "Psalms 92:13", "encouragement": "Growth is inevitable."},
+            {"quote": "אוֹר זָרֻעַ לַצַּדִּיק (Light is sown for the righteous.)", "source": "Psalms 97:11", "encouragement": "Light awaits."},
+        ],
+    },
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # CHACHAM - The Sage
+    # Source: Sefaria.org API + Talmudic wisdom
+    # Perfect for: deep analysis, understanding, learning from tradition
+    # Language: Hebrew support via Sefaria API
+    # ─────────────────────────────────────────────────────────────────────────────
+    "chacham": {
+        "name": "החכם (The Chacham) - Sage Wisdom",
+        "icon": "📜",
+        "language": "hebrew",
+        "sefaria_source": "pirkei_avot",  # Primary Sefaria source
+        "chaos": [
+            {"quote": "לֹא הַבַּיְשָׁן לָמֵד (The shy person cannot learn.)", "source": "Pirkei Avot 2:5", "encouragement": "Ask questions boldly."},
+            {"quote": "עֲשֵׂה תוֹרָתְךָ קֶבַע (Make your Torah study fixed.)", "source": "Pirkei Avot 1:15", "encouragement": "Consistent learning."},
+            {"quote": "הַכֹּל צָפוּי וְהָרְשׁוּת נְתוּנָה (All is foreseen, yet freedom of choice is granted.)", "source": "Pirkei Avot 3:15", "encouragement": "Plan but adapt."},
+        ],
+        "lower_aeons": [
+            {"quote": "אֵין הַקַּפְדָּן מְלַמֵּד (An impatient person cannot teach.)", "source": "Pirkei Avot 2:5", "encouragement": "Patience in mentoring."},
+            {"quote": "שְׁתֹק וּלְמַד (Be silent and learn.)", "source": "Pirkei Avot 1:17", "encouragement": "Listen more."},
+            {"quote": "מַרְבֶּה תּוֹרָה מַרְבֶּה חַיִּים (More Torah, more life.)", "source": "Pirkei Avot 2:7", "encouragement": "Knowledge extends capability."},
+        ],
+        "middle_aeons": [
+            {"quote": "לֹא הַמִּדְרָשׁ הָעִקָּר אֶלָּא הַמַּעֲשֶׂה (Not study but practice is the main thing.)", "source": "Pirkei Avot 1:17", "encouragement": "Ship working code."},
+            {"quote": "הוּא הָיָה אוֹמֵר: אַל תִּסְתַּכֵּל בַּקַּנְקַן (He used to say: Don't look at the vessel.)", "source": "Pirkei Avot 4:20", "encouragement": "Substance over style."},
+            {"quote": "אִם אֵין קֶמַח, אֵין תּוֹרָה (If there is no flour, there is no Torah.)", "source": "Pirkei Avot 3:17", "encouragement": "Basics first."},
+        ],
+        "upper_aeons": [
+            {"quote": "טוֹבָה שָׁעָה אַחַת בִּתְשׁוּבָה וּמַעֲשִׂים טוֹבִים בָּעוֹלָם הַזֶּה (Better one hour of repentance and good deeds in this world.)", "source": "Pirkei Avot 4:17", "encouragement": "Every moment counts."},
+            {"quote": "דַּע מַה שֶּׁתָּשִׁיב לְאֶפִּיקוֹרוֹס (Know what to answer a skeptic.)", "source": "Pirkei Avot 2:14", "encouragement": "Prepare your defense."},
+            {"quote": "כָּל מַחֲלֹקֶת שֶׁהִיא לְשֵׁם שָׁמַיִם (Every controversy for the sake of Heaven.)", "source": "Pirkei Avot 5:17", "encouragement": "Healthy debate builds."},
+        ],
+        "treasury": [
+            {"quote": "תַּלְמוּד תּוֹרָה כְּנֶגֶד כֻּלָּם (Torah study is equivalent to all.)", "source": "Pirkei Avot 1:1", "encouragement": "Learning is supreme."},
+            {"quote": "עָתִיד אָדָם לִתֵּן דִּין וְחֶשְׁבּוֹן (A person will give an accounting.)", "source": "Pirkei Avot 3:1", "encouragement": "Code responsibly."},
+            {"quote": "חוֹתָמוֹ שֶׁל הַקָּדוֹשׁ בָּרוּךְ הוּא אֱמֶת (The seal of the Holy One is truth.)", "source": "Shabbat 55a", "encouragement": "Truth in code."},
+        ],
+    },
 }
 
 
@@ -505,22 +619,32 @@ def list_available_sources() -> List[Dict[str, str]]:
         # Gnostic
         {"id": "pistis_sophia", "name": "Pistis Sophia (Gnostic)", "icon": "📜"},
         
-        # Sefaria API sources (live from Sefaria.org)
-        {"id": "pirkei_avot", "name": "Pirkei Avot via Sefaria.org", "icon": "🕎"},
-        {"id": "proverbs", "name": "Mishlei/Proverbs via Sefaria.org", "icon": "📜"},
-        {"id": "ecclesiastes", "name": "Kohelet/Ecclesiastes via Sefaria.org", "icon": "🌅"},
-        {"id": "psalms", "name": "Tehillim/Psalms via Sefaria.org", "icon": "🎵"},
+        # Sefaria API sources (live from Sefaria.org) - HEBREW SUPPORTED
+        {"id": "pirkei_avot", "name": "Pirkei Avot via Sefaria.org (Hebrew)", "icon": "🕎", "language": "hebrew"},
+        {"id": "proverbs", "name": "Mishlei/Proverbs via Sefaria.org (Hebrew)", "icon": "📜", "language": "hebrew"},
+        {"id": "ecclesiastes", "name": "Kohelet/Ecclesiastes via Sefaria.org (Hebrew)", "icon": "🌅", "language": "hebrew"},
+        {"id": "psalms", "name": "Tehillim/Psalms via Sefaria.org (Hebrew)", "icon": "🎵", "language": "hebrew"},
     ]
     
     # Local sources (no API needed)
     for source_id, source_data in WISDOM_SOURCES.items():
-        sources.append({
+        entry = {
             "id": source_id,
             "name": source_data["name"],
             "icon": source_data["icon"],
-        })
+        }
+        # Mark Hebrew sources
+        if source_data.get("language") == "hebrew":
+            entry["language"] = "hebrew"
+        sources.append(entry)
     
     return sources
+
+
+def list_hebrew_sources() -> List[Dict[str, str]]:
+    """List only Hebrew wisdom sources."""
+    all_sources = list_available_sources()
+    return [s for s in all_sources if s.get("language") == "hebrew"]
 
 
 def get_aeon_level(health_score: float) -> str:
@@ -557,7 +681,13 @@ def get_random_source(seed_date: bool = True) -> str:
     return random.choice(all_sources)
 
 
-def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) -> Optional[Dict[str, Any]]:
+def get_wisdom(
+    health_score: float, 
+    source: str = None, 
+    seed_date: bool = True,
+    include_hebrew: bool = None,
+    hebrew_only: bool = None,
+) -> Optional[Dict[str, Any]]:
     """
     Get wisdom quote based on project health.
     
@@ -565,9 +695,15 @@ def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) 
         health_score: Project health score (0-100)
         source: Wisdom source (default: from config), use "random" for random source
         seed_date: If True, same quote shown all day
+        include_hebrew: If True, include Hebrew text (bilingual). Default from env.
+        hebrew_only: If True, return only Hebrew text. Default from env.
     
     Returns:
         Dictionary with quote data, or None if disabled.
+    
+    Environment Variables:
+        EXARP_WISDOM_HEBREW=1 - Enable bilingual Hebrew/English
+        EXARP_WISDOM_HEBREW_ONLY=1 - Enable Hebrew-only mode
     """
     config = load_config()
     
@@ -575,6 +711,12 @@ def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) 
         return None
     
     source = source or config["source"]
+    
+    # Check Hebrew settings from environment if not explicitly set
+    if include_hebrew is None:
+        include_hebrew = os.environ.get("EXARP_WISDOM_HEBREW", "").lower() in ("1", "true", "yes")
+    if hebrew_only is None:
+        hebrew_only = os.environ.get("EXARP_WISDOM_HEBREW_ONLY", "").lower() in ("1", "true", "yes")
     
     # Handle random source selection
     if source == "random":
@@ -601,11 +743,17 @@ def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) 
         except ImportError:
             source = "tao"  # Fallback
     
-    # Handle Sefaria sources
+    # Handle Sefaria sources (all support Hebrew)
     if source in ("pirkei_avot", "proverbs", "ecclesiastes", "psalms"):
         try:
-            from .sefaria import get_sefaria_wisdom, format_sefaria_wisdom
-            return get_sefaria_wisdom(health_score, source, seed_date)
+            from .sefaria import get_sefaria_wisdom
+            return get_sefaria_wisdom(
+                health_score, 
+                source, 
+                seed_date,
+                include_hebrew=include_hebrew,
+                hebrew_only=hebrew_only,
+            )
         except ImportError:
             source = "bible"  # Fallback to local bible quotes
     
@@ -624,7 +772,7 @@ def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) 
     quote = random.choice(quotes)
     random.seed()  # Reset
     
-    return {
+    result = {
         "quote": quote["quote"],
         "source": quote["source"],
         "encouragement": quote["encouragement"],
@@ -634,6 +782,13 @@ def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) 
         "health_score": health_score,
         "show_disable_hint": config.get("show_disable_hint", True),
     }
+    
+    # Mark Hebrew sources
+    if source_data.get("language") == "hebrew":
+        result["language"] = "hebrew"
+        result["bilingual"] = True  # Local Hebrew sources are bilingual by default
+    
+    return result
 
 
 def format_wisdom_text(wisdom: Dict[str, Any]) -> str:
@@ -675,14 +830,33 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--list":
         print("\n📚 Available Wisdom Sources:\n")
         for src in list_available_sources():
+            lang_mark = " [עברית]" if src.get("language") == "hebrew" else ""
+            print(f"  {src['icon']} {src['id']:<20} - {src['name']}{lang_mark}")
+        print("\n🕎 Hebrew Sources:")
+        for src in list_hebrew_sources():
             print(f"  {src['icon']} {src['id']:<20} - {src['name']}")
         print("\nUsage: EXARP_WISDOM_SOURCE=<source> python -m ...")
+        print("Hebrew: EXARP_WISDOM_HEBREW=1 (bilingual) or EXARP_WISDOM_HEBREW_ONLY=1")
+        sys.exit(0)
+    
+    if len(sys.argv) > 1 and sys.argv[1] == "--hebrew":
+        print("\n🕎 Hebrew Wisdom Sources (עברית):\n")
+        for src in list_hebrew_sources():
+            print(f"  {src['icon']} {src['id']:<20} - {src['name']}")
+        print("\nUsage:")
+        print("  EXARP_WISDOM_SOURCE=rebbe python -m ...        # Hebrew advisor")
+        print("  EXARP_WISDOM_HEBREW=1                          # Bilingual mode")
+        print("  EXARP_WISDOM_HEBREW_ONLY=1                     # Hebrew only")
         sys.exit(0)
     
     health = float(sys.argv[1]) if len(sys.argv) > 1 else 75.0
     source = sys.argv[2] if len(sys.argv) > 2 else None
     
-    wisdom = get_wisdom(health, source)
+    # Check for Hebrew flags
+    include_hebrew = "--hebrew" in sys.argv or "--bilingual" in sys.argv
+    hebrew_only = "--hebrew-only" in sys.argv
+    
+    wisdom = get_wisdom(health, source, include_hebrew=include_hebrew, hebrew_only=hebrew_only)
     if wisdom:
         print(format_wisdom_text(wisdom))
     else:

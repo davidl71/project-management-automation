@@ -150,13 +150,14 @@ SEFARIA_SELECTIONS = {
 }
 
 
-def fetch_sefaria_text(ref: str, language: str = "en") -> Optional[Dict[str, Any]]:
+def fetch_sefaria_text(ref: str, language: str = "en", include_hebrew: bool = False) -> Optional[Dict[str, Any]]:
     """
     Fetch text from Sefaria API.
     
     Args:
         ref: Sefaria text reference (e.g., "Pirkei_Avot.1.14")
         language: Language preference ("en" or "he")
+        include_hebrew: If True, also fetch and include Hebrew text
     
     Returns:
         Dictionary with text data, or None on error.
@@ -171,25 +172,34 @@ def fetch_sefaria_text(ref: str, language: str = "en") -> Optional[Dict[str, Any
             
             # v1 API returns text directly
             text = data.get("text", "")
-            if isinstance(text, list):
-                # Flatten nested lists (common in Talmud, etc.)
-                def flatten(lst):
-                    result = []
-                    for item in lst:
-                        if isinstance(item, list):
-                            result.extend(flatten(item))
-                        elif item:
-                            result.append(str(item))
-                    return result
-                text = " ".join(flatten(text))
+            he_text = data.get("he", "")  # Hebrew text
             
-            if text:
-                return {
+            # Flatten nested lists (common in Talmud, etc.)
+            def flatten(lst):
+                result = []
+                for item in lst:
+                    if isinstance(item, list):
+                        result.extend(flatten(item))
+                    elif item:
+                        result.append(str(item))
+                return result
+            
+            if isinstance(text, list):
+                text = " ".join(flatten(text))
+            if isinstance(he_text, list):
+                he_text = " ".join(flatten(he_text))
+            
+            if text or he_text:
+                result = {
                     "text": text,
                     "ref": data.get("ref", ref),
                     "heRef": data.get("heRef", ""),
                     "book": data.get("book", ""),
                 }
+                # Include Hebrew if requested or if it's the primary language
+                if include_hebrew or language == "he":
+                    result["hebrew"] = he_text
+                return result
     except (urllib.error.URLError, json.JSONDecodeError, KeyError, TimeoutError) as e:
         # Silently fail - will use fallback
         pass
@@ -217,7 +227,9 @@ def get_sefaria_wisdom(
     health_score: float,
     source: str = "pirkei_avot",
     seed_date: bool = True,
-    fetch_live: bool = True
+    fetch_live: bool = True,
+    include_hebrew: bool = False,
+    hebrew_only: bool = False,
 ) -> Optional[Dict[str, Any]]:
     """
     Get wisdom from Sefaria based on project health.
@@ -227,6 +239,8 @@ def get_sefaria_wisdom(
         source: Which text source (pirkei_avot, proverbs, ecclesiastes, psalms)
         seed_date: If True, same quote shown all day
         fetch_live: If True, fetch from API; if False, use cached/fallback
+        include_hebrew: If True, include Hebrew text alongside English
+        hebrew_only: If True, return only Hebrew text (no English)
     
     Returns:
         Dictionary with wisdom data.
@@ -249,18 +263,39 @@ def get_sefaria_wisdom(
     # Try to fetch from Sefaria
     text_data = None
     if fetch_live:
-        text_data = fetch_sefaria_text(selection["ref"])
+        text_data = fetch_sefaria_text(
+            selection["ref"], 
+            language="he" if hebrew_only else "en",
+            include_hebrew=include_hebrew or hebrew_only
+        )
     
-    if text_data and text_data.get("text"):
-        quote = text_data["text"]
-        # Clean up HTML if present
-        quote = quote.replace("<b>", "").replace("</b>", "")
-        quote = quote.replace("<i>", "").replace("</i>", "")
-    else:
+    # Process English text
+    quote = ""
+    hebrew_quote = ""
+    
+    if text_data:
+        if text_data.get("text") and not hebrew_only:
+            quote = text_data["text"]
+            # Clean up HTML if present
+            quote = quote.replace("<b>", "").replace("</b>", "")
+            quote = quote.replace("<i>", "").replace("</i>", "")
+        
+        if text_data.get("hebrew"):
+            hebrew_quote = text_data["hebrew"]
+            # Clean up HTML if present in Hebrew
+            hebrew_quote = hebrew_quote.replace("<b>", "").replace("</b>", "")
+            hebrew_quote = hebrew_quote.replace("<i>", "").replace("</i>", "")
+    
+    if not quote and not hebrew_quote:
         # Fallback - just show the reference
         quote = f"[Read: {selection['ref'].replace('_', ' ')}]"
     
-    return {
+    # If hebrew_only, use Hebrew as the main quote
+    if hebrew_only and hebrew_quote:
+        quote = hebrew_quote
+        hebrew_quote = ""  # Don't duplicate
+    
+    result = {
         "quote": quote,
         "source": selection["ref"].replace("_", " "),
         "hebrew_ref": text_data.get("heRef", "") if text_data else "",
@@ -272,10 +307,60 @@ def get_sefaria_wisdom(
         "health_score": health_score,
         "sefaria_link": f"https://www.sefaria.org/{selection['ref']}",
     }
+    
+    # Include Hebrew text if requested
+    if include_hebrew and hebrew_quote:
+        result["hebrew"] = hebrew_quote
+        result["bilingual"] = True
+    
+    return result
 
 
-def format_sefaria_wisdom(wisdom: Dict[str, Any]) -> str:
-    """Format Sefaria wisdom for terminal display."""
+def format_rtl_text(text: str, width: int = 64) -> List[str]:
+    """
+    Format RTL (Hebrew) text for terminal display.
+    
+    Args:
+        text: Hebrew text to format
+        width: Maximum width per line
+        
+    Returns:
+        List of formatted lines with RTL markers
+    """
+    if not text:
+        return []
+    
+    # Unicode RTL markers for proper display
+    RLM = "\u200F"  # Right-to-Left Mark
+    
+    lines = []
+    words = text.split()
+    current_line = ""
+    
+    for word in words:
+        test_line = f"{current_line} {word}".strip() if current_line else word
+        if len(test_line) > width:
+            if current_line:
+                # Right-align Hebrew text
+                lines.append(f"{RLM}{current_line}")
+            current_line = word
+        else:
+            current_line = test_line
+    
+    if current_line:
+        lines.append(f"{RLM}{current_line}")
+    
+    return lines
+
+
+def format_sefaria_wisdom(wisdom: Dict[str, Any], show_hebrew: bool = True) -> str:
+    """
+    Format Sefaria wisdom for terminal display.
+    
+    Args:
+        wisdom: Wisdom dictionary from get_sefaria_wisdom
+        show_hebrew: If True and Hebrew available, show bilingual display
+    """
     if wisdom is None:
         return ""
     
@@ -283,6 +368,10 @@ def format_sefaria_wisdom(wisdom: Dict[str, Any]) -> str:
     source_name = wisdom.get("wisdom_source", "Sefaria")
     
     quote = wisdom.get("quote", "")
+    hebrew_quote = wisdom.get("hebrew", "")
+    hebrew_ref = wisdom.get("hebrew_ref", "")
+    is_bilingual = wisdom.get("bilingual", False) and show_hebrew and hebrew_quote
+    
     # Truncate long quotes
     if len(quote) > 200:
         quote = quote[:197] + "..."
@@ -296,7 +385,25 @@ def format_sefaria_wisdom(wisdom: Dict[str, Any]) -> str:
         "║                                                                      ║",
     ]
     
-    # Word wrap the quote
+    # Add Hebrew text first if bilingual (Hebrew reads top-to-bottom, right-to-left)
+    if is_bilingual and hebrew_quote:
+        lines.append("║  🇮🇱 עברית (Hebrew):                                               ║")
+        lines.append("║                                                                      ║")
+        
+        # Format Hebrew with RTL support
+        hebrew_lines = format_rtl_text(hebrew_quote, width=60)
+        for h_line in hebrew_lines:
+            # Right-align Hebrew text within the box
+            padded = f"║    {h_line}".ljust(70) + " ║"
+            lines.append(padded)
+        
+        if hebrew_ref:
+            lines.append(f"║    — {hebrew_ref}".ljust(70) + " ║")
+        lines.append("║                                                                      ║")
+        lines.append("║  🇬🇧 English:                                                        ║")
+        lines.append("║                                                                      ║")
+    
+    # Word wrap the English quote
     words = quote.split()
     line = "║  \""
     for word in words:
@@ -317,7 +424,53 @@ def format_sefaria_wisdom(wisdom: Dict[str, Any]) -> str:
         "║                                                                      ║",
         "╠══════════════════════════════════════════════════════════════════════╣",
         "║  Source: EXARP_WISDOM_SOURCE=pirkei_avot|proverbs|psalms|ecclesiastes║",
+        "║  Bilingual: EXARP_WISDOM_HEBREW=1 for Hebrew text                    ║",
         "║  Powered by Sefaria.org - Open Source Jewish Texts                   ║",
+        "╚══════════════════════════════════════════════════════════════════════╝",
+    ])
+    
+    return "\n".join(lines)
+
+
+def format_hebrew_only_wisdom(wisdom: Dict[str, Any]) -> str:
+    """
+    Format wisdom display for Hebrew-only mode.
+    Uses Hebrew text as primary quote.
+    """
+    if wisdom is None:
+        return ""
+    
+    icon = wisdom.get("wisdom_icon", "📜")
+    source_name = wisdom.get("wisdom_source", "Sefaria")
+    hebrew_ref = wisdom.get("hebrew_ref", "")
+    
+    quote = wisdom.get("quote", "")  # In hebrew_only mode, this is the Hebrew text
+    
+    lines = [
+        "",
+        "╔══════════════════════════════════════════════════════════════════════╗",
+        f"║  {icon} {source_name} (עברית)".ljust(70) + "║",
+        f"║  מצב הפרויקט: {wisdom['aeon_level']:<50} ║",
+        "╠══════════════════════════════════════════════════════════════════════╣",
+        "║                                                                      ║",
+    ]
+    
+    # Format Hebrew quote with RTL
+    hebrew_lines = format_rtl_text(quote, width=60)
+    for h_line in hebrew_lines:
+        lines.append(f"║    {h_line}".ljust(70) + " ║")
+    
+    ref_display = hebrew_ref if hebrew_ref else wisdom.get("source", "")
+    lines.extend([
+        "║                                                                      ║",
+        f"║  — {ref_display}".ljust(70) + " ║",
+        "║                                                                      ║",
+        f"║  💡 {wisdom['context']:<62} ║",
+        f"║  🔗 {wisdom['sefaria_link']:<62} ║",
+        "║                                                                      ║",
+        "╠══════════════════════════════════════════════════════════════════════╣",
+        "║  Hebrew Mode: EXARP_WISDOM_HEBREW_ONLY=1                              ║",
+        "║  Powered by Sefaria.org - טקסטים יהודיים פתוחים                       ║",
         "╚══════════════════════════════════════════════════════════════════════╝",
     ])
     
@@ -327,15 +480,40 @@ def format_sefaria_wisdom(wisdom: Dict[str, Any]) -> str:
 # CLI
 if __name__ == "__main__":
     import sys
+    import os
     
     health = float(sys.argv[1]) if len(sys.argv) > 1 else 75.0
     source = sys.argv[2] if len(sys.argv) > 2 else "pirkei_avot"
     
+    # Check environment variables for Hebrew settings
+    include_hebrew = os.environ.get("EXARP_WISDOM_HEBREW", "").lower() in ("1", "true", "yes")
+    hebrew_only = os.environ.get("EXARP_WISDOM_HEBREW_ONLY", "").lower() in ("1", "true", "yes")
+    
+    # Command line override
+    if len(sys.argv) > 3:
+        if sys.argv[3] == "--hebrew":
+            include_hebrew = True
+        elif sys.argv[3] == "--hebrew-only":
+            hebrew_only = True
+    
     print(f"\nFetching wisdom from Sefaria ({source})...")
-    wisdom = get_sefaria_wisdom(health, source)
+    if include_hebrew:
+        print("(Bilingual Hebrew/English mode)")
+    elif hebrew_only:
+        print("(Hebrew-only mode - עברית בלבד)")
+    
+    wisdom = get_sefaria_wisdom(
+        health, 
+        source, 
+        include_hebrew=include_hebrew,
+        hebrew_only=hebrew_only
+    )
     
     if wisdom:
-        print(format_sefaria_wisdom(wisdom))
+        if hebrew_only:
+            print(format_hebrew_only_wisdom(wisdom))
+        else:
+            print(format_sefaria_wisdom(wisdom, show_hebrew=include_hebrew))
     else:
         print("Failed to get wisdom.")
 

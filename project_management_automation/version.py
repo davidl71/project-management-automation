@@ -26,7 +26,7 @@ from typing import Dict, Optional, Tuple
 
 # Base version - increment this for releases
 # Format: MAJOR.MINOR.PATCH
-BASE_VERSION = "0.1.15"
+BASE_VERSION = "0.1.16"
 
 
 def get_epoch() -> int:

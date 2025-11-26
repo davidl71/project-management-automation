@@ -4,10 +4,10 @@ Wisdom System - Daily inspirational quotes based on project health.
 A multi-source wisdom engine that provides quotes matched to project status,
 designed for extraction to standalone package when needed.
 
-Available Sources (18 total):
+Available Sources (21 total, including Hebrew):
 - random: Randomly pick from any source (daily consistent) 🎲
 - pistis_sophia: Gnostic mysticism (default)
-- pirkei_avot, proverbs, ecclesiastes, psalms: Jewish texts via Sefaria.org
+- pirkei_avot, proverbs, ecclesiastes, psalms: Jewish texts via Sefaria.org 🕎
 - bofh: Bastard Operator From Hell (tech humor)
 - tao: Tao Te Ching (balance, flow)
 - art_of_war: Sun Tzu (strategy)
@@ -17,24 +17,36 @@ Available Sources (18 total):
 - murphy: Murphy's Laws (pragmatism)
 - shakespeare: The Bard (drama)
 - confucius: The Analects (ethics)
-- kybalion: Hermetic Philosophy (mental models) ⚗️ [NEW]
-- gracian: Art of Worldly Wisdom (pragmatic maxims) 🎭 [NEW]
-- enochian: John Dee's mystical calls 🔮 [NEW]
+- kybalion: Hermetic Philosophy (mental models) ⚗️
+- gracian: Art of Worldly Wisdom (pragmatic maxims) 🎭
+- enochian: John Dee's mystical calls 🔮
 
-Credits: Many texts from https://sacred-texts.com/ (public domain)
+Hebrew Advisors (עברית):
+- rebbe: The Rebbe - Chassidic wisdom from Pirkei Avot 🕎
+- tzaddik: The Tzaddik - Path of righteousness from Proverbs ✡️
+- chacham: The Chacham - Sage wisdom from Torah 📜
+
+Credits: 
+- Many texts from https://sacred-texts.com/ (public domain)
+- Hebrew texts from https://sefaria.org/ (open API)
 
 Usage:
     from project_management_automation.tools.wisdom import get_wisdom, list_sources
     
     wisdom = get_wisdom(health_score=75.0, source="stoic")
     wisdom = get_wisdom(health_score=75.0, source="random")  # Different source each day!
+    wisdom = get_wisdom(health_score=75.0, source="rebbe")   # Hebrew advisor
+    wisdom = get_wisdom(health_score=75.0, source="pirkei_avot", include_hebrew=True)  # Bilingual
     sources = list_sources()
 
 Configuration:
-    EXARP_WISDOM_SOURCE=random     # Random source each day
-    EXARP_WISDOM_SOURCE=<source>   # Specific source (default: pistis_sophia)
-    EXARP_DISABLE_WISDOM=1         # Disable completely
-    .exarp_no_wisdom               # File marker to disable
+    EXARP_WISDOM_SOURCE=random          # Random source each day
+    EXARP_WISDOM_SOURCE=<source>        # Specific source (default: pistis_sophia)
+    EXARP_WISDOM_SOURCE=rebbe           # Hebrew advisor
+    EXARP_WISDOM_HEBREW=1               # Enable bilingual Hebrew/English output
+    EXARP_WISDOM_HEBREW_ONLY=1          # Hebrew text only (no English)
+    EXARP_DISABLE_WISDOM=1              # Disable completely
+    .exarp_no_wisdom                    # File marker to disable
 
 Design Note:
     This package is designed for easy extraction to standalone `devwisdom`
@@ -48,6 +60,7 @@ from .sources import (
     get_random_source,
     format_wisdom_text as format_text,
     list_available_sources as list_sources,
+    list_hebrew_sources,  # NEW: Hebrew-specific source listing
     load_config,
     save_config,
     get_aeon_level,
@@ -98,10 +111,28 @@ from .advisors import (
     export_for_podcast,
 )
 
+# Voice/TTS System (optional - requires edge-tts or pyttsx3)
+try:
+    from .voice import (
+        ADVISOR_VOICES,
+        HEBREW_VOICES,
+        check_tts_backends,
+        synthesize_advisor_quote,
+        generate_podcast_audio,
+        list_available_voices,
+        get_available_backend,
+    )
+    VOICE_AVAILABLE = True
+except ImportError:
+    VOICE_AVAILABLE = False
+    ADVISOR_VOICES = {}
+    HEBREW_VOICES = {}
+
 __all__ = [
     # Core API (stable)
     "get_wisdom",
     "list_sources", 
+    "list_hebrew_sources",  # Hebrew-specific listing
     "format_text",
     "load_config",
     "save_config",
@@ -113,6 +144,7 @@ __all__ = [
     # Feature flags
     "SEFARIA_AVAILABLE",
     "PISTIS_SOPHIA_AVAILABLE",
+    "VOICE_AVAILABLE",
     
     # Trusted Advisor System
     "METRIC_ADVISORS",
@@ -128,6 +160,15 @@ __all__ = [
     "get_daily_briefing",
     "get_consultation_log",
     "export_for_podcast",
+    
+    # Voice/TTS System
+    "ADVISOR_VOICES",
+    "HEBREW_VOICES",
+    "check_tts_backends",
+    "synthesize_advisor_quote",
+    "generate_podcast_audio",
+    "list_available_voices",
+    "get_available_backend",
 ]
 
 # INTENTIONAL: Wisdom module has its own version, separate from Exarp.
