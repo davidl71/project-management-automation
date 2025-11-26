@@ -67,11 +67,29 @@ def validate_ci_cd_workflow(
     try:
         # Import here to avoid circular dependencies
         import sys
-        project_root = Path(__file__).parent.parent.parent.parent
-        sys.path.insert(0, str(project_root))
+        from project_management_automation.utils import find_project_root
+        project_root = find_project_root(Path(__file__).parent.parent.parent)
 
         # Default paths
-        workflow_file = Path(workflow_path) if workflow_path else project_root / '.github' / 'workflows' / 'parallel-agents-ci.yml'
+        if workflow_path:
+            workflow_file = Path(workflow_path)
+        else:
+            # Try common workflow files
+            workflows_dir = project_root / '.github' / 'workflows'
+            candidates = ['ci.yml', 'main.yml', 'build.yml', 'parallel-agents-ci.yml']
+            workflow_file = None
+            for candidate in candidates:
+                if (workflows_dir / candidate).exists():
+                    workflow_file = workflows_dir / candidate
+                    break
+            # Fall back to first .yml file found
+            if not workflow_file and workflows_dir.exists():
+                yml_files = list(workflows_dir.glob('*.yml'))
+                if yml_files:
+                    workflow_file = yml_files[0]
+            # Ultimate fallback
+            if not workflow_file:
+                workflow_file = workflows_dir / 'ci.yml'
         report_path = Path(output_path) if output_path else project_root / 'docs' / 'CI_CD_VALIDATION_REPORT.md'
 
         # Validation results
