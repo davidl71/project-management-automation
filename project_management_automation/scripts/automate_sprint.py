@@ -177,7 +177,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         try:
             # Use batch_approve_tasks tool
-            from tools.batch_task_approval import batch_approve_tasks
+            from project_management_automation.tools.batch_task_approval import batch_approve_tasks
             
             result = batch_approve_tasks(
                 status="Review",
@@ -202,7 +202,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # 1. Documentation health
         try:
-            from tools.docs_health import check_documentation_health
+            from project_management_automation.tools.docs_health import check_documentation_health
             docs_result = json.loads(check_documentation_health(create_tasks=False))
             if docs_result.get('success'):
                 results['documentation_health'] = docs_result.get('data', {})
@@ -211,7 +211,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # 2. Task alignment
         try:
-            from tools.todo2_alignment import analyze_todo2_alignment
+            from project_management_automation.tools.todo2_alignment import analyze_todo2_alignment
             alignment_result = json.loads(analyze_todo2_alignment(create_followup_tasks=True))
             if alignment_result.get('success'):
                 results['task_alignment'] = alignment_result.get('data', {})
@@ -220,7 +220,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # 3. Duplicate detection
         try:
-            from tools.duplicate_detection import detect_duplicate_tasks
+            from project_management_automation.tools.duplicate_detection import detect_duplicate_tasks
             dup_result = json.loads(detect_duplicate_tasks(auto_fix=True))
             if dup_result.get('success'):
                 results['duplicate_detection'] = dup_result.get('data', {})
@@ -229,7 +229,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # 4. Automation opportunities
         try:
-            from tools.automation_opportunities import find_automation_opportunities
+            from project_management_automation.tools.automation_opportunities import find_automation_opportunities
             auto_result = json.loads(find_automation_opportunities(min_value_score=0.8))
             if auto_result.get('success'):
                 results['automation_opportunities'] = auto_result.get('data', {})
@@ -246,7 +246,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # 1. Run tests
         try:
-            from tools.run_tests import run_tests
+            from project_management_automation.tools.run_tests import run_tests
             test_result = json.loads(run_tests(coverage=True))
             if test_result.get('success'):
                 results['test_execution'] = test_result.get('data', {})
@@ -255,7 +255,7 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # 2. Analyze coverage
         try:
-            from tools.test_coverage import analyze_test_coverage
+            from project_management_automation.tools.test_coverage import analyze_test_coverage
             coverage_result = json.loads(analyze_test_coverage(min_coverage=80))
             if coverage_result.get('success'):
                 results['test_coverage'] = coverage_result.get('data', {})
@@ -516,8 +516,9 @@ class SprintAutomation(IntelligentAutomationBase):
         
         # Process up to 10 tasks
         processed = 0
+        actionable_statuses = ['Todo', 'todo', 'pending', 'Pending']
         for task in background_tasks[:10]:
-            if task.get('status') in ['Todo', 'todo']:
+            if task.get('status') in actionable_statuses:
                 # Mark as in progress (simulated)
                 if not self.dry_run:
                     task['status'] = 'In Progress'
@@ -533,8 +534,9 @@ class SprintAutomation(IntelligentAutomationBase):
         long_desc = task.get('long_description', '').lower() or task.get('details', '').lower()
         status = task.get('status', '')
         
-        # Skip if not in Todo status
-        if status not in ['Todo', 'todo']:
+        # Skip if not in actionable status
+        actionable_statuses = ['Todo', 'todo', 'pending', 'Pending']
+        if status not in actionable_statuses:
             return False
         
         # Interactive indicators (exclude)
