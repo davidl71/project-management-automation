@@ -2,9 +2,9 @@
 Dynamic versioning for Exarp.
 
 Version formats (PEP 440 compliant):
-- Release:  0.1.15          (from git tag v0.1.15)
-- Dev:      0.1.15.dev1732617600   (latest + epoch)
-- Nightly:  0.1.15n1732617600      (nightly + epoch)
+- Release:  X.Y.Z                    (from git tag vX.Y.Z)
+- Dev:      X.Y.Z.devEPOCH+gCOMMIT   (dev version with epoch and commit)
+- Nightly:  X.Y.Z.postEPOCH          (nightly/CI builds)
 
 Version is determined by:
 1. Git tag (if on a tag): exact version from tag
@@ -13,7 +13,7 @@ Version is determined by:
 
 Usage:
     from project_management_automation.version import __version__, get_version_info
-    print(__version__)  # "0.1.15.dev1732617600"
+    print(__version__)  # Dynamic version string
 """
 
 import os

@@ -24,6 +24,31 @@ from .logging_config import get_logger
 logger = get_logger(__name__)
 
 
+def _refresh_version() -> Optional[str]:
+    """
+    Force refresh of __version__ after module reload.
+    
+    The version module caches __version__ at import time.
+    This function recalculates it after a reload.
+    
+    Returns:
+        New version string or None if refresh failed
+    """
+    try:
+        version_module_name = "project_management_automation.version"
+        if version_module_name in sys.modules:
+            version_module = sys.modules[version_module_name]
+            # Force recalculation
+            new_version = version_module.get_version()
+            # Update the cached __version__
+            version_module.__version__ = new_version
+            logger.info(f"Version refreshed: {new_version}")
+            return new_version
+    except Exception as e:
+        logger.warning(f"Failed to refresh version: {e}")
+    return None
+
+
 def is_dev_mode() -> bool:
     """Check if development mode is enabled."""
     return os.environ.get("EXARP_DEV_MODE", "").lower() in ("1", "true", "yes")
@@ -137,6 +162,9 @@ def reload_all_modules(package_name: str = "project_management_automation") -> D
     
     duration = (datetime.now() - start_time).total_seconds()
     
+    # Force refresh of __version__ after reload
+    version_refreshed = _refresh_version()
+    
     return {
         "success": errors == 0,
         "timestamp": datetime.now().isoformat(),
@@ -148,6 +176,7 @@ def reload_all_modules(package_name: str = "project_management_automation") -> D
             "skipped": skipped
         },
         "modules": results if errors > 0 else None,  # Only show details if errors
+        "version": version_refreshed,
         "message": f"Reloaded {reloaded} modules in {duration:.2f}s" + (
             f" ({errors} errors)" if errors else ""
         )
