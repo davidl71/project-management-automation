@@ -2232,6 +2232,108 @@
       "updatedAt": "2025-11-26T04:12:41.973329Z",
       "dependencies": [],
       "estimatedHours": 1
+    },
+    {
+      "id": "3dc8c346-7d4d-487f-9c5f-85b62b2a0d29",
+      "content": "Implement recommend_next_task tool",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "tool",
+        "developer-query",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Answer \"What should I work on next?\"\n\n\ud83d\udccb **Acceptance Criteria:**\n- Analyze task dependencies, priorities, and blockers\n- Consider estimated effort vs available time\n- Factor in task age (older high-priority first)\n- Return ranked recommendations with reasoning\n\n**Algorithm:**\n1. Filter to actionable tasks (not blocked, not in-progress)\n2. Score by: priority (40%) + age (20%) + dependency unlocks (30%) + effort fit (10%)\n3. Return top 3-5 recommendations\n\n**HINT format:**\n`[HINT: Next task recommendation. Returns top 3 tasks, reasoning, estimated effort.]`\n\n**Natural language queries:**\n- \"What should I work on?\"\n- \"What's the highest priority task?\"\n- \"What can I finish quickly?\"",
+      "completed": false,
+      "createdAt": "2025-11-26T04:19:48.941736Z",
+      "updatedAt": "2025-11-26T04:19:48.941767Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "f4f2bb4c-d703-4403-b39e-980dbbb514b0",
+      "content": "Implement get_recent_changes tool",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "tool",
+        "developer-query",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Answer \"What changed since X?\"\n\n\ud83d\udccb **Acceptance Criteria:**\n- Show task status changes in time range\n- Show git commits in time range\n- Show documentation updates\n- Configurable time window (today, this week, since date)\n\n**Parameters:**\n- since: datetime or \"today\"/\"week\"/\"sprint\"\n- include_git: bool (default: true)\n- include_tasks: bool (default: true)\n- include_docs: bool (default: false)\n\n**HINT format:**\n`[HINT: Recent changes. Returns task changes, commits, docs updated, time range.]`\n\n**Natural language queries:**\n- \"What changed today?\"\n- \"What happened since Monday?\"\n- \"Show me this sprint's changes\"",
+      "completed": false,
+      "createdAt": "2025-11-26T04:19:48.941814Z",
+      "updatedAt": "2025-11-26T04:19:48.941817Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "c7cda1a9-c72b-476f-bad4-3f3d64bd1610",
+      "content": "Implement generate_progress_report tool",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "tool",
+        "developer-query",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Answer \"Summarize my progress\"\n\n\ud83d\udccb **Acceptance Criteria:**\n- Tasks completed vs total\n- Velocity (tasks/day or tasks/week)\n- Blockers identified\n- Time in each status\n- Trend comparison (this week vs last)\n\n**Output formats:**\n- summary: Quick text summary\n- detailed: Full markdown report\n- json: Machine-readable\n\n**HINT format:**\n`[HINT: Progress report. Returns completed %, velocity, blockers, trend.]`\n\n**Natural language queries:**\n- \"How am I doing?\"\n- \"Summarize my progress\"\n- \"Sprint burndown\"",
+      "completed": false,
+      "createdAt": "2025-11-26T04:19:48.941839Z",
+      "updatedAt": "2025-11-26T04:19:48.941841Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "fcf577da-de8a-4bf1-926c-9019cfd45735",
+      "content": "Implement estimate_task_effort tool",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "tool",
+        "developer-query",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Answer \"How long will X take?\"\n\n\ud83d\udccb **Acceptance Criteria:**\n- Analyze task description for complexity signals\n- Compare to similar completed tasks\n- Factor in dependencies\n- Provide confidence interval (optimistic/likely/pessimistic)\n\n**Algorithm:**\n1. Parse task for complexity keywords\n2. Find similar historical tasks\n3. Calculate avg completion time\n4. Adjust for dependencies and blockers\n\n**HINT format:**\n`[HINT: Effort estimate. Returns hours estimate, confidence, similar tasks.]`\n\n**Natural language queries:**\n- \"How long will this take?\"\n- \"Estimate task T-123\"\n- \"Can I finish this today?\"",
+      "completed": false,
+      "createdAt": "2025-11-26T04:19:48.941848Z",
+      "updatedAt": "2025-11-26T04:19:48.941850Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "b9a4dd0f-97eb-4f94-b7a9-3fedad7c9058",
+      "content": "Implement diff_task_states tool",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "tool",
+        "developer-query",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Answer \"Compare X to Y\"\n\n\ud83d\udccb **Acceptance Criteria:**\n- Compare task states between two points in time\n- Show added/removed/changed tasks\n- Show status transitions\n- Useful for sprint retrospectives\n\n**Parameters:**\n- from_state: datetime or snapshot ID\n- to_state: datetime or \"now\"\n- format: summary/detailed/json\n\n**HINT format:**\n`[HINT: Task diff. Returns added, removed, changed, status transitions.]`\n\n**Natural language queries:**\n- \"What changed between sprints?\"\n- \"Diff last week vs this week\"\n- \"Compare to yesterday\"",
+      "completed": false,
+      "createdAt": "2025-11-26T04:19:48.941858Z",
+      "updatedAt": "2025-11-26T04:19:48.941860Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "9e739139-6e36-458b-816c-5d02483578d8",
+      "content": "Implement set_task_reminder tool",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "tool",
+        "developer-query",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Answer \"Remind me about X\"\n\n\ud83d\udccb **Acceptance Criteria:**\n- Set reminder for specific task\n- Trigger on: time, event (status change), or condition\n- Store reminders persistently\n- Integrate with list_tasks_awaiting_clarification\n\n**Trigger types:**\n- time: \"remind me tomorrow\"\n- event: \"remind me when T-123 is done\"\n- condition: \"remind me when no blockers\"\n\n**HINT format:**\n`[HINT: Task reminder. Returns reminder set, trigger condition, task ID.]`\n\n**Natural language queries:**\n- \"Remind me about this tomorrow\"\n- \"Alert me when blocked tasks clear\"\n- \"Follow up on T-123 next week\"",
+      "completed": false,
+      "createdAt": "2025-11-26T04:19:48.941866Z",
+      "updatedAt": "2025-11-26T04:19:48.941868Z",
+      "dependencies": [],
+      "estimatedHours": 3
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
