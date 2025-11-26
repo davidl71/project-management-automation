@@ -4,7 +4,8 @@ Wisdom System - Daily inspirational quotes based on project health.
 A multi-source wisdom engine that provides quotes matched to project status,
 designed for extraction to standalone package when needed.
 
-Available Sources (14 total):
+Available Sources (15 total):
+- random: Randomly pick from any source (daily consistent) 🎲
 - pistis_sophia: Gnostic mysticism (default)
 - pirkei_avot, proverbs, ecclesiastes, psalms: Jewish texts via Sefaria.org
 - bofh: Bastard Operator From Hell (tech humor)
@@ -21,10 +22,12 @@ Usage:
     from project_management_automation.tools.wisdom import get_wisdom, list_sources
     
     wisdom = get_wisdom(health_score=75.0, source="stoic")
+    wisdom = get_wisdom(health_score=75.0, source="random")  # Different source each day!
     sources = list_sources()
 
 Configuration:
-    EXARP_WISDOM_SOURCE=<source>   # Change source (default: pistis_sophia)
+    EXARP_WISDOM_SOURCE=random     # Random source each day
+    EXARP_WISDOM_SOURCE=<source>   # Specific source (default: pistis_sophia)
     EXARP_DISABLE_WISDOM=1         # Disable completely
     .exarp_no_wisdom               # File marker to disable
 
@@ -37,6 +40,7 @@ Design Note:
 # Public API - stable for extraction
 from .sources import (
     get_wisdom,
+    get_random_source,
     format_wisdom_text as format_text,
     list_available_sources as list_sources,
     load_config,

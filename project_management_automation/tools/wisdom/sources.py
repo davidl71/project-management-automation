@@ -5,6 +5,7 @@ Provides inspirational/humorous quotes from various public domain texts
 matched to project health status.
 
 Available Sources:
+- random: Randomly pick from any source (daily consistent)
 - pistis_sophia: Gnostic mysticism (default)
 - bofh: Bastard Operator From Hell (tech humor)
 - tao: Tao Te Ching (balance and flow)
@@ -17,7 +18,7 @@ Available Sources:
 - confucius: The Analects (ethics)
 
 Configuration:
-- EXARP_WISDOM_SOURCE=<source_name>  (default: pistis_sophia)
+- EXARP_WISDOM_SOURCE=<source_name>  (default: pistis_sophia, use "random" for variety)
 - EXARP_DISABLE_WISDOM=1             (disable all wisdom)
 - .exarp_wisdom_config               (JSON config file)
 """
@@ -388,6 +389,9 @@ def save_config(config: Dict[str, Any]) -> None:
 def list_available_sources() -> List[Dict[str, str]]:
     """List all available wisdom sources."""
     sources = [
+        # Random - picks from any source
+        {"id": "random", "name": "Random (any source)", "icon": "🎲"},
+        
         # Gnostic
         {"id": "pistis_sophia", "name": "Pistis Sophia (Gnostic)", "icon": "📜"},
         
@@ -423,13 +427,33 @@ def get_aeon_level(health_score: float) -> str:
         return "treasury"
 
 
+def get_random_source(seed_date: bool = True) -> str:
+    """
+    Get a random wisdom source.
+    
+    Args:
+        seed_date: If True, same source shown all day
+        
+    Returns:
+        Source ID string
+    """
+    # All available sources (local + Sefaria)
+    all_sources = list(WISDOM_SOURCES.keys()) + ["pistis_sophia", "pirkei_avot", "proverbs", "ecclesiastes", "psalms"]
+    
+    if seed_date:
+        today = datetime.now().strftime("%Y%m%d")
+        random.seed(int(today) + hash("random_source"))
+    
+    return random.choice(all_sources)
+
+
 def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) -> Optional[Dict[str, Any]]:
     """
     Get wisdom quote based on project health.
     
     Args:
         health_score: Project health score (0-100)
-        source: Wisdom source (default: from config)
+        source: Wisdom source (default: from config), use "random" for random source
         seed_date: If True, same quote shown all day
     
     Returns:
@@ -441,6 +465,10 @@ def get_wisdom(health_score: float, source: str = None, seed_date: bool = True) 
         return None
     
     source = source or config["source"]
+    
+    # Handle random source selection
+    if source == "random":
+        source = get_random_source(seed_date)
     
     # Handle Pistis Sophia from separate module
     if source == "pistis_sophia":
