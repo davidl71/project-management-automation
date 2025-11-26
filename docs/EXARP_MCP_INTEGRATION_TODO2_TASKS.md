@@ -1,4 +1,4 @@
-# Automa MCP Integration - Todo2 Tasks
+# Exarp MCP Integration - Todo2 Tasks
 
 **Date**: 2025-01-27
 **Status**: Tasks Created
@@ -10,7 +10,7 @@
 ### Task 1: Add MCP Client Infrastructure
 
 **Priority**: High (9/10)
-**Tags**: automa, integration, mcp, infrastructure
+**Tags**: exarp, integration, mcp, infrastructure
 
 **Objective**: Create MCP client infrastructure for calling other MCP servers programmatically
 
@@ -52,7 +52,7 @@
 ### Task 2: Replace Todo2 File Access with Agentic-Tools MCP
 
 **Priority**: High (9/10)
-**Tags**: automa, integration, agentic-tools, todo2
+**Tags**: exarp, integration, agentic-tools, todo2
 
 **Objective**: Replace all direct Todo2 file reads with agentic-tools MCP server calls
 
@@ -97,7 +97,7 @@
 ### Task 3: Replace Git Subprocess with Git MCP
 
 **Priority**: High (8/10)
-**Tags**: automa, integration, git, mcp
+**Tags**: exarp, integration, git, mcp
 
 **Objective**: Replace all subprocess git commands with git MCP server calls
 
@@ -140,7 +140,7 @@
 ### Task 4: Replace Filesystem Operations with Filesystem MCP
 
 **Priority**: Medium (7/10)
-**Tags**: automa, integration, filesystem, mcp
+**Tags**: exarp, integration, filesystem, mcp
 
 **Objective**: Replace filesystem operations with filesystem MCP for better workspace awareness
 
@@ -184,7 +184,7 @@
 ### Task 5: Add Context7 MCP Integration
 
 **Priority**: High (8/10)
-**Tags**: automa, integration, context7, documentation
+**Tags**: exarp, integration, context7, documentation
 
 **Objective**: Add actual Context7 MCP integration to verify external library documentation
 
@@ -227,7 +227,7 @@
 ### Task 6: Add Tractatus Thinking MCP Integration
 
 **Priority**: High (8/10)
-**Tags**: automa, integration, tractatus, structural-analysis
+**Tags**: exarp, integration, tractatus, structural-analysis
 
 **Objective**: Add Tractatus Thinking MCP integration for structural analysis before running tools
 
@@ -270,7 +270,7 @@
 ### Task 7: Add Sequential Thinking MCP Integration
 
 **Priority**: High (8/10)
-**Tags**: automa, integration, sequential, workflow
+**Tags**: exarp, integration, sequential, workflow
 
 **Objective**: Add Sequential Thinking MCP integration to convert analysis results into implementation workflows
 

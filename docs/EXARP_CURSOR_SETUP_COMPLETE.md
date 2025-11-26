@@ -1,4 +1,4 @@
-# Automa Cursor Setup - COMPLETE ✅
+# Exarp Cursor Setup - COMPLETE ✅
 
 **Date**: 2025-01-27  
 **Status**: ✅ Installed and Configured
@@ -7,7 +7,7 @@
 
 ## ✅ Setup Steps Completed
 
-1. ✅ **Removed old automa entry** from `.cursor/mcp.json`
+1. ✅ **Removed old exarp entry** from `.cursor/mcp.json`
 2. ✅ **Installed dependencies** (`mcp`, `pydantic`)
 3. ✅ **Installed from private GitHub repository** using SSH
 4. ✅ **Updated `.cursor/mcp.json`** with new entry point
@@ -70,7 +70,7 @@ cat .cursor/mcp.json | grep -A 5 "project-management-automation"
 ## What Changed
 
 ### Removed
-- ❌ Old `automa` entry from `.cursor/mcp.json` (local path)
+- ❌ Old `exarp` entry from `.cursor/mcp.json` (local path)
 - ❌ Old package installation (if any)
 
 ### Added
@@ -83,7 +83,7 @@ cat .cursor/mcp.json | grep -A 5 "project-management-automation"
 ## Next Steps
 
 1. **Restart Cursor** to load new MCP configuration
-2. **Test automa tools** in Cursor chat
+2. **Test exarp tools** in Cursor chat
 3. **Verify tools are available** - try: "Check documentation health"
 
 ---
@@ -111,5 +111,5 @@ cat .cursor/mcp.json | grep -A 5 "project-management-automation"
 
 ---
 
-**Setup Complete**: ✅ Automa is installed from private GitHub repository and configured in Cursor!
+**Setup Complete**: ✅ Exarp is installed from private GitHub repository and configured in Cursor!
 

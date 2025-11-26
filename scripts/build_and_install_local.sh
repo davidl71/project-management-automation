@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build and install automa locally (editable mode)
+# Build and install exarp locally (editable mode)
 
 set -e
 
@@ -12,7 +12,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-echo -e "${BLUE}Building and installing automa locally...${NC}"
+echo -e "${BLUE}Building and installing exarp locally...${NC}"
 echo "Project directory: $PROJECT_DIR"
 echo ""
 

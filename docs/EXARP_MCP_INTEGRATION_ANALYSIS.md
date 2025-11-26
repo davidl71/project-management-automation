@@ -1,4 +1,4 @@
-# Automa MCP Server Integration Analysis
+# Exarp MCP Server Integration Analysis
 
 **Date**: 2025-01-27
 **Status**: Analysis Complete - Integration Opportunities Identified
@@ -7,13 +7,13 @@
 
 ## Executive Summary
 
-**Current State**: Automa has **minimal integration** with other MCP servers. It primarily uses:
+**Current State**: Exarp has **minimal integration** with other MCP servers. It primarily uses:
 - Direct file access for Todo2 (instead of agentic-tools MCP)
 - Subprocess for git operations (instead of git MCP)
 - pathlib for filesystem (instead of filesystem MCP)
 - No actual calls to Context7, Tractatus, or Sequential MCP servers
 
-**Opportunity**: Automa could significantly enhance its capabilities by:
+**Opportunity**: Exarp could significantly enhance its capabilities by:
 1. Using MCP client libraries to call other servers programmatically
 2. Replacing direct file access with MCP server calls
 3. Adding actual integration with Context7, Tractatus, and Sequential
@@ -23,7 +23,7 @@
 
 ## Current Integration Status
 
-### ✅ What Automa Currently Does
+### ✅ What Exarp Currently Does
 
 | Integration | Status | Method | Notes |
 |------------|--------|--------|-------|
@@ -36,7 +36,7 @@
 
 ### ❌ What's Missing
 
-1. **No MCP Client Usage**: Automa doesn't use MCP client libraries to call other servers
+1. **No MCP Client Usage**: Exarp doesn't use MCP client libraries to call other servers
 2. **Direct File Access**: Reads Todo2 files directly instead of using agentic-tools MCP
 3. **Subprocess Git**: Uses `subprocess` for git instead of git MCP server
 4. **No Context7 Calls**: Doesn't verify external library documentation
@@ -55,12 +55,12 @@
 
 #### Approach 1: AI Orchestration (Current)
 - AI assistant calls multiple MCP servers
-- Automa provides hints in tool descriptions
+- Exarp provides hints in tool descriptions
 - Works but requires AI to coordinate
 
 #### Approach 2: Programmatic MCP Client (Recommended)
-- Automa uses MCP client library to call other servers
-- Direct integration within automa tools
+- Exarp uses MCP client library to call other servers
+- Direct integration within exarp tools
 - More powerful and autonomous
 
 ---
@@ -69,7 +69,7 @@
 
 ### 1. Agentic-Tools MCP Integration
 
-**Current**: Automa reads `.todo2/state.todo2.json` directly
+**Current**: Exarp reads `.todo2/state.todo2.json` directly
 
 **Problem**:
 - Breaks when Todo2 format changes
@@ -115,7 +115,7 @@ async def get_todo2_tasks():
 
 ### 2. Git MCP Integration
 
-**Current**: Automa uses `subprocess` for git commands
+**Current**: Exarp uses `subprocess` for git commands
 
 **Problem**:
 - Fragile (depends on git being installed)
@@ -152,7 +152,7 @@ async def get_git_status():
 
 ### 3. Filesystem MCP Integration
 
-**Current**: Automa uses Python `pathlib`/`os`
+**Current**: Exarp uses Python `pathlib`/`os`
 
 **Problem**:
 - Limited workspace awareness
@@ -227,7 +227,7 @@ async def verify_library_docs(library: str):
 
 ### 5. Tractatus Thinking MCP Integration
 
-**Current**: Only mentioned in documentation as "use before automa"
+**Current**: Only mentioned in documentation as "use before exarp"
 
 **Problem**:
 - Can't do structural analysis before running tools
@@ -266,7 +266,7 @@ async def analyze_structure(concept: str):
 
 ### 6. Sequential Thinking MCP Integration
 
-**Current**: Only mentioned in documentation as "use after automa"
+**Current**: Only mentioned in documentation as "use after exarp"
 
 **Problem**:
 - Can't convert analysis results into implementation workflows
@@ -351,7 +351,7 @@ async def create_workflow(problem: str, analysis_results: dict):
 
 ## Integration Matrix
 
-| Automa Tool | Agentic-Tools | Git | Filesystem | Context7 | Tractatus | Sequential |
+| Exarp Tool | Agentic-Tools | Git | Filesystem | Context7 | Tractatus | Sequential |
 |------------|---------------|-----|------------|----------|-----------|------------|
 | `check_documentation_health` | ❌ | ❌ | ✅ Replace | ✅ Add | ✅ Add | ✅ Add |
 | `analyze_todo2_alignment` | ✅ Replace | ❌ | ❌ | ❌ | ✅ Add | ✅ Add |

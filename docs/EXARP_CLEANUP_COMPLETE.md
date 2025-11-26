@@ -31,7 +31,7 @@ The `project-management-automation` MCP server has been successfully split into 
 **Updated**:
 - ❌ Removed: Old path reference (`mcp-servers/project-management-automation/run_server.sh`)
 - ❌ Removed: Old server location documentation
-- ❌ Removed: Old MCP server name (`automa`)
+- ❌ Removed: Old MCP server name (`exarp`)
 - ✅ Added: PyPI installation instructions
 - ✅ Added: Correct MCP configuration (Python package)
 - ✅ Updated: Documentation reference to Exarp repository
@@ -39,7 +39,7 @@ The `project-management-automation` MCP server has been successfully split into 
 **Before**:
 ```json
 {
-  "automa": {
+  "exarp": {
     "command": "/Users/davidl/.../mcp-servers/project-management-automation/run_server.sh",
     "args": [],
     "description": "Project management automation tools..."

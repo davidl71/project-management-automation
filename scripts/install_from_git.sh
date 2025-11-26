@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install automa from Git repository
+# Install exarp from Git repository
 
 set -e
 
@@ -13,7 +13,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}Installing automa MCP server...${NC}"
+echo -e "${BLUE}Installing exarp MCP server...${NC}"
 echo "Repository: $REPO_URL"
 echo "Branch: $BRANCH"
 if [ -n "$VERSION" ]; then

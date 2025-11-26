@@ -1,4 +1,4 @@
-# Duplicate Functionality Analysis - automa MCP Server
+# Duplicate Functionality Analysis - exarp MCP Server
 
 ## Issues Found
 

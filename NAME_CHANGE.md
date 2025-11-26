@@ -1,10 +1,10 @@
-# MCP Server Name Change: `project-management-automation` → `automa`
+# MCP Server Name Change: `project-management-automation` → `exarp`
 
 ## Summary
 
-The MCP server name has been shortened from `project-management-automation` to `automa` for brevity and ease of use.
+The MCP server name has been shortened from `project-management-automation` to `exarp` for brevity and ease of use.
 
-**New Name:** `automa` (short for "automation")
+**New Name:** `exarp` (short for "automation")
 
 ---
 
@@ -12,7 +12,7 @@ The MCP server name has been shortened from `project-management-automation` to `
 
 ### Server Display Name
 - **Before:** `"Project Management Automation"`
-- **After:** `"automa"`
+- **After:** `"exarp"`
 
 This affects:
 - Server initialization in `server.py`
@@ -21,7 +21,7 @@ This affects:
 
 ### MCP Configuration Key
 - **Before:** `"project-management-automation"`
-- **After:** `"automa"`
+- **After:** `"exarp"`
 
 This affects:
 - `.cursor/mcp.json` configuration key
@@ -34,7 +34,7 @@ This affects:
 
 ### 1. Update `.cursor/mcp.json`
 
-Change the server key from `project-management-automation` to `automa`:
+Change the server key from `project-management-automation` to `exarp`:
 
 **Before:**
 ```json
@@ -52,7 +52,7 @@ Change the server key from `project-management-automation` to `automa`:
 ```json
 {
   "mcpServers": {
-    "automa": {
+    "exarp": {
       "command": "/path/to/run_server.sh",
       "args": []
     }
@@ -65,18 +65,18 @@ Change the server key from `project-management-automation` to `automa`:
 After updating the configuration:
 1. Save `.cursor/mcp.json`
 2. **Restart Cursor completely** (not just reload)
-3. Verify the server appears as "automa" in MCP logs
+3. Verify the server appears as "exarp" in MCP logs
 
 ---
 
 ## Files Updated
 
 ### ✅ Already Updated
-- `server.py` - Server display name changed to "automa"
+- `server.py` - Server display name changed to "exarp"
 - `.cursor/rules/project-automation.mdc` - Configuration example updated
 
 ### ⚠️ Manual Update Required
-- `.cursor/mcp.json` - Change the server key from `project-management-automation` to `automa`
+- `.cursor/mcp.json` - Change the server key from `project-management-automation` to `exarp`
 
 ### 📝 Documentation (Optional)
 - Documentation files still reference the old name for historical context
@@ -84,7 +84,7 @@ After updating the configuration:
 
 ---
 
-## Why "automa"?
+## Why "exarp"?
 
 - **Short & Memorable:** Easy to type and remember
 - **Clear Meaning:** Obviously related to automation
@@ -97,8 +97,8 @@ After updating the configuration:
 
 After updating `.cursor/mcp.json` and restarting Cursor, you should see:
 
-1. **MCP Logs:** Server name shows as "automa"
-2. **Server Status:** `server_status` tool returns server name as "automa"
+1. **MCP Logs:** Server name shows as "exarp"
+2. **Server Status:** `server_status` tool returns server name as "exarp"
 3. **Tool Availability:** All 7 tools still work normally
 
 ---

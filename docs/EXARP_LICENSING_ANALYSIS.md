@@ -1,4 +1,4 @@
-# Automa Licensing Analysis
+# Exarp Licensing Analysis
 
 **Date**: 2025-01-27
 **Status**: Complete - MIT License Recommended
@@ -164,7 +164,7 @@
 
 1. **Document contributors**: Keep track of contributors for copyright
 2. **CLA (optional)**: Consider Contributor License Agreement for future contributions
-3. **Trademark**: Consider trademark protection for "automa" name if needed
+3. **Trademark**: Consider trademark protection for "exarp" name if needed
 
 ---
 
@@ -194,7 +194,7 @@
 
 ## Conclusion
 
-**✅ MIT License is the optimal choice for automa:**
+**✅ MIT License is the optimal choice for exarp:**
 
 1. ✅ All code is original - no licensing obligations
 2. ✅ All dependencies are permissive - fully compatible

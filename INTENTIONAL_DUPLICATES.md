@@ -2,7 +2,7 @@
 
 ## Overview
 
-The automa MCP server intentionally provides some functionality through both **tools** and **resources**. This is not a bug - it's a design decision that follows MCP best practices and provides flexibility for different use cases.
+The exarp MCP server intentionally provides some functionality through both **tools** and **resources**. This is not a bug - it's a design decision that follows MCP best practices and provides flexibility for different use cases.
 
 ---
 
@@ -44,7 +44,7 @@ The automa MCP server intentionally provides some functionality through both **t
 **Returns:**
 ```json
 {
-  "server": "automa",
+  "server": "exarp",
   "version": "0.1.0",
   "status": "operational",
   "mcp_available": true,

@@ -1,13 +1,13 @@
-# Automa MCP Server - Packaging and Repository Split Plan
+# Exarp MCP Server - Packaging and Repository Split Plan
 
 **Date**: 2025-01-27
-**Purpose**: Plan npm/PyPI packaging and repository split for automa MCP server
+**Purpose**: Plan npm/PyPI packaging and repository split for exarp MCP server
 
 ---
 
 ## 🔍 Current State Analysis
 
-### Automa Structure
+### Exarp Structure
 - **Language**: Python (not JavaScript/TypeScript)
 - **Package Format**: Python package (`pyproject.toml`)
 - **Location**: `mcp-servers/project-management-automation/`
@@ -23,7 +23,7 @@
 - **Target**: `trading-mcp-servers` or `project-management-automation` repository
 
 ### Multi-Machine Usage
-- User needs automa on multiple machines
+- User needs exarp on multiple machines
 - Currently requires cloning entire monorepo
 - Needs easier installation and updates
 
@@ -34,7 +34,7 @@
 ### Option 1: PyPI Package (Recommended for Python)
 
 **Why PyPI over npm:**
-- Automa is **Python code**, not JavaScript
+- Exarp is **Python code**, not JavaScript
 - PyPI is the standard for Python packages
 - Better dependency management for Python projects
 - Easier integration with Python tooling
@@ -92,7 +92,7 @@ pip install git+https://github.com/davidl71/project-management-automation.git
 
 **PyPI for core package + npm for MCP wrapper**:
 - PyPI: `project-management-automation-mcp` (Python package)
-- npm: `@davidl71/automa-mcp` (thin wrapper that calls Python)
+- npm: `@davidl71/exarp-mcp` (thin wrapper that calls Python)
 
 **Benefits**:
 - ✅ Best of both worlds
@@ -111,7 +111,7 @@ pip install git+https://github.com/davidl71/project-management-automation.git
 
 ### Target Repository Structure
 
-**Repository Name**: `project-management-automation` (or `automa-mcp-server`)
+**Repository Name**: `project-management-automation` (or `exarp-mcp-server`)
 
 **Public Repository**:
 ```
@@ -257,7 +257,7 @@ pip install -e git+https://github.com/davidl71/project-management-automation.git
    - Remove hardcoded project paths
 
 2. **Create Standalone Package**:
-   - Make automa work without main repo dependencies
+   - Make exarp work without main repo dependencies
    - Add configuration system for project-specific behavior
    - Create plugin interface for project-specific tools
 
@@ -274,7 +274,7 @@ pip install -e git+https://github.com/davidl71/project-management-automation.git
    - Configure PyPI publishing
 
 2. **Extract Code**:
-   - Copy all automa code to new repo
+   - Copy all exarp code to new repo
    - Remove project-specific dependencies
    - Add abstraction layers
 
@@ -306,7 +306,7 @@ pip install -e git+https://github.com/davidl71/project-management-automation.git
 ### Primary: PyPI Package
 
 **Why**:
-- Automa is Python code → PyPI is standard
+- Exarp is Python code → PyPI is standard
 - Multi-machine usage → Package install is easier
 - Version management → PyPI handles versions
 - Updates → Simple `pip install --upgrade`
@@ -447,15 +447,15 @@ dev = [
 ]
 
 [project.scripts]
-automa-mcp = "project_management_automation.server:main"
+exarp-mcp = "project_management_automation.server:main"
 ```
 
 ### Entry Point Script
 
-Create `automa-mcp` command that can be called from anywhere:
+Create `exarp-mcp` command that can be called from anywhere:
 ```bash
 # After pip install
-automa-mcp  # Runs the MCP server
+exarp-mcp  # Runs the MCP server
 ```
 
 ---
@@ -463,13 +463,13 @@ automa-mcp  # Runs the MCP server
 ## 🔧 Configuration Abstraction
 
 ### Current Problem
-- Automa depends on project-specific scripts
+- Exarp depends on project-specific scripts
 - Direct file access to `.todo2/state.todo2.json`
 - Hardcoded project paths
 
 ### Solution: Configuration System
 
-**Configuration File**: `.automa/config.json` (or environment variables)
+**Configuration File**: `.exarp/config.json` (or environment variables)
 
 ```json
 {

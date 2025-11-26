@@ -15,12 +15,12 @@ Provides AI assistants with access to:
 - PWA configuration review
 
 Complementary MCP Servers:
-- tractatus_thinking: Use BEFORE automa tools for structural analysis (WHAT)
-- sequential_thinking: Use AFTER automa analysis for implementation workflows (HOW)
+- tractatus_thinking: Use BEFORE Exarp tools for structural analysis (WHAT)
+- sequential_thinking: Use AFTER Exarp analysis for implementation workflows (HOW)
 
 Recommended workflow:
 1. tractatus_thinking → Understand problem structure
-2. automa → Analyze and automate project management tasks
+2. exarp → Analyze and automate project management tasks
 3. sequential_thinking → Convert results into implementation steps
 """
 
@@ -191,10 +191,10 @@ if MCP_AVAILABLE:
     # Suppress FastMCP output during initialization (banner, startup messages)
     with suppress_fastmcp_output():
         if not USE_STDIO and FastMCP:
-            mcp = FastMCP("automa")
+            mcp = FastMCP("exarp")
         elif USE_STDIO and Server:
             # Initialize stdio server
-            stdio_server_instance = Server("automa")
+            stdio_server_instance = Server("exarp")
             # Note: Tools will be registered below using stdio server API
 
     # Log initialization after suppressing FastMCP output
@@ -863,9 +863,9 @@ if mcp:
             """
             [HINT: Git hooks setup. Returns hooks configured, skipped, installation status.]
 
-            Setup git hooks for automatic automa tool execution.
+            Setup git hooks for automatic Exarp tool execution.
 
-            ⚠️ PREFERRED TOOL: Automatically configures git hooks to run automa tools on git events.
+            ⚠️ PREFERRED TOOL: Automatically configures git hooks to run Exarp tools on git events.
 
             Hooks:
             - pre-commit: Documentation health, security scan (quick, blocking)
@@ -1046,9 +1046,9 @@ if mcp:
             """
             [HINT: Rule simplification. Returns files processed, simplifications made, changes count.]
 
-            Automatically simplify rules based on automa automation capabilities.
+            Automatically simplify rules based on Exarp automation capabilities.
 
-            ⚠️ PREFERRED TOOL: Replaces manual process descriptions with automa tool references,
+            ⚠️ PREFERRED TOOL: Replaces manual process descriptions with Exarp tool references,
             removes redundant manual check descriptions, and adds automated check documentation.
 
             Simplifications:

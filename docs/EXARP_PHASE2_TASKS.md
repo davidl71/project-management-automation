@@ -1,4 +1,4 @@
-# Automa Phase 2 - Task Details
+# Exarp Phase 2 - Task Details
 
 **Date**: 2025-01-27
 **Status**: Tasks Created
@@ -10,13 +10,13 @@
 ### Task 1: Implement setup_ci_cd_integration_tool
 
 **Priority**: High (8/10)
-**Tags**: automa, ci-cd, integration, phase2
+**Tags**: exarp, ci-cd, integration, phase2
 
-**Objective**: Create automa tool to automatically integrate automa checks into CI/CD workflows (GitHub Actions, etc.)
+**Objective**: Create exarp tool to automatically integrate exarp checks into CI/CD workflows (GitHub Actions, etc.)
 
 **Acceptance Criteria**:
 - Tool automatically detects CI/CD workflow files (.github/workflows/*.yml)
-- Adds automa checks to appropriate workflow steps
+- Adds exarp checks to appropriate workflow steps
 - Configures status checks and reporting
 - Supports dry-run mode for preview
 - Integrates with existing CI/CD validation tool
@@ -26,7 +26,7 @@
 - **Excluded:** Other CI/CD systems (CircleCI, Jenkins) - can be added later
 
 **Technical Requirements**:
-- Python tool following automa tool pattern
+- Python tool following exarp tool pattern
 - YAML parsing and modification
 - Integration with validate_ci_cd_workflow_tool
 - MCP tool registration in server.py
@@ -45,15 +45,15 @@
 ### Task 2: Implement setup_file_watchers_tool
 
 **Priority**: High (8/10)
-**Tags**: automa, file-watchers, monitoring, phase2
+**Tags**: exarp, file-watchers, monitoring, phase2
 
-**Objective**: Create automa tool to setup real-time file watchers that trigger automa tools on file changes
+**Objective**: Create exarp tool to setup real-time file watchers that trigger exarp tools on file changes
 
 **Acceptance Criteria**:
 - Tool creates file watcher script that monitors file patterns
 - Integrates with pattern_triggers configuration
 - Supports multiple file watching methods (polling, inotify on Linux, fsevents on macOS)
-- Automatically triggers appropriate automa tools on file changes
+- Automatically triggers appropriate exarp tools on file changes
 - Supports background daemon mode
 - Creates systemd service or launchd plist for auto-start
 
@@ -85,9 +85,9 @@
 ### Task 3: Implement setup_build_integration_tool
 
 **Priority**: Medium (7/10)
-**Tags**: automa, build-system, integration, phase2
+**Tags**: exarp, build-system, integration, phase2
 
-**Objective**: Create automa tool to integrate automa checks into build system workflows (CMake, Cargo, npm, etc.)
+**Objective**: Create exarp tool to integrate exarp checks into build system workflows (CMake, Cargo, npm, etc.)
 
 **Acceptance Criteria**:
 - Tool detects build system type (CMake, Cargo, npm, etc.)
@@ -102,7 +102,7 @@
 - **Excluded:** Other build systems (Maven, Gradle) - can be added later
 
 **Technical Requirements**:
-- Python tool following automa tool pattern
+- Python tool following exarp tool pattern
 - Build system detection and configuration
 - Hook script generation for each build system
 - Integration with existing build commands

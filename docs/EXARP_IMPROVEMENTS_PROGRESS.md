@@ -1,4 +1,4 @@
-# Automa Improvements - Implementation Progress
+# Exarp Improvements - Implementation Progress
 
 **Date**: 2025-01-27
 **Status**: Phase 1 Started
@@ -18,7 +18,7 @@
   - Never use deprecated APIs
   - Never modify third-party code directly
   - Never skip tests for critical trading/risk code
-- ✅ Updated "Before Committing" section to reference automa automation
+- ✅ Updated "Before Committing" section to reference exarp automation
 - ✅ Updated command references to use `.cursor/commands.json` format
 - ✅ Added references to automation documentation
 
@@ -27,7 +27,7 @@
 - ✅ Simplified suggestion descriptions
 - ✅ Added context about when checks run automatically
 
-### 2. Automa Tool Implementation
+### 2. Exarp Tool Implementation
 
 #### `setup_git_hooks_tool` ✅
 - ✅ Created `mcp-servers/project-management-automation/tools/git_hooks.py`
@@ -37,7 +37,7 @@
   - `pre-push`: Task alignment + comprehensive security scan (blocking)
   - `post-commit`: Automation opportunity discovery (non-blocking)
   - `post-merge`: Duplicate detection + task sync (non-blocking)
-- ✅ Auto-detects automa server path from `.cursor/mcp.json`
+- ✅ Auto-detects exarp server path from `.cursor/mcp.json`
 - ✅ Generates executable git hook scripts
 - ✅ Supports dry-run mode for preview
 
@@ -58,7 +58,7 @@
 
 2. **`simplify_rules_tool`** - Automatic rule simplification ✅
    - Status: Complete
-   - Replace manual processes with automa references
+   - Replace manual processes with exarp references
    - Remove redundant descriptions
    - Update rules based on automation capabilities
    - Pattern-based simplification with regex matching
@@ -155,8 +155,8 @@
 ### Setup Git Hooks
 
 ```bash
-# Via automa MCP tool
-"Setup git hooks for automatic automa tool execution"
+# Via exarp MCP tool
+"Setup git hooks for automatic exarp tool execution"
 
 # Or via Python directly
 python3 mcp-servers/project-management-automation/tools/git_hooks.py --hooks pre-commit pre-push
@@ -165,7 +165,7 @@ python3 mcp-servers/project-management-automation/tools/git_hooks.py --hooks pre
 ### Setup Pattern Triggers
 
 ```bash
-# Via automa MCP tool
+# Via exarp MCP tool
 "Setup pattern-based triggers for automatic tool execution"
 
 # Or via Python directly
@@ -175,8 +175,8 @@ python3 mcp-servers/project-management-automation/tools/pattern_triggers.py --dr
 ### Simplify Rules
 
 ```bash
-# Via automa MCP tool
-"Simplify rules based on automa automation capabilities"
+# Via exarp MCP tool
+"Simplify rules based on exarp automation capabilities"
 
 # Or via Python directly
 python3 mcp-servers/project-management-automation/tools/simplify_rules.py --no-dry-run

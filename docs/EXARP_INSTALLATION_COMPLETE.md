@@ -1,4 +1,4 @@
-# Automa Installation - COMPLETE ✅
+# Exarp Installation - COMPLETE ✅
 
 **Date**: 2025-01-27
 **Status**: ✅ Successfully Installed with FastMCP 2.0
@@ -7,11 +7,11 @@
 
 ## ✅ Installation Summary
 
-1. ✅ **Removed old automa entry** from `.cursor/mcp.json`
+1. ✅ **Removed old exarp entry** from `.cursor/mcp.json`
 2. ✅ **Updated dependency** to `fastmcp>=2.0.0` in `pyproject.toml`
 3. ✅ **Committed and tagged** v0.1.1 in GitHub repository
 4. ✅ **Installed FastMCP 2.0** using `python3 -m pip install --break-system-packages fastmcp`
-5. ✅ **Installed automa package** from private GitHub repository (v0.1.1)
+5. ✅ **Installed exarp package** from private GitHub repository (v0.1.1)
 6. ✅ **Updated `.cursor/mcp.json`** with new entry point
 7. ✅ **Verified package** imports successfully
 
@@ -23,7 +23,7 @@
 # Install FastMCP 2.0 and dependencies
 python3 -m pip install --break-system-packages fastmcp pydantic
 
-# Install automa from private repository
+# Install exarp from private repository
 python3 -m pip install --break-system-packages git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.1
 ```
 
@@ -82,7 +82,7 @@ cat .cursor/mcp.json | grep -A 5 "project-management-automation"
 ## Next Steps
 
 1. **Restart Cursor** to load new MCP configuration
-2. **Test automa tools** in Cursor chat
+2. **Test exarp tools** in Cursor chat
 3. **Verify tools are available** - try: "Check documentation health"
 
 ---
@@ -99,4 +99,4 @@ FastMCP 2.0 provides:
 
 ---
 
-**Installation Complete**: ✅ Automa is installed from private GitHub repository with FastMCP 2.0 and configured in Cursor!
+**Installation Complete**: ✅ Exarp is installed from private GitHub repository with FastMCP 2.0 and configured in Cursor!

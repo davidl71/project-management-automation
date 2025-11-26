@@ -1,4 +1,4 @@
-# Automa Dependencies: Required vs Optimal
+# Exarp Dependencies: Required vs Optimal
 
 **Date**: 2025-01-27
 **Quick Reference**: Required vs Optimal Dependencies for Packaging
@@ -7,7 +7,7 @@
 
 ## ✅ REQUIRED Dependencies
 
-**Core dependencies that automa cannot function without:**
+**Core dependencies that exarp cannot function without:**
 
 ```toml
 dependencies = [
@@ -17,7 +17,7 @@ dependencies = [
 ```
 
 **Why Required:**
-- `mcp`: Automa is an MCP server - this is the core framework
+- `mcp`: Exarp is an MCP server - this is the core framework
 - `pydantic`: Required by MCP framework for type validation
 
 **Standard Library (No Package Needed):**
@@ -123,19 +123,19 @@ pip install project-management-automation-mcp[all]
 
 ### Script Dependencies Problem
 
-**Current Issue**: Automa imports scripts from main repository:
+**Current Issue**: Exarp imports scripts from main repository:
 ```python
 from scripts.automate_docs_health_v2 import DocumentationHealthAnalyzerV2
 ```
 
 **Problems:**
-1. Scripts are NOT part of automa package
+1. Scripts are NOT part of exarp package
 2. Scripts may have their own dependencies
 3. Breaks packaging isolation
 
 **Solutions:**
 1. **Extract scripts to package** (recommended)
-2. **Make scripts optional** - automa works without them
+2. **Make scripts optional** - exarp works without them
 3. **Use MCP client** - call scripts via MCP (future)
 
 ---

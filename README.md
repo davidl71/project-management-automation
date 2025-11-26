@@ -3,7 +3,7 @@
 **Version:** 0.1.0
 **Status:** Phase 1 Complete - Core Framework Ready
 **License:** [MIT License](LICENSE)
-**MCP Server Name:** `automa` (configured in `.cursor/mcp.json`)
+**MCP Server Name:** `exarp` (configured in `.cursor/mcp.json`)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
@@ -11,25 +11,25 @@
 
 MCP server exposing project management automation tools built on `IntelligentAutomationBase`. Provides AI assistants with access to documentation health checks, Todo2 analysis, duplicate detection, security scanning, and more.
 
-**Note**: This server is configured as **"automa"** in Cursor's MCP configuration (`.cursor/mcp.json`). The directory name is `project-management-automation`, but it's accessible via the "automa" identifier in Cursor.
+**Note**: This server is configured as **"exarp"** in Cursor's MCP configuration (`.cursor/mcp.json`). The directory name is `project-management-automation`, but it's accessible via the "exarp" identifier in Cursor.
 
 ## Complementary MCP Servers
 
-The automa server works best when used alongside these complementary MCP servers:
+The Exarp server works best when used alongside these complementary MCP servers:
 
 - **`tractatus_thinking`** - For structural analysis and logical decomposition of complex problems
-  - Use BEFORE automa tools to understand WHAT needs to be analyzed
+  - Use BEFORE Exarp tools to understand WHAT needs to be analyzed
   - Breaks down concepts into atomic components
   - Reveals multiplicative dependencies
 
 - **`sequential_thinking`** - For converting structural understanding into implementation workflows
   - Use AFTER tractatus_thinking analysis to plan HOW to proceed
-  - Converts automa analysis results into actionable steps
+  - Converts Exarp analysis results into actionable steps
   - Creates step-by-step implementation plans
 
 **Recommended Workflow:**
 1. Use **tractatus_thinking** to understand the structure of a problem
-2. Use **automa** tools to analyze and automate project management tasks
+2. Use **Exarp** tools to analyze and automate project management tasks
 3. Use **sequential_thinking** to convert analysis results into implementation workflows
 
 See `.cursor/rules/tractatus-thinking.mdc` and `.cursor/rules/sequential-thinking.mdc` for detailed usage guidelines.
@@ -84,12 +84,12 @@ python -m project_management_automation.server
 
 ### MCP Configuration
 
-Add to `.cursor/mcp.json` as **"automa"**:
+Add to `.cursor/mcp.json` as **"exarp"**:
 
 ```json
 {
   "mcpServers": {
-    "automa": {
+    "exarp": {
       "command": "/Users/davidl/Projects/Trading/ib_box_spread_full_universal/mcp-servers/project-management-automation/run_server.sh",
       "args": [],
       "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
@@ -98,7 +98,7 @@ Add to `.cursor/mcp.json` as **"automa"**:
 }
 ```
 
-**Note**: The server is configured with the identifier "automa" for easier reference in Cursor prompts and documentation.
+**Note**: The server is configured with the identifier "exarp" for easier reference in Cursor prompts and documentation.
 
 ## Tools (Phase 2)
 
@@ -167,8 +167,8 @@ pip install git+ssh://git@github.com/davidl71/project-management-automation.git@
 
 Or use the helper script:
 ```bash
-export AUTOMA_REPO_URL="git@github.com:davidl71/project-management-automation.git"
-export AUTOMA_VERSION="v0.1.0"
+export EXARP_REPO_URL="git@github.com:davidl71/project-management-automation.git"
+export EXARP_VERSION="v0.1.0"
 ./scripts/install_from_git.sh
 ```
 
@@ -184,9 +184,9 @@ See [PRIVATE_REPOSITORY_SETUP.md](docs/PRIVATE_REPOSITORY_SETUP.md) for detailed
 
 ## Dependencies
 
-The automa server works best with complementary MCP servers:
-- **tractatus_thinking** - For structural analysis (use BEFORE automa)
-- **sequential_thinking** - For implementation workflows (use AFTER automa)
+The Exarp server works best with complementary MCP servers:
+- **tractatus_thinking** - For structural analysis (use BEFORE Exarp)
+- **sequential_thinking** - For implementation workflows (use AFTER Exarp)
 
 See [DEPENDENCIES.md](DEPENDENCIES.md) for detailed integration guide.
 

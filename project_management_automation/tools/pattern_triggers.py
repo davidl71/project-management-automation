@@ -270,9 +270,9 @@ def _generate_file_watcher_script(file_patterns: Dict) -> str:
     """Generate file watcher script content."""
     return f"""#!/usr/bin/env python3
 \"\"\"
-Automa File Watcher
+Exarp File Watcher
 
-Monitors file changes and triggers automa tools based on patterns.
+Monitors file changes and triggers exarp tools based on patterns.
 Run manually or via cron job.
 \"\"\"
 
@@ -300,7 +300,7 @@ def check_file_changes() -> List[Dict]:
     return []
 
 def trigger_tool(tool_name: str) -> bool:
-    \"\"\"Trigger an automa tool.\"\"\"
+    \"\"\"Trigger an exarp tool.\"\"\"
     # This is a placeholder - implement actual tool triggering
     # For now, just prints what would be triggered
     print(f"Would trigger: {{tool_name}}")

@@ -1,4 +1,4 @@
-# Automa FastMCP 2.0 Setup
+# Exarp FastMCP 2.0 Setup
 
 **Date**: 2025-01-27
 **Status**: ✅ Complete - Using FastMCP 2.0
@@ -27,7 +27,7 @@ FastMCP 2.0 is the actively maintained version that extends beyond basic MCP pro
 pip install fastmcp pydantic
 ```
 
-### Step 2: Install Automa from Private Repository
+### Step 2: Install Exarp from Private Repository
 
 ```bash
 pip install git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.1
@@ -51,7 +51,7 @@ dependencies = [
 
 ## Server Implementation
 
-The automa server uses FastMCP 2.0's FastMCP class:
+The exarp server uses FastMCP 2.0's FastMCP class:
 
 ```python
 from fastmcp import FastMCP
@@ -90,7 +90,7 @@ According to [FastMCP documentation](https://gofastmcp.com/getting-started/welco
 # Verify FastMCP is installed
 pip show fastmcp
 
-# Verify automa package
+# Verify exarp package
 pip show project-management-automation-mcp
 
 # Test import
@@ -122,7 +122,7 @@ python3 -c "from project_management_automation.server import main; print('OK')"
 # Install FastMCP 2.0
 pip install fastmcp pydantic
 
-# Install automa
+# Install exarp
 pip install git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.1
 ```
 
@@ -135,7 +135,7 @@ pip uninstall project-management-automation-mcp
 # Install FastMCP 2.0
 pip install fastmcp
 
-# Install updated automa
+# Install updated exarp
 pip install git+ssh://git@github.com/davidl71/project-management-automation.git@v0.1.1
 ```
 
@@ -149,4 +149,4 @@ pip install git+ssh://git@github.com/davidl71/project-management-automation.git@
 
 ---
 
-**Status**: ✅ Automa now uses FastMCP 2.0 as the MCP framework
+**Status**: ✅ Exarp now uses FastMCP 2.0 as the MCP framework

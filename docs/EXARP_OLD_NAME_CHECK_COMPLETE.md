@@ -5,17 +5,17 @@
 
 ---
 
-## ✅ Fixed: "automa" → "Exarp"
+## ✅ Fixed: "exarp" → "Exarp"
 
 ### Code Files (Critical - Runtime Behavior)
 1. ✅ **`project_management_automation/server.py`**:
-   - `FastMCP("automa")` → `FastMCP("exarp")`
-   - `Server("automa")` → `Server("exarp")`
+   - `FastMCP("exarp")` → `FastMCP("exarp")`
+   - `Server("exarp")` → `Server("exarp")`
    - Comments updated
 
 2. ✅ **`server.py` (root)**:
-   - `FastMCP("automa")` → `FastMCP("exarp")`
-   - `Server("automa")` → `Server("exarp")`
+   - `FastMCP("exarp")` → `FastMCP("exarp")`
+   - `Server("exarp")` → `Server("exarp")`
    - Tool descriptions updated
 
 3. ✅ **`project_management_automation/resources/status.py`**:

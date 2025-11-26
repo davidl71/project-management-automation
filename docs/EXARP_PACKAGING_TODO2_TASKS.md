@@ -1,4 +1,4 @@
-# Automa Packaging and Split - Todo2 Tasks
+# Exarp Packaging and Split - Todo2 Tasks
 
 **Date**: 2025-01-27
 **Status**: Tasks Created
@@ -10,15 +10,15 @@
 ### Task 1: Refactor Project-Specific Dependencies
 
 **Priority**: High (9/10)
-**Tags**: automa, refactoring, packaging, dependencies
+**Tags**: exarp, refactoring, packaging, dependencies
 
-**Objective**: Remove project-specific dependencies so automa can work as standalone package
+**Objective**: Remove project-specific dependencies so exarp can work as standalone package
 
 **Acceptance Criteria**:
 - All `scripts/automate_*.py` calls abstracted to configuration/plugin system
 - Direct Todo2 file access replaced with Todo2 MCP server calls
 - Configuration system created for project-specific behavior
-- Automa works without main repo dependencies
+- Exarp works without main repo dependencies
 
 **Scope**:
 - **Included:** Dependency abstraction, configuration system, Todo2 MCP integration
@@ -26,7 +26,7 @@
 - **Clarification Required:** Plugin interface design
 
 **Technical Requirements**:
-- Create configuration file (`.automa/config.json` or environment variables)
+- Create configuration file (`.exarp/config.json` or environment variables)
 - Abstract script calls behind interface
 - Use Todo2 MCP server instead of direct file access
 - Maintain backward compatibility during transition
@@ -37,7 +37,7 @@
 - Create: `mcp-servers/project-management-automation/plugins.py` (plugin interface)
 
 **Testing Requirements**:
-- Test automa works without main repo scripts
+- Test exarp works without main repo scripts
 - Test configuration system works
 - Test Todo2 MCP integration
 - Verify backward compatibility
@@ -49,13 +49,13 @@
 ### Task 2: Create PyPI Package Structure
 
 **Priority**: High (8/10)
-**Tags**: automa, packaging, pypi, setup
+**Tags**: exarp, packaging, pypi, setup
 
-**Objective**: Prepare automa for PyPI publishing with proper package structure
+**Objective**: Prepare exarp for PyPI publishing with proper package structure
 
 **Acceptance Criteria**:
 - `pyproject.toml` updated for PyPI publishing
-- Entry points created (`automa-mcp` command)
+- Entry points created (`exarp-mcp` command)
 - Package structure follows Python packaging standards
 - All dependencies properly declared
 - README and documentation included
@@ -81,23 +81,23 @@
 **Testing Requirements**:
 - Test package builds: `python -m build`
 - Test installation: `pip install -e .`
-- Test entry point: `automa-mcp --help`
+- Test entry point: `exarp-mcp --help`
 - Verify all dependencies install correctly
 
 **Dependencies**: Task 1 (refactoring must be complete)
 
 ---
 
-### Task 3: Extract Automa to Separate Repository
+### Task 3: Extract Exarp to Separate Repository
 
 **Priority**: High (8/10)
-**Tags**: automa, repository, split, extraction
+**Tags**: exarp, repository, split, extraction
 
-**Objective**: Create standalone `project-management-automation` repository with all automa code
+**Objective**: Create standalone `project-management-automation` repository with all exarp code
 
 **Acceptance Criteria**:
 - New GitHub repository created
-- All automa code extracted and cleaned
+- All exarp code extracted and cleaned
 - CI/CD workflow configured for PyPI publishing
 - LICENSE (MIT) added
 - README with installation instructions
@@ -106,11 +106,11 @@
 **Scope**:
 - **Included:** Code extraction, repository setup, CI/CD, documentation
 - **Excluded:** PyPI publishing (separate task)
-- **Clarification Required:** Repository name (project-management-automation vs automa-mcp-server)
+- **Clarification Required:** Repository name (project-management-automation vs exarp-mcp-server)
 
 **Technical Requirements**:
 - Create new GitHub repository
-- Copy all automa code (tools, resources, server.py, etc.)
+- Copy all exarp code (tools, resources, server.py, etc.)
 - Remove project-specific dependencies
 - Add GitHub Actions workflow for CI/CD
 - Configure PyPI publishing workflow
@@ -134,12 +134,12 @@
 
 ---
 
-### Task 4: Publish Automa to PyPI
+### Task 4: Publish Exarp to PyPI
 
 **Priority**: High (8/10)
-**Tags**: automa, pypi, publishing, distribution
+**Tags**: exarp, pypi, publishing, distribution
 
-**Objective**: Publish automa package to PyPI for easy installation
+**Objective**: Publish exarp package to PyPI for easy installation
 
 **Acceptance Criteria**:
 - PyPI account created and configured
@@ -180,7 +180,7 @@
 ### Task 5: Update Main Repo to Use PyPI Package
 
 **Priority**: High (8/10)
-**Tags**: automa, integration, migration, main-repo
+**Tags**: exarp, integration, migration, main-repo
 
 **Objective**: Update main repository to use PyPI package instead of local code
 
@@ -213,7 +213,7 @@
 **Testing Requirements**:
 - Test package installation in main repo
 - Test MCP server connection
-- Test all automa tools work correctly
+- Test all exarp tools work correctly
 - Verify all agents can use package
 - Test on multiple machines
 
@@ -224,7 +224,7 @@
 ### Task 6: Create Installation Helper Script
 
 **Priority**: Medium (7/10)
-**Tags**: automa, installation, automation, multi-machine
+**Tags**: exarp, installation, automation, multi-machine
 
 **Objective**: Create helper script for easy multi-machine installation and configuration
 
@@ -301,7 +301,7 @@ Task 3 (Extract Repo) ────┼──→ Task 4 (Publish PyPI)
 
 ### Task 2: Package Structure
 - Package builds successfully
-- Entry point works: `automa-mcp --help`
+- Entry point works: `exarp-mcp --help`
 - All dependencies declared correctly
 
 ### Task 3: Repository Extraction

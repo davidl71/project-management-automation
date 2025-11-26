@@ -60,7 +60,7 @@
 
 ## ⏳ Remaining Tasks (Optional/Incremental)
 
-1. **Content Updates**: Update "automa" → "exarp" in renamed documentation files
+1. **Content Updates**: Update "exarp" → "exarp" in renamed documentation files
 2. **Code Comments**: Update remaining references in code files
 3. **GitHub Repository**: Update repository description
 4. **Test Installation**: Verify package installs correctly with new name

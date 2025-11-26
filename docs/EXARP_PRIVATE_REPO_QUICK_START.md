@@ -1,4 +1,4 @@
-# Automa Private Repository Quick Start
+# Exarp Private Repository Quick Start
 
 **Date**: 2025-01-27
 **Purpose**: Quick setup guide for private/local repository distribution

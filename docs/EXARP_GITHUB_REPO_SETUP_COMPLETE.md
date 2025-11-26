@@ -1,4 +1,4 @@
-# Automa GitHub Private Repository Setup - COMPLETE ✅
+# Exarp GitHub Private Repository Setup - COMPLETE ✅
 
 **Date**: 2025-01-27
 **Status**: ✅ Complete

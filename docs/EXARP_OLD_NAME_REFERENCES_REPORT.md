@@ -24,23 +24,23 @@
 
 ---
 
-### "automa" / "Automa" / "AUTOMA"
+### "exarp" / "Exarp" / "EXARP"
 
 **Status**: ❌ **Replace with "Exarp"** (Old Project Name)
 
 **Found in**:
 1. **Code Files** (Critical):
-   - `server.py` line 270: `FastMCP("automa")` → should be `"exarp"`
-   - `server.py` line 273: `Server("automa")` → should be `"exarp"`
+   - `server.py` line 270: `FastMCP("exarp")` → should be `"exarp"`
+   - `server.py` line 273: `Server("exarp")` → should be `"exarp"`
    - `resources/status.py` line 40, 69: `"server": "project-management-automation"` → should be `"exarp"`
 
 2. **Documentation Files** (Update):
-   - `README.md`: Multiple references to "automa" in workflow descriptions
-   - `RESOURCES.md`: References to "automa MCP server"
+   - `README.md`: Multiple references to "exarp" in workflow descriptions
+   - `RESOURCES.md`: References to "exarp MCP server"
    - `NAME_CHANGE.md`: Historical document (can update or archive)
-   - `INTENTIONAL_DUPLICATES.md`: References to "automa MCP server"
-   - `DUPLICATE_ANALYSIS.md`: References to "automa MCP server"
-   - `USAGE.md`: References to "automa" in descriptions
+   - `INTENTIONAL_DUPLICATES.md`: References to "exarp MCP server"
+   - `DUPLICATE_ANALYSIS.md`: References to "exarp MCP server"
+   - `USAGE.md`: References to "exarp" in descriptions
 
 3. **Cursor Rules** (Already Updated):
    - `.cursor/rules/project-automation.mdc`: ✅ Already updated
@@ -55,8 +55,8 @@
 **Priority: HIGH** - These affect runtime behavior:
 
 1. **`server.py`**:
-   - Line 270: `mcp = FastMCP("automa")` → `mcp = FastMCP("exarp")`
-   - Line 273: `stdio_server_instance = Server("automa")` → `stdio_server_instance = Server("exarp")`
+   - Line 270: `mcp = FastMCP("exarp")` → `mcp = FastMCP("exarp")`
+   - Line 273: `stdio_server_instance = Server("exarp")` → `stdio_server_instance = Server("exarp")`
 
 2. **`resources/status.py`**:
    - Line 40: `"server": "project-management-automation"` → `"server": "exarp"`
@@ -67,13 +67,13 @@
 **Priority: MEDIUM** - User-facing documentation:
 
 1. **`README.md`**:
-   - Line 23: "Use BEFORE automa tools" → "Use BEFORE Exarp tools"
-   - Line 29: "converts automa analysis" → "converts Exarp analysis"
-   - Line 34: "Use **automa** tools" → "Use **Exarp** tools"
+   - Line 23: "Use BEFORE exarp tools" → "Use BEFORE Exarp tools"
+   - Line 29: "converts exarp analysis" → "converts Exarp analysis"
+   - Line 34: "Use **exarp** tools" → "Use **Exarp** tools"
 
 2. **`RESOURCES.md`**:
-   - Replace "automa MCP server" with "Exarp MCP server"
-   - Replace "automa" with "Exarp" in examples
+   - Replace "exarp MCP server" with "Exarp MCP server"
+   - Replace "exarp" with "Exarp" in examples
 
 3. **Other Documentation**:
    - `INTENTIONAL_DUPLICATES.md`

@@ -1,16 +1,16 @@
-# Automa MCP Server Dependencies
+# Exarp MCP Server Dependencies
 
-This document describes the complementary MCP servers that work with the automa MCP server.
+This document describes the complementary MCP servers that work with the exarp MCP server.
 
 ## Complementary MCP Servers
 
-The automa server is designed to work alongside these complementary MCP servers for enhanced problem-solving workflows:
+The exarp server is designed to work alongside these complementary MCP servers for enhanced problem-solving workflows:
 
 ### 1. tractatus_thinking
 
 **Purpose**: Structural analysis and logical decomposition of complex problems
 
-**When to Use**: BEFORE using automa tools to understand WHAT needs to be analyzed
+**When to Use**: BEFORE using exarp tools to understand WHAT needs to be analyzed
 
 **Benefits**:
 - Breaks down complex concepts into atomic components
@@ -41,7 +41,7 @@ The automa server is designed to work alongside these complementary MCP servers 
 
 **Purpose**: Converting structural understanding into actionable implementation workflows
 
-**When to Use**: AFTER tractatus_thinking and automa analysis to plan HOW to proceed
+**When to Use**: AFTER tractatus_thinking and exarp analysis to plan HOW to proceed
 
 **Benefits**:
 - Converts structural analysis into concrete implementation steps
@@ -77,8 +77,8 @@ The automa server is designed to work alongside these complementary MCP servers 
    - Break down concepts into atomic components
    - Identify multiplicative dependencies
 
-2. **automa** → Analyze and automate (project management)
-   - Use automa tools to analyze documentation, tasks, security, etc.
+2. **exarp** → Analyze and automate (project management)
+   - Use exarp tools to analyze documentation, tasks, security, etc.
    - Generate reports and identify issues
    - Create automation opportunities
 
@@ -93,7 +93,7 @@ The automa server is designed to work alongside these complementary MCP servers 
 1. tractatus_thinking: "What is the structure of documentation health?"
    → Reveals: Health = Valid Links × Current Content × Proper Format × Complete Coverage
 
-2. automa: check_documentation_health_tool()
+2. exarp: check_documentation_health_tool()
    → Analyzes actual documentation state
    → Generates report with broken links, stale content, etc.
 
@@ -111,7 +111,7 @@ The automa server is designed to work alongside these complementary MCP servers 
 1. tractatus_thinking: "What makes a task aligned with project goals?"
    → Reveals: Alignment = Goal Match × Priority × Dependencies × Resources
 
-2. automa: analyze_todo2_alignment_tool()
+2. exarp: analyze_todo2_alignment_tool()
    → Analyzes actual task alignment
    → Identifies misaligned tasks
 
@@ -124,7 +124,7 @@ The automa server is designed to work alongside these complementary MCP servers 
 ## Integration Notes
 
 - These MCP servers are **complementary**, not required
-- Automa can work independently, but works best with tractatus/sequential
+- Exarp can work independently, but works best with tractatus/sequential
 - All three servers should be configured in `.cursor/mcp.json`
 - The AI assistant will automatically use the appropriate server based on the task
 
@@ -134,6 +134,6 @@ The automa server is designed to work alongside these complementary MCP servers 
 
 - `.cursor/rules/tractatus-thinking.mdc` - Detailed Tractatus Thinking usage
 - `.cursor/rules/sequential-thinking.mdc` - Detailed Sequential Thinking usage
-- `.cursor/rules/project-automation.mdc` - Automa server usage guide
-- `README.md` - Automa server overview
+- `.cursor/rules/project-automation.mdc` - Exarp server usage guide
+- `README.md` - Exarp server overview
 

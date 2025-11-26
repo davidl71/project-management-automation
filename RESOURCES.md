@@ -1,6 +1,6 @@
-# Automa MCP Server Resources
+# Exarp MCP Server Resources
 
-This document describes the resources exposed by the automa MCP server for accessing cached data and agent information.
+This document describes the resources exposed by the exarp MCP server for accessing cached data and agent information.
 
 ## Available Resources
 
@@ -157,7 +157,7 @@ Cache status and metadata.
 
 ### Get Tasks for Current Agent
 ```
-"Get tasks for backend-agent using automa"
+"Get tasks for backend-agent using exarp"
 "Show me tasks assigned to web-agent"
 ```
 
@@ -199,7 +199,7 @@ Cache status and metadata.
 
 ## Integration with Cursor
 
-Resources are automatically available when the automa MCP server is configured. Access them via:
+Resources are automatically available when the exarp MCP server is configured. Access them via:
 
 1. **Direct Resource Access**: Cursor can read resources directly
 2. **Tool Integration**: Some tools use cached data from resources

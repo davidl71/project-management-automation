@@ -1,22 +1,22 @@
-# Automa MCP Server Integration Analysis
+# Exarp MCP Server Integration Analysis
 
-This document analyzes how the automa MCP server can integrate with other MCP servers in the Cursor configuration.
+This document analyzes how the exarp MCP server can integrate with other MCP servers in the Cursor configuration.
 
 ## MCP Server Architecture
 
 **Important**: MCP servers cannot directly call other MCP servers. They are independent services that communicate with the AI assistant (Cursor) via JSON-RPC over stdio. The AI assistant orchestrates calls between servers.
 
-However, automa can be **designed to work well with** other servers by:
+However, exarp can be **designed to work well with** other servers by:
 1. **Complementary Tools**: Tools that work well together in workflows
 2. **Resource Sharing**: Exposing resources that other servers might need
-3. **Workflow Documentation**: Documenting how to use automa with other servers
+3. **Workflow Documentation**: Documenting how to use exarp with other servers
 4. **Tool Hints**: Adding hints in tool descriptions about when to use other servers
 
 ## Current MCP Server Configuration
 
 ### Enabled Servers
 
-1. **automa** - Project management automation (self-hosted)
+1. **exarp** - Project management automation (self-hosted)
 2. **filesystem** - File system operations
 3. **agentic-tools** - Advanced task management
 4. **context7** - Up-to-date documentation
@@ -32,23 +32,23 @@ However, automa can be **designed to work well with** other servers by:
 
 ### 1. Filesystem Server Integration
 
-**How automa can benefit:**
+**How exarp can benefit:**
 - Read configuration files for analysis
 - Write reports to appropriate locations
 - Check file existence before operations
 - Access project structure for context
 
 **Current Usage:**
-- Automa tools already use filesystem operations via Python's `pathlib` and `os`
+- Exarp tools already use filesystem operations via Python's `pathlib` and `os`
 - Could benefit from filesystem MCP for better path resolution and workspace awareness
 
 **Recommendation:**
-- Add hints in automa tool descriptions: "Uses filesystem operations for file access"
+- Add hints in exarp tool descriptions: "Uses filesystem operations for file access"
 - Document that filesystem MCP provides better workspace context
 
 ### 2. Git Server Integration
 
-**How automa can benefit:**
+**How exarp can benefit:**
 - Check git status before running automation
 - Understand commit history for context
 - Validate working copy health (already implemented in `working_copy_health.py`)
@@ -64,7 +64,7 @@ However, automa can be **designed to work well with** other servers by:
 
 ### 3. Context7 Server Integration
 
-**How automa can benefit:**
+**How exarp can benefit:**
 - Get up-to-date documentation for external libraries mentioned in code
 - Verify API usage patterns in codebase
 - Check if documentation references are current
@@ -79,7 +79,7 @@ However, automa can be **designed to work well with** other servers by:
 
 ### 4. Semgrep Server Integration
 
-**How automa can benefit:**
+**How exarp can benefit:**
 - Cross-reference security findings with dependency security scan
 - Validate code quality alongside documentation health
 - Provide comprehensive security reports
@@ -89,18 +89,18 @@ However, automa can be **designed to work well with** other servers by:
 - Semgrep scans code for security issues
 
 **Recommendation:**
-- Add integration hint: "Use semgrep MCP for code-level security, automa for dependency security"
+- Add integration hint: "Use semgrep MCP for code-level security, exarp for dependency security"
 - Consider combining results in `run_daily_automation_tool`
 
 ### 5. Agentic-Tools Server Integration
 
-**How automa can benefit:**
+**How exarp can benefit:**
 - Sync Todo2 tasks with agentic-tools tasks
 - Share task context between systems
 - Coordinate task management across tools
 
 **Current Usage:**
-- Automa has its own Todo2 integration
+- Exarp has its own Todo2 integration
 - Agentic-tools has separate task management
 
 **Recommendation:**
@@ -109,14 +109,14 @@ However, automa can be **designed to work well with** other servers by:
 
 ### 6. Tractatus Thinking Integration
 
-**How automa can benefit:**
-- Use tractatus for structural analysis BEFORE running automa tools
+**How exarp can benefit:**
+- Use tractatus for structural analysis BEFORE running exarp tools
 - Understand problem structure before automation
 - Break down complex automation tasks
 
 **Current Usage:**
 - Documented as complementary server in DEPENDENCIES.md
-- Workflow: tractatus → automa → sequential
+- Workflow: tractatus → exarp → sequential
 
 **Recommendation:**
 - Add tool hints: "Use tractatus_thinking MCP to analyze problem structure first"
@@ -124,14 +124,14 @@ However, automa can be **designed to work well with** other servers by:
 
 ### 7. Sequential Thinking Integration
 
-**How automa can benefit:**
-- Convert automa analysis results into implementation steps
+**How exarp can benefit:**
+- Convert exarp analysis results into implementation steps
 - Create workflows from automation findings
 - Plan fixes for identified issues
 
 **Current Usage:**
 - Documented as complementary server in DEPENDENCIES.md
-- Workflow: tractatus → automa → sequential
+- Workflow: tractatus → exarp → sequential
 
 **Recommendation:**
 - Add tool hints: "Use sequential_thinking MCP to convert results into implementation steps"
@@ -146,7 +146,7 @@ However, automa can be **designed to work well with** other servers by:
 
 ### Phase 2: Enhance Tool Descriptions
 
-Add hints to automa tool descriptions about when to use other servers:
+Add hints to exarp tool descriptions about when to use other servers:
 
 ```python
 @mcp.tool()
@@ -175,24 +175,24 @@ Create integration guides for common workflows:
 
 1. **Documentation Health Workflow**:
    - tractatus_thinking → Analyze documentation structure
-   - automa → Check documentation health
+   - exarp → Check documentation health
    - context7 → Verify external references
    - sequential_thinking → Plan fixes
 
 2. **Security Analysis Workflow**:
-   - automa → Scan dependencies
+   - exarp → Scan dependencies
    - semgrep → Scan code
    - Combine results → Comprehensive security report
 
 3. **Task Management Workflow**:
    - tractatus_thinking → Analyze task structure
-   - automa → Analyze task alignment
+   - exarp → Analyze task alignment
    - agentic-tools → Manage tasks
    - sequential_thinking → Plan task implementation
 
 ## Tool Integration Matrix
 
-| Automa Tool | Filesystem | Git | Context7 | Semgrep | Tractatus | Sequential |
+| Exarp Tool | Filesystem | Git | Context7 | Semgrep | Tractatus | Sequential |
 |------------|------------|-----|----------|---------|-----------|------------|
 | `check_documentation_health` | ✅ Read files | ⚠️ Optional | ✅ Verify refs | ❌ | ✅ Structure | ✅ Fix plan |
 | `analyze_todo2_alignment` | ❌ | ❌ | ❌ | ❌ | ✅ Structure | ✅ Action plan |
@@ -216,7 +216,7 @@ Create integration guides for common workflows:
    - Add `sequential_thinking` to `.cursor/mcp.json`
 
 2. **Update Tool Descriptions**:
-   - Add integration hints to automa tool docstrings
+   - Add integration hints to exarp tool docstrings
    - Reference complementary servers in tool descriptions
 
 3. **Document Workflows**:
@@ -240,5 +240,5 @@ Create integration guides for common workflows:
 ## See Also
 
 - [DEPENDENCIES.md](DEPENDENCIES.md) - Complementary MCP servers
-- [README.md](README.md) - Automa server overview
+- [README.md](README.md) - Exarp server overview
 - `.cursor/rules/project-automation.mdc` - Usage guidelines

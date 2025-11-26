@@ -1,8 +1,8 @@
-# Automa MCP Server Portability
+# Exarp MCP Server Portability
 
 ## Overview
 
-The automa MCP server is designed to work across different agents and servers with different paths. This document explains how portability is achieved.
+The exarp MCP server is designed to work across different agents and servers with different paths. This document explains how portability is achieved.
 
 ## Portable Components
 
@@ -80,7 +80,7 @@ If you need to configure manually, use this format:
 ```json
 {
   "mcpServers": {
-    "automa": {
+    "exarp": {
       "command": "/absolute/path/to/project/mcp-servers/project-management-automation/run_server.sh",
       "args": [],
       "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
@@ -122,7 +122,7 @@ After setup, verify portability:
 
 3. **Check MCP config**:
    ```bash
-   cat .cursor/mcp.json | grep automa
+   cat .cursor/mcp.json | grep exarp
    # Should show absolute path for this server
    ```
 

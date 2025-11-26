@@ -17,7 +17,7 @@
 
 **However**, we should check if any **user-facing** references need updating.
 
-### "automa" / "Automa" / "AUTOMA"
+### "exarp" / "Exarp" / "EXARP"
 
 **Note**: This is the **old project name** that should be replaced with "Exarp" in:
 - Documentation
@@ -34,7 +34,7 @@
    - ✅ Keep directory name (descriptive)
    - ⚠️ Check user-facing references
 
-2. **Old Name** (`automa`):
+2. **Old Name** (`exarp`):
    - ❌ Replace in documentation
    - ❌ Replace in comments
    - ❌ Replace in user-facing strings
@@ -45,7 +45,7 @@
 ## Next Steps
 
 1. Review search results
-2. Update user-facing references to "automa" → "Exarp"
+2. Update user-facing references to "exarp" → "Exarp"
 3. Keep package/directory names as-is (they're descriptive)
 
 ---

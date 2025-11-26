@@ -1,4 +1,4 @@
-# Private/Local Repository Setup for Automa
+# Private/Local Repository Setup for Exarp
 
 **Date**: 2025-01-27
 **Purpose**: Setup private/local package distribution before PyPI publication
@@ -165,7 +165,7 @@ Create a helper script for easy installation:
 REPO_URL="${AUTOMA_REPO_URL:-https://github.com/username/project-management-automation.git}"
 BRANCH="${AUTOMA_BRANCH:-main}"
 
-echo "Installing automa from $REPO_URL (branch: $BRANCH)"
+echo "Installing exarp from $REPO_URL (branch: $BRANCH)"
 
 pip install git+$REPO_URL@$BRANCH
 

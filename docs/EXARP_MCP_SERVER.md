@@ -1,14 +1,14 @@
-# automa MCP Server
+# exarp MCP Server
 
-**Quick Reference**: The **automa** MCP server is the configured name for the Project Management Automation MCP server in this repository.
+**Quick Reference**: The **exarp** MCP server is the configured name for the Project Management Automation MCP server in this repository.
 
-## What is automa?
+## What is exarp?
 
-**automa** is the MCP server identifier configured in `.cursor/mcp.json` for the self-hosted project management automation tools located in `mcp-servers/project-management-automation/`.
+**exarp** is the MCP server identifier configured in `.cursor/mcp.json` for the self-hosted project management automation tools located in `mcp-servers/project-management-automation/`.
 
-## Why "automa"?
+## Why "exarp"?
 
-The server is configured with the shorter identifier "automa" for:
+The server is configured with the shorter identifier "exarp" for:
 - **Easier reference** in Cursor prompts and documentation
 - **Shorter name** than "project-management-automation"
 - **Clear identity** as the automation server
@@ -16,7 +16,7 @@ The server is configured with the shorter identifier "automa" for:
 ## Server Location
 
 - **Directory**: `mcp-servers/project-management-automation/`
-- **MCP Identifier**: `automa` (in `.cursor/mcp.json`)
+- **MCP Identifier**: `exarp` (in `.cursor/mcp.json`)
 - **Entry Point**: `mcp-servers/project-management-automation/run_server.sh`
 
 ## Configuration
@@ -26,7 +26,7 @@ The server is configured in `.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
-    "automa": {
+    "exarp": {
       "command": "/Users/davidl/Projects/Trading/ib_box_spread_full_universal/mcp-servers/project-management-automation/run_server.sh",
       "args": [],
       "description": "Project management automation tools - documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
@@ -37,7 +37,7 @@ The server is configured in `.cursor/mcp.json`:
 
 ## Available Resources
 
-The automa server exposes these resources for quick access to cached data:
+The exarp server exposes these resources for quick access to cached data:
 
 1. **`automation://status`** - Server status and health
 2. **`automation://history`** - Execution history
@@ -50,7 +50,7 @@ The automa server exposes these resources for quick access to cached data:
 
 ## Available Tools
 
-The automa server provides:
+The exarp server provides:
 
 1. **Documentation Health** - `check_documentation_health_tool`
 2. **Task Alignment** - `analyze_todo2_alignment_tool`
@@ -68,12 +68,12 @@ The automa server provides:
 
 ## Usage
 
-When working with Cursor AI assistants, you can reference "automa" tools:
+When working with Cursor AI assistants, you can reference "exarp" tools:
 
-- "Check documentation health using automa"
-- "Find duplicate tasks with automa"
-- "Scan dependencies for security issues using automa"
-- "Run daily automation tasks via automa"
+- "Check documentation health using exarp"
+- "Find duplicate tasks with exarp"
+- "Scan dependencies for security issues using exarp"
+- "Run daily automation tasks via exarp"
 
 ## Documentation
 
@@ -86,14 +86,14 @@ When working with Cursor AI assistants, you can reference "automa" tools:
 
 When setting up new Cursor agents or worktrees:
 
-1. The **automa** server is already configured in `.cursor/mcp.json`
+1. The **exarp** server is already configured in `.cursor/mcp.json`
 2. The server code is in `mcp-servers/project-management-automation/`
-3. Reference it as **"automa"** in prompts and documentation
+3. Reference it as **"exarp"** in prompts and documentation
 4. See `.cursor/rules/project-automation.mdc` for detailed tool usage
 
 ## Directory Naming
 
-**No renaming needed**: The directory `mcp-servers/project-management-automation/` is descriptive and appropriate. The "automa" identifier is just the MCP server name in the configuration, which is a common pattern (shorter identifier for easier reference).
+**No renaming needed**: The directory `mcp-servers/project-management-automation/` is descriptive and appropriate. The "exarp" identifier is just the MCP server name in the configuration, which is a common pattern (shorter identifier for easier reference).
 
 ---
 

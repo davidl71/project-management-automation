@@ -54,7 +54,7 @@ The `project-management-automation` MCP server has been split into a separate re
 - `.cursor/rules/automation-tool-suggestions.mdc` - May reference old name
 - `.cursor/rules/todo2.mdc` - May reference old name
 
-**Action**: Update references from "automa" or "project-management-automation" to "Exarp"
+**Action**: Update references from "exarp" or "project-management-automation" to "Exarp"
 
 ---
 
@@ -89,7 +89,7 @@ The `project-management-automation` MCP server has been split into a separate re
    - Remove `exarp` entry from `.cursor/mcp.json`
 
 4. **Update documentation**:
-   - Remove references to Exarp/automa
+   - Remove references to Exarp/exarp
    - Update setup guides
 
 5. **Update Cursor rules**:
@@ -165,7 +165,7 @@ The `project-management-automation` MCP server has been split into a separate re
    - Remove references to local directory
 
 5. **Update Cursor rules**:
-   - Update references from "automa" to "Exarp"
+   - Update references from "exarp" to "Exarp"
    - Update installation instructions
 
 ---
@@ -179,11 +179,11 @@ The `project-management-automation` MCP server has been split into a separate re
    - Verify command points to installed package
 
 2. **`.cursor/rules/project-automation.mdc`**
-   - Update references from "automa" to "Exarp"
+   - Update references from "exarp" to "Exarp"
    - Update installation instructions
 
 3. **`.cursor/rules/automation-tool-suggestions.mdc`**
-   - Update references from "automa" to "Exarp"
+   - Update references from "exarp" to "Exarp"
 
 4. **`.cursorrules`**
    - Check for references to project-management-automation
@@ -228,7 +228,7 @@ The `project-management-automation` MCP server has been split into a separate re
 
 ### Update References
 
-- [ ] Update all "automa" → "Exarp" references
+- [ ] Update all "exarp" → "Exarp" references
 - [ ] Update all "project-management-automation" → "exarp-project-management" references
 - [ ] Update installation instructions to PyPI
 - [ ] Remove local directory references

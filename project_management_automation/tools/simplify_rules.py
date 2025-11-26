@@ -1,8 +1,8 @@
 """
 Rule Simplification Tool
 
-Automatically simplifies rules based on automa automation capabilities.
-Replaces manual processes with automa tool references.
+Automatically simplifies rules based on exarp automation capabilities.
+Replaces manual processes with exarp tool references.
 """
 
 import json
@@ -21,7 +21,7 @@ def simplify_rules(
     output_dir: Optional[str] = None
 ) -> str:
     """
-    Automatically simplify rules based on automa automation capabilities.
+    Automatically simplify rules based on exarp automation capabilities.
 
     Args:
         rule_files: List of rule files to simplify (default: all .cursorrules and .cursor/rules/*.mdc)
@@ -142,13 +142,13 @@ def _get_simplification_patterns() -> Dict[str, Dict]:
 5. Update documentation if needed
 6. Add static analysis annotations where appropriate
 
-**Automated checks (via automa - see `.cursor/rules/project-automation.mdc`):**
+**Automated checks (via exarp - see `.cursor/rules/project-automation.mdc`):**
 - Documentation health (runs automatically on git hooks)
 - Security scanning (runs automatically on dependency changes)
 - Task alignment (runs automatically on task status changes)
 - Duplicate detection (runs automatically on task creation)
 
-**To configure automated checks:** Use automa tools (git hooks, file watchers, cron jobs)""",
+**To configure automated checks:** Use exarp tools (git hooks, file watchers, cron jobs)""",
             "description": "Add automated checks section to Before Committing",
             "flags": re.DOTALL
         },
@@ -202,7 +202,7 @@ def _replace_pattern(content: str, pattern_config: Dict, matches: List[Dict]) ->
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Simplify rules based on automa automation")
+    parser = argparse.ArgumentParser(description="Simplify rules based on exarp automation")
     parser.add_argument("--files", nargs="+", help="Rule files to simplify")
     parser.add_argument("--no-dry-run", action="store_true", help="Actually modify files")
     parser.add_argument("--output-dir", help="Directory to write simplified rules")

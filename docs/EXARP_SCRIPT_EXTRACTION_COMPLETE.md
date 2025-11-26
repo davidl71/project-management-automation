@@ -1,4 +1,4 @@
-# Automa Script Extraction - COMPLETE ✅
+# Exarp Script Extraction - COMPLETE ✅
 
 **Date**: 2025-01-27
 **Status**: ✅ Complete - Ready for Testing

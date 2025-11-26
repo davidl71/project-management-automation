@@ -180,8 +180,8 @@ def analyze_cursor_rules_tool(
 
     # Suggest improvements
     if suggest_improvements:
-        if 'automa' in rules_content.lower():
-            analysis['suggestions'].append('Replace "automa" references with "Exarp"')
+        if 'exarp' in rules_content.lower():
+            analysis['suggestions'].append('Replace "exarp" references with "Exarp"')
 
         if 'manual' in rules_content.lower() and 'exarp' not in rules_content.lower():
             analysis['suggestions'].append('Consider using Exarp automation instead of manual steps')

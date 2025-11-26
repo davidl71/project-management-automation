@@ -1,20 +1,20 @@
-# Automa MCP Server - Rules Redundancy Analysis
+# Exarp MCP Server - Rules Redundancy Analysis
 
 **Date**: 2025-01-27
-**Purpose**: Identify rules and manual processes that are redundant with automa's automated capabilities
+**Purpose**: Identify rules and manual processes that are redundant with exarp's automated capabilities
 
 ---
 
 ## 🔍 Executive Summary
 
 ### Key Findings
-1. **Suggestion System Redundancy**: `automation-tool-suggestions.mdc` provides manual suggestions, but automa can automate many checks
-2. **Manual Process Redundancy**: Several manual check processes can be fully automated by automa
-3. **Pattern-Based Opportunities**: Rules can be simplified to just reference automa tools instead of describing manual processes
+1. **Suggestion System Redundancy**: `automation-tool-suggestions.mdc` provides manual suggestions, but exarp can automate many checks
+2. **Manual Process Redundancy**: Several manual check processes can be fully automated by exarp
+3. **Pattern-Based Opportunities**: Rules can be simplified to just reference exarp tools instead of describing manual processes
 
 ---
 
-## 1. Rules Made Redundant by Automa
+## 1. Rules Made Redundant by Exarp
 
 ### 1.1 Manual Documentation Health Checks
 
@@ -22,7 +22,7 @@
 - `automation-tool-suggestions.mdc` suggests using `check_documentation_health_tool` when docs change
 - Manual process: AI must remember to suggest, user must run tool
 
-**Automa Capability**:
+**Exarp Capability**:
 - `check_documentation_health_tool` can be automated via:
   - Git hooks (pre-commit, post-commit)
   - Cron jobs (daily/weekly checks)
@@ -44,7 +44,7 @@
 - `automation-tool-suggestions.mdc` suggests `analyze_todo2_alignment_tool` at task transitions
 - Manual process: AI suggests, user runs tool
 
-**Automa Capability**:
+**Exarp Capability**:
 - `analyze_todo2_alignment_tool` can be automated:
   - On task status changes (Todo → In Progress)
   - Before task moves to Review
@@ -66,7 +66,7 @@
 - `automation-tool-suggestions.mdc` suggests `detect_duplicate_tasks_tool` when 5+ tasks created
 - Manual process: AI suggests, user runs tool
 
-**Automa Capability**:
+**Exarp Capability**:
 - `detect_duplicate_tasks_tool` can be automated:
   - On task creation (check against existing tasks)
   - Daily/weekly batch detection
@@ -88,7 +88,7 @@
 - `automation-tool-suggestions.mdc` suggests `scan_dependency_security_tool` when dependencies change
 - Manual process: AI suggests, user runs tool
 
-**Automa Capability**:
+**Exarp Capability**:
 - `scan_dependency_security_tool` can be automated:
   - On dependency file changes (`requirements.txt`, `Cargo.toml`, `package.json`)
   - Pre-commit hooks (block commits with vulnerabilities)
@@ -110,7 +110,7 @@
 - `automation-tool-suggestions.mdc` doesn't suggest `find_automation_opportunities_tool`
 - No automated discovery process
 
-**Automa Capability**:
+**Exarp Capability**:
 - `find_automation_opportunities_tool` can be automated:
   - Weekly batch analysis
   - On code review completion
@@ -137,16 +137,16 @@
 - Manual suggestion logic
 - Context detection rules
 
-**Automa Enhancement**:
-- Automa can handle automated execution
+**Exarp Enhancement**:
+- Exarp can handle automated execution
 - Suggestions can be simplified to just tool references
-- Rate limiting can be handled by automa's execution history
+- Rate limiting can be handled by exarp's execution history
 
 **Recommendation**:
 ```markdown
 ## Simplified Automation Tool Suggestions
 
-**When to Suggest Automa Tools:**
+**When to Suggest Exarp Tools:**
 
 1. **Documentation Changes** → Suggest `check_documentation_health_tool`
    - Note: Also runs automatically on git hooks
@@ -181,11 +181,11 @@
 6. Add static analysis annotations where appropriate
 ```
 
-**Automa Enhancement**:
-- Documentation health can be automated (automa)
-- Security scanning can be automated (automa)
-- Task alignment can be automated (automa)
-- Duplicate detection can be automated (automa)
+**Exarp Enhancement**:
+- Documentation health can be automated (exarp)
+- Security scanning can be automated (exarp)
+- Task alignment can be automated (exarp)
+- Duplicate detection can be automated (exarp)
 
 **Recommendation**:
 ```markdown
@@ -195,10 +195,10 @@
 2. Run tests: `test:run` (or `ctest --output-on-failure`)
 3. Verify build: `build:debug` (or `cmake --build build`)
 4. **Automated checks (via git hooks):**
-   - Documentation health (automa: `check_documentation_health_tool`)
-   - Security scanning (automa: `scan_dependency_security_tool`)
-   - Task alignment (automa: `analyze_todo2_alignment_tool`)
-   - Duplicate detection (automa: `detect_duplicate_tasks_tool`)
+   - Documentation health (exarp: `check_documentation_health_tool`)
+   - Security scanning (exarp: `scan_dependency_security_tool`)
+   - Task alignment (exarp: `analyze_todo2_alignment_tool`)
+   - Duplicate detection (exarp: `detect_duplicate_tasks_tool`)
 5. Check for credentials/secrets (manual - no automation)
 6. Update documentation if needed
 7. Add static analysis annotations where appropriate
@@ -211,13 +211,13 @@
 ### 3.1 Git Hooks Integration
 
 **Current**: Manual processes
-**Automa**: Can automate via git hooks
+**Exarp**: Can automate via git hooks
 
 **Recommendation**: Add to `.cursorrules`:
 ```markdown
 ## Automated Quality Checks
 
-The following checks run automatically via git hooks (configured via automa):
+The following checks run automatically via git hooks (configured via exarp):
 
 - **Pre-commit**: Documentation health, security scanning, duplicate detection
 - **Pre-push**: Task alignment, comprehensive security scan
@@ -229,13 +229,13 @@ To configure: See `docs/AUTOMA_GIT_HOOKS_SETUP.md`
 ### 3.2 Cron Job Integration
 
 **Current**: Manual daily/weekly checks
-**Automa**: Can automate via cron jobs
+**Exarp**: Can automate via cron jobs
 
 **Recommendation**: Add to `.cursorrules`:
 ```markdown
 ## Automated Maintenance
 
-The following checks run automatically via cron jobs (configured via automa):
+The following checks run automatically via cron jobs (configured via exarp):
 
 - **Daily**: Documentation health, task alignment, duplicate detection
 - **Weekly**: Comprehensive security scan, automation opportunity discovery
@@ -247,24 +247,24 @@ To configure: See `docs/AUTOMA_CRON_SETUP.md`
 ### 3.3 CI/CD Integration
 
 **Current**: Manual CI/CD checks
-**Automa**: Can integrate with CI/CD pipelines
+**Exarp**: Can integrate with CI/CD pipelines
 
 **Recommendation**: Add to `.cursorrules`:
 ```markdown
 ## CI/CD Integration
 
-Automa tools are integrated into CI/CD pipelines:
+Exarp tools are integrated into CI/CD pipelines:
 
 - **On PR**: Documentation health, security scanning, task alignment
 - **On Merge**: Duplicate detection, automation opportunity discovery
 - **On Release**: Comprehensive project health report
 
-Configuration: See `.github/workflows/automa-checks.yml`
+Configuration: See `.github/workflows/exarp-checks.yml`
 ```
 
 ---
 
-## 4. Rules That Should Reference Automa
+## 4. Rules That Should Reference Exarp
 
 ### 4.1 Documentation Rules
 
@@ -274,7 +274,7 @@ Configuration: See `.github/workflows/automa-checks.yml`
 ## Documentation
 
 - Use `@docs` to reference documentation files
-- **Automated checks**: Documentation health is checked automatically via automa
+- **Automated checks**: Documentation health is checked automatically via exarp
 - **Manual override**: Use `check_documentation_health_tool` for on-demand checks
 - See `.cursor/rules/documentation.mdc` for complete guide
 ```
@@ -287,8 +287,8 @@ Configuration: See `.github/workflows/automa-checks.yml`
 ## Task Management
 
 - Use Todo2 workflow for all tasks (see `.cursor/rules/todo2.mdc`)
-- **Automated checks**: Task alignment and duplicate detection run automatically via automa
-- **Manual override**: Use automa tools for on-demand analysis
+- **Automated checks**: Task alignment and duplicate detection run automatically via exarp
+- **Manual override**: Use exarp tools for on-demand analysis
 - See `.cursor/rules/project-automation.mdc` for complete guide
 ```
 
@@ -301,7 +301,7 @@ Configuration: See `.github/workflows/automa-checks.yml`
 
 - Never commit credentials, API keys, or secrets
 - Never log sensitive information
-- **Automated checks**: Dependency security scanning runs automatically via automa
+- **Automated checks**: Dependency security scanning runs automatically via exarp
 - **Manual override**: Use `scan_dependency_security_tool` for on-demand scans
 - Always use paper trading port (7497) for testing
 - Gate live trading behind explicit configuration flags
@@ -320,9 +320,9 @@ Configuration: See `.github/workflows/automa-checks.yml`
    - Remove redundant manual process descriptions
 
 2. **Update `.cursorrules` "Before Committing" section**:
-   - Reference automated checks via automa
+   - Reference automated checks via exarp
    - Keep manual checks that can't be automated
-   - Add links to automa configuration docs
+   - Add links to exarp configuration docs
 
 3. **Add automated trigger documentation**:
    - Git hooks setup guide
@@ -332,23 +332,23 @@ Configuration: See `.github/workflows/automa-checks.yml`
 ### 5.2 Medium Priority
 
 1. **Update documentation rules**:
-   - Reference automa's automated documentation health checks
+   - Reference exarp's automated documentation health checks
    - Keep manual `@docs` reference system
    - Add automated check notes
 
 2. **Update task management rules**:
-   - Reference automa's automated task alignment and duplicate detection
+   - Reference exarp's automated task alignment and duplicate detection
    - Keep Todo2 workflow rules
    - Add automated check notes
 
 3. **Update security rules**:
-   - Reference automa's automated security scanning
+   - Reference exarp's automated security scanning
    - Keep manual security best practices
    - Add automated check notes
 
 ### 5.3 Low Priority (Nice to Have)
 
-1. **Create automa configuration guides**:
+1. **Create exarp configuration guides**:
    - Git hooks setup
    - Cron job setup
    - CI/CD integration
@@ -370,7 +370,7 @@ Configuration: See `.github/workflows/automa-checks.yml`
 
 ### Short-term Actions
 
-1. **Create automa configuration guides** - Git hooks, cron, CI/CD
+1. **Create exarp configuration guides** - Git hooks, cron, CI/CD
 2. **Update documentation rules** - Reference automated checks
 3. **Update task management rules** - Reference automated checks
 4. **Update security rules** - Reference automated checks
@@ -388,11 +388,11 @@ Configuration: See `.github/workflows/automa-checks.yml`
 **The suggestion system (`automation-tool-suggestions.mdc`) is NOT redundant** - it serves a different purpose:
 
 - **Suggestion System**: AI awareness and proactive suggestions
-- **Automa Automation**: Automated execution and enforcement
+- **Exarp Automation**: Automated execution and enforcement
 
 **However**, manual process descriptions in rules CAN be simplified because:
-- Automa can handle automated execution
-- Rules should reference automa instead of describing manual processes
+- Exarp can handle automated execution
+- Rules should reference exarp instead of describing manual processes
 - Suggestion system can be simplified to just tool references
 
 ---
@@ -400,5 +400,5 @@ Configuration: See `.github/workflows/automa-checks.yml`
 **Next Steps**:
 1. Review this analysis
 2. Implement high-priority recommendations
-3. Create automa configuration guides
+3. Create exarp configuration guides
 4. Update rules to reference automated checks
