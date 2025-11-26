@@ -7912,6 +7912,70 @@
       ],
       "created": "2025-11-26T11:35:22.859177",
       "lastModified": "2025-11-26T11:35:22.859182"
+    },
+    {
+      "id": "AUTO-20251126113643",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T11:36:43.248284",
+      "lastModified": "2025-11-26T11:36:43.744294",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126113643-C-1",
+          "todoId": "AUTO-20251126113643",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 22.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":160,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"}],\"orphaned_files\":[\"EXARP_CURSOR_INTEGRATION_STRATEGY.md\",\"EXARP_RULES_REDUNDANCY_ANALYSIS.md\",\"CI_CD_VALIDATION_REPORT.md\",\"INSTALLATION_EXAMPLES.md\",\"TODO2_PRIORITY_ALIGNMENT_ANALYSIS.md\",\"EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md\",\"EXARP_TOOL_REUSE_ANALYSIS.md\",\"EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"DAILY_AUTOMATION_REPORT.md\",\"UNIT_TEST_STATUS.md\",\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"EXARP_PACKAGING_RESOURCES_ANALYSIS.md\",\"TEST_COVERAGE_ANALYSIS.md\",\"EXARP_FASTMCP_SETUP.md\",\"EXARP_MCP_SERVER.md\",\"EXTERNAL_TOOL_HINTS_REPORT.md\",\"TESTING_TOOLS_PROPOSAL.md\",\"EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md\",\"EXARP_OLD_NAME_REFERENCES_REPORT.md\",\"EXARP_PACKAGING_DEPENDENCIES.md\",\"AUTO_FIX_USAGE.md\",\"EXARP_OLD_NAME_CHECK_COMPLETE.md\",\"EXARP_RESOURCES_PACKAGING_COMPLETE.md\",\"EXARP_FASTMCP_CONFIGURATION.md\",\"EXARP_IMPROVEMENTS_ANALYSIS.md\",\"EXARP_REPOSITORY_OPTIMIZATION_COMPLETE.md\",\"PROJECT_OVERVIEW.md\",\"TODO2_DUPLICATE_DETECTION_REPORT.md\",\"DOCUMENTATION_HEALTH_REPORT.md\",\"IDE_INTEGRATION.md\",\"EXARP_PRIVATE_REPO_QUICK_START.md\",\"EXARP_OLD_NAME_REFERENCES.md\",\"SECURITY_STATUS.md\",\"UNIT_TEST_FIXES_COMPLETE.md\",\"SPRINT_AUTOMATION_PROPOSAL.md\",\"EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"UNIT_TEST_FIXES.md\",\"CONTEXT7_MCP_INTEGRATION_STATUS.md\",\"EXARP_LICENSING_ANALYSIS.md\",\"EXARP_OLD_NAME_FIXES_COMPLETE.md\",\"EXARP_IMPROVEMENTS_PROGRESS.md\",\"WORKFLOW.md\",\"EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"EXARP_PACKAGING_TODO2_TASKS.md\",\"EXARP_CURSOR_SETUP_COMPLETE.md\",\"EXARP_PACKAGE_RENAME_COMPLETE.md\",\"EXARP_GITHUB_REPO_SETUP_COMPLETE.md\",\"EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"EXARP_OLD_NAME_REFERENCES_FINAL.md\",\"EXARP_INSTALLATION_COMPLETE.md\",\"TEST_COVERAGE_FIXES.md\",\"SEQUENTIAL_THINKING_MCP_INTEGRATION_STATUS.md\",\"DESIGN_DECISIONS.md\",\"EXARP_SCRIPT_EXTRACTION_COMPLETE.md\",\"EXARP_PHASE2_TASKS.md\",\"EXARP_COMPARISON_AND_VALUE_PROPOSITION.md\",\"TOOL_REDUNDANCY_ANALYSIS.md\",\"AGENTIC_TOOLS_INTEGRATION_PLAN.md\",\"EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"DOCS_CLEANUP_PLAN.md\",\"EXARP_RENAMING_COMPLETE.md\",\"FILESYSTEM_MCP_INTEGRATION_STATUS.md\"]},\"health_score\":22.0}",
+          "created": "2025-11-26T11:36:43.703754",
+          "lastModified": "2025-11-26T11:36:43.703763"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126113643-394",
+      "name": "Update stale documentation",
+      "content": "Update 15 stale documents (>90 days old)",
+      "status": "todo",
+      "priority": "medium",
+      "tags": [
+        "documentation",
+        "update"
+      ],
+      "dependencies": [
+        "AUTO-20251126113643"
+      ],
+      "created": "2025-11-26T11:36:43.723991",
+      "lastModified": "2025-11-26T11:36:43.723996"
+    },
+    {
+      "id": "AUTO-20251126114021",
+      "name": "Automation: Dependency Security Scan",
+      "content": "Automated Dependency Security Scan execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "dependency-security-scan"
+      ],
+      "created": "2025-11-26T11:40:21.881119",
+      "lastModified": "2025-11-26T11:40:22.026546",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126114021-C-1",
+          "todoId": "AUTO-20251126114021",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-26T11:40:22.003499",
+          "lastModified": "2025-11-26T11:40:22.003515"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092"

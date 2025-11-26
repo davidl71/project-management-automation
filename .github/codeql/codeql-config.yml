@@ -1,0 +1,40 @@
+# CodeQL Configuration for project-management-automation (exarp)
+# See: https://docs.github.com/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
+
+name: "Exarp CodeQL Config"
+
+# Query suites to run
+# security-extended: More security queries (recommended)
+# security-and-quality: All security + code quality queries
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+# Paths to analyze (default: entire repo)
+paths:
+  - project_management_automation
+  - prompts.py
+  - error_handler.py
+
+# Paths to exclude from analysis
+paths-ignore:
+  - tests
+  - "**/*_test.py"
+  - "**/test_*.py"
+  - docs
+  - "*.md"
+  - .github
+  - .venv
+  - venv
+  - build
+  - dist
+  - "**/__pycache__"
+
+# Query filters - adjust severity thresholds
+# Uncomment to only report high severity issues:
+# query-filters:
+#   - exclude:
+#       problem.severity:
+#         - recommendation
+#         - warning
+
