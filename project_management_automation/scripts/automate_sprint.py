@@ -523,15 +523,17 @@ class SprintAutomation(IntelligentAutomationBase):
                 if not self.dry_run:
                     task['status'] = 'In Progress'
                 processed += 1
-                logger.info(f"Processing task: {task.get('name', 'Unknown')}")
+                task_name = task.get('name') or task.get('content', 'Unknown')
+                logger.info(f"Processing task: {task_name}")
         
         self.sprint_results['tasks_processed'] += processed
         return processed
 
     def _is_background_capable(self, task: Dict) -> bool:
         """Check if task is background-capable."""
-        name = task.get('name', '').lower()
-        long_desc = task.get('long_description', '').lower() or task.get('details', '').lower()
+        # Support both 'name' and 'content' fields (different todo formats)
+        name = (task.get('name', '') or task.get('content', '')).lower()
+        long_desc = (task.get('long_description', '') or task.get('details', '')).lower()
         status = task.get('status', '')
         
         # Skip if not in actionable status

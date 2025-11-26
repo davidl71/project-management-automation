@@ -103,9 +103,11 @@ def sprint_automation(
         results = automation.run()
 
         # Format response
-        sprint_results = results.get('results', {})
+        # Results are nested: results['results']['results'] contains sprint_results
+        inner_results = results.get('results', {})
+        sprint_results = inner_results.get('results', {}) if isinstance(inner_results, dict) else {}
         response_data = {
-            'iterations': results.get('iterations', 0),
+            'iterations': inner_results.get('iterations', 0),
             'subtasks_extracted': sprint_results.get('subtasks_extracted', 0),
             'tasks_auto_approved': sprint_results.get('tasks_auto_approved', 0),
             'tasks_processed': sprint_results.get('tasks_processed', 0),
