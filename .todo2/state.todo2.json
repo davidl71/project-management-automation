@@ -2334,6 +2334,125 @@
       "updatedAt": "2025-11-26T04:19:48.941868Z",
       "dependencies": [],
       "estimatedHours": 3
+    },
+    {
+      "id": "859325f2-1fa1-45f1-8fcc-c415fc5f6751",
+      "content": "Implement find_legacy_references tool",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "tool",
+        "codebase-maintenance",
+        "self-improvement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Find old names, paths, and patterns in codebase\n\n\ud83d\udccb **Acceptance Criteria:**\n- Search for specified patterns across all files\n- Support regex patterns\n- Exclude configured directories (venv, node_modules, etc.)\n- Return file paths, line numbers, and context\n- Group by pattern type (names, paths, imports)\n\n**Use Cases:**\n- Project rename (automa \u2192 exarp)\n- Find hardcoded values before refactor\n- Audit legacy code references\n\n**Parameters:**\n- patterns: List of strings/regex to find\n- exclude_dirs: Directories to skip\n- file_types: File extensions to search\n- context_lines: Lines of context to show\n\n**HINT format:**\n`[HINT: Legacy finder. Returns matches by pattern, file locations, context.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571082Z",
+      "updatedAt": "2025-11-26T04:23:19.571097Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "d12c196c-b161-4c4e-b374-bde6a022a9ab",
+      "content": "Implement rename_project_references tool",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "tool",
+        "codebase-maintenance",
+        "self-improvement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Bulk rename across codebase safely\n\n\ud83d\udccb **Acceptance Criteria:**\n- Replace old_name \u2192 new_name across files\n- Support case variations (automa, Automa, AUTOMA)\n- Preview mode (dry_run) before applying\n- Skip binary files\n- Create backup/git commit before changes\n- Handle env vars, imports, strings separately\n\n**Safety Features:**\n- Require confirmation for >100 replacements\n- Show diff preview\n- Exclude patterns (don't rename in comments only)\n\n**Parameters:**\n- old_name: String to replace\n- new_name: Replacement string\n- case_sensitive: bool (default: false = handle all cases)\n- dry_run: bool (default: true)\n- include_env_vars: bool (default: true)\n\n**HINT format:**\n`[HINT: Project rename. Returns files changed, replacements made, dry_run preview.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571115Z",
+      "updatedAt": "2025-11-26T04:23:19.571117Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "bb7c0612-efaa-4f98-bdd9-3535a6b55d8f",
+      "content": "Implement detect_hardcoded_paths tool",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "tool",
+        "codebase-maintenance",
+        "portability"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Find non-portable hardcoded paths\n\n\ud83d\udccb **Acceptance Criteria:**\n- Detect /Users/*, /home/*, C:\\Users\\* patterns\n- Detect project-specific paths (ib_box_spread, mcp-servers)\n- Distinguish config files vs code\n- Suggest fixes (use env vars, relative paths)\n- Score portability (0-100)\n\n**Detection Patterns:**\n- Absolute user paths: /Users/david, /home/user\n- Windows paths: C:\\Users\\\n- Project-specific: /project-name/, hardcoded repo names\n- IP addresses and ports (optional)\n\n**Parameters:**\n- include_configs: bool (check config files too)\n- suggest_fixes: bool (provide replacement suggestions)\n- severity_threshold: only report above threshold\n\n**HINT format:**\n`[HINT: Hardcoded path detector. Returns paths found, portability score, fix suggestions.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571129Z",
+      "updatedAt": "2025-11-26T04:23:19.571131Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "53a80260-07ef-4bb8-994c-b5abcbd8bfb0",
+      "content": "Implement generate_session_summary tool",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "tool",
+        "session-management",
+        "self-improvement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Summarize work done in current session\n\n\ud83d\udccb **Acceptance Criteria:**\n- Track files modified in session\n- Track git commits made\n- Track tasks created/completed\n- Track tools executed\n- Generate markdown summary\n\n**Data Sources:**\n- Git log since session start\n- File modification times\n- Todo2 task changes\n- Tool execution history (if available)\n\n**Output:**\n- Files changed (grouped by type)\n- Commits made\n- Tasks created/completed\n- Tools run and results\n- Decisions made (from commit messages)\n\n**Parameters:**\n- since: datetime or \"session_start\"\n- format: markdown/json/text\n- include_diffs: bool (show file diffs)\n\n**HINT format:**\n`[HINT: Session summary. Returns files changed, commits, tasks, decisions made.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571141Z",
+      "updatedAt": "2025-11-26T04:23:19.571143Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "b0793a1d-8f82-419f-bc87-3c8773dd2a69",
+      "content": "Implement generate_ignore_files tool",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "tool",
+        "project-setup",
+        "self-improvement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Generate .gitignore, .cursorignore from project analysis\n\n\ud83d\udccb **Acceptance Criteria:**\n- Detect project type (Python, Node, Rust, etc.)\n- Generate appropriate ignore patterns\n- Merge with existing ignore files\n- Support multiple ignore file types\n\n**Detection Logic:**\n- requirements.txt/pyproject.toml \u2192 Python ignores\n- package.json \u2192 Node ignores\n- Cargo.toml \u2192 Rust ignores\n- Find existing build dirs, caches\n\n**Output Files:**\n- .gitignore (version control)\n- .cursorignore (IDE indexing)\n- .dockerignore (if Dockerfile exists)\n\n**Parameters:**\n- output_files: List of ignore files to generate\n- merge_existing: bool (merge with existing or overwrite)\n- dry_run: bool (preview only)\n\n**HINT format:**\n`[HINT: Ignore file generator. Returns files created, patterns added, project type detected.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571150Z",
+      "updatedAt": "2025-11-26T04:23:19.571152Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "2e1032fc-8191-4314-85c0-ff53e13df4cf",
+      "content": "Implement generate_ci_cd_workflow tool",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "tool",
+        "project-setup",
+        "ci-cd"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Bootstrap GitHub Actions CI/CD from project analysis\n\n\ud83d\udccb **Acceptance Criteria:**\n- Detect project type and test framework\n- Generate appropriate workflow file\n- Include lint, test, security, build stages\n- Support multiple CI providers (GitHub Actions primary)\n\n**Detection Logic:**\n- pytest/unittest \u2192 Python test job\n- npm test \u2192 Node test job\n- cargo test \u2192 Rust test job\n- Detect linters (ruff, eslint, clippy)\n\n**Generated Workflow:**\n- Lint job (language-specific)\n- Test job with coverage\n- Security scan job\n- Build/package job\n- Optional: Deploy job template\n\n**Parameters:**\n- ci_provider: github/gitlab/circleci (default: github)\n- include_deploy: bool (add deploy template)\n- python_version/node_version: version to use\n- dry_run: bool\n\n**HINT format:**\n`[HINT: CI/CD generator. Returns workflow file path, jobs created, triggers configured.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571159Z",
+      "updatedAt": "2025-11-26T04:23:19.571161Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "64507615-28da-43dd-a2fe-0434cb4c6730",
+      "content": "Implement cleanup_build_artifacts tool",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "tool",
+        "codebase-maintenance",
+        "cleanup"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Remove build artifacts and caches safely\n\n\ud83d\udccb **Acceptance Criteria:**\n- Identify common build directories\n- Calculate space to be freed\n- Support dry_run preview\n- Respect .gitignore patterns\n- Never delete tracked files\n\n**Directories to Clean:**\n- Python: __pycache__, *.egg-info, .pytest_cache, build/, dist/\n- Node: node_modules (optional), .next, dist/\n- Rust: target/\n- General: .cache, *.pyc, *.pyo\n\n**Safety:**\n- Check git status before cleaning\n- Never delete if uncommitted changes in dir\n- Require confirmation for >100MB\n\n**Parameters:**\n- include_node_modules: bool (default: false, large impact)\n- dry_run: bool (default: true)\n- min_size_mb: Only report dirs larger than this\n\n**HINT format:**\n`[HINT: Build cleanup. Returns dirs removed, space freed, files deleted count.]`",
+      "completed": false,
+      "createdAt": "2025-11-26T04:23:19.571168Z",
+      "updatedAt": "2025-11-26T04:23:19.571170Z",
+      "dependencies": [],
+      "estimatedHours": 1
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
