@@ -1,6 +1,6 @@
 # Exarp Private Repository Quick Start
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Purpose**: Quick setup guide for private/local repository distribution
 
 ---

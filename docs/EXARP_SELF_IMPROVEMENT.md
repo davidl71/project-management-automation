@@ -1,6 +1,6 @@
 # Exarp Self-Improvement Strategy
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Status**: Proposal
 **Concept**: "Eating Our Own Dog Food" - Using Exarp to Improve Exarp
 
@@ -501,7 +501,7 @@ workflow_result = run_automation_workflow_tool(
 - GitHub Workflows - CI/CD workflows
 - Tool Status - Available tools
 - Usage Guide - How to use Exarp tools
-- [Contributing Guide](../CONTRIBUTING.md) - Development guidelines
+- Contributing Guide - Development guidelines
 
 ---
 

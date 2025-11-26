@@ -1,6 +1,6 @@
 # Exarp Deployment Options
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Reference**: [FastMCP Deployment Guide](https://gofastmcp.com/deployment/running-server) | [FastMCP Cloud](https://gofastmcp.com/deployment/fastmcp-cloud)
 
 ---

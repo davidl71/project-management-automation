@@ -198,7 +198,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## References
 
-- [IntelligentAutomationBase Guide](../../docs/INTELLIGENT_AUTOMATION_GUIDE.md)
-- [MCP Server Proposal](../../docs/MCP_PROJECT_MANAGEMENT_SERVER_PROPOSAL.md)
-- [Implementation Plan](../../docs/MCP_SERVER_IMPLEMENTATION_PLAN.md)
 - [Dependencies](DEPENDENCIES.md) - Complementary MCP servers
+- [Sprint Automation Proposal](docs/SPRINT_AUTOMATION_PROPOSAL.md)
+- [Testing Tools Proposal](docs/TESTING_TOOLS_PROPOSAL.md)

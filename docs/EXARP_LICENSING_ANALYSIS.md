@@ -1,6 +1,6 @@
 # Exarp Licensing Analysis
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Status**: Complete - MIT License Recommended
 
 ---
@@ -120,7 +120,7 @@
    ```markdown
    ## License
 
-   This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+   This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
    ```
 
 3. **Add copyright notice** to key files (optional):

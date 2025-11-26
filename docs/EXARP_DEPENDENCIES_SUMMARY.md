@@ -1,6 +1,6 @@
 # Exarp Dependencies: Required vs Optimal
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Quick Reference**: Required vs Optimal Dependencies for Packaging
 
 ---

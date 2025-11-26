@@ -1,6 +1,6 @@
 # Exarp AI Agent Discoverability Analysis
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Question**: Will AI agents (Cursor, ChatGPT, Claude, Gemini) easily understand and detect what Exarp does?
 
 ---

@@ -1,6 +1,6 @@
 # Exarp MCP Completion Support Analysis
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Reference**: [MCP Completion Specification](https://modelcontextprotocol.io/specification/2025-06-18/server/utilities/completion)
 
 ---

@@ -1,6 +1,6 @@
 # Exarp Packaging Resources Analysis
 
-**Date**: 2025-01-27
+**Date**: 2025-11-26
 **Question**: Which resources are unique to Exarp and should be packaged?
 
 ---
