@@ -251,15 +251,23 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     # 7. SECURITY
     # ═══════════════════════════════════════════════════════════════
+    
+    # Check for security.py module existence
+    security_module = project_root / 'project_management_automation' / 'utils' / 'security.py'
+    security_module_exists = security_module.exists()
+    
+    # Check security module contents for specific controls
+    security_content = security_module.read_text() if security_module_exists else ""
+    
     security_checks = {
         'security_docs': (project_root / 'docs' / 'SECURITY.md').exists(),
         'ci_cd_workflow': (project_root / '.github' / 'workflows' / 'ci.yml').exists(),
         'gitignore': (project_root / '.gitignore').exists(),
         'no_hardcoded_secrets': True,
-        'input_validation': False,
-        'path_boundaries': False,
-        'rate_limiting': False,
-        'access_control': False,
+        'input_validation': 'sanitize_string' in security_content and 'validate_' in security_content,
+        'path_boundaries': 'PathValidator' in security_content and 'PathBoundaryError' in security_content,
+        'rate_limiting': 'RateLimiter' in security_content and 'rate_limit' in security_content,
+        'access_control': 'AccessController' in security_content and 'require_access' in security_content,
     }
     
     passed = sum(1 for v in security_checks.values() if v)

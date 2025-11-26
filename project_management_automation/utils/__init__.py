@@ -17,6 +17,30 @@ from typing import Optional
 
 from .output import split_output, progress_wrapper, compact_json, output_to_human_and_ai
 from .logging_config import configure_logging, get_logger, is_mcp_mode, suppress_noisy_loggers
+from .security import (
+    # Path validation
+    PathBoundaryError,
+    PathValidator,
+    set_default_path_validator,
+    get_default_path_validator,
+    validate_path,
+    # Input validation
+    InputValidationError,
+    sanitize_string,
+    validate_identifier,
+    validate_enum,
+    validate_range,
+    # Rate limiting
+    RateLimiter,
+    get_rate_limiter,
+    rate_limit,
+    # Access control
+    AccessLevel,
+    AccessController,
+    get_access_controller,
+    set_access_controller,
+    require_access,
+)
 
 
 def find_project_root(start_path: Optional[Path] = None) -> Path:
@@ -69,14 +93,38 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
 
 
 __all__ = [
+    # Project utilities
     'find_project_root',
     'split_output',
     'progress_wrapper',
     'compact_json',
     'output_to_human_and_ai',
+    # Logging
     'configure_logging',
     'get_logger',
     'is_mcp_mode',
-    'suppress_noisy_loggers'
+    'suppress_noisy_loggers',
+    # Security - Path validation
+    'PathBoundaryError',
+    'PathValidator',
+    'set_default_path_validator',
+    'get_default_path_validator',
+    'validate_path',
+    # Security - Input validation
+    'InputValidationError',
+    'sanitize_string',
+    'validate_identifier',
+    'validate_enum',
+    'validate_range',
+    # Security - Rate limiting
+    'RateLimiter',
+    'get_rate_limiter',
+    'rate_limit',
+    # Security - Access control
+    'AccessLevel',
+    'AccessController',
+    'get_access_controller',
+    'set_access_controller',
+    'require_access',
 ]
 

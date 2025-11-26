@@ -1,8 +1,8 @@
 # Todo2 Duplicate Task Detection Report
 
-**Generated**: 2025-11-26 09:32:55
-**Total Tasks Analyzed**: 336
-**Duplicates Found**: 1582
+**Generated**: 2025-11-26 09:39:03
+**Total Tasks Analyzed**: 343
+**Duplicates Found**: 1759
 
 ---
 
@@ -39,7 +39,7 @@ Tasks with identical names but different IDs:
 - `AUTO-20251126032538`: Automation: Sprint Automation (Status: done, Priority: medium)
 - `AUTO-20251126050522`: Automation: Sprint Automation (Status: done, Priority: medium)
 
-**Name**: "Automation: Documentation Health Analysis" (38 tasks)
+**Name**: "Automation: Documentation Health Analysis" (40 tasks)
 
 - `AUTO-20251126032538`: Automation: Documentation Health Analysis (Status: in_progress, Priority: medium)
 - `AUTO-20251126040217`: Automation: Documentation Health Analysis (Status: done, Priority: medium)
@@ -79,8 +79,10 @@ Tasks with identical names but different IDs:
 - `AUTO-20251126093008`: Automation: Documentation Health Analysis (Status: done, Priority: medium)
 - `AUTO-20251126093037`: Automation: Documentation Health Analysis (Status: done, Priority: medium)
 - `AUTO-20251126093236`: Automation: Documentation Health Analysis (Status: done, Priority: medium)
+- `AUTO-20251126093747`: Automation: Documentation Health Analysis (Status: done, Priority: medium)
+- `AUTO-20251126093830`: Automation: Documentation Health Analysis (Status: done, Priority: medium)
 
-**Name**: "Automation: Todo2 Alignment Analysis" (9 tasks)
+**Name**: "Automation: Todo2 Alignment Analysis" (11 tasks)
 
 - `AUTO-20251126032538`: Automation: Todo2 Alignment Analysis (Status: in_progress, Priority: medium)
 - `AUTO-20251126040218`: Automation: Todo2 Alignment Analysis (Status: done, Priority: medium)
@@ -91,15 +93,18 @@ Tasks with identical names but different IDs:
 - `AUTO-20251126092437`: Automation: Todo2 Alignment Analysis (Status: done, Priority: medium)
 - `AUTO-20251126093009`: Automation: Todo2 Alignment Analysis (Status: done, Priority: medium)
 - `AUTO-20251126093237`: Automation: Todo2 Alignment Analysis (Status: done, Priority: medium)
+- `AUTO-20251126093428`: Automation: Todo2 Alignment Analysis (Status: done, Priority: medium)
+- `AUTO-20251126093832`: Automation: Todo2 Alignment Analysis (Status: done, Priority: medium)
 
-**Name**: "Automation: Todo2 Duplicate Detection" (4 tasks)
+**Name**: "Automation: Todo2 Duplicate Detection" (5 tasks)
 
 - `AUTO-20251126032538`: Automation: Todo2 Duplicate Detection (Status: in_progress, Priority: medium)
 - `AUTO-20251126092437`: Automation: Todo2 Duplicate Detection (Status: in_progress, Priority: medium)
 - `AUTO-20251126093010`: Automation: Todo2 Duplicate Detection (Status: done, Priority: medium)
-- `AUTO-20251126093238`: Automation: Todo2 Duplicate Detection (Status: in_progress, Priority: medium)
+- `AUTO-20251126093238`: Automation: Todo2 Duplicate Detection (Status: done, Priority: medium)
+- `AUTO-20251126093834`: Automation: Todo2 Duplicate Detection (Status: in_progress, Priority: medium)
 
-**Name**: "Update stale documentation" (38 tasks)
+**Name**: "Update stale documentation" (40 tasks)
 
 - `T-20251126034108-60`: Update stale documentation (Status: todo, Priority: medium)
 - `T-20251126040217-60`: Update stale documentation (Status: todo, Priority: medium)
@@ -139,6 +144,8 @@ Tasks with identical names but different IDs:
 - `T-20251126093009-327`: Update stale documentation (Status: todo, Priority: medium)
 - `T-20251126093038-331`: Update stale documentation (Status: todo, Priority: medium)
 - `T-20251126093237-333`: Update stale documentation (Status: todo, Priority: medium)
+- `T-20251126093748-338`: Update stale documentation (Status: todo, Priority: medium)
+- `T-20251126093831-340`: Update stale documentation (Status: todo, Priority: medium)
 
 **Name**: "Automation: Dependency Security Scan" (14 tasks)
 
@@ -185,7 +192,7 @@ Tasks with identical names but different IDs:
 - `AUTO-20251126080001`: Automation: Shared TODO Table Synchronization (Status: done, Priority: medium)
 - `AUTO-20251126090001`: Automation: Shared TODO Table Synchronization (Status: done, Priority: medium)
 
-### 🔍 Similar Name Matches (1568)
+### 🔍 Similar Name Matches (1745)
 
 Tasks with similar names (similarity ≥ 85%):
 

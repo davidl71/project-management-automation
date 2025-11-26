@@ -115,5 +115,18 @@
       },
       "critical_vulnerabilities": []
     }
+  },
+  {
+    "timestamp": "2025-11-26T07:41:07.867996+00:00",
+    "summary": {
+      "total_vulnerabilities": 0,
+      "by_severity": {},
+      "by_language": {
+        "python": 0,
+        "rust": 0,
+        "npm": 0
+      },
+      "critical_vulnerabilities": []
+    }
   }
 ]

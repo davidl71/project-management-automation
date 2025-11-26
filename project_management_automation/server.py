@@ -40,7 +40,7 @@ from typing import Any, Dict, List, Optional
 from functools import wraps
 
 # Version - keep in sync with pyproject.toml
-__version__ = "0.1.14"
+__version__ = "0.1.15"
 
 # Import our MCP-aware logging utilities
 from .utils.logging_config import configure_logging, suppress_noisy_loggers, is_mcp_mode
@@ -48,6 +48,15 @@ from .utils.logging_config import configure_logging, suppress_noisy_loggers, is_
 # Configure logging (quiet in MCP mode, verbose in CLI)
 logger = configure_logging("exarp", level=logging.INFO)
 suppress_noisy_loggers()
+
+# Import security utilities
+from .utils.security import (
+    PathValidator,
+    set_default_path_validator,
+    get_access_controller,
+    AccessController,
+    set_access_controller,
+)
 
 # Robust project root detection
 def _find_project_root(start_path: Path) -> Path:
@@ -78,6 +87,29 @@ def _find_project_root(start_path: Path) -> Path:
 # Add project root to path for script imports
 project_root = _find_project_root(Path(__file__))
 sys.path.insert(0, str(project_root))
+
+# Initialize security controls
+# Path boundary: only allow access within project root and common temp dirs
+_path_validator = PathValidator(
+    allowed_roots=[project_root, Path("/tmp"), Path("/var/tmp")],
+    allow_symlinks=False,
+    blocked_patterns=[
+        r'\.git(?:/|$)',      # .git directory
+        r'\.env',             # Environment files  
+        r'\.ssh',             # SSH keys
+        r'\.aws',             # AWS credentials
+        r'id_rsa',            # SSH private keys
+        r'\.pem$',            # Certificate files
+        r'secrets?\.ya?ml',   # Secrets files
+    ]
+)
+set_default_path_validator(_path_validator)
+
+# Access control: default write access, customizable per deployment
+_access_controller = AccessController(default_level="write")
+set_access_controller(_access_controller)
+
+logger.debug(f"Security initialized: path_boundaries={len(_path_validator.allowed_roots)} roots, access_control=write")
 
 # Add server directory to path for absolute imports when run as script
 server_dir = Path(__file__).parent
