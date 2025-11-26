@@ -2453,6 +2453,91 @@
       "updatedAt": "2025-11-26T04:23:19.571170Z",
       "dependencies": [],
       "estimatedHours": 1
+    },
+    {
+      "id": "fa979c33-cee1-473a-959f-a234190d702e",
+      "content": "Migrate tests to FastMCP Client pattern",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "testing",
+        "fastmcp",
+        "refactor"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Replace mock-based tests with FastMCP in-memory client\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/patterns/testing\n\n**Current State:**\n- Tests use `unittest.mock` to patch functions\n- 21 tests currently failing due to mock issues\n- No actual MCP protocol testing\n\n**Target Pattern:**\n```python\nimport pytest\nfrom fastmcp.client import Client\n\n@pytest.fixture\nasync def exarp_client():\n    from project_management_automation.server import mcp\n    async with Client(transport=mcp) as client:\n        yield client\n\nasync def test_docs_health(exarp_client):\n    result = await exarp_client.call_tool(\n        name=\"check_documentation_health\",\n        arguments={\"create_tasks\": False}\n    )\n    assert result.data is not None\n```\n\n**Dependencies:**\n- pip install pytest-asyncio\n- Configure pyproject.toml: asyncio_mode = \"auto\"\n\n**Benefits:**\n- Tests actual MCP protocol\n- In-memory (fast, no network)\n- Catches serialization issues\n- More realistic testing",
+      "completed": false,
+      "createdAt": "2025-11-26T04:26:24.752228Z",
+      "updatedAt": "2025-11-26T04:26:24.752242Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "4c01394f-8e8a-4c59-ae12-0632ae8025f6",
+      "content": "Add tag-based filtering to Exarp tools",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "enhancement",
+        "organization"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Categorize tools with tags for selective exposure\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/server#tag-based-filtering\n\n**Tag Categories:**\n```python\n# Speed-based\n@mcp.tool(tags={\"quick\"})      # < 10 seconds\n@mcp.tool(tags={\"slow\"})       # > 30 seconds\n\n# Workflow-based  \n@mcp.tool(tags={\"daily\"})      # Daily automation\n@mcp.tool(tags={\"weekly\"})     # Weekly maintenance\n@mcp.tool(tags={\"sprint\"})     # Sprint workflows\n\n# Function-based\n@mcp.tool(tags={\"tasks\"})      # Task management\n@mcp.tool(tags={\"code\"})       # Code analysis\n@mcp.tool(tags={\"docs\"})       # Documentation\n@mcp.tool(tags={\"security\"})   # Security scanning\n```\n\n**Tool Assignments:**\n- quick: server_status, list_tasks_awaiting_clarification\n- slow: scan_dependency_security, sprint_automation\n- daily: check_documentation_health, run_daily_automation\n- weekly: scan_dependency_security, detect_duplicate_tasks\n\n**Usage:**\n```python\n# Quick tools only for CI\nmcp_ci = FastMCP(include_tags={\"quick\"})\n\n# Exclude slow tools for interactive use\nmcp_interactive = FastMCP(exclude_tags={\"slow\"})\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:26:24.752260Z",
+      "updatedAt": "2025-11-26T04:26:24.752262Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "6cae10cc-aede-4cf5-9c43-05607f850be4",
+      "content": "Implement progress reporting for long-running tools",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "enhancement",
+        "ux"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Add progress reporting to long-running tools\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/context\n\n**Tools Needing Progress:**\n1. sprint_automation (max_iterations loop)\n2. scan_dependency_security (multi-language scan)\n3. run_daily_automation (multiple tasks)\n4. detect_duplicate_tasks (similarity calculations)\n\n**Implementation Pattern:**\n```python\nfrom fastmcp import Context\n\n@mcp.tool\nasync def sprint_automation(ctx: Context, max_iterations: int = 10):\n    for i in range(max_iterations):\n        # Report progress\n        await ctx.report_progress(\n            progress=i,\n            total=max_iterations,\n            message=f\"Processing iteration {i+1}/{max_iterations}\"\n        )\n        \n        # Log info\n        await ctx.info(f\"Completed iteration {i+1}\")\n        \n        # ... do work\n    \n    await ctx.info(\"Sprint automation complete!\")\n    return results\n```\n\n**Benefits:**\n- Users see progress in real-time\n- Can estimate completion time\n- Better UX for long operations",
+      "completed": false,
+      "createdAt": "2025-11-26T04:26:24.752271Z",
+      "updatedAt": "2025-11-26T04:26:24.752273Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "43659b2b-adb4-4f5c-84f8-13510ec47a0b",
+      "content": "Add /health custom route for monitoring",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "enhancement",
+        "monitoring"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Add standard health check endpoint\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/server#custom-routes\n\n**Implementation:**\n```python\nfrom starlette.requests import Request\nfrom starlette.responses import JSONResponse\n\n@mcp.custom_route(\"/health\", methods=[\"GET\"])\nasync def health_check(request: Request) -> JSONResponse:\n    return JSONResponse({\n        \"status\": \"healthy\",\n        \"version\": __version__,\n        \"tools_available\": TOOLS_AVAILABLE,\n        \"tools_count\": 23,\n        \"prompts_count\": 20,\n        \"resources_count\": 8,\n        \"project_root\": str(project_root)\n    })\n\n@mcp.custom_route(\"/ready\", methods=[\"GET\"])\nasync def readiness_check(request: Request) -> JSONResponse:\n    # Check if dependencies are available\n    checks = {\n        \"todo2_file\": Path(\".todo2/state.todo2.json\").exists(),\n        \"project_goals\": Path(\"PROJECT_GOALS.md\").exists(),\n    }\n    all_ready = all(checks.values())\n    return JSONResponse({\n        \"ready\": all_ready,\n        \"checks\": checks\n    }, status_code=200 if all_ready else 503)\n```\n\n**Use Cases:**\n- Kubernetes liveness/readiness probes\n- Monitoring dashboards\n- Load balancer health checks",
+      "completed": false,
+      "createdAt": "2025-11-26T04:26:24.752279Z",
+      "updatedAt": "2025-11-26T04:26:24.752281Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "63af9098-a32a-4136-a330-381589376e30",
+      "content": "Refactor Exarp into modular sub-servers",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "refactor",
+        "architecture"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Split 23+ tools into logical sub-servers\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/composition\n\n**Proposed Structure:**\n```\nexarp/\n\u251c\u2500\u2500 servers/\n\u2502   \u251c\u2500\u2500 tasks.py      # Task management tools\n\u2502   \u251c\u2500\u2500 code.py       # Code quality tools\n\u2502   \u251c\u2500\u2500 docs.py       # Documentation tools\n\u2502   \u251c\u2500\u2500 security.py   # Security tools\n\u2502   \u2514\u2500\u2500 automation.py # Automation tools\n\u2514\u2500\u2500 server.py         # Main server (mounts sub-servers)\n```\n\n**Sub-Server Definitions:**\n```python\n# servers/tasks.py\ntask_tools = FastMCP(name=\"TaskTools\")\n\n@task_tools.tool\ndef analyze_todo2_alignment(): ...\n\n@task_tools.tool\ndef detect_duplicate_tasks(): ...\n\n@task_tools.tool\ndef batch_approve_tasks(): ...\n\n\n# server.py (main)\nfrom servers.tasks import task_tools\nfrom servers.code import code_tools\nfrom servers.docs import docs_tools\n\nmain = FastMCP(name=\"Exarp\")\nmain.mount(task_tools, prefix=\"tasks\")\nmain.mount(code_tools, prefix=\"code\")\nmain.mount(docs_tools, prefix=\"docs\")\n```\n\n**Tool Distribution:**\n- tasks: 8 tools (alignment, duplicates, batch, clarification, etc.)\n- code: 4 tools (run_tests, coverage, ci_cd, working_copy)\n- docs: 3 tools (health, hints, pwa_review)\n- security: 2 tools (dependency_security, git_hooks)\n- automation: 6 tools (daily, nightly, sprint, pattern_triggers, etc.)\n\n**Benefits:**\n- Easier maintenance\n- Can deploy sub-servers independently\n- Better code organization",
+      "completed": false,
+      "createdAt": "2025-11-26T04:26:24.752289Z",
+      "updatedAt": "2025-11-26T04:26:24.752291Z",
+      "dependencies": [],
+      "estimatedHours": 4
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
