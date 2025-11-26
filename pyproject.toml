@@ -35,6 +35,8 @@ addopts = "-v --tb=short"
 
 [project.scripts]
 project-management-automation = "project_management_automation.server:main"
+exarp = "project_management_automation.server:main"
+pma = "project_management_automation.server:main"
 
 [tool.setuptools.packages.find]
 include = ["project_management_automation*"]
