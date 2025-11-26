@@ -1,0 +1,42 @@
+# Virtual environments (344MB total)
+venv/
+.build-env/
+env/
+.venv/
+
+# Git
+.git/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Build artifacts
+build/
+dist/
+*.egg
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Large data files
+*.whl
+*.tar.gz
+

@@ -4,9 +4,9 @@
 set -e
 
 # Configuration
-REPO_URL="${AUTOMA_REPO_URL:-git@github.com:davidl71/project-management-automation.git}"
-BRANCH="${AUTOMA_BRANCH:-main}"
-VERSION="${AUTOMA_VERSION:-}"
+REPO_URL="${EXARP_REPO_URL:-git@github.com:davidl71/project-management-automation.git}"
+BRANCH="${EXARP_BRANCH:-main}"
+VERSION="${EXARP_VERSION:-}"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -30,7 +30,7 @@ pip install "git+$INSTALL_URL"
 echo -e "${GREEN}Installation complete!${NC}"
 echo ""
 echo "To configure in Cursor, update .cursor/mcp.json:"
-echo '  "project-management-automation": {'
+echo '  "exarp": {'
 echo '    "command": "python3",'
 echo '    "args": ["-m", "project_management_automation.server"]'
 echo '  }'
