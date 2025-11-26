@@ -238,6 +238,40 @@ Run these tools to enable automated project management:
 
 After setup, Exarp will automatically maintain project health."""
 
+# Project Scorecard Prompt
+
+PROJECT_SCORECARD = """Generate a comprehensive project health scorecard.
+
+Run the project_scorecard tool to get a complete assessment across all dimensions:
+
+Metrics evaluated:
+- Overall score (0-100%) with production readiness
+- Documentation health and coverage ratio
+- Test coverage and quality
+- Security posture (8 critical controls)
+- CI/CD readiness
+- Task alignment with project goals (MCP keywords)
+- Task clarity (estimates, tags, descriptions)
+- Parallelizability (tasks ready for multi-agent execution)
+- Task completion rate
+
+Output options:
+- output_format="text" - Human-readable scorecard (default)
+- output_format="markdown" - Markdown for documentation
+- output_format="json" - Structured data for programmatic use
+
+The scorecard identifies:
+- Production blockers
+- Priority actions for score improvement
+- Quick wins (<2h each)
+- Estimated effort to reach target scores
+
+Use this for:
+- Daily/weekly project status
+- Sprint planning decisions
+- Release readiness checks
+- Project health dashboards"""
+
 # Prompt Metadata
 
 PROMPTS = {
@@ -340,6 +374,11 @@ PROMPTS = {
     "automation_setup": {
         "name": "Automation Setup Workflow",
         "description": AUTOMATION_SETUP,
+        "arguments": []
+    },
+    "project_scorecard": {
+        "name": "Project Scorecard",
+        "description": PROJECT_SCORECARD,
         "arguments": []
     },
 }

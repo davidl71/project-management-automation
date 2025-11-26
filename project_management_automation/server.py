@@ -246,6 +246,7 @@ try:
             resolve_multiple_clarifications as _resolve_multiple_clarifications,
             list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification
         )
+        from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
@@ -273,6 +274,7 @@ try:
             resolve_multiple_clarifications as _resolve_multiple_clarifications,
             list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification
         )
+        from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -297,7 +299,7 @@ def register_tools():
                     "status": "operational",
                     "version": "0.1.7",
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 23 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 24 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
@@ -1077,6 +1079,46 @@ if mcp:
 
             return _simplify_rules(parsed_files, dry_run, output_dir)
 
+        @mcp.tool()
+        def project_scorecard(
+            output_format: str = "text",
+            include_recommendations: bool = True,
+            output_path: Optional[str] = None
+        ) -> str:
+            """
+            [HINT: Project scorecard. Returns overall score, component scores (security, testing,
+            docs, alignment, clarity, parallelizable), task metrics, production readiness.]
+
+            Generate comprehensive project health scorecard with scores across multiple dimensions.
+
+            Scores include:
+            - Documentation health and coverage
+            - Test coverage and quality
+            - Security posture and controls
+            - Task alignment with project goals
+            - Task clarity and actionability
+            - Parallelizability for multi-agent execution
+            - CI/CD readiness
+            - Overall production readiness
+
+            Args:
+                output_format: Output format - "text", "json", or "markdown" (default: text)
+                include_recommendations: Include improvement recommendations (default: true)
+                output_path: Optional path to save report
+
+            Returns:
+                JSON string with scorecard data and formatted output
+            """
+            result = _generate_project_scorecard(output_format, include_recommendations, output_path)
+            return json.dumps({
+                'overall_score': result['overall_score'],
+                'production_ready': result['production_ready'],
+                'blockers': result.get('blockers', []),
+                'scores': result['scores'],
+                'recommendations': result.get('recommendations', []),
+                'formatted_output': result['formatted_output'],
+            }, indent=2)
+
     # Register prompts
     try:
         # Try relative imports first (when run as module)
@@ -1103,6 +1145,7 @@ if mcp:
                 TASK_REVIEW,
                 PROJECT_HEALTH,
                 AUTOMATION_SETUP,
+                PROJECT_SCORECARD,
             )
         except ImportError:
             # Fallback to absolute imports (when run as script)
@@ -1128,6 +1171,7 @@ if mcp:
                 TASK_REVIEW,
                 PROJECT_HEALTH,
                 AUTOMATION_SETUP,
+                PROJECT_SCORECARD,
             )
 
         @mcp.prompt()
@@ -1231,8 +1275,13 @@ if mcp:
             """One-time automation setup: git hooks, triggers, cron."""
             return AUTOMATION_SETUP
 
+        @mcp.prompt()
+        def scorecard() -> str:
+            """Generate comprehensive project health scorecard with all metrics."""
+            return PROJECT_SCORECARD
+
         PROMPTS_AVAILABLE = True
-        logger.info("Registered 20 prompts successfully")
+        logger.info("Registered 21 prompts successfully")
     except ImportError as e:
         PROMPTS_AVAILABLE = False
         logger.warning(f"Prompts not available: {e}")
@@ -1294,6 +1343,12 @@ if mcp:
             """Get cache status - what data is cached and when it was last updated."""
             return get_cache_status_resource()
 
+        @mcp.resource("automation://scorecard")
+        def get_project_scorecard() -> str:
+            """Get current project scorecard with all health metrics."""
+            result = _generate_project_scorecard("json", True, None)
+            return json.dumps(result, indent=2)
+
         RESOURCES_AVAILABLE = True
         logger.info("Resource handlers loaded successfully")
     except ImportError as e:
@@ -1315,7 +1370,7 @@ def main():
     import sys
     
     # Print our own banner to stderr (MCP-compatible)
-    tools_count = 23 if TOOLS_AVAILABLE else 1  # Known tool count
+    tools_count = 24 if TOOLS_AVAILABLE else 1  # Known tool count
     resources_ok = RESOURCES_AVAILABLE if 'RESOURCES_AVAILABLE' in globals() else False
     
     version_str = f"{__version__}"
