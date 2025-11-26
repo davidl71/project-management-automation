@@ -37,7 +37,7 @@ def get_status_resource() -> str:
         error_handler_available = (Path(__file__).parent.parent / 'error_handler.py').exists()
 
         status = {
-            "server": "project-management-automation",
+            "server": "exarp",
             "version": "0.1.6",
             "status": "operational",
             "mcp_available": True,  # Assumed if resource is being called
@@ -79,7 +79,7 @@ def get_status_resource() -> str:
     except Exception as e:
         logger.error(f"Error getting status resource: {e}")
         return json.dumps({
-            "server": "project-management-automation",
+            "server": "exarp",
             "status": "error",
             "error": str(e),
             "timestamp": datetime.now().isoformat()

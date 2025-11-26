@@ -152,8 +152,8 @@ def _find_project_root(start_path: Path) -> Path:
             break
         current = current.parent
 
-    # Fallback to relative path (assumes mcp-servers/project-management-automation/tools/file.py)
-    return start_path.parent.parent.parent.parent.resolve()
+    # Fallback to relative path (assumes project-management-automation/project_management_automation/tools/file.py)
+    return start_path.parent.parent.parent.resolve()
 
 
 def check_working_copy_health(
@@ -181,18 +181,17 @@ def check_working_copy_health(
     }
 
     if check_remote:
-        agents.update({
-            "ubuntu": {
-                "host": "david@192.168.192.57",
-                "path": "~/ib_box_spread_full_universal",
-                "type": "remote"
-            },
-            "macos": {
-                "host": "davidl@192.168.192.141",
-                "path": "~/Projects/Trading/ib_box_spread_full_universal",
-                "type": "remote"
-            }
-        })
+        # Load remote agents from environment or config
+        # Format: EXARP_REMOTE_AGENTS='{"ubuntu": {"host": "user@host", "path": "~/project"}}'
+        import os
+        remote_agents_json = os.environ.get("EXARP_REMOTE_AGENTS", "{}")
+        try:
+            remote_agents = json.loads(remote_agents_json)
+            for name, config in remote_agents.items():
+                config["type"] = "remote"
+            agents.update(remote_agents)
+        except json.JSONDecodeError:
+            pass  # No remote agents configured
 
     results = {}
 

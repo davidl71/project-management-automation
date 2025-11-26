@@ -78,7 +78,7 @@ def _find_project_root(start_path: Path) -> Path:
             break
         current = current.parent
 
-    # Fallback to relative path (assumes mcp-servers/project-management-automation/server.py)
+    # Fallback to relative path (assumes project-management-automation/project_management_automation/server.py)
     return start_path.parent.parent.parent.parent.resolve()
 
 # Add project root to path for script imports

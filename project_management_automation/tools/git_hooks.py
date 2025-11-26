@@ -100,27 +100,27 @@ def setup_git_hooks(
 
     # Find exarp server path
     mcp_config_path = project_root / ".cursor" / "mcp.json"
-    automa_path = None
+    exarp_path = None
 
     if mcp_config_path.exists():
         try:
             with open(mcp_config_path, 'r') as f:
                 mcp_config = json.load(f)
                 if "mcpServers" in mcp_config and "exarp" in mcp_config["mcpServers"]:
-                    automa_config = mcp_config["mcpServers"]["exarp"]
-                    if "command" in automa_config:
+                    exarp_config = mcp_config["mcpServers"]["exarp"]
+                    if "command" in exarp_config:
                         # Extract path from command (may be a script)
-                        command = automa_config["command"]
+                        command = exarp_config["command"]
                         if command.endswith(".sh"):
-                            automa_path = Path(command).parent
+                            exarp_path = Path(command).parent
                         else:
-                            automa_path = Path(command).parent
+                            exarp_path = Path(command).parent
         except Exception as e:
             pass
 
-    # Default to server directory if not found
-    if automa_path is None:
-        automa_path = project_root / "mcp-servers" / "project-management-automation"
+    # Default to current package directory if not found
+    if exarp_path is None:
+        exarp_path = Path(__file__).parent.parent
 
     for hook_name in hooks:
         if hook_name not in hook_configs:
@@ -144,7 +144,7 @@ def setup_git_hooks(
             continue
 
         # Generate hook script
-        hook_script = _generate_hook_script(hook_name, config, automa_path, project_root)
+        hook_script = _generate_hook_script(hook_name, config, exarp_path, project_root)
 
         # Write hook file
         try:
@@ -173,7 +173,7 @@ def setup_git_hooks(
 def _generate_hook_script(
     hook_name: str,
     config: Dict[str, Any],
-    automa_path: Path,
+    exarp_path: Path,
     project_root: Path
 ) -> str:
     """Generate git hook script content."""
@@ -219,13 +219,13 @@ set -euo pipefail
 
 EXIT_CODE=0
 PROJECT_ROOT="{project_root}"
-AUTOMA_PATH="{automa_path}"
+EXARP_PATH="{exarp_path}"
 
 # Change to project root
 cd "$PROJECT_ROOT"
 
 # Add exarp to Python path
-export PYTHONPATH="$AUTOMA_PATH:$PYTHONPATH"
+export PYTHONPATH="$EXARP_PATH:$PYTHONPATH"
 
 echo "🔍 Running {hook_name} checks..."
 

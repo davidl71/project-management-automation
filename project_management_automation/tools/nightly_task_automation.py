@@ -137,8 +137,8 @@ def _find_project_root(start_path: Path) -> Path:
             break
         current = current.parent
 
-    # Fallback to relative path (assumes mcp-servers/project-management-automation/tools/file.py)
-    return start_path.parent.parent.parent.parent.resolve()
+    # Fallback to relative path (assumes project-management-automation/project_management_automation/tools/file.py)
+    return start_path.parent.parent.parent.resolve()
 
 
 class NightlyTaskAutomation(IntelligentAutomationBase):
@@ -151,24 +151,19 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         self.agent_hostnames = self._load_agent_hostnames()
 
     def _load_agent_hostnames(self) -> Dict[str, str]:
-        """Load agent hostname configuration."""
-        hostnames_file = self.project_root / "docs" / "AGENT_HOSTNAMES.md"
-
-        # Default configuration (can be overridden by file)
-        default_hostnames = {
-            "ubuntu": {
-                "hostname": "david@192.168.192.57",
-                "project_path": "ib_box_spread_full_universal",
-                "type": "ubuntu"
-            },
-            "macos": {
-                "hostname": "192.168.192.141",
-                "project_path": "~/Projects/Trading/ib_box_spread_full_universal",
-                "type": "macos"
-            }
-        }
+        """Load agent hostname configuration from environment or config file."""
+        import os
+        
+        # Load from environment variable (JSON format)
+        # Format: EXARP_AGENT_HOSTNAMES='{"ubuntu": {"hostname": "user@host", "project_path": "~/project", "type": "ubuntu"}}'
+        env_hostnames = os.environ.get("EXARP_AGENT_HOSTNAMES", "{}")
+        try:
+            default_hostnames = json.loads(env_hostnames)
+        except json.JSONDecodeError:
+            default_hostnames = {}
 
         # Try to read from file if it exists
+        hostnames_file = self.project_root / "docs" / "AGENT_HOSTNAMES.md"
         if hostnames_file.exists():
             try:
                 content = hostnames_file.read_text()
