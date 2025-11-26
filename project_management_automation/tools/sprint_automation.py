@@ -2,15 +2,65 @@
 MCP Tool Wrapper for Sprint Automation
 
 Wraps SprintAutomation to expose as MCP tool.
+
+Memory Integration:
+- Recalls sprint memories at start for context
+- Saves sprint results as insights for future planning
 """
 
 import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 logger = logging.getLogger(__name__)
+
+
+def _recall_sprint_context() -> Dict[str, Any]:
+    """Recall memories useful for sprint planning."""
+    try:
+        from .session_memory import get_memories_for_sprint
+        return get_memories_for_sprint()
+    except ImportError:
+        logger.debug("Session memory not available for sprint context")
+        return {"success": False, "error": "Memory system not available"}
+
+
+def _save_sprint_result(results: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    """Save sprint results as memory for future reference."""
+    if dry_run:
+        return {"success": True, "skipped": "dry_run"}
+    
+    try:
+        from .session_memory import save_session_insight
+        
+        # Create summary content
+        content = f"""Sprint automation completed.
+
+## Results
+- Iterations: {results.get('iterations', 0)}
+- Tasks processed: {results.get('tasks_processed', 0)}
+- Tasks completed: {results.get('tasks_completed', 0)}
+- Subtasks extracted: {results.get('subtasks_extracted', 0)}
+- Tasks auto-approved: {results.get('tasks_auto_approved', 0)}
+
+## Blockers ({results.get('blockers_count', 0)})
+{chr(10).join('- ' + b for b in results.get('blockers', [])[:5]) or 'None identified'}
+
+## Human Contributions Needed ({results.get('human_contributions_count', 0)})
+{chr(10).join('- ' + h for h in results.get('human_contributions', [])[:5]) or 'None identified'}
+"""
+        
+        return save_session_insight(
+            title=f"Sprint: {results.get('tasks_processed', 0)} tasks, {results.get('tasks_completed', 0)} completed",
+            content=content,
+            category="insight",
+            metadata={"automation_type": "sprint", "source": "sprint_automation"}
+        )
+    except ImportError:
+        logger.debug("Session memory not available for saving sprint result")
+        return {"success": False, "error": "Memory system not available"}
 
 # Import error handler
 try:
@@ -82,6 +132,12 @@ def sprint_automation(
     """
     start_time = time.time()
 
+    # ═══ MEMORY INTEGRATION: Recall sprint context ═══
+    sprint_context = _recall_sprint_context()
+    if sprint_context.get('success'):
+        logger.info(f"Sprint context: {sprint_context.get('total_memories', 0)} memories, "
+                   f"{sprint_context.get('blockers_mentioned', 0)} blockers mentioned")
+
     try:
         from project_management_automation.scripts.automate_sprint import SprintAutomation
         from project_management_automation.utils import find_project_root
@@ -125,6 +181,18 @@ def sprint_automation(
 
         duration = time.time() - start_time
         log_automation_execution('sprint_automation', duration, True)
+
+        # ═══ MEMORY INTEGRATION: Save sprint results ═══
+        memory_result = _save_sprint_result(response_data, dry_run)
+        if memory_result.get('success'):
+            response_data['memory_saved'] = memory_result.get('memory_id')
+        
+        # Include sprint context summary in response
+        if sprint_context.get('success'):
+            response_data['context_used'] = {
+                'memories_recalled': sprint_context.get('total_memories', 0),
+                'blockers_from_memory': sprint_context.get('blockers_mentioned', 0),
+            }
 
         return json.dumps(format_success_response(response_data), indent=2)
 

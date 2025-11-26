@@ -437,3 +437,4 @@ class TestIntegrationWithWisdomSources:
         # Should have actual quote content
         assert len(result.get("quote", "")) > 0
         assert len(result.get("encouragement", "")) > 0
+

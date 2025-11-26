@@ -2,15 +2,53 @@
 MCP Tool Wrapper for Duplicate Task Detection
 
 Wraps Todo2DuplicateDetector to expose as MCP tool.
+
+Memory Integration:
+- Saves duplicate resolution decisions for consistency
 """
 
 import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
+
+
+def _save_duplicate_detection_memory(response_data: Dict[str, Any], auto_fix: bool) -> Dict[str, Any]:
+    """Save duplicate detection results as memory for future reference."""
+    try:
+        from .session_memory import save_session_insight
+        
+        content = f"""Duplicate task detection completed.
+
+## Results
+- Total tasks scanned: {response_data.get('total_tasks', 0)}
+- Duplicate IDs found: {response_data.get('duplicate_ids', 0)}
+- Exact name matches: {response_data.get('exact_name_matches', 0)}
+- Similar name matches: {response_data.get('similar_name_matches', 0)}
+- Similar description matches: {response_data.get('similar_description_matches', 0)}
+- Self dependencies: {response_data.get('self_dependencies', 0)}
+
+## Actions Taken {'(auto_fix applied)' if auto_fix else '(report only)'}
+- Tasks removed: {response_data.get('tasks_removed', 0)}
+- Tasks merged: {response_data.get('tasks_merged', 0)}
+- Dependencies updated: {response_data.get('dependencies_updated', 0)}
+
+## Report
+{response_data.get('report_path', 'N/A')}
+"""
+        
+        return save_session_insight(
+            title=f"Duplicates: {response_data.get('total_duplicates_found', 0)} found",
+            content=content,
+            category="insight",
+            metadata={"type": "duplicate_detection", "auto_fix": auto_fix}
+        )
+    except ImportError:
+        logger.debug("Session memory not available for saving duplicate detection")
+        return {"success": False, "error": "Memory system not available"}
 
 # Import error handler at module level to avoid scoping issues
 try:
@@ -129,6 +167,12 @@ def detect_duplicate_tasks(
 
         duration = time.time() - start_time
         log_automation_execution('detect_duplicate_tasks', duration, True)
+
+        # ═══ MEMORY INTEGRATION: Save detection results ═══
+        if response_data.get('total_duplicates_found', 0) > 0:
+            memory_result = _save_duplicate_detection_memory(response_data, auto_fix)
+            if memory_result.get('success'):
+                response_data['memory_saved'] = memory_result.get('memory_id')
 
         return json.dumps(format_success_response(response_data), indent=2)
 

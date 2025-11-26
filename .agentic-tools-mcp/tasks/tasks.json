@@ -914,11 +914,11 @@
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-11-26T10:25:12.723Z",
-      "updatedAt": "2025-11-26T10:25:12.723Z",
+      "updatedAt": "2025-11-26T22:02:10.307Z",
       "dependsOn": [],
       "priority": 8,
       "complexity": 7,
-      "status": "pending",
+      "status": "done",
       "tags": [
         "integration",
         "mcp",
@@ -928,7 +928,8 @@
         "ai-session"
       ],
       "estimatedHours": 12,
-      "level": 0
+      "level": 0,
+      "actualHours": 2
     },
     {
       "id": "21bdddfc-9652-45b9-b4c9-0fb2c467f412",
@@ -938,18 +939,19 @@
       "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
       "completed": false,
       "createdAt": "2025-11-26T10:25:55.794Z",
-      "updatedAt": "2025-11-26T10:25:55.794Z",
+      "updatedAt": "2025-11-26T22:02:26.200Z",
       "dependsOn": [],
       "priority": 8,
       "complexity": 5,
-      "status": "pending",
+      "status": "done",
       "tags": [
         "resources",
         "mcp",
         "architecture"
       ],
       "estimatedHours": 3,
-      "level": 1
+      "level": 1,
+      "actualHours": 0.5
     },
     {
       "id": "26940192-b78a-4bb9-888a-45b3e1588701",
@@ -959,18 +961,19 @@
       "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
       "completed": false,
       "createdAt": "2025-11-26T10:26:07.577Z",
-      "updatedAt": "2025-11-26T10:26:07.577Z",
+      "updatedAt": "2025-11-26T22:02:43.606Z",
       "dependsOn": [],
       "priority": 8,
       "complexity": 6,
-      "status": "pending",
+      "status": "done",
       "tags": [
         "tools",
         "mcp",
         "implementation"
       ],
       "estimatedHours": 4,
-      "level": 1
+      "level": 1,
+      "actualHours": 0.5
     },
     {
       "id": "6270519e-66a8-4cbb-bb6d-8b794ce0138f",
@@ -980,18 +983,19 @@
       "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
       "completed": false,
       "createdAt": "2025-11-26T10:26:20.869Z",
-      "updatedAt": "2025-11-26T10:26:20.869Z",
+      "updatedAt": "2025-11-26T22:02:54.240Z",
       "dependsOn": [],
       "priority": 7,
       "complexity": 5,
-      "status": "pending",
+      "status": "done",
       "tags": [
         "integration",
         "advisor",
         "alignment"
       ],
       "estimatedHours": 3,
-      "level": 1
+      "level": 1,
+      "actualHours": 0.5
     },
     {
       "id": "775f6dff-4bcb-4d7f-a25b-b362453d75da",
@@ -1001,18 +1005,19 @@
       "parentId": "0054adcf-e06a-41b9-81be-79a31a521166",
       "completed": false,
       "createdAt": "2025-11-26T10:26:33.277Z",
-      "updatedAt": "2025-11-26T10:26:33.277Z",
+      "updatedAt": "2025-11-26T22:03:05.436Z",
       "dependsOn": [],
       "priority": 6,
       "complexity": 4,
-      "status": "pending",
+      "status": "done",
       "tags": [
         "documentation",
         "testing",
         "quality"
       ],
       "estimatedHours": 2,
-      "level": 1
+      "level": 1,
+      "actualHours": 0.5
     },
     {
       "id": "77de9675-64e5-47ff-bc52-ef0c5923dc22",
@@ -1253,6 +1258,238 @@
         "evaluation"
       ],
       "level": 0
+    },
+    {
+      "id": "1b6fe5e8-fd1b-4abd-b981-5c91744d669e",
+      "name": "Integrate task tools with AI Session Memory System",
+      "details": "🎯 **Objective:** Connect existing task-related tools to the AI Session Memory System for better context awareness and learning.\n\n## Integrations Needed\n\n### High Priority\n1. **sprint_automation** → Call `sprint_memories()` at start for patterns\n2. **nightly_task_automation** → Save execution results, recall past patterns\n\n### Medium Priority  \n3. **clarification** → Recall similar past clarifications\n4. **duplicate_detection** → Save resolution choices for consistency\n\n### Low Priority\n5. **batch_approve_tasks** → Save approval patterns\n\n## Integration Pattern\n```python\n# At start of tool execution\nfrom tools.session_memory import recall_task_context, get_memories_for_sprint\n\n# Recall relevant context\nmemories = get_memories_for_sprint()  # or recall_task_context(task_id)\n\n# At end of tool execution\nfrom tools.session_memory import save_session_insight\n\nsave_session_insight(\n    title=\"Tool: result summary\",\n    content=\"Details of what was done\",\n    category=\"insight\",  # or \"debug\" for errors\n    task_id=task_id  # if applicable\n)\n```\n\n## Advisor: 🔮 Enochian (Architecture)\nUnderstanding hidden patterns and connections between tools and memories.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-26T22:06:03.721Z",
+      "updatedAt": "2025-11-26T22:10:00.851Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 5,
+      "status": "done",
+      "tags": [
+        "integration",
+        "memory",
+        "task-tools"
+      ],
+      "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "83cdac5c-cd43-456c-809f-b89629ac07fe",
+      "name": "Memory Integration Phase 2: High-Priority Tools",
+      "details": "Integrate AI Session Memory with remaining high-priority tools:\n\n## High Priority (This Task)\n1. **project_scorecard** - Save score history and trends\n2. **scan_dependency_security** - Save vulnerabilities and remediation\n3. **run_tests** - Save failure patterns and debug insights\n4. **problems_advisor** - Save problem resolutions\n\n## Medium Priority (Future)\n5. check_definition_of_done\n6. todo2_alignment\n7. docs_health\n8. workflow_recommender\n9. batch_task_approval\n\n## Integration Pattern\nSame pattern as Phase 1:\n- Import from tools.session_memory (graceful fallback)\n- Save insights after execution\n- Include memory_id in response",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-26T22:12:23.843Z",
+      "updatedAt": "2025-11-26T22:15:28.072Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 4,
+      "status": "done",
+      "tags": [
+        "integration",
+        "memory",
+        "phase-2"
+      ],
+      "level": 0
+    },
+    {
+      "id": "35de4982-df75-4962-bebd-6970ba8e2c42",
+      "name": "Tool Consolidation: Reduce 58 tools to ~32",
+      "details": "Consolidate MCP tools to reduce complexity and improve maintainability.\n\n## Phase 1: Quick Wins (4 tools)\n- Remove deprecated aliases: project_overview, session_summary, sprint_memories, unified_security_report\n\n## Phase 2: Convert to Resources (7 tools)  \n- list_advisors → automation://advisors\n- list_available_models → automation://models\n- list_problem_categories → automation://problem-categories\n- list_tools → automation://tools\n- get_linter_status → automation://linters\n- check_tts_backends → automation://tts-backends\n- server_status → automation://status\n\n## Phase 3: Consolidate Parameterized (15→5)\n- analyze_alignment(type) ← analyze_todo2_alignment, analyze_prd_alignment\n- security(action) ← scan_dependency_security, fetch_dependabot_alerts, generate_security_report\n- generate_config(type) ← generate_cursor_rules, generate_cursorignore, simplify_rules\n- setup_hooks(type) ← setup_git_hooks, setup_pattern_triggers\n- prompt_tracking(action) ← log_prompt_iteration, analyze_prompt_iterations\n\n## Phase 4: Memory Consolidation (7→5)\n- Merge get_session_summary, get_sprint_memories into search_memories(scope=)\n\n## Phase 5: Prompt Replacements (3)\n- recommend_workflow_mode, recommend_model, get_tool_help → prompts\n\nTarget: 58 → ~32 tools",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-26T22:23:07.556Z",
+      "updatedAt": "2025-11-26T22:32:12.857Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 6,
+      "status": "done",
+      "tags": [
+        "consolidation",
+        "refactor",
+        "tools"
+      ],
+      "level": 0
+    },
+    {
+      "id": "5adbe6dc-53f3-4e0d-b1eb-4b26b085908a",
+      "name": "Tool Consolidation Complete: 58→29 tools (50% reduction)",
+      "details": "## Summary\nConsolidated 58 MCP tools down to 29 (50% reduction) while adding 5 new browsable resources.\n\n## Consolidated Tools (10 unified interfaces)\n\n### analyze_alignment(type=todo2|prd)\n- Replaces: analyze_todo2_alignment, analyze_prd_alignment\n\n### security(action=scan|alerts|report)\n- Replaces: scan_dependency_security, fetch_dependabot_alerts, generate_security_report\n\n### generate_config(type=rules|ignore|simplify)\n- Replaces: generate_cursor_rules, generate_cursorignore, simplify_rules\n\n### setup_hooks(type=git|patterns)\n- Replaces: setup_git_hooks, setup_pattern_triggers\n\n### prompt_tracking(action=log|analyze)\n- Replaces: log_prompt_iteration, analyze_prompt_iterations\n\n### health(type=server|git|docs|dod)\n- Replaces: server_status, check_working_copy_health, check_documentation_health, check_definition_of_done\n\n### report(type=overview|scorecard|briefing|prd)\n- Replaces: generate_project_overview, generate_project_scorecard, get_advisor_briefing, generate_prd\n\n### advisor_audio(action=quote|podcast|export)\n- Replaces: synthesize_advisor_quote, generate_podcast_audio, export_advisor_podcast\n\n## New MCP Resources (browsable context)\n\n| Resource URI | Replaces Tool | Description |\n|--------------|---------------|-------------|\n| automation://advisors | list_advisors | Trusted advisor assignments |\n| automation://models | list_available_models, recommend_model | AI model catalog |\n| automation://problem-categories | list_problem_categories | Problem resolution hints |\n| automation://linters | get_linter_status | Linter availability |\n| automation://tts-backends | check_tts_backends | TTS backend status |\n\n## Files Modified\n- server.py - Tool registrations consolidated\n- tools/consolidated.py - Unified tool implementations\n- resources/catalog.py - New resource handlers",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-26T22:40:57.991Z",
+      "updatedAt": "2025-11-26T22:47:08.062Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 6,
+      "status": "done",
+      "tags": [
+        "consolidation",
+        "refactor",
+        "tools",
+        "resources",
+        "completed"
+      ],
+      "level": 0
+    },
+    {
+      "id": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "name": "Webrix MCP Gateway Integration (Free Tier)",
+      "details": "Integrate Exarp with Webrix Secure MCP Gateway to add enterprise features: SSO, RBAC, audit logs, guardrails, and token optimization. Focus on FREE tier: up to 5 integrations, unlimited tool calls, MCP Catalog, Custom MCP proxy. Docs: https://docs.webrix.ai | Gateway: https://connect.mcp-s.com",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-11-26T23:25:56.902Z",
+      "updatedAt": "2025-11-26T23:25:56.902Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "integration",
+        "webrix",
+        "mcp",
+        "security",
+        "free-tier"
+      ],
+      "level": 0
+    },
+    {
+      "id": "0aefc0cc-a0be-4520-9965-100f6fa8ad2f",
+      "name": "Expose Exarp via Webrix Custom MCP Proxy",
+      "details": "PRIMARY INTEGRATION (uses 1 of 5 free slots). Connect Exarp MCP server through Webrix secure gateway proxy. Benefits: SSO auth, RBAC permissions, audit logging, policy enforcement, secure token handling. Steps: 1) Sign up at webrix.ai, 2) Integrations → New → Custom MCP, 3) Enter Exarp endpoint details, 4) Configure RBAC visibility, 5) Save and test.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "completed": false,
+      "createdAt": "2025-11-26T23:26:17.402Z",
+      "updatedAt": "2025-11-26T23:26:17.402Z",
+      "dependsOn": [],
+      "priority": 10,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "high-priority",
+        "webrix",
+        "security",
+        "proxy"
+      ],
+      "level": 1
+    },
+    {
+      "id": "4f826c2e-9b2f-4c3d-8ddb-ee25e90f8a68",
+      "name": "Select 4 MCP Catalog Connectors (Free Slots)",
+      "details": "FREE TIER: 5 integrations total (1 reserved for Exarp proxy). Choose 4 from 100+ pre-built connectors. RECOMMENDED for PM automation: GitHub (repo/PR management), Linear OR Jira (issue tracking), Slack (notifications/alerts), Notion (documentation). Browse catalog: Integrations → New → MCP Catalog. Each connector is pre-vetted, no setup required.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "completed": false,
+      "createdAt": "2025-11-26T23:26:30.819Z",
+      "updatedAt": "2025-11-26T23:28:00.241Z",
+      "dependsOn": [
+        "0aefc0cc-a0be-4520-9965-100f6fa8ad2f"
+      ],
+      "priority": 9,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "high-priority",
+        "webrix",
+        "catalog",
+        "connectors"
+      ],
+      "level": 1
+    },
+    {
+      "id": "17e6082c-1f55-42cc-aa94-23381ed974c5",
+      "name": "Configure Token Optimization",
+      "details": "COST SAVINGS: Enable Webrix token optimization to reduce LLM API costs. Converts tool outputs to more compact formats - especially valuable for Exarp's large responses (project scorecards, task lists, security reports). Available in free tier. Access via Token Optimization settings in Webrix Admin.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "completed": false,
+      "createdAt": "2025-11-26T23:26:40.445Z",
+      "updatedAt": "2025-11-26T23:27:27.868Z",
+      "dependsOn": [
+        "0aefc0cc-a0be-4520-9965-100f6fa8ad2f"
+      ],
+      "priority": 8,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "high-priority",
+        "webrix",
+        "optimization",
+        "cost-savings"
+      ],
+      "level": 1
+    },
+    {
+      "id": "33be31d8-5424-48b2-a98d-e35faa901611",
+      "name": "Implement Guardrails & Data Protection",
+      "details": "SECURITY LAYER: Configure Webrix guardrails to protect against malicious/unwanted content. Options: 1) Built-in Data Protection (default filters), 2) Active Fence Integration (advanced threat detection), 3) Custom Webhook Integration (send security events to your systems). Recommended: Start with Built-in, add Custom Webhook for Exarp alerts.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "completed": false,
+      "createdAt": "2025-11-26T23:26:50.422Z",
+      "updatedAt": "2025-11-26T23:27:45.832Z",
+      "dependsOn": [
+        "0aefc0cc-a0be-4520-9965-100f6fa8ad2f"
+      ],
+      "priority": 6,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "medium-priority",
+        "webrix",
+        "security",
+        "guardrails"
+      ],
+      "level": 1
+    },
+    {
+      "id": "5b3f05f4-78d0-4e4d-81ab-c9396d3496ad",
+      "name": "Configure SSO Authentication",
+      "details": "ENTERPRISE AUTH: Set up Single Sign-On for team access. Supported providers: Google, Auth0, Okta, Azure AD, Keycloak. Steps: Connect your SSO → Select provider → Copy callback URL to provider → Configure in Webrix. Enables centralized user management and audit trails per user.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "completed": false,
+      "createdAt": "2025-11-26T23:27:01.209Z",
+      "updatedAt": "2025-11-26T23:27:01.209Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "medium-priority",
+        "webrix",
+        "sso",
+        "authentication"
+      ],
+      "level": 1
+    },
+    {
+      "id": "d8de57d3-95b0-490a-94d9-e0532007f1d1",
+      "name": "Evaluate Premium Features for Future Upgrade",
+      "details": "RESEARCH ONLY: Document benefits of Premium tier for potential upgrade. Features: 1) From API - Turn any HTTP API into MCP without code (could expose existing REST APIs), 2) Built-in Connectors - Premium-only integrations. Capture ROI considerations if free tier limits become constraining (>5 integrations needed).",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "parentId": "f2de5ff7-28b1-45e4-a390-7a4b95f3c0b0",
+      "completed": false,
+      "createdAt": "2025-11-26T23:27:10.916Z",
+      "updatedAt": "2025-11-26T23:27:10.916Z",
+      "dependsOn": [],
+      "priority": 3,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "low-priority",
+        "webrix",
+        "research",
+        "premium"
+      ],
+      "level": 1
     }
   ],
   "subtasks": [],

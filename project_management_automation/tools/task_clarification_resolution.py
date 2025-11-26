@@ -3,15 +3,56 @@ Task Clarification Resolution Tool
 
 MCP Tool for resolving task clarifications by updating task descriptions with decisions.
 Replaces Python heredocs with a clean MCP interface.
+
+Memory Integration:
+- Saves clarification decisions for pattern learning
+- Recalls similar past clarifications (optional)
 """
 
 import json
+import logging
 import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 from ..utils import find_project_root
+
+logger = logging.getLogger(__name__)
+
+
+def _save_clarification_memory(
+    task_id: str,
+    clarification: str,
+    decision: str,
+    success: bool
+) -> Dict[str, Any]:
+    """Save clarification decision as memory for pattern learning."""
+    try:
+        from .session_memory import save_session_insight
+        
+        content = f"""Clarification resolved for task {task_id}.
+
+## Question
+{clarification}
+
+## Decision
+{decision}
+
+## Result
+{'Successfully resolved and moved to Todo' if success else 'Resolution failed'}
+"""
+        
+        return save_session_insight(
+            title=f"Clarification: {task_id[:20]}",
+            content=content,
+            category="insight",
+            task_id=task_id,
+            metadata={"type": "clarification_decision", "success": success}
+        )
+    except ImportError:
+        logger.debug("Session memory not available for saving clarification")
+        return {"success": False, "error": "Memory system not available"}
 
 
 def resolve_task_clarification(
@@ -78,6 +119,10 @@ def resolve_task_clarification(
         # Parse output to extract task info
         output = result.stdout
         success = "✅" in output or "Updated" in output
+
+        # ═══ MEMORY INTEGRATION: Save clarification decision ═══
+        if success and not dry_run:
+            _save_clarification_memory(task_id, clarification, decision, success)
 
         return {
             "status": "success" if success else "error",

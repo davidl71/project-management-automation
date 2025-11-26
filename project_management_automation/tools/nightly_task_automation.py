@@ -4,6 +4,10 @@ Nightly Task Automation Tool
 Automatically executes background-capable TODO2 tasks in parallel across multiple hosts.
 Moves interactive tasks to Review status and proceeds to next tasks.
 Also includes batch approval of research tasks that don't need clarification.
+
+Memory Integration:
+- Recalls task context before execution
+- Saves execution results for future reference
 """
 
 import json
@@ -15,6 +19,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from datetime import datetime
 import time
+import logging
+
+nightly_logger = logging.getLogger(__name__)
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -279,12 +286,59 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return task
 
+    def _recall_task_memories(self, task_id: str) -> Dict[str, Any]:
+        """Recall memories related to a task before execution."""
+        try:
+            from .session_memory import recall_task_context
+            return recall_task_context(task_id, include_related=True)
+        except ImportError:
+            nightly_logger.debug(f"Session memory not available for task {task_id}")
+            return {"success": False, "error": "Memory system not available"}
+    
+    def _save_task_execution_memory(self, task: Dict[str, Any], result: Dict[str, Any]) -> Dict[str, Any]:
+        """Save task execution result as memory."""
+        try:
+            from .session_memory import save_session_insight
+            
+            task_id = task.get('id', 'unknown')
+            task_title = task.get('title', 'Untitled task')
+            status = result.get('status', 'unknown')
+            
+            content = f"""Nightly automation executed task.
+
+## Task
+- ID: {task_id}
+- Title: {task_title}
+- Status: {status}
+- Host: {result.get('host', 'N/A')}
+- Timestamp: {result.get('timestamp', 'N/A')}
+
+## Notes
+{result.get('note', 'No additional notes')}
+"""
+            
+            return save_session_insight(
+                title=f"Nightly: {task_title[:50]}",
+                content=content,
+                category="insight",
+                task_id=task_id,
+                metadata={"automation_type": "nightly", "status": status}
+            )
+        except ImportError:
+            nightly_logger.debug("Session memory not available for saving execution result")
+            return {"success": False, "error": "Memory system not available"}
+
     def _execute_task_on_host(self, task: Dict[str, Any], host_info: Dict[str, str]) -> Dict[str, Any]:
         """Execute a task on a specific host via SSH."""
         task_id = task.get('id', '')
         hostname = host_info.get('hostname', '')
         project_path = host_info.get('project_path', '')
         host_type = host_info.get('type', 'ubuntu')
+
+        # ═══ MEMORY INTEGRATION: Recall task context ═══
+        task_context = self._recall_task_memories(task_id)
+        if task_context.get('success') and task_context.get('memories'):
+            nightly_logger.info(f"Task {task_id}: {len(task_context.get('memories', []))} memories recalled")
 
         # Construct SSH command
         if '@' in hostname:
@@ -303,8 +357,12 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
             'host': hostname,
             'status': 'started',
             'timestamp': datetime.utcnow().isoformat() + 'Z',
-            'note': 'Task execution would happen here via SSH/Cursor agent'
+            'note': 'Task execution would happen here via SSH/Cursor agent',
+            'memories_used': task_context.get('memory_count', 0) if task_context.get('success') else 0
         }
+
+        # ═══ MEMORY INTEGRATION: Save execution result ═══
+        self._save_task_execution_memory(task, result)
 
         return result
 
@@ -539,7 +597,43 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
             'background_tasks_remaining': len(background_tasks) - len(assigned_tasks)
         }
 
+        # ═══ MEMORY INTEGRATION: Save overall nightly results ═══
+        if not dry_run:
+            self._save_nightly_summary(results)
+
         return results
+    
+    def _save_nightly_summary(self, results: Dict[str, Any]) -> Dict[str, Any]:
+        """Save nightly automation summary as memory."""
+        try:
+            from .session_memory import save_session_insight
+            
+            summary = results.get('summary', {})
+            content = f"""Nightly automation run completed.
+
+## Summary
+- Background tasks found: {summary.get('background_tasks_found', 0)}
+- Tasks assigned: {summary.get('tasks_assigned', 0)}
+- Tasks moved to review: {summary.get('tasks_moved_to_review', 0)}
+- Tasks batch approved: {summary.get('tasks_batch_approved', 0)}
+- Hosts used: {summary.get('hosts_used', 0)}
+
+## Assigned Tasks
+{chr(10).join('- ' + t.get('task_name', 'Untitled') + ' → ' + t.get('host', 'N/A') for t in results.get('assigned_tasks', [])[:10]) or 'None'}
+
+## Remaining Background Tasks
+{results.get('background_tasks_remaining', 0)} tasks remaining for future runs.
+"""
+            
+            return save_session_insight(
+                title=f"Nightly: {summary.get('tasks_assigned', 0)} assigned, {summary.get('tasks_batch_approved', 0)} approved",
+                content=content,
+                category="insight",
+                metadata={"automation_type": "nightly_summary"}
+            )
+        except ImportError:
+            nightly_logger.debug("Session memory not available for nightly summary")
+            return {"success": False, "error": "Memory system not available"}
 
 
 def run_nightly_task_automation(

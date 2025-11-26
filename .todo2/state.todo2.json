@@ -971,6 +971,302 @@
           "lastModified": "2025-11-26T23:25:24.986065"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251126232550-782561",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T23:25:50.782571",
+      "lastModified": "2025-11-26T23:25:52.901024",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126232550-782561-C-1",
+          "todoId": "AUTO-20251126232550-782561",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 15.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":178,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"}],\"orphaned_files\":[\"SPRINT_AUTOMATION_PROPOSAL.md\",\"SECURITY_STATUS.md\",\"CONTEXT7_MCP_INTEGRATION_STATUS.md\",\"DAILY_AUTOMATION_REPORT.md\",\"EXARP_IMPROVEMENTS_ANALYSIS.md\",\"EXARP_OLD_NAME_FIXES_COMPLETE.md\",\"CI_CD_VALIDATION_REPORT.md\",\"TODO2_PRIORITY_ALIGNMENT_ANALYSIS.md\",\"EXARP_PRIVATE_REPO_QUICK_START.md\",\"EXARP_OLD_NAME_REFERENCES_REPORT.md\",\"EXTERNAL_TOOL_HINTS_REPORT.md\",\"TODO2_DUPLICATE_DETECTION_REPORT.md\",\"EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md\",\"EXARP_PACKAGING_TODO2_TASKS.md\",\"NOTEBOOKLM_PODCAST.md\",\"PROJECT_OVERVIEW.md\",\"EXARP_OLD_NAME_REFERENCES_FINAL.md\",\"AGENTIC_TOOLS_INTEGRATION_PLAN.md\",\"EXARP_MCP_SERVER.md\",\"DESIGN_DECISIONS.md\",\"EXARP_IMPROVEMENTS_PROGRESS.md\",\"EXARP_RULES_REDUNDANCY_ANALYSIS.md\",\"PRD.md\",\"DOCS_CLEANUP_PLAN.md\",\"SEQUENTIAL_THINKING_MCP_INTEGRATION_STATUS.md\",\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"EXARP_CURSOR_SETUP_COMPLETE.md\",\"EXARP_FASTMCP_CONFIGURATION.md\",\"EXARP_SCRIPT_EXTRACTION_COMPLETE.md\",\"EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md\",\"UNIT_TEST_STATUS.md\",\"CURSOR_IDE_BEST_PRACTICES.md\",\"EXARP_CURSOR_INTEGRATION_STRATEGY.md\",\"MCP_EXTENSION_EVALUATION.md\",\"EXARP_RESOURCES_PACKAGING_COMPLETE.md\",\"EXARP_GITHUB_REPO_SETUP_COMPLETE.md\",\"EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"WORKFLOW.md\",\"TOOL_REDUNDANCY_ANALYSIS.md\",\"EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"PERSONA_ALIGNMENT_GUIDE.md\",\"AUTO_FIX_USAGE.md\",\"EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md\",\"EXARP_OLD_NAME_REFERENCES.md\",\"UNIT_TEST_FIXES.md\",\"INSTALLATION_EXAMPLES.md\",\"EXARP_PACKAGING_RESOURCES_ANALYSIS.md\",\"EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"EXARP_PACKAGE_RENAME_COMPLETE.md\",\"TEST_COVERAGE_ANALYSIS.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"EXARP_TOOL_REUSE_ANALYSIS.md\",\"EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"TEST_COVERAGE_FIXES.md\",\"EXARP_PACKAGING_DEPENDENCIES.md\",\"EXARP_OLD_NAME_CHECK_COMPLETE.md\",\"EXARP_INSTALLATION_COMPLETE.md\",\"EXARP_REPOSITORY_OPTIMIZATION_COMPLETE.md\",\"EXARP_LICENSING_ANALYSIS.md\",\"DOCUMENTATION_HEALTH_REPORT.md\",\"IDE_INTEGRATION.md\",\"EXARP_RENAMING_COMPLETE.md\",\"FILESYSTEM_MCP_INTEGRATION_STATUS.md\",\"UNIT_TEST_FIXES_COMPLETE.md\",\"EXARP_FASTMCP_SETUP.md\",\"TESTING_TOOLS_PROPOSAL.md\",\"EXARP_PHASE2_TASKS.md\",\"EXARP_COMPARISON_AND_VALUE_PROPOSITION.md\"]},\"health_score\":15.0}",
+          "created": "2025-11-26T23:25:52.890804",
+          "lastModified": "2025-11-26T23:25:52.890813"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126232739",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-11-26T23:27:39.654866",
+      "lastModified": "2025-11-26T23:27:40.422831",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126232739-C-1",
+          "todoId": "AUTO-20251126232739",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 27 duplicate issues**\n\n\ud83d\udd0d **5 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **22 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":36,\"duplicates_found\":27,\"duplicate_ids\":[],\"exact_name_matches\":[{\"name\":\"Automation: Documentation Health Analysis\",\"count\":4,\"tasks\":[{\"id\":\"AUTO-20251126230758\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:07:58.460278\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126231235-891865\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:12:35.891906\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126231440-138792\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:14:40.138778\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232550-782561\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:25:50.782571\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Todo2 Duplicate Detection\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251126230744\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\",\"created\":\"2025-11-26T23:07:44.375161\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232739\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\",\"created\":\"2025-11-26T23:27:39.654866\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Test Runner\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251126110118\",\"name\":\"Automation: Test Runner\",\"status\":\"done\",\"created\":\"2025-11-26T11:01:18.383265\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232018\",\"name\":\"Automation: Test Runner\",\"status\":\"done\",\"created\":\"2025-11-26T23:20:18.095065\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Dependency Security Scan\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251126143529\",\"name\":\"Automation: Dependency Security Scan\",\"status\":\"done\",\"created\":\"2025-11-26T14:35:29.783173\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232340-628552\",\"name\":\"Automation: Dependency Security Scan\",\"status\":\"done\",\"created\":\"2025-11-26T23:23:40.628629\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232524-582483\",\"name\":\"Automation: Dependency Security Scan\",\"status\":\"done\",\"created\":\"2025-11-26T23:25:24.582507\",\"priority\":\"medium\"}]},{\"name\":\"Automation: External Tool Hints Automation\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251126035818\",\"name\":\"Automation: External Tool Hints Automation\",\"status\":\"done\",\"created\":\"2025-11-26T03:58:18.778058\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232340-851211\",\"name\":\"Automation: External Tool Hints Automation\",\"status\":\"done\",\"created\":\"2025-11-26T23:23:40.851404\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232524-697580\",\"name\":\"Automation: External Tool Hints Automation\",\"status\":\"done\",\"created\":\"2025-11-26T23:25:24.697648\",\"priority\":\"medium\"}]}],\"similar_name_matches\":\"[22 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-11-26T23:27:40.412180",
+          "lastModified": "2025-11-26T23:27:40.412190"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127000005-270015",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-11-27T00:00:05.270128",
+      "lastModified": "2025-11-27T00:00:05.286549",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127000005-270015-C-1",
+          "todoId": "AUTO-20251127000005-270015",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 37 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[37 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[37 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T00:00:05.274788",
+          "lastModified": "2025-11-27T00:00:05.274797"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127003154-301126",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-27T00:31:54.301184",
+      "lastModified": "2025-11-27T00:31:55.182788",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127003154-301126-C-1",
+          "todoId": "AUTO-20251127003154-301126",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":64,\"by_priority\":{\"high\":28,\"medium\":32,\"low\":2,\"critical\":2},\"by_status\":{\"todo\":0,\"in_progress\":1,\"review\":0,\"done\":12},\"by_phase\":{\"phase1\":{\"total\":44,\"high_priority\":19,\"aligned\":44},\"phase2\":{\"total\":43,\"high_priority\":18,\"aligned\":43},\"phase3\":{\"total\":48,\"high_priority\":23,\"aligned\":48},\"phase4\":{\"total\":52,\"high_priority\":25,\"aligned\":52},\"phase5\":{\"total\":30,\"high_priority\":14,\"aligned\":30}},\"strategy_critical\":\"[28 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"alignment_score\":100.0}",
+          "created": "2025-11-27T00:31:55.174365",
+          "lastModified": "2025-11-27T00:31:55.174374"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127010009-744822",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-11-27T01:00:09.744871",
+      "lastModified": "2025-11-27T01:00:09.764744",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127010009-744822-C-1",
+          "todoId": "AUTO-20251127010009-744822",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 39 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[39 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[39 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T01:00:09.750264",
+          "lastModified": "2025-11-27T01:00:09.750274"
+        }
+      ]
+    },
+    {
+      "id": "MODE-001",
+      "name": "Research: Cursor mode detection signals",
+      "long_description": "Research how to detect/infer Cursor's current mode (Agent/Ask/Manual).\n\nPotential signals to investigate:\n1. Tool call frequency and patterns\n2. File edit patterns (multi-file vs single-file)\n3. Session duration and complexity\n4. MCP context or headers (if any)\n5. Environment variables (CURSOR_* vars)\n\nGoal: Document reliable signals for mode inference.",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "research",
+        "mode-awareness",
+        "enhancement",
+        "cursor-integration"
+      ],
+      "created": "2025-11-26T23:33:04.132641+00:00",
+      "lastModified": "2025-11-26T23:33:04.132874+00:00",
+      "dependencies": []
+    },
+    {
+      "id": "MODE-002",
+      "name": "Implement: Session mode inference from tool patterns",
+      "long_description": "Implement mode inference based on tool call patterns during a session.\n\nDetection heuristics:\n- AGENT mode: High tool call frequency, multi-file edits, longer sessions\n- ASK mode: Lower frequency, single queries, shorter interactions\n- MANUAL mode: No tool calls, direct file edits\n\nImplementation:\n1. Track tool calls in session\n2. Analyze patterns using sliding window\n3. Infer mode with confidence score\n4. Update session context\n\nDependencies: MODE-001 research findings",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "enhancement"
+      ],
+      "created": "2025-11-26T23:33:04.132880+00:00",
+      "lastModified": "2025-11-26T23:33:04.132882+00:00",
+      "dependencies": [
+        "MODE-001"
+      ]
+    },
+    {
+      "id": "MODE-003",
+      "name": "Implement: Mode-aware advisor guidance",
+      "long_description": "Modify advisor consultations to provide mode-specific guidance.\n\nMode-specific advice:\n- AGENT mode: Strategic guidance, checkpoint reminders, progress tracking\n- ASK mode: Direct answers, focused explanations, quick references\n- MANUAL mode: Observational wisdom, encouragement\n\nChanges needed:\n1. Pass inferred mode to consult_advisor()\n2. Select different quote pools per mode\n3. Adjust encouragement tone per mode\n4. Add mode-specific prompts to advisors\n\nDependencies: MODE-002 mode inference",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "wisdom",
+        "enhancement"
+      ],
+      "created": "2025-11-26T23:33:04.132886+00:00",
+      "lastModified": "2025-11-26T23:33:04.132888+00:00",
+      "dependencies": [
+        "MODE-002"
+      ]
+    },
+    {
+      "id": "MODE-004",
+      "name": "Implement: Session mode resource (automation://session/mode)",
+      "long_description": "Create MCP resource to expose current inferred session mode.\n\nResource: automation://session/mode\n\nReturns:\n{\n  \"inferred_mode\": \"AGENT|ASK|MANUAL|UNKNOWN\",\n  \"confidence\": 0.0-1.0,\n  \"signals\": {\n    \"tool_calls\": 15,\n    \"files_edited\": 3,\n    \"session_duration_sec\": 300,\n    \"multi_file_edits\": true\n  },\n  \"last_updated\": \"ISO timestamp\"\n}\n\nDependencies: MODE-002 mode inference",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "resource",
+        "enhancement"
+      ],
+      "created": "2025-11-26T23:33:04.132891+00:00",
+      "lastModified": "2025-11-26T23:33:04.132893+00:00",
+      "dependencies": [
+        "MODE-002"
+      ]
+    },
+    {
+      "id": "MODE-005",
+      "name": "Implement: Auto-log mode in memory system",
+      "long_description": "Automatically log inferred mode in the memory system for pattern analysis.\n\nFeatures:\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\nMemory format:\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\nDependencies: MODE-002, MODE-004",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "memory",
+        "enhancement"
+      ],
+      "created": "2025-11-26T23:33:04.132896+00:00",
+      "lastModified": "2025-11-26T23:33:04.132898+00:00",
+      "dependencies": [
+        "MODE-002",
+        "MODE-004"
+      ]
+    },
+    {
+      "id": "MODE-006",
+      "name": "Add prompt template: mode-aware workflow selection",
+      "long_description": "Create prompt template that helps users select appropriate mode.\n\nPrompt: mode_select\n\nContent:\n- Explains AGENT/ASK/Manual modes\n- Provides decision tree based on task type\n- References recommend_workflow_mode() logic\n- Includes examples for each mode\n\nIntegration with existing prompts:\n- Reference from persona workflows\n- Include in daily_checkin prompt\n- Add to sprint_start prompt",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "prompts",
+        "enhancement"
+      ],
+      "created": "2025-11-26T23:33:04.132901+00:00",
+      "lastModified": "2025-11-26T23:33:04.132903+00:00",
+      "dependencies": []
+    },
+    {
+      "id": "AUTO-20251127013512-665919",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-27T01:35:12.665964",
+      "lastModified": "2025-11-27T01:35:14.555919",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127013512-665919-C-1",
+          "todoId": "AUTO-20251127013512-665919",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 11.0%**\n\u26a0\ufe0f 2 broken links need attention\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":181,\"broken_internal\":[{\"url\":\"./ADVISOR_SYSTEM.md\",\"source\":\"docs/AI_SESSION_MEMORY.md\"},{\"url\":\"./PROJECT_SCORECARD.md\",\"source\":\"docs/AI_SESSION_MEMORY.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"AI_SESSION_MEMORY.md\",\"target\":\"./ADVISOR_SYSTEM.md\"},{\"source\":\"AI_SESSION_MEMORY.md\",\"target\":\"./PROJECT_SCORECARD.md\"}],\"orphaned_files\":[\"PRD.md\",\"EXARP_IMPROVEMENTS_ANALYSIS.md\",\"EXARP_RENAMING_COMPLETE.md\",\"EXARP_OLD_NAME_FIXES_COMPLETE.md\",\"EXARP_PRIVATE_REPO_QUICK_START.md\",\"SEQUENTIAL_THINKING_MCP_INTEGRATION_STATUS.md\",\"EXARP_OLD_NAME_REFERENCES_FINAL.md\",\"EXARP_PACKAGE_RENAME_COMPLETE.md\",\"EXARP_PACKAGING_RESOURCES_ANALYSIS.md\",\"EXARP_FASTMCP_SETUP.md\",\"EXARP_FASTMCP_CONFIGURATION.md\",\"TOOL_REDUNDANCY_ANALYSIS.md\",\"FILESYSTEM_MCP_INTEGRATION_STATUS.md\",\"SPRINT_AUTOMATION_PROPOSAL.md\",\"DOCUMENTATION_HEALTH_REPORT.md\",\"TODO2_PRIORITY_ALIGNMENT_ANALYSIS.md\",\"MCP_EXTENSION_EVALUATION.md\",\"EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"EXARP_CURSOR_SETUP_COMPLETE.md\",\"EXARP_OLD_NAME_REFERENCES.md\",\"EXARP_TOOL_REUSE_ANALYSIS.md\",\"EXARP_REPOSITORY_OPTIMIZATION_COMPLETE.md\",\"DAILY_AUTOMATION_REPORT.md\",\"EXARP_INSTALLATION_COMPLETE.md\",\"PROJECT_OVERVIEW.md\",\"SECURITY_STATUS.md\",\"EXARP_SCRIPT_EXTRACTION_COMPLETE.md\",\"WORKFLOW.md\",\"AI_SESSION_MEMORY.md\",\"EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md\",\"EXARP_CURSOR_INTEGRATION_STRATEGY.md\",\"EXARP_OLD_NAME_REFERENCES_REPORT.md\",\"EXARP_RULES_REDUNDANCY_ANALYSIS.md\",\"EXARP_LICENSING_ANALYSIS.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md\",\"CI_CD_VALIDATION_REPORT.md\",\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"DOCS_CLEANUP_PLAN.md\",\"EXARP_PACKAGING_TODO2_TASKS.md\",\"EXARP_COMPARISON_AND_VALUE_PROPOSITION.md\",\"UNIT_TEST_FIXES_COMPLETE.md\",\"EXARP_GITHUB_REPO_SETUP_COMPLETE.md\",\"TEST_COVERAGE_ANALYSIS.md\",\"EXARP_RESOURCES_PACKAGING_COMPLETE.md\",\"TEST_COVERAGE_FIXES.md\",\"EXARP_PHASE2_TASKS.md\",\"EXARP_MCP_SERVER.md\",\"EXARP_OLD_NAME_CHECK_COMPLETE.md\",\"EXTERNAL_TOOL_HINTS_REPORT.md\",\"CONTEXT7_MCP_INTEGRATION_STATUS.md\",\"INSTALLATION_EXAMPLES.md\",\"EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"EXARP_PACKAGING_DEPENDENCIES.md\",\"NOTEBOOKLM_PODCAST.md\",\"CURSOR_IDE_BEST_PRACTICES.md\",\"PERSONA_ALIGNMENT_GUIDE.md\",\"AUTO_FIX_USAGE.md\",\"TESTING_TOOLS_PROPOSAL.md\",\"TODO2_DUPLICATE_DETECTION_REPORT.md\",\"UNIT_TEST_FIXES.md\",\"EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md\",\"IDE_INTEGRATION.md\",\"AGENTIC_TOOLS_INTEGRATION_PLAN.md\",\"EXARP_IMPROVEMENTS_PROGRESS.md\",\"UNIT_TEST_STATUS.md\",\"DESIGN_DECISIONS.md\"]},\"health_score\":11.0}",
+          "created": "2025-11-27T01:35:14.547528",
+          "lastModified": "2025-11-27T01:35:14.547537"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127013531-404869",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-11-27T01:35:31.404888",
+      "lastModified": "2025-11-27T01:35:32.338621",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127013531-404869-C-1",
+          "todoId": "AUTO-20251127013531-404869",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 31 duplicate issues**\n\n\ud83d\udd0d **7 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **24 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":47,\"duplicates_found\":31,\"duplicate_ids\":[],\"exact_name_matches\":[{\"name\":\"Automation: Documentation Health Analysis\",\"count\":5,\"tasks\":[{\"id\":\"AUTO-20251126230758\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:07:58.460278\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126231235-891865\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:12:35.891906\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126231440-138792\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:14:40.138778\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232550-782561\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:25:50.782571\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251127013512-665919\",\"name\":\"Automation: Documentation Health Analysis\",\"status\":\"done\",\"created\":\"2025-11-27T01:35:12.665964\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Todo2 Alignment Analysis\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251126230757\",\"name\":\"Automation: Todo2 Alignment Analysis\",\"status\":\"done\",\"created\":\"2025-11-26T23:07:57.600384\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251127003154-301126\",\"name\":\"Automation: Todo2 Alignment Analysis\",\"status\":\"done\",\"created\":\"2025-11-27T00:31:54.301184\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Todo2 Duplicate Detection\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251126230744\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\",\"created\":\"2025-11-26T23:07:44.375161\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232739\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\",\"created\":\"2025-11-26T23:27:39.654866\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251127013531-404869\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\",\"created\":\"2025-11-27T01:35:31.404888\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Test Runner\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251126110118\",\"name\":\"Automation: Test Runner\",\"status\":\"done\",\"created\":\"2025-11-26T11:01:18.383265\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232018\",\"name\":\"Automation: Test Runner\",\"status\":\"done\",\"created\":\"2025-11-26T23:20:18.095065\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Dependency Security Scan\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251126143529\",\"name\":\"Automation: Dependency Security Scan\",\"status\":\"done\",\"created\":\"2025-11-26T14:35:29.783173\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232340-628552\",\"name\":\"Automation: Dependency Security Scan\",\"status\":\"done\",\"created\":\"2025-11-26T23:23:40.628629\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232524-582483\",\"name\":\"Automation: Dependency Security Scan\",\"status\":\"done\",\"created\":\"2025-11-26T23:25:24.582507\",\"priority\":\"medium\"}]},{\"name\":\"Automation: External Tool Hints Automation\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251126035818\",\"name\":\"Automation: External Tool Hints Automation\",\"status\":\"done\",\"created\":\"2025-11-26T03:58:18.778058\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232340-851211\",\"name\":\"Automation: External Tool Hints Automation\",\"status\":\"done\",\"created\":\"2025-11-26T23:23:40.851404\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251126232524-697580\",\"name\":\"Automation: External Tool Hints Automation\",\"status\":\"done\",\"created\":\"2025-11-26T23:25:24.697648\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Shared TODO Table Synchronization\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251126230004\",\"name\":\"Automation: Shared TODO Table Synchronization\",\"status\":\"done\",\"created\":\"2025-11-26T23:00:04.276792\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251127000005-270015\",\"name\":\"Automation: Shared TODO Table Synchronization\",\"status\":\"done\",\"created\":\"2025-11-27T00:00:05.270128\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251127010009-744822\",\"name\":\"Automation: Shared TODO Table Synchronization\",\"status\":\"done\",\"created\":\"2025-11-27T01:00:09.744871\",\"priority\":\"medium\"}]}],\"similar_name_matches\":\"[24 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-11-27T01:35:32.329952",
+          "lastModified": "2025-11-27T01:35:32.329962"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127013640-494757",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-27T01:36:40.494776",
+      "lastModified": "2025-11-27T01:36:41.188692",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127013640-494757-C-1",
+          "todoId": "AUTO-20251127013640-494757",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 11.0%**\n\u26a0\ufe0f 2 broken links need attention\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":181,\"broken_internal\":[{\"url\":\"./ADVISOR_SYSTEM.md\",\"source\":\"docs/AI_SESSION_MEMORY.md\"},{\"url\":\"./PROJECT_SCORECARD.md\",\"source\":\"docs/AI_SESSION_MEMORY.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"AI_SESSION_MEMORY.md\",\"target\":\"./ADVISOR_SYSTEM.md\"},{\"source\":\"AI_SESSION_MEMORY.md\",\"target\":\"./PROJECT_SCORECARD.md\"}],\"orphaned_files\":[\"AGENTIC_TOOLS_INTEGRATION_PLAN.md\",\"EXARP_PACKAGING_RESOURCES_ANALYSIS.md\",\"EXARP_PRIVATE_REPO_QUICK_START.md\",\"MCP_EXTENSION_EVALUATION.md\",\"EXARP_OLD_NAME_CHECK_COMPLETE.md\",\"EXARP_REPOSITORY_OPTIMIZATION_COMPLETE.md\",\"AI_SESSION_MEMORY.md\",\"EXARP_PHASE2_TASKS.md\",\"EXARP_TOOL_REUSE_ANALYSIS.md\",\"PERSONA_ALIGNMENT_GUIDE.md\",\"EXARP_OLD_NAME_REFERENCES_REPORT.md\",\"EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"SEQUENTIAL_THINKING_MCP_INTEGRATION_STATUS.md\",\"EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"EXARP_INSTALLATION_COMPLETE.md\",\"EXARP_FASTMCP_SETUP.md\",\"EXARP_PACKAGING_TODO2_TASKS.md\",\"EXARP_SCRIPT_EXTRACTION_COMPLETE.md\",\"PRD.md\",\"EXARP_RULES_REDUNDANCY_ANALYSIS.md\",\"DAILY_AUTOMATION_REPORT.md\",\"IDE_INTEGRATION.md\",\"EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"EXARP_GITHUB_REPO_SETUP_COMPLETE.md\",\"EXARP_OLD_NAME_FIXES_COMPLETE.md\",\"TESTING_TOOLS_PROPOSAL.md\",\"CURSOR_IDE_BEST_PRACTICES.md\",\"EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md\",\"DOCS_CLEANUP_PLAN.md\",\"EXARP_COMPARISON_AND_VALUE_PROPOSITION.md\",\"DESIGN_DECISIONS.md\",\"SECURITY_STATUS.md\",\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"EXARP_PACKAGE_RENAME_COMPLETE.md\",\"TODO2_DUPLICATE_DETECTION_REPORT.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"EXARP_CURSOR_SETUP_COMPLETE.md\",\"EXARP_LICENSING_ANALYSIS.md\",\"EXARP_IMPROVEMENTS_PROGRESS.md\",\"EXARP_RESOURCES_PACKAGING_COMPLETE.md\",\"WORKFLOW.md\",\"EXARP_PACKAGING_DEPENDENCIES.md\",\"EXTERNAL_TOOL_HINTS_REPORT.md\",\"UNIT_TEST_STATUS.md\",\"EXARP_IMPROVEMENTS_ANALYSIS.md\",\"TOOL_REDUNDANCY_ANALYSIS.md\",\"EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md\",\"EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"EXARP_CURSOR_INTEGRATION_STRATEGY.md\",\"CI_CD_VALIDATION_REPORT.md\",\"TODO2_PRIORITY_ALIGNMENT_ANALYSIS.md\",\"EXARP_OLD_NAME_REFERENCES_FINAL.md\",\"FILESYSTEM_MCP_INTEGRATION_STATUS.md\",\"EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md\",\"CONTEXT7_MCP_INTEGRATION_STATUS.md\",\"DOCUMENTATION_HEALTH_REPORT.md\",\"EXARP_OLD_NAME_REFERENCES.md\",\"SPRINT_AUTOMATION_PROPOSAL.md\",\"EXARP_MCP_SERVER.md\",\"AUTO_FIX_USAGE.md\",\"EXARP_FASTMCP_CONFIGURATION.md\",\"TEST_COVERAGE_FIXES.md\",\"UNIT_TEST_FIXES_COMPLETE.md\",\"NOTEBOOKLM_PODCAST.md\",\"PROJECT_OVERVIEW.md\",\"INSTALLATION_EXAMPLES.md\",\"UNIT_TEST_FIXES.md\",\"TEST_COVERAGE_ANALYSIS.md\",\"EXARP_RENAMING_COMPLETE.md\"]},\"health_score\":11.0}",
+          "created": "2025-11-27T01:36:41.176263",
+          "lastModified": "2025-11-27T01:36:41.176272"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",

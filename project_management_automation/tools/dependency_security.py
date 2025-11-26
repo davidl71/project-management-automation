@@ -2,36 +2,69 @@
 MCP Tool Wrapper for Dependency Security Scan
 
 Wraps DependencySecurityAnalyzer to expose as MCP tool.
+
+Memory Integration:
+- Saves vulnerability findings for tracking remediation
 """
 
 import json
 import logging
 import time
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+
+def _save_security_scan_memory(response_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Save security scan results as memory for remediation tracking."""
+    try:
+        from .session_memory import save_session_insight
+
+        total_vulns = response_data.get('total_vulnerabilities', 0)
+
+        content = f"""Dependency security scan completed.
+
+## Vulnerabilities Found: {total_vulns}
+
+### By Severity
+- Critical: {response_data.get('critical_count', 0)}
+- High: {response_data.get('high_count', 0)}
+- Medium: {response_data.get('medium_count', 0)}
+- Low: {response_data.get('low_count', 0)}
+
+### By Language
+- Python: {response_data.get('python_vulnerabilities', 0)}
+- Rust: {response_data.get('rust_vulnerabilities', 0)}
+- NPM: {response_data.get('npm_vulnerabilities', 0)}
+
+## Report
+{response_data.get('report_path', 'N/A')}
+"""
+
+        severity = "debug" if total_vulns == 0 else "insight"
+        title_suffix = "✅ Clean" if total_vulns == 0 else f"⚠️ {total_vulns} vulns"
+
+        return save_session_insight(
+            title=f"Security Scan: {title_suffix}",
+            content=content,
+            category=severity,
+            metadata={"type": "security_scan", "total_vulnerabilities": total_vulns}
+        )
+    except ImportError:
+        logger.debug("Session memory not available for saving security scan")
+        return {"success": False, "error": "Memory system not available"}
+
 # Import error handler at module level to avoid scoping issues
 try:
-    from ..error_handler import (
-        format_success_response,
-        format_error_response,
-        log_automation_execution,
-        ErrorCode
-    )
+    from ..error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
 except ImportError:
     import sys
     from pathlib import Path
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     try:
-        from error_handler import (
-            format_success_response,
-            format_error_response,
-            log_automation_execution,
-            ErrorCode
-        )
+        from error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
     except ImportError:
         # Fallback: define minimal versions if import fails
         def format_success_response(data, message=None):
@@ -75,7 +108,7 @@ def scan_dependency_security(
         # Load and modify config if languages specified
         if languages:
             import json as json_module
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 config_data = json_module.load(f)
 
             # Enable only specified languages
@@ -113,6 +146,11 @@ def scan_dependency_security(
 
         duration = time.time() - start_time
         log_automation_execution('scan_dependency_security', duration, True)
+
+        # ═══ MEMORY INTEGRATION: Save scan results ═══
+        memory_result = _save_security_scan_memory(response_data)
+        if memory_result.get('success'):
+            response_data['memory_saved'] = memory_result.get('memory_id')
 
         return json.dumps(format_success_response(response_data), indent=2)
 

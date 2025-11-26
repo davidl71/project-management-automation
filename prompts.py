@@ -2,10 +2,14 @@
 MCP Prompts for Project Management Automation
 
 Reusable prompt templates that guide users through common workflows
-using the project management automation tools.
+using the consolidated project management automation tools.
+
+Updated for consolidated tool API (all tools use action= parameter).
 """
 
-# Documentation Health Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# DOCUMENTATION PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 DOCUMENTATION_HEALTH_CHECK = """Analyze the project documentation health and identify issues.
 
@@ -16,15 +20,17 @@ This prompt will:
 4. Generate a health score (0-100)
 5. Optionally create Todo2 tasks for issues found
 
-Use the check_documentation_health_tool with create_tasks=True to automatically create tasks for issues."""
+Use: health(action="docs", create_tasks=True)"""
 
 DOCUMENTATION_QUICK_CHECK = """Quick documentation health check without creating tasks.
 
-Use check_documentation_health_tool with create_tasks=False for a report-only analysis."""
+Use: health(action="docs", create_tasks=False)"""
 
-# Task Management Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# TASK MANAGEMENT PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
-TASK_ALIGNMENT_ANALYSIS = """Analyze Todo2 task alignment with project goals and investment strategy framework.
+TASK_ALIGNMENT_ANALYSIS = """Analyze Todo2 task alignment with project goals.
 
 This prompt will:
 1. Evaluate task alignment with project objectives
@@ -32,7 +38,7 @@ This prompt will:
 3. Calculate alignment scores for each task
 4. Optionally create follow-up tasks for misaligned items
 
-Use analyze_todo2_alignment_tool with create_followup_tasks=True to automatically create tasks for misaligned items."""
+Use: analyze_alignment(action="todo2", create_followup_tasks=True)"""
 
 DUPLICATE_TASK_CLEANUP = """Find and consolidate duplicate Todo2 tasks.
 
@@ -42,21 +48,21 @@ This prompt will:
 3. Provide recommendations for consolidation
 4. Optionally auto-fix duplicates (merge/delete)
 
-Use detect_duplicate_tasks_tool with:
-- similarity_threshold=0.85 (default) for standard detection
-- auto_fix=True to automatically consolidate duplicates
-- auto_fix=False (default) to review before fixing"""
+Use: task_analysis(action="duplicates", similarity_threshold=0.85, auto_fix=False)"""
 
 TASK_SYNC = """Synchronize tasks between shared TODO table and Todo2.
 
 This prompt will:
 1. Compare tasks across systems
 2. Identify missing or out-of-sync tasks
-3. Optionally sync tasks (dry_run=False) or preview changes (dry_run=True)
+3. Preview or apply changes
 
-Use sync_todo_tasks_tool with dry_run=True first to preview changes, then dry_run=False to apply."""
+Use: task_workflow(action="sync", dry_run=True) first to preview,
+     then task_workflow(action="sync", dry_run=False) to apply."""
 
-# Security & Dependencies Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# SECURITY PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 SECURITY_SCAN_ALL = """Scan all project dependencies for security vulnerabilities.
 
@@ -66,17 +72,21 @@ This prompt will:
 3. Prioritize by severity (critical, high, medium, low)
 4. Provide remediation recommendations
 
-Use scan_dependency_security_tool with languages=None to scan all languages, or specify ['python', 'rust', 'npm']."""
+Use: security(action="scan") for local pip-audit,
+     security(action="alerts") for GitHub Dependabot,
+     security(action="report") for combined report."""
 
 SECURITY_SCAN_PYTHON = """Scan Python dependencies for security vulnerabilities.
 
-Use scan_dependency_security_tool with languages=['python']."""
+Use: security(action="scan", languages=["python"])"""
 
 SECURITY_SCAN_RUST = """Scan Rust dependencies for security vulnerabilities.
 
-Use scan_dependency_security_tool with languages=['rust']."""
+Use: security(action="scan", languages=["rust"])"""
 
-# Automation Discovery Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUTOMATION PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 AUTOMATION_DISCOVERY = """Discover new automation opportunities in the codebase.
 
@@ -86,13 +96,15 @@ This prompt will:
 3. Score opportunities by value and effort
 4. Generate recommendations for automation
 
-Use find_automation_opportunities_tool with min_value_score=0.7 to find high-value opportunities."""
+Use: run_automation(action="discover", min_value_score=0.7)"""
 
 AUTOMATION_HIGH_VALUE = """Find only high-value automation opportunities (score >= 0.8).
 
-Use find_automation_opportunities_tool with min_value_score=0.8."""
+Use: run_automation(action="discover", min_value_score=0.8)"""
 
-# PWA Configuration Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# PWA CONFIGURATION PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 PWA_REVIEW = """Review PWA configuration and generate improvement recommendations.
 
@@ -102,48 +114,52 @@ This prompt will:
 3. Identify missing features or optimizations
 4. Provide actionable improvement recommendations
 
-Use review_pwa_config_tool to analyze the current PWA setup."""
+Use: review_pwa_config()"""
 
-# Workflow Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# WORKFLOW PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 PRE_SPRINT_CLEANUP = """Pre-sprint cleanup workflow.
 
 Run these tools in sequence:
-1. detect_duplicate_tasks_tool - Find and consolidate duplicates
-2. analyze_todo2_alignment_tool - Check task alignment
-3. check_documentation_health_tool - Ensure docs are up to date
+1. task_analysis(action="duplicates") - Find and consolidate duplicates
+2. analyze_alignment(action="todo2") - Check task alignment
+3. health(action="docs") - Ensure docs are up to date
 
 This ensures a clean task list and aligned goals before starting new work."""
 
 POST_IMPLEMENTATION_REVIEW = """Post-implementation review workflow.
 
 Run these tools after completing a feature:
-1. check_documentation_health_tool - Update documentation
-2. scan_dependency_security_tool - Check for new vulnerabilities
-3. find_automation_opportunities_tool - Discover new automation needs
+1. health(action="docs") - Update documentation
+2. security(action="report") - Check for new vulnerabilities
+3. run_automation(action="discover") - Discover new automation needs
 
 This ensures quality and identifies follow-up work."""
 
 WEEKLY_MAINTENANCE = """Weekly maintenance workflow.
 
 Run these tools weekly:
-1. check_documentation_health_tool - Keep docs healthy
-2. detect_duplicate_tasks_tool - Clean up duplicates
-3. scan_dependency_security_tool - Check security
-4. sync_todo_tasks_tool - Sync across systems
+1. health(action="docs") - Keep docs healthy
+2. task_analysis(action="duplicates") - Clean up duplicates
+3. security(action="scan") - Check security
+4. task_workflow(action="sync") - Sync across systems
 
 This maintains project health and keeps systems in sync."""
 
-# Daily Workflow Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# DAILY WORKFLOW PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 DAILY_CHECKIN = """Daily check-in workflow for project health monitoring.
 
 Run these tools every morning (5 min):
-1. server_status - Verify server is operational
-2. project_scorecard - Get current health metrics and overall score
-3. consult_advisor stage="daily_checkin" - Get wisdom from your daily advisor (Pistis Sophia)
-4. list_tasks_awaiting_clarification - Identify any blockers needing decisions
-5. check_working_copy_health - Verify Git status across agents
+1. health(action="server") - Verify server is operational
+2. report(action="scorecard") - Get current health metrics and overall score
+3. consult_advisor(stage="daily_checkin") - Get wisdom from Pistis Sophia 📜
+4. task_workflow(action="clarify", sub_action="list") - Identify blockers
+5. health(action="git") - Verify Git status across agents
 
 The advisor will provide wisdom matched to your current project health:
 - Score < 30%: 🔥 Chaos mode - urgent guidance for every action
@@ -151,67 +167,70 @@ The advisor will provide wisdom matched to your current project health:
 - Score 60-80%: 🌱 Maturing mode - strategic advice
 - Score 80-100%: 🎯 Mastery mode - reflective wisdom
 
-For automated daily maintenance, use run_daily_automation_tool which handles:
-- Documentation health checks
-- Task alignment verification
-- Duplicate detection
+For automated daily maintenance, use run_automation(action="daily").
 
-Tip: Use get_advisor_briefing with your scorecard metrics for a focused morning briefing."""
+Tip: Use report(action="briefing") with your scorecard metrics for a focused morning briefing."""
 
-# Sprint Workflow Prompts
+# ═══════════════════════════════════════════════════════════════════════════════
+# SPRINT WORKFLOW PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 SPRINT_START = """Sprint start workflow for preparing a clean backlog.
 
 Run these tools at the beginning of each sprint:
-1. detect_duplicate_tasks_tool - Clean up duplicate tasks
-2. analyze_todo2_alignment_tool - Ensure tasks align with goals
-3. batch_approve_tasks_tool - Queue ready tasks for automation
-4. list_tasks_awaiting_clarification - Identify blocked tasks
+1. task_analysis(action="duplicates") - Clean up duplicate tasks
+2. analyze_alignment(action="todo2") - Ensure tasks align with goals
+3. task_workflow(action="approve") - Queue ready tasks for automation
+4. task_workflow(action="clarify", sub_action="list") - Identify blocked tasks
+5. consult_advisor(stage="planning") - Strategic wisdom from Sun Tzu ⚔️
 
 This ensures a clean, prioritized backlog before starting sprint work."""
 
 SPRINT_END = """Sprint end workflow for quality assurance and documentation.
 
 Run these tools at the end of each sprint:
-1. run_tests_tool with coverage=true - Verify test coverage
-2. analyze_test_coverage_tool - Identify coverage gaps
-3. check_documentation_health_tool - Ensure docs are updated
-4. scan_dependency_security_tool - Security check before release
+1. testing(action="run", coverage=True) - Verify test coverage
+2. testing(action="coverage") - Identify coverage gaps
+3. health(action="docs") - Ensure docs are updated
+4. security(action="report") - Security check before release
+5. consult_advisor(stage="review") - Stoic wisdom for accepting results 🏛️
 
 This ensures quality standards are met before sprint completion."""
 
-# Task Review Workflow
+# ═══════════════════════════════════════════════════════════════════════════════
+# TASK REVIEW WORKFLOW
+# ═══════════════════════════════════════════════════════════════════════════════
 
 TASK_REVIEW = """Comprehensive task review workflow for backlog hygiene.
 
 Run monthly or after major project changes:
-1. detect_duplicate_tasks_tool - Find and merge duplicates
-2. analyze_todo2_alignment_tool - Check task-goal alignment  
-3. list_tasks_awaiting_clarification - Review blocked tasks
-4. Review manually for obsolete/stale tasks
-5. batch_approve_tasks_tool - Queue reviewed tasks
+1. task_analysis(action="duplicates") - Find and merge duplicates
+2. analyze_alignment(action="todo2") - Check task-goal alignment  
+3. task_workflow(action="clarify", sub_action="list") - Review blocked tasks
+4. task_analysis(action="hierarchy") - Review task structure
+5. task_workflow(action="approve") - Queue reviewed tasks
 
 Categories to evaluate:
 - Duplicates → Merge or remove
 - Misaligned → Re-scope or cancel
 - Obsolete → Cancel if work already done
 - Stale (>30 days) → Review priority or cancel
-- Blocked → Resolve dependencies
+- Blocked → Resolve dependencies"""
 
-Future: review_task_relevance_tool and infer_task_completion_tool will automate steps 4."""
-
-# Project Health Prompt
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROJECT HEALTH PROMPT
+# ═══════════════════════════════════════════════════════════════════════════════
 
 PROJECT_HEALTH = """Comprehensive project health assessment.
 
 Run these tools for a full health check:
-1. server_status - Server operational status
-2. check_documentation_health_tool - Documentation score
-3. run_tests_tool coverage=true - Test results and coverage
-4. analyze_test_coverage_tool - Coverage gap analysis
-5. scan_dependency_security_tool - Security vulnerabilities
-6. validate_ci_cd_workflow_tool - CI/CD pipeline status
-7. analyze_todo2_alignment_tool - Task alignment with goals
+1. health(action="server") - Server operational status
+2. health(action="docs") - Documentation score
+3. testing(action="run", coverage=True) - Test results and coverage
+4. testing(action="coverage") - Coverage gap analysis
+5. security(action="report") - Security vulnerabilities
+6. health(action="cicd") - CI/CD pipeline status
+7. analyze_alignment(action="todo2") - Task alignment with goals
 
 This provides a complete picture of:
 - Code quality (tests, coverage)
@@ -222,35 +241,39 @@ This provides a complete picture of:
 
 Use this before major releases or quarterly reviews."""
 
-# Automation Setup Prompt
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUTOMATION SETUP PROMPT
+# ═══════════════════════════════════════════════════════════════════════════════
 
 AUTOMATION_SETUP = """One-time automation setup workflow.
 
 Run these tools to enable automated project management:
 
-1. setup_git_hooks_tool - Configure automatic checks on commits
+1. setup_hooks(action="git") - Configure automatic checks on commits
    - pre-commit: docs health, security scan (blocking)
    - pre-push: task alignment, comprehensive security (blocking)
    - post-commit: automation discovery (non-blocking)
    - post-merge: duplicate detection, task sync (non-blocking)
 
-2. setup_pattern_triggers_tool - Configure file change triggers
+2. setup_hooks(action="patterns") - Configure file change triggers
    - docs/**/*.md → documentation health check
    - src/**/*.py → run tests
    - requirements.txt → security scan
 
 3. Configure cron jobs (manual):
-   - Daily: run_daily_automation
-   - Weekly: scan_dependency_security
+   - Daily: run_automation(action="daily")
+   - Weekly: security(action="scan")
    - See scripts/cron/*.sh for examples
 
 After setup, Exarp will automatically maintain project health."""
 
-# Project Scorecard Prompt
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROJECT REPORTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
 PROJECT_OVERVIEW = """Generate a one-page project overview for stakeholders.
 
-Run the project_overview tool to get a comprehensive summary:
+Use: report(action="overview")
 
 Sections included:
 - Project Info: name, version, type, status
@@ -263,25 +286,17 @@ Sections included:
 
 Output formats:
 - output_format="text" - Terminal-friendly ASCII (default)
-- output_format="html" - Styled HTML page (print to PDF via Cmd+P)
+- output_format="html" - Styled HTML page
 - output_format="markdown" - For GitHub/documentation
-- output_format="slides" - Marp markdown (convert with marp-cli)
 - output_format="json" - Structured data
 
 Save to file:
-- output_path="docs/OVERVIEW.html" - Save HTML
-- output_path="docs/OVERVIEW.md" - Save Markdown
-
-Use this for:
-- Stakeholder updates
-- Team standups
-- Sprint reviews
-- Documentation
-- Dashboards"""
+- output_path="docs/OVERVIEW.html"
+- output_path="docs/OVERVIEW.md" """
 
 PROJECT_SCORECARD = """Generate a comprehensive project health scorecard with trusted advisor wisdom.
 
-Run the project_scorecard tool to get a complete assessment across all dimensions:
+Use: report(action="scorecard")
 
 Metrics evaluated (each with a trusted advisor):
 - Security (😈 BOFH) - Paranoid security checks
@@ -294,116 +309,167 @@ Metrics evaluated (each with a trusted advisor):
 - Dogfooding (🔧 Murphy) - Use your own tools!
 - Overall score (0-100%) with production readiness
 
-Output options:
-- output_format="text" - Human-readable scorecard (default)
-- output_format="markdown" - Markdown for documentation
-- output_format="json" - Structured data for programmatic use
+After running, consult advisors for lowest-scoring metrics:
+- consult_advisor(metric="<lowest_metric>", score=<score>)
+- report(action="briefing", overall_score=<score>)"""
 
-After running the scorecard, consult advisors for your lowest-scoring metrics:
-- consult_advisor metric="<lowest_metric>" score=<score>
-- get_advisor_briefing overall_score=<score> <metric>_score=<score> ...
+# ═══════════════════════════════════════════════════════════════════════════════
+# WISDOM ADVISOR PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
 
-The scorecard identifies:
-- Production blockers
-- Priority actions for score improvement (with advisor wisdom)
-- Quick wins (<2h each)
-- Estimated effort to reach target scores
+ADVISOR_CONSULT = """Consult a trusted advisor for wisdom on your current work.
 
-Use this for:
-- Daily/weekly project status with advisor guidance
-- Sprint planning decisions
-- Release readiness checks
-- Project health dashboards"""
+Each project metric has an assigned advisor with unique perspective:
 
-# ═══════════════════════════════════════════════════════════════════════════
+📊 **Metric Advisors:**
+- security → 😈 BOFH: Paranoid, expects users to break everything
+- testing → 🏛️ Stoics: Discipline through adversity
+- documentation → 🎓 Confucius: Teaching and transmitting wisdom
+- completion → ⚔️ Sun Tzu: Strategy and decisive execution
+- alignment → ☯️ Tao: Balance, flow, and purpose
+- clarity → 🎭 Gracián: Models of clarity and pragmatism
+- ci_cd → ⚗️ Kybalion: Cause and effect, mental models
+- dogfooding → 🔧 Murphy: Expect failure, plan for it
+
+⏰ **Stage Advisors:**
+- daily_checkin → 📜 Pistis Sophia: Enlightenment journey
+- planning → ⚔️ Sun Tzu: Strategic planning
+- implementation → 💻 Tao of Programming: Natural flow
+- debugging → 😈 BOFH: Knows all the ways things break
+- review → 🏛️ Stoics: Accepting harsh truths
+
+Use:
+- consult_advisor(metric="security", score=75.0) - Metric advice
+- consult_advisor(stage="daily_checkin") - Stage advice
+- consult_advisor(tool="testing") - Tool guidance"""
+
+ADVISOR_BRIEFING = """Get a morning briefing from trusted advisors based on project health.
+
+Use: report(action="briefing", overall_score=75.0, security_score=80.0, ...)
+
+The briefing focuses on your lowest-scoring metrics, providing:
+1. Advisor wisdom matched to score tier
+2. Specific encouragement for improvement
+3. Context-aware guidance
+
+Score tiers affect advisor tone:
+- 🔥 < 30%: Chaos - urgent, every-action guidance
+- 🏗️ 30-60%: Building - focus on fundamentals
+- 🌱 60-80%: Maturing - strategic advice
+- 🎯 80-100%: Mastery - reflective wisdom
+
+Combine with scorecard for context:
+1. report(action="scorecard") - Get current scores
+2. report(action="briefing", **scores) - Get focused guidance"""
+
+ADVISOR_AUDIO = """Generate audio from advisor consultations for podcast/video.
+
+Use: advisor_audio(action="quote", text="...", advisor="bofh")
+     advisor_audio(action="podcast", days=7)
+     advisor_audio(action="export", days=7)
+
+Audio backends:
+- elevenlabs: High-quality AI voices (requires API key)
+- edge-tts: Microsoft Edge TTS (free, good quality)
+- pyttsx3: Offline TTS (basic quality)
+
+Export formats:
+- Quote: Single MP3 file with advisor voice
+- Podcast: Combined audio from recent consultations
+- Export: JSON data for external podcast generation
+
+Advisor voice profiles are matched to their personality."""
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # PERSONA-BASED WORKFLOWS
-# ═══════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
 
 PERSONA_DEVELOPER = """Developer daily workflow for writing quality code.
 
 **Morning Checkin (~2 min):**
-1. project_scorecard_tool - Quick health check
-2. list_tasks_awaiting_clarification_tool - Any blockers?
+1. report(action="scorecard") - Quick health check
+2. task_workflow(action="clarify", sub_action="list") - Any blockers?
+3. consult_advisor(stage="daily_checkin") - Morning wisdom 📜
 
 **Before Committing:**
-- check_documentation_health_tool (if you touched docs)
-- Git pre-commit hook runs: complexity + security check
+- health(action="docs") if you touched docs
+- lint(action="run") - Code quality check
+- Git pre-commit hook runs automatically
 
 **Before PR/Push:**
-- analyze_todo2_alignment_tool - Is work aligned with goals?
-- Git pre-push hook runs: full security scan + tests
+- analyze_alignment(action="todo2") - Is work aligned with goals?
+- consult_advisor(stage="review") - Stoic wisdom 🏛️
+- Git pre-push hook runs full checks
 
-**Weekly Self-Review (~10 min):**
-- project_scorecard_tool with tier="quick" - With complexity metrics
-- consolidate_tags_tool dry_run=true - Tag hygiene
+**During Debugging:**
+- consult_advisor(stage="debugging") - BOFH knows breakage 😈
+- memory(action="save", category="debug") - Save discoveries
 
 **Key Targets:**
 - Cyclomatic Complexity: <10 per function
 - Test Coverage: >80%
-- Bandit Findings: 0 high/critical
-- Cycle Time: <3 days avg"""
+- Bandit Findings: 0 high/critical"""
 
 PERSONA_PROJECT_MANAGER = """Project Manager workflow for delivery tracking.
 
 **Daily Standup Prep (~3 min):**
-1. project_scorecard_tool - Overall health
-2. list_tasks_awaiting_clarification_tool - What needs decisions?
+1. report(action="scorecard") - Overall health
+2. task_workflow(action="clarify", sub_action="list") - What needs decisions?
+3. consult_advisor(stage="planning") - Strategic wisdom ⚔️
 
 **Sprint Planning (~15 min):**
-1. project_overview_tool output_format="markdown" - Current state
-2. detect_duplicate_tasks_tool - Clean up backlog
-3. analyze_todo2_alignment_tool - Prioritize aligned work
+1. report(action="overview", output_format="markdown") - Current state
+2. task_analysis(action="duplicates") - Clean up backlog
+3. analyze_alignment(action="todo2") - Prioritize aligned work
+4. analyze_alignment(action="prd") - Check PRD persona mapping
 
 **Sprint Retrospective (~20 min):**
-1. project_scorecard_tool tier="deep" - Full analysis
-   Review: Cycle time, First pass yield, Estimation accuracy
+1. report(action="scorecard") - Full analysis
+2. consult_advisor(metric="completion") - Sun Tzu on execution ⚔️
+3. Review: Cycle time, First pass yield, Estimation accuracy
 
 **Weekly Status Report (~5 min):**
-- project_overview_tool output_format="html" output_path="docs/WEEKLY_STATUS.html"
+- report(action="overview", output_format="html", output_path="docs/WEEKLY_STATUS.html")
 
 **Key Metrics:**
 - Task Completion %: Per sprint goal
 - Blocked Tasks: Target 0
-- Cycle Time: Should be consistent
-- First Pass Yield: >85%
-- Dependency Health: No cycles"""
+- Cycle Time: Should be consistent"""
 
 PERSONA_CODE_REVIEWER = """Code Reviewer workflow for quality gates.
 
 **Pre-Review Check (~1 min):**
-- project_scorecard_tool tier="quick" - Changed since main?
+- report(action="scorecard") - Changed since main?
+- consult_advisor(stage="review") - Stoic equanimity 🏛️
 
 **During Review:**
 For complexity concerns:
-  radon cc <changed_files> -s
-
+  lint(action="run")
 For security concerns:
-  bandit -r <changed_files>
-
+  security(action="scan")
 For architecture concerns:
-  project_scorecard_tool tier="deep" - Full coupling/cohesion
+  report(action="scorecard") - Full coupling/cohesion
 
 **Review Checklist:**
 - [ ] Complexity acceptable? (CC < 10)
 - [ ] Tests added/updated?
-- [ ] No security issues? (Bandit clean)
+- [ ] No security issues?
 - [ ] Documentation updated?
-- [ ] No dead code introduced?
 
 **Key Targets:**
 - Cyclomatic Complexity: <10 new, <15 existing
-- Comment Density: 10-30%
 - Bandit Findings: 0 in new code"""
 
 PERSONA_EXECUTIVE = """Executive/Stakeholder workflow for strategic view.
 
 **Weekly Check (~2 min):**
-- project_overview_tool output_format="html"
+- report(action="overview", output_format="html")
   One-page summary: health, risks, progress, blockers
 
 **Monthly Review (~10 min):**
-- project_scorecard_tool tier="deep" output_format="markdown"
+- report(action="scorecard", output_format="markdown")
   Review GQM goal achievement
+- report(action="briefing") - Advisor wisdom summary
 
 **Executive Dashboard Metrics:**
 | Metric | What It Tells You |
@@ -412,25 +478,25 @@ PERSONA_EXECUTIVE = """Executive/Stakeholder workflow for strategic view.
 | Goal Alignment % | Building the right things? |
 | Security Score | Risk exposure |
 | Velocity Trend | Speeding up or slowing? |
-| Tech Debt Score | Long-term sustainability |
 
 **Quarterly Strategy (~30 min):**
-- project_scorecard_tool tier="deep"
+- report(action="scorecard")
   Review: Uniqueness, Architecture health, Security posture"""
 
 PERSONA_SECURITY_ENGINEER = """Security Engineer workflow for risk management.
 
 **Daily Scan (~5 min):**
-- scan_dependency_security_tool - Dependency vulnerabilities
+- security(action="scan") - Dependency vulnerabilities
+- consult_advisor(metric="security") - BOFH paranoia 😈
 
 **Weekly Deep Scan (~15 min):**
-1. scan_dependency_security_tool - Dependencies
-2. Run: bandit -r project_management_automation/ -f json
-3. project_scorecard_tool - Security score trend
+1. security(action="report") - Full combined report
+2. report(action="scorecard") - Security score trend
+3. consult_advisor(metric="security", score=<current_score>)
 
 **Security Audit (~1 hour):**
-- project_scorecard_tool tier="deep"
-  Review: All Bandit findings, Dependency tree, Security hotspots
+- report(action="scorecard") - Full analysis
+  Review: All findings, Dependency tree, Security hotspots
 
 **Key Targets:**
 - Critical Vulns: 0
@@ -441,40 +507,36 @@ PERSONA_SECURITY_ENGINEER = """Security Engineer workflow for risk management.
 PERSONA_ARCHITECT = """Architect workflow for system design.
 
 **Weekly Architecture Review (~15 min):**
-- project_scorecard_tool tier="deep"
-  Focus: Coupling matrix, Cohesion scores, Distance from Main Sequence
+- report(action="scorecard")
+  Focus: Coupling matrix, Cohesion scores
+- consult_advisor(metric="alignment") - Tao balance ☯️
 
 **Before Major Changes:**
-1. project_scorecard_tool tier="deep" output_path="before_change.json"
+1. report(action="scorecard", output_path="before.json")
 2. [Make changes]
-3. project_scorecard_tool tier="deep" output_path="after_change.json"
+3. report(action="scorecard", output_path="after.json")
 4. Compare architecture impact
 
 **Tech Debt Prioritization (~30 min):**
-- project_scorecard_tool tier="deep"
+- report(action="scorecard")
   Review: High complexity, Dead code, Coupling hotspots
+- task_analysis(action="hierarchy") - Task structure
 
 **Key Targets:**
 - Avg Cyclomatic Complexity: <5
 - Max Complexity: <15
-- Distance from Main Sequence: <0.3
-- Dead Code %: <5%"""
+- Distance from Main Sequence: <0.3"""
 
 PERSONA_QA_ENGINEER = """QA Engineer workflow for quality assurance.
 
 **Daily Testing Status (~3 min):**
-1. run_tests_tool - Run test suite
-2. analyze_test_coverage_tool - Coverage report
+1. testing(action="run") - Run test suite
+2. testing(action="coverage") - Coverage report
+3. consult_advisor(metric="testing") - Stoic discipline 🏛️
 
 **Sprint Testing Review (~20 min):**
-- project_scorecard_tool tier="quick"
+- report(action="scorecard")
   Review: Test coverage %, Test ratio, Failing tests
-
-**Defect Analysis (~30 min):**
-When ODC implemented:
-- Review defect type distribution
-- Trigger analysis (where are bugs found?)
-- Impact distribution
 
 **Key Targets:**
 - Test Coverage: >80%
@@ -485,8 +547,9 @@ When ODC implemented:
 PERSONA_TECH_WRITER = """Technical Writer workflow for documentation.
 
 **Weekly Doc Health (~5 min):**
-- check_documentation_health_tool - Full docs analysis
+- health(action="docs") - Full docs analysis
   Check: Broken links, Stale documents, Missing docs
+- consult_advisor(metric="documentation") - Confucius wisdom 🎓
 
 **Key Targets:**
 - Broken Links: 0
@@ -494,159 +557,307 @@ PERSONA_TECH_WRITER = """Technical Writer workflow for documentation.
 - Comment Density: 10-30%
 - Docstring Coverage: >90%"""
 
-# Prompt Metadata
+# ═══════════════════════════════════════════════════════════════════════════════
+# TASK DISCOVERY PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+TASK_DISCOVERY = """Discover tasks from various sources in the codebase.
+
+Use: task_discovery(action="all") for comprehensive scan
+
+Sources:
+- action="comments": Find TODO/FIXME in code files
+- action="markdown": Find task lists in *.md files  
+- action="orphans": Find orphaned Todo2 tasks
+- action="all": All sources combined
+
+Options:
+- create_tasks=True: Auto-create Todo2 tasks from discoveries
+- file_patterns='["*.py", "*.ts"]': Limit code scanning
+- include_fixme=False: Skip FIXME comments
+
+This helps ensure no tasks slip through the cracks."""
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CONFIG GENERATION PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+CONFIG_GENERATION = """Generate IDE configuration files for optimal AI assistance.
+
+Use: generate_config(action="rules|ignore|simplify")
+
+Actions:
+- action="rules": Generate .cursor/rules/*.mdc files
+  Tailored rules for your project type and frameworks
+
+- action="ignore": Generate .cursorignore/.cursorindexingignore
+  Optimize AI context by excluding noise
+
+- action="simplify": Simplify existing rule files
+  Remove redundancy and improve clarity
+
+Options:
+- dry_run=True: Preview changes without writing
+- analyze_only=True: Only analyze project structure
+- overwrite=True: Replace existing files"""
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MEMORY SYSTEM PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+MEMORY_SYSTEM = """Use AI session memory to persist insights across sessions.
+
+Use: memory(action="save|recall|search")
+
+Actions:
+- action="save": Store an insight
+  memory(action="save", title="...", content="...", category="debug")
+  
+- action="recall": Get context for a task before starting
+  memory(action="recall", task_id="T-123")
+  
+- action="search": Find past insights
+  memory(action="search", query="authentication flow")
+
+Categories:
+- debug: Error solutions, workarounds, root causes
+- research: Pre-implementation findings
+- architecture: Component relationships, dependencies
+- preference: Coding style, workflow preferences
+- insight: Sprint patterns, blockers, optimizations
+
+Memory persists between sessions - like having a colleague who remembers!"""
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROMPT METADATA
+# ═══════════════════════════════════════════════════════════════════════════════
 
 PROMPTS = {
+    # Documentation
     "doc_health_check": {
         "name": "Documentation Health Check",
         "description": DOCUMENTATION_HEALTH_CHECK,
+        "category": "documentation",
         "arguments": []
     },
     "doc_quick_check": {
         "name": "Quick Documentation Check",
         "description": DOCUMENTATION_QUICK_CHECK,
+        "category": "documentation",
         "arguments": []
     },
+    # Task Management
     "task_alignment": {
         "name": "Task Alignment Analysis",
         "description": TASK_ALIGNMENT_ANALYSIS,
+        "category": "tasks",
         "arguments": []
     },
     "duplicate_cleanup": {
         "name": "Duplicate Task Cleanup",
         "description": DUPLICATE_TASK_CLEANUP,
+        "category": "tasks",
         "arguments": []
     },
     "task_sync": {
         "name": "Task Synchronization",
         "description": TASK_SYNC,
+        "category": "tasks",
         "arguments": []
     },
+    "task_discovery": {
+        "name": "Task Discovery",
+        "description": TASK_DISCOVERY,
+        "category": "tasks",
+        "arguments": []
+    },
+    # Security
     "security_scan_all": {
         "name": "Security Scan (All Languages)",
         "description": SECURITY_SCAN_ALL,
+        "category": "security",
         "arguments": []
     },
     "security_scan_python": {
         "name": "Security Scan (Python)",
         "description": SECURITY_SCAN_PYTHON,
+        "category": "security",
         "arguments": []
     },
     "security_scan_rust": {
         "name": "Security Scan (Rust)",
         "description": SECURITY_SCAN_RUST,
+        "category": "security",
         "arguments": []
     },
+    # Automation
     "automation_discovery": {
         "name": "Automation Discovery",
         "description": AUTOMATION_DISCOVERY,
+        "category": "automation",
         "arguments": []
     },
     "automation_high_value": {
         "name": "High-Value Automation Discovery",
         "description": AUTOMATION_HIGH_VALUE,
+        "category": "automation",
         "arguments": []
     },
+    # PWA
     "pwa_review": {
         "name": "PWA Configuration Review",
         "description": PWA_REVIEW,
+        "category": "config",
         "arguments": []
     },
+    # Workflows - Sprint
     "pre_sprint_cleanup": {
         "name": "Pre-Sprint Cleanup Workflow",
         "description": PRE_SPRINT_CLEANUP,
+        "category": "workflow",
         "arguments": []
     },
     "post_implementation_review": {
         "name": "Post-Implementation Review Workflow",
         "description": POST_IMPLEMENTATION_REVIEW,
+        "category": "workflow",
         "arguments": []
     },
     "weekly_maintenance": {
         "name": "Weekly Maintenance Workflow",
         "description": WEEKLY_MAINTENANCE,
+        "category": "workflow",
         "arguments": []
     },
-    # New workflow prompts
     "daily_checkin": {
         "name": "Daily Check-in Workflow",
         "description": DAILY_CHECKIN,
+        "category": "workflow",
         "arguments": []
     },
     "sprint_start": {
         "name": "Sprint Start Workflow",
         "description": SPRINT_START,
+        "category": "workflow",
         "arguments": []
     },
     "sprint_end": {
         "name": "Sprint End Workflow",
         "description": SPRINT_END,
+        "category": "workflow",
         "arguments": []
     },
     "task_review": {
         "name": "Task Review Workflow",
         "description": TASK_REVIEW,
+        "category": "workflow",
         "arguments": []
     },
     "project_health": {
         "name": "Project Health Assessment",
         "description": PROJECT_HEALTH,
+        "category": "workflow",
         "arguments": []
     },
     "automation_setup": {
         "name": "Automation Setup Workflow",
         "description": AUTOMATION_SETUP,
+        "category": "config",
         "arguments": []
     },
+    # Reports
     "project_scorecard": {
         "name": "Project Scorecard",
         "description": PROJECT_SCORECARD,
+        "category": "reports",
         "arguments": []
     },
     "project_overview": {
         "name": "Project Overview",
         "description": PROJECT_OVERVIEW,
+        "category": "reports",
+        "arguments": []
+    },
+    # Wisdom Advisors
+    "advisor_consult": {
+        "name": "Consult Trusted Advisor",
+        "description": ADVISOR_CONSULT,
+        "category": "wisdom",
+        "arguments": []
+    },
+    "advisor_briefing": {
+        "name": "Advisor Morning Briefing",
+        "description": ADVISOR_BRIEFING,
+        "category": "wisdom",
+        "arguments": []
+    },
+    "advisor_audio": {
+        "name": "Advisor Audio Generation",
+        "description": ADVISOR_AUDIO,
+        "category": "wisdom",
+        "arguments": []
+    },
+    # Memory System
+    "memory_system": {
+        "name": "AI Session Memory",
+        "description": MEMORY_SYSTEM,
+        "category": "memory",
+        "arguments": []
+    },
+    # Config Generation
+    "config_generation": {
+        "name": "Config File Generation",
+        "description": CONFIG_GENERATION,
+        "category": "config",
         "arguments": []
     },
     # Persona-based workflows
     "persona_developer": {
         "name": "Developer Workflow",
         "description": PERSONA_DEVELOPER,
+        "category": "persona",
         "arguments": []
     },
     "persona_project_manager": {
         "name": "Project Manager Workflow",
         "description": PERSONA_PROJECT_MANAGER,
+        "category": "persona",
         "arguments": []
     },
     "persona_code_reviewer": {
         "name": "Code Reviewer Workflow",
         "description": PERSONA_CODE_REVIEWER,
+        "category": "persona",
         "arguments": []
     },
     "persona_executive": {
         "name": "Executive/Stakeholder Workflow",
         "description": PERSONA_EXECUTIVE,
+        "category": "persona",
         "arguments": []
     },
     "persona_security": {
         "name": "Security Engineer Workflow",
         "description": PERSONA_SECURITY_ENGINEER,
+        "category": "persona",
         "arguments": []
     },
     "persona_architect": {
         "name": "Architect Workflow",
         "description": PERSONA_ARCHITECT,
+        "category": "persona",
         "arguments": []
     },
     "persona_qa": {
         "name": "QA Engineer Workflow",
         "description": PERSONA_QA_ENGINEER,
+        "category": "persona",
         "arguments": []
     },
     "persona_tech_writer": {
         "name": "Technical Writer Workflow",
         "description": PERSONA_TECH_WRITER,
+        "category": "persona",
         "arguments": []
     },
 }

@@ -8,6 +8,9 @@ Analyzes IDE diagnostics (linter errors, warnings) and provides:
 - Auto-fix suggestions where possible
 
 Works with Cursor's read_lints tool output to provide actionable advice.
+
+Memory Integration:
+- Saves problem resolutions for pattern matching
 """
 
 import json
@@ -20,6 +23,48 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
+
+
+def _save_problems_memory(analysis: Dict[str, Any]) -> Dict[str, Any]:
+    """Save problem analysis as memory for pattern matching."""
+    try:
+        from .session_memory import save_session_insight
+
+        total = analysis.get('total_problems', 0)
+
+        # Only save if there were problems
+        if total == 0:
+            return {"success": True, "skipped": "no_problems"}
+
+        by_severity = analysis.get('by_severity', {})
+        by_category = analysis.get('by_category', {})
+
+        content = f"""Problems analysis completed.
+
+## Total Problems: {total}
+
+### By Severity
+{chr(10).join(f'- {sev}: {count}' for sev, count in by_severity.items()) or '- None'}
+
+### By Category
+{chr(10).join(f'- {cat}: {count}' for cat, count in by_category.items()) or '- None'}
+
+### Top Files
+{chr(10).join(f'- {f}: {c} problems' for f, c in list(analysis.get('by_file', {}).items())[:5]) or '- None'}
+
+### Resolution Hints Used
+{analysis.get('hints_provided', 0)} hints provided
+"""
+
+        return save_session_insight(
+            title=f"Problems: {total} found",
+            content=content,
+            category="debug",
+            metadata={"type": "problems_analysis", "total_problems": total}
+        )
+    except ImportError:
+        logger.debug("Session memory not available for saving problems analysis")
+        return {"success": False, "error": "Memory system not available"}
 
 # Import error handler
 try:
@@ -338,6 +383,11 @@ def analyze_problems_tool(problems_json: str, include_hints: bool = True, output
 
         duration = time.time() - start_time
         log_automation_execution("analyze_problems", duration, True)
+
+        # ═══ MEMORY INTEGRATION: Save problems analysis ═══
+        memory_result = _save_problems_memory(analysis)
+        if memory_result.get('success') and not memory_result.get('skipped'):
+            analysis['memory_saved'] = memory_result.get('memory_id')
 
         return json.dumps(format_success_response(analysis, "Problems analysis completed"), indent=2)
 

@@ -3,23 +3,78 @@ Project Scorecard Tool - Generate comprehensive project health overview.
 
 [HINT: Project scorecard. Returns overall score, component scores (security, testing,
 docs, alignment, clarity, parallelizable, dogfooding, uniqueness), task metrics, production readiness.]
+
+Memory Integration:
+- Saves score history for trend tracking
 """
 
 import json
+import logging
 import re
-from pathlib import Path
 from datetime import datetime
-from typing import Any
+from pathlib import Path
+from typing import Any, Dict
 
 from ..utils import find_project_root
+
+scorecard_logger = logging.getLogger(__name__)
+
+
+def _save_scorecard_memory(result: Dict[str, Any]) -> Dict[str, Any]:
+    """Save scorecard results as memory for trend tracking."""
+    try:
+        from .session_memory import save_session_insight
+
+        scores = result.get('scores', {})
+        blockers = result.get('blockers', [])
+        recs = result.get('recommendations', [])[:5]
+        
+        # Format recommendations (avoid long line)
+        recs_str = 'None'
+        if recs:
+            recs_str = chr(10).join(
+                f"- [{r.get('priority', '?')}] {r.get('area', '?')}: {r.get('action', '?')}"
+                for r in recs
+            )
+
+        content = f"""Project scorecard generated.
+
+## Overall Score: {result.get('overall_score', 0)}%
+Production Ready: {'✅ Yes' if result.get('production_ready') else '❌ No'}
+
+## Component Scores
+{chr(10).join(f'- {name}: {score}%' for name, score in sorted(scores.items(), key=lambda x: -x[1]))}
+
+## Blockers
+{chr(10).join('- ' + b for b in blockers) or 'None'}
+
+## Recommendations
+{recs_str}
+"""
+
+        return save_session_insight(
+            title=f"Scorecard: {result.get('overall_score', 0)}% {'✅' if result.get('production_ready') else '❌'}",
+            content=content,
+            category="insight",
+            metadata={"type": "scorecard", "overall_score": result.get('overall_score', 0)}
+        )
+    except ImportError:
+        scorecard_logger.debug("Session memory not available for saving scorecard")
+        return {"success": False, "error": "Memory system not available"}
 
 # Optional: Multi-source wisdom system (extraction-ready subpackage)
 try:
     from .wisdom import (
-        get_wisdom,
         format_text as format_wisdom_text,
-        load_config as load_wisdom_config,
+    )
+    from .wisdom import (
+        get_wisdom,
+    )
+    from .wisdom import (
         list_sources as list_available_sources,
+    )
+    from .wisdom import (
+        load_config as load_wisdom_config,
     )
     WISDOM_AVAILABLE = True
 except ImportError:
@@ -50,29 +105,29 @@ def generate_project_scorecard(
         Dictionary with scorecard data and formatted output
     """
     project_root = find_project_root()
-    
+
     scores = {}
     metrics = {}
     details = {}
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 1. CODEBASE METRICS
     # ═══════════════════════════════════════════════════════════════
     py_files = list(project_root.rglob('*.py'))
-    py_files = [f for f in py_files if 'venv' not in str(f) and '.build-env' not in str(f) 
+    py_files = [f for f in py_files if 'venv' not in str(f) and '.build-env' not in str(f)
                 and '__pycache__' not in str(f)]
-    
+
     total_py_lines = 0
     for f in py_files:
         try:
             total_py_lines += len(f.read_text().splitlines())
         except:
             pass
-    
+
     # Count tools and prompts
     tools_dir = project_root / 'project_management_automation' / 'tools'
     tools_count = len([f for f in tools_dir.glob('*.py') if not f.name.startswith('__')]) if tools_dir.exists() else 0
-    
+
     try:
         import sys
         sys.path.insert(0, str(project_root))
@@ -80,7 +135,7 @@ def generate_project_scorecard(
         prompts_count = len(PROMPTS)
     except:
         prompts_count = 0
-    
+
     metrics['codebase'] = {
         'python_files': len(py_files),
         'python_lines': total_py_lines,
@@ -88,45 +143,45 @@ def generate_project_scorecard(
         'mcp_prompts': prompts_count,
     }
     scores['codebase'] = 80  # Base score for having a structured codebase
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 2. TESTING
     # ═══════════════════════════════════════════════════════════════
     test_dir = project_root / 'tests'
     test_files = list(test_dir.rglob('test_*.py')) if test_dir.exists() else []
     test_lines = sum(len(f.read_text().splitlines()) for f in test_files if f.exists())
-    
+
     test_ratio = (test_lines / total_py_lines * 100) if total_py_lines > 0 else 0
     scores['testing'] = min(100, test_ratio * 3)  # 33% ratio = 100%
-    
+
     metrics['testing'] = {
         'test_files': len(test_files),
         'test_lines': test_lines,
         'test_ratio': round(test_ratio, 1),
     }
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 3. DOCUMENTATION
     # ═══════════════════════════════════════════════════════════════
     docs_dir = project_root / 'docs'
     md_files = list(project_root.rglob('*.md'))
     md_files = [f for f in md_files if 'venv' not in str(f)]
-    
+
     doc_lines = sum(len(f.read_text().splitlines()) for f in md_files if f.exists())
     doc_ratio = (doc_lines / total_py_lines * 100) if total_py_lines > 0 else 0
-    
+
     key_docs = ['README.md', 'INSTALL.md', 'docs/SECURITY.md', 'docs/WORKFLOW.md']
     existing_docs = sum(1 for d in key_docs if (project_root / d).exists())
-    
+
     scores['documentation'] = min(100, doc_ratio + (existing_docs / len(key_docs) * 50))
-    
+
     metrics['documentation'] = {
         'doc_files': len(md_files),
         'doc_lines': doc_lines,
         'doc_ratio': round(doc_ratio, 1),
         'key_docs': f"{existing_docs}/{len(key_docs)}",
     }
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 4. TASK MANAGEMENT
     # ═══════════════════════════════════════════════════════════════
@@ -135,15 +190,15 @@ def generate_project_scorecard(
         with open(todo2_file) as f:
             data = json.load(f)
         todos = data.get('todos', [])
-        
+
         pending = [t for t in todos if t.get('status') in ['pending', 'in_progress']]
         completed = [t for t in todos if t.get('status') == 'completed']
-        
+
         completion_rate = len(completed) / len(todos) * 100 if todos else 0
         scores['completion'] = completion_rate
-        
+
         remaining_hours = sum(t.get('estimatedHours', 0) for t in pending)
-        
+
         metrics['tasks'] = {
             'total': len(todos),
             'pending': len(pending),
@@ -151,7 +206,7 @@ def generate_project_scorecard(
             'completion_rate': round(completion_rate, 1),
             'remaining_hours': remaining_hours,
         }
-        
+
         # ═══════════════════════════════════════════════════════════
         # 5. ALIGNMENT ANALYSIS
         # ═══════════════════════════════════════════════════════════
@@ -164,7 +219,7 @@ def generate_project_scorecard(
             'boundary', 'rate', 'limiting', 'access', 'control', 'auth',
             'exarp', 'hook', 'hooks', 'trigger', 'config', 'deploy',
         }
-        
+
         alignment_scores = []
         well_aligned = 0
         moderately_aligned = 0
@@ -173,10 +228,10 @@ def generate_project_scorecard(
             details_text = (task.get('details', '') or task.get('long_description', '') or '').lower()
             tags = ' '.join(task.get('tags', [])).lower()
             full_text = f"{content} {details_text} {tags}"
-            
+
             words = set(re.findall(r'\b[a-z_]{3,}\b', full_text))
             matches = len(words & mcp_keywords)
-            
+
             # Score based on matches (generous scoring)
             if matches >= 5:
                 score = 100
@@ -192,41 +247,41 @@ def generate_project_scorecard(
             else:
                 score = 10
             alignment_scores.append(score)
-        
+
         avg_alignment = sum(alignment_scores) / len(alignment_scores) if alignment_scores else 0
         scores['alignment'] = avg_alignment
-        
+
         metrics['alignment'] = {
             'well_aligned': well_aligned,
             'moderately_aligned': moderately_aligned,
             'total_pending': len(pending),
             'avg_score': round(avg_alignment, 1),
         }
-        
+
         # ═══════════════════════════════════════════════════════════
         # 6. CLARITY & PARALLELIZABILITY
         # ═══════════════════════════════════════════════════════════
-        action_verbs = ['add', 'implement', 'create', 'fix', 'update', 'remove', 
+        action_verbs = ['add', 'implement', 'create', 'fix', 'update', 'remove',
                        'refactor', 'migrate', 'integrate', 'test', 'document', 'extend']
-        
+
         has_estimate = sum(1 for t in pending if t.get('estimatedHours', 0) > 0)
         has_tags = sum(1 for t in pending if t.get('tags'))
         small_enough = sum(1 for t in pending if 0 < t.get('estimatedHours', 0) <= 4)
         clear_name = sum(1 for t in pending if any(
             t.get('content', '').lower().startswith(v) for v in action_verbs))
         no_deps = sum(1 for t in pending if not t.get('dependsOn') and not t.get('dependencies'))
-        
+
         total_pending = len(pending) or 1
         clarity_score = (has_estimate + has_tags + small_enough + clear_name + no_deps) / (5 * total_pending) * 100
         scores['clarity'] = clarity_score
-        
-        parallelizable = sum(1 for t in pending if 
-            t.get('estimatedHours', 0) <= 4 and 
-            not t.get('dependsOn') and 
+
+        parallelizable = sum(1 for t in pending if
+            t.get('estimatedHours', 0) <= 4 and
+            not t.get('dependsOn') and
             not t.get('dependencies'))
         parallel_score = parallelizable / total_pending * 100 if total_pending else 0
         scores['parallelizable'] = parallel_score
-        
+
         metrics['clarity'] = {
             'has_estimate': has_estimate,
             'has_tags': has_tags,
@@ -235,7 +290,7 @@ def generate_project_scorecard(
             'no_dependencies': no_deps,
             'clarity_score': round(clarity_score, 1),
         }
-        
+
         metrics['parallelizable'] = {
             'ready': parallelizable,
             'total': total_pending,
@@ -247,18 +302,18 @@ def generate_project_scorecard(
         scores['clarity'] = 0
         scores['parallelizable'] = 0
         metrics['tasks'] = {'total': 0, 'pending': 0, 'completed': 0}
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 7. SECURITY (including CodeQL integration)
     # ═══════════════════════════════════════════════════════════════
-    
+
     # Check for security.py module existence
     security_module = project_root / 'project_management_automation' / 'utils' / 'security.py'
     security_module_exists = security_module.exists()
-    
+
     # Check security module contents for specific controls
     security_content = security_module.read_text() if security_module_exists else ""
-    
+
     # Get CodeQL metrics
     try:
         from .codeql_security import get_codeql_security_metrics
@@ -277,7 +332,7 @@ def generate_project_scorecard(
             'languages': [],
             'recommendations': [],
         }
-    
+
     security_checks = {
         'security_docs': (project_root / 'docs' / 'SECURITY.md').exists(),
         'ci_cd_workflow': (project_root / '.github' / 'workflows' / 'ci.yml').exists(),
@@ -292,21 +347,21 @@ def generate_project_scorecard(
         'codeql_no_critical': codeql_metrics['checks']['no_critical_alerts'],
         'codeql_no_high': codeql_metrics['checks']['no_high_alerts'],
     }
-    
+
     passed = sum(1 for v in security_checks.values() if v)
-    
+
     # Base security score from checks
     base_security_score = passed / len(security_checks) * 100
-    
+
     # Blend with CodeQL score if configured (CodeQL gets 30% weight when enabled)
     if codeql_metrics['configured']:
         scores['security'] = (base_security_score * 0.7) + (codeql_metrics['score'] * 0.3)
     else:
         scores['security'] = base_security_score
-    
+
     # Count pending security tasks
     security_tasks = [t for t in todos if 'security' in t.get('tags', []) and t.get('status') == 'pending'] if todo2_file.exists() else []
-    
+
     metrics['security'] = {
         'checks_passed': passed,
         'checks_total': len(security_checks),
@@ -319,7 +374,7 @@ def generate_project_scorecard(
             'languages': codeql_metrics['languages'],
         },
     }
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 8. CI/CD
     # ═══════════════════════════════════════════════════════════════
@@ -331,17 +386,17 @@ def generate_project_scorecard(
         'pre_commit': (project_root / '.pre-commit-config.yaml').exists(),
         'dependency_lock': (project_root / 'requirements.txt').exists(),
     }
-    
+
     scores['ci_cd'] = sum(1 for v in ci_checks.values() if v) / len(ci_checks) * 100
     metrics['ci_cd'] = ci_checks
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 9. DOGFOODING SCORE (Does Exarp use its own tools?)
     # ═══════════════════════════════════════════════════════════════
     dogfooding_checks = {
         # Git hooks using exarp
-        'pre_commit_hook': (project_root / '.git' / 'hooks' / 'pre-commit').exists() and 
-            'exarp' in ((project_root / '.git' / 'hooks' / 'pre-commit').read_text().lower() 
+        'pre_commit_hook': (project_root / '.git' / 'hooks' / 'pre-commit').exists() and
+            'exarp' in ((project_root / '.git' / 'hooks' / 'pre-commit').read_text().lower()
             if (project_root / '.git' / 'hooks' / 'pre-commit').exists() else ''),
         'pre_push_hook': (project_root / '.git' / 'hooks' / 'pre-push').exists() and
             'exarp' in ((project_root / '.git' / 'hooks' / 'pre-push').read_text().lower()
@@ -364,28 +419,28 @@ def generate_project_scorecard(
         # Pattern triggers
         'pattern_triggers': (project_root / '.cursor' / 'automa_patterns.json').exists(),
     }
-    
+
     dogfooding_passed = sum(1 for v in dogfooding_checks.values() if v)
     scores['dogfooding'] = dogfooding_passed / len(dogfooding_checks) * 100
-    
+
     metrics['dogfooding'] = {
         'checks_passed': dogfooding_passed,
         'checks_total': len(dogfooding_checks),
         'details': dogfooding_checks,
         'description': 'How much Exarp uses its own tools for self-maintenance',
     }
-    
+
     # ═══════════════════════════════════════════════════════════════
     # 10. UNIQUENESS SCORE (Are we reinventing the wheel?)
     # ═══════════════════════════════════════════════════════════════
-    
+
     # Check for common patterns that could use existing libraries
     wheel_reinventions = []
     justified_customs = []
-    
+
     # Analyze source files for potential reinventions
     tools_dir = project_root / 'project_management_automation' / 'tools'
-    
+
     # Known patterns that might be reinventions
     reinvention_patterns = {
         'http_client': {
@@ -448,7 +503,7 @@ def generate_project_scorecard(
             'check_file': False,
         },
     }
-    
+
     # Check requirements.txt for dependencies we DO use
     req_file = project_root / 'requirements.txt'
     dependencies = set()
@@ -457,7 +512,7 @@ def generate_project_scorecard(
             if line.strip() and not line.startswith('#'):
                 dep = line.split('==')[0].split('>=')[0].split('[')[0].strip().lower()
                 dependencies.add(dep)
-    
+
     # Check pyproject.toml for more deps
     pyproject = project_root / 'pyproject.toml'
     if pyproject.exists():
@@ -465,7 +520,7 @@ def generate_project_scorecard(
         # Simple extraction of dependencies
         for match in re.findall(r'"([a-zA-Z0-9_-]+)', content):
             dependencies.add(match.lower())
-    
+
     # Check for a DESIGN_DECISIONS.md or similar
     design_docs = [
         project_root / 'docs' / 'DESIGN_DECISIONS.md',
@@ -474,7 +529,7 @@ def generate_project_scorecard(
         project_root / 'DESIGN.md',
     ]
     has_design_docs = any(d.exists() for d in design_docs)
-    
+
     # Score components
     uniqueness_analysis = {
         'core_features': {
@@ -485,7 +540,7 @@ def generate_project_scorecard(
             },
             'mcp_tools': {
                 'custom': True,
-                'justified': True, 
+                'justified': True,
                 'reason': 'Custom MCP tools are the product itself',
             },
             'project_scorecard': {
@@ -518,11 +573,11 @@ def generate_project_scorecard(
         },
         'potential_improvements': [],
     }
-    
+
     # Check if we're using heavy frameworks where simpler would work
     using_fastmcp = 'fastmcp' in dependencies or 'mcp' in dependencies
     using_pydantic = 'pydantic' in dependencies
-    
+
     # FastMCP is justified - it's the standard for MCP servers
     if using_fastmcp:
         uniqueness_analysis['infrastructure']['mcp_framework'] = {
@@ -530,17 +585,17 @@ def generate_project_scorecard(
             'justified': True,
             'reason': 'FastMCP is the standard MCP server framework',
         }
-    
+
     # Count justified vs potentially unjustified
     total_decisions = 0
     justified_count = 0
-    
+
     for category in ['core_features', 'infrastructure']:
         for name, info in uniqueness_analysis.get(category, {}).items():
             total_decisions += 1
             if info.get('justified'):
                 justified_count += 1
-    
+
     # Check for design documentation
     if has_design_docs:
         justified_count += 1
@@ -556,11 +611,11 @@ def generate_project_scorecard(
             'suggestion': 'Create docs/DESIGN_DECISIONS.md to document why custom implementations were chosen',
             'priority': 'low',
         })
-    
+
     # Calculate uniqueness score
     # Higher score = better justified custom code OR using existing solutions
     uniqueness_score = (justified_count / total_decisions * 100) if total_decisions > 0 else 50
-    
+
     # Bonus for minimal dependencies (less dependency hell)
     dep_count = len(dependencies)
     if dep_count <= 5:
@@ -583,9 +638,9 @@ def generate_project_scorecard(
             'rating': 'heavy',
             'reason': 'Consider reducing dependencies',
         }
-    
+
     scores['uniqueness'] = uniqueness_score
-    
+
     metrics['uniqueness'] = {
         'score': round(uniqueness_score, 1),
         'justified_decisions': justified_count,
@@ -595,7 +650,7 @@ def generate_project_scorecard(
         'analysis': uniqueness_analysis,
         'description': 'Are we reinventing wheels? If so, is it justified?',
     }
-    
+
     # ═══════════════════════════════════════════════════════════════
     # CALCULATE OVERALL SCORE
     # ═══════════════════════════════════════════════════════════════
@@ -612,9 +667,9 @@ def generate_project_scorecard(
         'dogfooding': 0.13,  # Eating our own dog food
         'uniqueness': 0.10,  # Not reinventing wheels (or justified if we are)
     }
-    
+
     overall_score = sum(scores.get(k, 0) * weights.get(k, 0) for k in weights)
-    
+
     # Determine production readiness
     production_ready = scores.get('security', 0) >= 80 and scores.get('testing', 0) >= 50
     blockers = []
@@ -622,7 +677,7 @@ def generate_project_scorecard(
         blockers.append("Security controls incomplete")
     if scores.get('testing', 0) < 50:
         blockers.append("Test coverage too low")
-    
+
     # ═══════════════════════════════════════════════════════════════
     # BUILD RESULT
     # ═══════════════════════════════════════════════════════════════
@@ -635,11 +690,11 @@ def generate_project_scorecard(
         'weights': weights,
         'metrics': metrics,
     }
-    
+
     # Add recommendations if requested
     if include_recommendations:
         recommendations = []
-        
+
         if scores.get('security', 0) < 80:
             recommendations.append({
                 'priority': 'critical',
@@ -647,7 +702,7 @@ def generate_project_scorecard(
                 'action': 'Implement path boundary enforcement, rate limiting, and access control',
                 'impact': '+25% to security score',
             })
-        
+
         # CodeQL-specific recommendations
         if not codeql_metrics['configured']:
             recommendations.append({
@@ -670,7 +725,7 @@ def generate_project_scorecard(
                 'action': f"Address {codeql_metrics['alerts']['high']} high-severity CodeQL alerts",
                 'impact': '+15% to CodeQL score',
             })
-        
+
         if scores.get('testing', 0) < 50:
             recommendations.append({
                 'priority': 'high',
@@ -678,7 +733,7 @@ def generate_project_scorecard(
                 'action': 'Fix failing tests and increase coverage to 30%',
                 'impact': '+15% to testing score',
             })
-        
+
         if scores.get('completion', 0) < 25:
             recommendations.append({
                 'priority': 'medium',
@@ -686,7 +741,7 @@ def generate_project_scorecard(
                 'action': 'Complete pending tasks to show progress',
                 'impact': '+5% to overall score',
             })
-        
+
         if scores.get('dogfooding', 0) < 70:
             missing = [k for k, v in metrics.get('dogfooding', {}).get('details', {}).items() if not v]
             recommendations.append({
@@ -695,7 +750,7 @@ def generate_project_scorecard(
                 'action': f'Enable more self-maintenance: {", ".join(missing[:3])}{"..." if len(missing) > 3 else ""}',
                 'impact': '+13% to dogfooding score',
             })
-        
+
         if scores.get('uniqueness', 0) < 80:
             improvements = metrics.get('uniqueness', {}).get('analysis', {}).get('potential_improvements', [])
             if improvements:
@@ -705,9 +760,9 @@ def generate_project_scorecard(
                     'action': improvements[0].get('suggestion', 'Document design decisions'),
                     'impact': '+10% to uniqueness score',
                 })
-        
+
         result['recommendations'] = recommendations
-    
+
     # ═══════════════════════════════════════════════════════════════
     # FORMAT OUTPUT
     # ═══════════════════════════════════════════════════════════════
@@ -717,16 +772,21 @@ def generate_project_scorecard(
         formatted_output = _format_markdown(result)
     else:
         formatted_output = _format_text(result)
-    
+
     result['formatted_output'] = formatted_output
-    
+
     # Save to file if requested
     if output_path:
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
         output_file.write_text(formatted_output)
         result['output_file'] = str(output_file)
-    
+
+    # ═══ MEMORY INTEGRATION: Save scorecard for trend tracking ═══
+    memory_result = _save_scorecard_memory(result)
+    if memory_result.get('success'):
+        result['memory_saved'] = memory_result.get('memory_id')
+
     return result
 
 
@@ -737,16 +797,16 @@ def _format_text(data: dict) -> str:
     lines.append("  📊 EXARP PROJECT SCORE CARD")
     lines.append(f"  Generated: {data['generated_at'][:16].replace('T', ' ')}")
     lines.append("=" * 70)
-    
+
     # Overall score
     overall = data['overall_score']
     status = "🟢" if overall >= 70 else "🟡" if overall >= 50 else "🔴"
     lines.append(f"\n  OVERALL SCORE: {overall}% {status}")
     lines.append(f"  Production Ready: {'YES ✅' if data['production_ready'] else 'NO ❌'}")
-    
+
     if data.get('blockers'):
         lines.append(f"  Blockers: {', '.join(data['blockers'])}")
-    
+
     # Component scores
     lines.append("\n  Component Scores:")
     for name, score in sorted(data['scores'].items(), key=lambda x: -x[1]):
@@ -755,29 +815,29 @@ def _format_text(data: dict) -> str:
         status = "🟢" if score >= 70 else "🟡" if score >= 50 else "🔴"
         weight = int(data['weights'].get(name, 0) * 100)
         lines.append(f"    {name:<14} [{bar}] {score:>5.1f}% {status} (×{weight}%)")
-    
+
     # Key metrics
     lines.append("\n  Key Metrics:")
     if 'tasks' in data['metrics']:
         t = data['metrics']['tasks']
         lines.append(f"    Tasks: {t.get('pending', 0)} pending, {t.get('completed', 0)} completed")
         lines.append(f"    Remaining work: {t.get('remaining_hours', 0)}h")
-    
+
     if 'parallelizable' in data['metrics']:
         p = data['metrics']['parallelizable']
         lines.append(f"    Parallelizable: {p.get('ready', 0)} tasks ({p.get('score', 0)}%)")
-    
+
     if 'dogfooding' in data['metrics']:
         d = data['metrics']['dogfooding']
         lines.append(f"    Dogfooding: {d.get('checks_passed', 0)}/{d.get('checks_total', 0)} self-checks")
-    
+
     if 'uniqueness' in data['metrics']:
         u = data['metrics']['uniqueness']
         deps = u.get('dependency_count', 0)
         justified = u.get('justified_decisions', 0)
         total = u.get('total_decisions', 0)
         lines.append(f"    Uniqueness: {justified}/{total} decisions justified, {deps} deps")
-    
+
     # CodeQL Security
     if 'security' in data['metrics'] and 'codeql' in data['metrics']['security']:
         cql = data['metrics']['security']['codeql']
@@ -795,16 +855,16 @@ def _format_text(data: dict) -> str:
                 lines.append(f"    CodeQL Languages: {', '.join(cql['languages'])}")
         else:
             lines.append("    🔐 CodeQL: Not configured")
-    
+
     # Recommendations
     if data.get('recommendations'):
         lines.append("\n  Recommendations:")
         for rec in data['recommendations']:
             icon = {'critical': '🔴', 'high': '🟠', 'medium': '🟡'}.get(rec['priority'], '•')
             lines.append(f"    {icon} [{rec['area']}] {rec['action']}")
-    
+
     lines.append("\n" + "=" * 70)
-    
+
     # Add daily wisdom if available and enabled
     if WISDOM_AVAILABLE:
         wisdom_config = load_wisdom_config()
@@ -819,11 +879,11 @@ def _format_text(data: dict) -> str:
                     lines.append(_first_run_wisdom_prompt())
                 except:
                     pass
-            
+
             wisdom = get_wisdom(data['overall_score'])
             if wisdom:
                 lines.append(format_wisdom_text(wisdom))
-    
+
     return "\n".join(lines)
 
 
@@ -832,16 +892,16 @@ def _format_markdown(data: dict) -> str:
     lines = []
     lines.append("# 📊 Exarp Project Score Card")
     lines.append(f"\n*Generated: {data['generated_at'][:16].replace('T', ' ')}*")
-    
+
     # Overall score
     overall = data['overall_score']
     status = "🟢" if overall >= 70 else "🟡" if overall >= 50 else "🔴"
     lines.append(f"\n## Overall Score: **{overall}%** {status}")
     lines.append(f"\n**Production Ready:** {'✅ Yes' if data['production_ready'] else '❌ No'}")
-    
+
     if data.get('blockers'):
         lines.append(f"\n**Blockers:** {', '.join(data['blockers'])}")
-    
+
     # Component scores table
     lines.append("\n## Component Scores\n")
     lines.append("| Component | Score | Status | Weight |")
@@ -850,36 +910,36 @@ def _format_markdown(data: dict) -> str:
         status = "🟢" if score >= 70 else "🟡" if score >= 50 else "🔴"
         weight = int(data['weights'].get(name, 0) * 100)
         lines.append(f"| {name.title()} | {score:.1f}% | {status} | {weight}% |")
-    
+
     # Key metrics
     lines.append("\n## Key Metrics\n")
     if 'tasks' in data['metrics']:
         t = data['metrics']['tasks']
         lines.append(f"- **Tasks:** {t.get('pending', 0)} pending, {t.get('completed', 0)} completed")
         lines.append(f"- **Remaining work:** {t.get('remaining_hours', 0)}h")
-    
+
     if 'parallelizable' in data['metrics']:
         p = data['metrics']['parallelizable']
         lines.append(f"- **Parallelizable:** {p.get('ready', 0)} tasks ({p.get('score', 0)}%)")
-    
+
     if 'dogfooding' in data['metrics']:
         d = data['metrics']['dogfooding']
         lines.append(f"- **Dogfooding:** {d.get('checks_passed', 0)}/{d.get('checks_total', 0)} self-checks ({data['scores'].get('dogfooding', 0):.0f}%)")
-    
+
     if 'uniqueness' in data['metrics']:
         u = data['metrics']['uniqueness']
         deps = u.get('dependency_count', 0)
         justified = u.get('justified_decisions', 0)
         total = u.get('total_decisions', 0)
         lines.append(f"- **Uniqueness:** {justified}/{total} decisions justified, {deps} dependencies ({data['scores'].get('uniqueness', 0):.0f}%)")
-    
+
     # CodeQL Security
     if 'security' in data['metrics'] and 'codeql' in data['metrics']['security']:
         cql = data['metrics']['security']['codeql']
         if cql.get('configured'):
             alerts = cql.get('alerts', {})
             status = "✅ No alerts" if alerts.get('total', 0) == 0 else f"⚠️ {alerts.get('total', 0)} alerts"
-            lines.append(f"\n### 🔐 CodeQL Security\n")
+            lines.append("\n### 🔐 CodeQL Security\n")
             lines.append(f"- **Status:** {status}")
             lines.append(f"- **Score:** {cql.get('score', 0):.0f}%")
             if alerts.get('total', 0) > 0:
@@ -887,17 +947,17 @@ def _format_markdown(data: dict) -> str:
             if cql.get('languages'):
                 lines.append(f"- **Languages:** {', '.join(cql['languages'])}")
         else:
-            lines.append(f"\n### 🔐 CodeQL Security\n")
+            lines.append("\n### 🔐 CodeQL Security\n")
             lines.append("- **Status:** Not configured")
             lines.append("- **Recommendation:** Add `.github/workflows/codeql.yml` for automated security scanning")
-    
+
     # Recommendations
     if data.get('recommendations'):
         lines.append("\n## Recommendations\n")
         for rec in data['recommendations']:
             icon = {'critical': '🔴', 'high': '🟠', 'medium': '🟡'}.get(rec['priority'], '•')
             lines.append(f"- {icon} **{rec['area']}:** {rec['action']} ({rec['impact']})")
-    
+
     # Add daily wisdom if available and enabled
     if WISDOM_AVAILABLE:
         wisdom_config = load_wisdom_config()
@@ -905,7 +965,7 @@ def _format_markdown(data: dict) -> str:
             wisdom = get_wisdom(data['overall_score'])
             if wisdom:
                 lines.append(_format_wisdom_markdown(wisdom))
-    
+
     return "\n".join(lines)
 
 
@@ -913,7 +973,7 @@ def _first_run_wisdom_prompt() -> str:
     """First-run message introducing the wisdom feature."""
     sources = list_available_sources() if WISDOM_AVAILABLE else []
     source_list = ", ".join([s['id'] for s in sources[:5]]) + "..." if len(sources) > 5 else ", ".join([s['id'] for s in sources])
-    
+
     return f"""
 ┌──────────────────────────────────────────────────────────────────────┐
 │  ✨ NEW FEATURE: Daily Wisdom from Public Domain Texts               │
@@ -938,7 +998,7 @@ def _format_wisdom_markdown(wisdom: dict) -> str:
     """Format wisdom as Markdown."""
     if wisdom is None:
         return ""
-    
+
     return f"""
 ---
 
