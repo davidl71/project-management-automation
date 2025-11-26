@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "project-management-automation-mcp"
-version = "0.1.8"
+name = "exarp"
+version = "0.1.9"
 description = "MCP server for project management automation - health scores, task alignment, security scanning"
 readme = "README.md"
 requires-python = ">=3.9"
