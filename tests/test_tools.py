@@ -45,8 +45,8 @@ class TestDocumentationHealthTool:
 
         # Mock project root finder
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-        # Call tool
-        result = check_documentation_health(output_path="test_report.md", create_tasks=True)
+            # Call tool
+            result = check_documentation_health(output_path="test_report.md", create_tasks=True)
         result_data = json.loads(result)
 
         # Assertions
@@ -64,9 +64,9 @@ class TestDocumentationHealthTool:
 
         # Mock project root finder
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-        # Call tool
-        result = check_documentation_health()
-        result_data = json.loads(result)
+            # Call tool
+            result = check_documentation_health()
+            result_data = json.loads(result)
 
         # Assertions
         assert result_data['success'] is False
@@ -109,7 +109,7 @@ class TestTodo2AlignmentTool:
 
         # Assertions
         assert result_data['success'] is True
-            assert 'data' in result_data
+        assert 'data' in result_data
 
 
 class TestDuplicateDetectionTool:
@@ -202,8 +202,8 @@ class TestDependencySecurityTool:
             # Mock json.loads to return a valid config
             with patch.object(json_module, 'loads', return_value={'python': {}, 'rust': {}, 'npm': {}}):
                 # Call tool - will fail on file not found, but that's okay for test
-        result = scan_dependency_security(languages=['python'])
-        result_data = json.loads(result)
+                result = scan_dependency_security(languages=['python'])
+                result_data = json.loads(result)
 
                 # May fail or succeed depending on file existence
                 assert 'success' in result_data or 'error' in result_data
