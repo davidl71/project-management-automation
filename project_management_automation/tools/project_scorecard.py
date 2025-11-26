@@ -13,6 +13,19 @@ from typing import Any
 
 from ..utils import find_project_root
 
+# Optional: Pistis Sophia daily wisdom
+try:
+    from .pistis_sophia_quotes import (
+        get_daily_wisdom, 
+        format_wisdom_ascii, 
+        format_wisdom_markdown,
+        check_first_run_and_prompt
+    )
+    WISDOM_AVAILABLE = True
+except ImportError:
+    WISDOM_AVAILABLE = False
+    check_first_run_and_prompt = lambda: None
+
 
 def generate_project_scorecard(
     output_format: str = "text",
@@ -702,6 +715,18 @@ def _format_text(data: dict) -> str:
             lines.append(f"    {icon} [{rec['area']}] {rec['action']}")
     
     lines.append("\n" + "=" * 70)
+    
+    # Add Pistis Sophia wisdom if available
+    if WISDOM_AVAILABLE:
+        # Check for first run
+        first_run_msg = check_first_run_and_prompt()
+        if first_run_msg:
+            lines.append(first_run_msg)
+        
+        wisdom = get_daily_wisdom(data['overall_score'])
+        if wisdom:
+            lines.append(format_wisdom_ascii(wisdom))
+    
     return "\n".join(lines)
 
 
@@ -757,6 +782,12 @@ def _format_markdown(data: dict) -> str:
         for rec in data['recommendations']:
             icon = {'critical': '🔴', 'high': '🟠', 'medium': '🟡'}.get(rec['priority'], '•')
             lines.append(f"- {icon} **{rec['area']}:** {rec['action']} ({rec['impact']})")
+    
+    # Add Pistis Sophia wisdom if available
+    if WISDOM_AVAILABLE:
+        wisdom = get_daily_wisdom(data['overall_score'])
+        if wisdom:
+            lines.append(format_wisdom_markdown(wisdom))
     
     return "\n".join(lines)
 
