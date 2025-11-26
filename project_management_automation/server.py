@@ -1050,6 +1050,50 @@ if mcp:
             consultations = get_consultation_log(days=days)
             return json.dumps(_generate(consultations, output_path, backend), separators=(",", ":"))
 
+        # ═══════════════════════════════════════════════════════════════════
+        # DEPENDABOT INTEGRATION TOOLS
+        # ═══════════════════════════════════════════════════════════════════
+
+        @mcp.tool()
+        def fetch_dependabot_alerts(
+            repo: str = "davidl71/project-management-automation",
+            state: str = "open",
+        ) -> str:
+            """
+            [HINT: Dependabot alerts. Fetch GitHub security alerts via API.]
+
+            Fetch Dependabot vulnerability alerts from GitHub.
+            Requires: gh CLI installed and authenticated.
+
+            Args:
+                repo: GitHub repo in owner/repo format
+                state: Alert state (open, fixed, dismissed, all)
+            """
+            from .tools.dependabot_integration import fetch_dependabot_alerts as _fetch
+
+            return json.dumps(_fetch(repo, state), separators=(",", ":"))
+
+        @mcp.tool()
+        def unified_security_report(
+            repo: str = "davidl71/project-management-automation",
+            include_dismissed: bool = False,
+        ) -> str:
+            """
+            [HINT: Unified security. Combines Dependabot + pip-audit findings.]
+
+            Get comprehensive security report combining:
+            - GitHub Dependabot alerts
+            - Local pip-audit scan
+            - Comparison and recommendations
+
+            Args:
+                repo: GitHub repo in owner/repo format
+                include_dismissed: Include dismissed alerts
+            """
+            from .tools.dependabot_integration import get_unified_security_report
+
+            return json.dumps(get_unified_security_report(repo, include_dismissed), separators=(",", ":"))
+
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS
     # ═══════════════════════════════════════════════════════════════════════════════
