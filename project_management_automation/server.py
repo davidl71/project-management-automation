@@ -242,10 +242,10 @@ try:
         from .tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
         from .tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
         from .tools.git_hooks import setup_git_hooks as _setup_git_hooks
-        from .tools.problems_advisor import analyze_problems_tool as _analyze_problems
-        from .tools.problems_advisor import list_problem_categories as _list_problem_categories
         from .tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
         from .tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
+        from .tools.problems_advisor import analyze_problems_tool as _analyze_problems
+        from .tools.problems_advisor import list_problem_categories as _list_problem_categories
         from .tools.project_overview import generate_project_overview as _generate_project_overview
         from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         from .tools.pwa_review import review_pwa_config as _review_pwa_config
@@ -278,10 +278,10 @@ try:
         from tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
         from tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
         from tools.git_hooks import setup_git_hooks as _setup_git_hooks
-        from tools.problems_advisor import analyze_problems_tool as _analyze_problems
-        from tools.problems_advisor import list_problem_categories as _list_problem_categories
         from tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
         from tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
+        from tools.problems_advisor import analyze_problems_tool as _analyze_problems
+        from tools.problems_advisor import list_problem_categories as _list_problem_categories
         from tools.project_overview import generate_project_overview as _generate_project_overview
         from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         from tools.pwa_review import review_pwa_config as _review_pwa_config
@@ -657,11 +657,7 @@ if mcp:
             return _add_external_tool_hints(dry_run, output_path, min_file_size)
 
         @mcp.tool()
-        def analyze_problems(
-            problems_json: str,
-            include_hints: bool = True,
-            output_path: Optional[str] = None
-        ) -> str:
+        def analyze_problems(problems_json: str, include_hints: bool = True, output_path: Optional[str] = None) -> str:
             """[HINT: Problems advisor. Analyzes linter errors, provides resolution hints, metrics.]"""
             return _analyze_problems(problems_json, include_hints, output_path)
 
@@ -1713,35 +1709,7 @@ _exarp_project_cache() {{
     echo "$EXARP_CACHE_DIR/projects/$proj_hash"
 }}
 
-# Scorecard with caching and offline fallback
-xs() {{
-    local cache_dir=$(_exarp_project_cache)
-    local cache_file="$cache_dir/scorecard.txt"
-    mkdir -p "$cache_dir" 2>/dev/null
-    
-    # Try uvx first
-    local result
-    result=$(uvx --from exarp python3 -c "
-from project_management_automation.tools.project_scorecard import generate_project_scorecard
-r = generate_project_scorecard()
-print(r.get('formatted_output', ''))
-" 2>/dev/null)
-    
-    if [[ -n "$result" ]]; then
-        echo "$result"
-        echo "$result" > "$cache_file"
-        date +%s > "$cache_file.ts"
-    elif [[ -f "$cache_file" ]]; then
-        local age=999999
-        [[ -f "$cache_file.ts" ]] && age=$(($(date +%s) - $(cat "$cache_file.ts")))
-        echo "⚠️  Using cached scorecard (uvx unavailable, cached $((age/60))m ago)"
-        echo ""
-        cat "$cache_file"
-    else
-        echo "❌ Scorecard unavailable (no uvx, no cache)"
-        echo "   Try: xl (lite context) or check network"
-    fi
-}}
+# NOTE: xs() is defined below in CAPTURED OUTPUT section with score caching
 
 # Overview with caching and offline fallback
 xo() {{
@@ -1919,38 +1887,251 @@ xc() {{
 # PROMPT INTEGRATION
 # ═══════════════════════════════════════════════════════════════
 
+# Get cached score (fast, no Python)
+_exarp_cached_score() {{
+    local cache_file="$(_exarp_project_cache)/score.txt"
+    [[ -f "$cache_file" ]] && cat "$cache_file" || echo ""
+}}
+
+# Update cached score (called after xs)
+_exarp_update_score() {{
+    local score="$1"
+    local cache_file="$(_exarp_project_cache)/score.txt"
+    mkdir -p "$(dirname "$cache_file")" 2>/dev/null
+    echo "$score" > "$cache_file"
+}}
+
+# Prompt info with tasks and optional score
 exarp_prompt_info() {{
     [[ "${{EXARP_PROMPT:-0}}" == "0" ]] && return
     _exarp_detect "." || return
+    
     local tasks=$(_exarp_tasks ".")
     local pending=${{tasks%%/*}}
-    (( pending > 0 )) && echo "%F{{blue}}◇$pending%f"
+    local output=""
+    
+    # Task count badge
+    if (( pending > 0 )); then
+        if (( pending > 10 )); then
+            output="%F{{red}}◇$pending%f"
+        elif (( pending > 5 )); then
+            output="%F{{yellow}}◇$pending%f"
+        else
+            output="%F{{blue}}◇$pending%f"
+        fi
+    fi
+    
+    # Score badge (if cached)
+    local score=$(_exarp_cached_score)
+    if [[ -n "$score" ]]; then
+        if (( score >= 80 )); then
+            output="$output %F{{green}}●$score%%%f"
+        elif (( score >= 60 )); then
+            output="$output %F{{yellow}}●$score%%%f"
+        else
+            output="$output %F{{red}}●$score%%%f"
+        fi
+    fi
+    
+    echo "$output"
 }}
 
 # Add to your prompt: RPROMPT='$(exarp_prompt_info) '$RPROMPT
 
 # ═══════════════════════════════════════════════════════════════
+# iTERM2 INTEGRATION
+# ═══════════════════════════════════════════════════════════════
+
+# Set iTerm2 badge (project name + score)
+exarp_iterm_badge() {{
+    [[ "$TERM_PROGRAM" != "iTerm.app" ]] && return
+    _exarp_detect "." || return
+    
+    local name=$(_exarp_name ".")
+    local tasks=$(_exarp_tasks ".")
+    local score=$(_exarp_cached_score)
+    
+    local badge="$name"
+    [[ -n "$tasks" ]] && badge="$badge ◇${{tasks%%/*}}"
+    [[ -n "$score" ]] && badge="$badge ●$score%"
+    
+    # iTerm2 badge escape sequence
+    printf "\\033]1337;SetBadgeFormat=%s\\007" "$(echo -n "$badge" | base64)"
+}}
+
+# Set iTerm2 tab title
+exarp_iterm_title() {{
+    [[ "$TERM_PROGRAM" != "iTerm.app" ]] && return
+    _exarp_detect "." || return
+    
+    local name=$(_exarp_name ".")
+    # Set tab title
+    printf "\\033]0;%s\\007" "$name"
+}}
+
+# Set iTerm2 user vars (for status bar)
+exarp_iterm_vars() {{
+    [[ "$TERM_PROGRAM" != "iTerm.app" ]] && return
+    _exarp_detect "." || return
+    
+    local name=$(_exarp_name ".")
+    local tasks=$(_exarp_tasks ".")
+    local score=$(_exarp_cached_score)
+    
+    # Set user variables for iTerm2 status bar
+    printf "\\033]1337;SetUserVar=exarp_project=%s\\007" "$(echo -n "$name" | base64)"
+    printf "\\033]1337;SetUserVar=exarp_tasks=%s\\007" "$(echo -n "$tasks" | base64)"
+    [[ -n "$score" ]] && printf "\\033]1337;SetUserVar=exarp_score=%s\\007" "$(echo -n "$score" | base64)"
+}}
+
+# Update all iTerm2 integrations
+exarp_iterm_update() {{
+    exarp_iterm_badge
+    exarp_iterm_title
+    exarp_iterm_vars
+}}
+
+# Hook into cd to update iTerm2 on directory change
+if [[ "$TERM_PROGRAM" == "iTerm.app" ]] && [[ "${{EXARP_ITERM:-1}}" != "0" ]]; then
+    # Save original cd
+    if ! type _exarp_original_cd &>/dev/null; then
+        _exarp_original_cd() {{ builtin cd "$@"; }}
+    fi
+    
+    cd() {{
+        _exarp_original_cd "$@" && exarp_iterm_update
+    }}
+    
+    # Initial update
+    exarp_iterm_update
+fi
+
+# ═══════════════════════════════════════════════════════════════
 # MOTD (Message of the Day)
 # ═══════════════════════════════════════════════════════════════
 
+# Enhanced MOTD with multiple modes
 exarp_motd() {{
-    echo ""
-    echo "┌─────────────────────────────────────────────────────┐"
-    echo "│  🌟 EXARP - Project Health & Wisdom                 │"
-    echo "└─────────────────────────────────────────────────────┘"
-    if _exarp_detect "."; then xl; else xpl; fi
+    local mode="${{EXARP_MOTD:-lite}}"
+    
+    case "$mode" in
+        lite)
+            # Quick summary
+            echo ""
+            echo "┌─────────────────────────────────────────────────────┐"
+            echo "│  🌟 EXARP                                           │"
+            echo "└─────────────────────────────────────────────────────┘"
+            if _exarp_detect "."; then xl; else xpl; fi
+            ;;
+        context)
+            # Project context with tasks
+            echo ""
+            if _exarp_detect "."; then
+                xl
+                echo ""
+                xt | head -12
+            else
+                xpl
+            fi
+            ;;
+        score)
+            # Include scorecard (slower, needs uvx)
+            echo ""
+            if _exarp_detect "."; then
+                xs 2>/dev/null | head -20
+            else
+                xpl
+            fi
+            ;;
+        wisdom)
+            # Wisdom only
+            xw 2>/dev/null
+            ;;
+        full)
+            # Everything
+            echo ""
+            if _exarp_detect "."; then
+                xl
+                echo ""
+                xt | head -8
+                echo ""
+                xw 2>/dev/null | head -15
+            else
+                xpl
+            fi
+            ;;
+        *)
+            # Default to lite
+            exarp_motd lite
+            ;;
+    esac
 }}
 
 # Auto-MOTD on shell start (if enabled)
 if [[ "${{EXARP_MOTD:-0}}" != "0" ]]; then
-    local today=$(date +%Y%m%d)
-    if [[ ! -f "$EXARP_CACHE_DIR/motd_${{today}}" ]]; then
+    _motd_today=$(date +%Y%m%d)
+    if [[ ! -f "$EXARP_CACHE_DIR/motd_${{_motd_today}}" ]]; then
         exarp_motd
-        touch "$EXARP_CACHE_DIR/motd_${{today}}"
+        touch "$EXARP_CACHE_DIR/motd_${{_motd_today}}"
     fi
+    unset _motd_today
 fi
 
-echo "✅ Exarp loaded: xl (lite) | xt (tasks) | xpl (projects) | xs/xo/xw (full)"
+# ═══════════════════════════════════════════════════════════════
+# CAPTURED OUTPUT / TRIGGERS
+# ═══════════════════════════════════════════════════════════════
+
+# Print trigger-friendly output (for iTerm2 triggers)
+exarp_trigger_output() {{
+    _exarp_detect "." || return
+    local tasks=$(_exarp_tasks ".")
+    local pending=${{tasks%%/*}}
+    local total=${{tasks##*/}}
+    local score=$(_exarp_cached_score)
+    
+    # Format: [EXARP] project:name tasks:N/M score:XX
+    echo "[EXARP] project:$(_exarp_name .) tasks:$pending/$total score:${{score:-??}}"
+}}
+
+# Call after xs to update score cache and triggers
+xs() {{
+    local cache_dir=$(_exarp_project_cache)
+    local cache_file="$cache_dir/scorecard.txt"
+    mkdir -p "$cache_dir" 2>/dev/null
+    
+    # Try uvx first
+    local result
+    result=$(uvx --from exarp python3 -c "
+from project_management_automation.tools.project_scorecard import generate_project_scorecard
+r = generate_project_scorecard()
+print(r.get('formatted_output', ''))
+# Extract score for caching
+import re
+match = re.search(r'OVERALL SCORE: ([0-9.]+)%', r.get('formatted_output', ''))
+if match:
+    with open('$cache_dir/score.txt', 'w') as f:
+        f.write(match.group(1).split('.')[0])
+" 2>/dev/null)
+    
+    if [[ -n "$result" ]]; then
+        echo "$result"
+        echo "$result" > "$cache_file"
+        date +%s > "$cache_file.ts"
+        # Update iTerm2 after score update
+        exarp_iterm_update 2>/dev/null
+    elif [[ -f "$cache_file" ]]; then
+        local age=999999
+        [[ -f "$cache_file.ts" ]] && age=$(($(date +%s) - $(cat "$cache_file.ts")))
+        echo "⚠️  Using cached scorecard (uvx unavailable, cached $((age/60))m ago)"
+        echo ""
+        cat "$cache_file"
+    else
+        echo "❌ Scorecard unavailable (no uvx, no cache)"
+        echo "   Try: xl (lite context) or check network"
+    fi
+}}
+
+echo "✅ Exarp loaded: xl | xt | xpl | xs/xo/xw | iTerm2: ${{TERM_PROGRAM:-n/a}}"
 """
     print(setup)
 
