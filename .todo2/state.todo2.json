@@ -1896,6 +1896,240 @@
       ],
       "created": "2025-11-26T04:00:01.413812",
       "lastModified": "2025-11-26T04:00:01.413816"
+    },
+    {
+      "id": "AUTO-20251126040217",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T04:02:17.922568",
+      "lastModified": "2025-11-26T04:02:18.001648",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126040217-C-1",
+          "todoId": "AUTO-20251126040217",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\n  \"link_validation\": {\n    \"total_links\": 132,\n    \"broken_internal\": [],\n    \"broken_external\": []\n  },\n  \"format_validation\": {\n    \"format_errors\": [],\n    \"missing_required_fields\": []\n  },\n  \"date_currency\": {\n    \"stale_files\": [\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_LICENSING_ANALYSIS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_FASTMCP_CONFIGURATION.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/PRIVATE_REPOSITORY_SETUP.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PHASE2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      }\n    ],\n    \"missing_dates\": []\n  },\n  \"cross_references\": {\n    \"broken_references\": [],\n    \"orphaned_files\": []\n  },\n  \"health_score\": 85.0\n}",
+          "created": "2025-11-26T04:02:17.966070",
+          "lastModified": "2025-11-26T04:02:17.966081"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126040217-60",
+      "name": "Update stale documentation",
+      "content": "Update 15 stale documents (>90 days old)",
+      "status": "todo",
+      "priority": "medium",
+      "tags": [
+        "documentation",
+        "update"
+      ],
+      "dependencies": [
+        "AUTO-20251126040217"
+      ],
+      "created": "2025-11-26T04:02:17.984449",
+      "lastModified": "2025-11-26T04:02:17.984453"
+    },
+    {
+      "id": "AUTO-20251126040218",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-26T04:02:18.478905",
+      "lastModified": "2025-11-26T04:02:18.512912",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126040218-C-1",
+          "todoId": "AUTO-20251126040218",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\n**Key Findings:**\n{\n  \"total_tasks\": 28,\n  \"by_priority\": {\n    \"high\": 13,\n    \"medium\": 13,\n    \"low\": 0,\n    \"critical\": 2\n  },\n  \"by_status\": {\n    \"todo\": 0,\n    \"in_progress\": 0,\n    \"review\": 0,\n    \"done\": 5\n  },\n  \"by_phase\": {\n    \"phase1\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase2\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase3\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    }\n  },\n  \"strategy_critical\": [],\n  \"misaligned_tasks\": [],\n  \"stale_tasks\": [],\n  \"blocked_tasks\": [],\n  \"infrastructure_tasks\": [\n    {\n      \"id\": \"d8863dae-ee14-403c-8be5-eb03dda95e7b\",\n      \"content\": \"Extend MCPClient class with agentic-tools MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"44d2e835-7843-4b61-a212-3443230267b0\",\n      \"content\": \"Migrate duplicate detection tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2\",\n      \"content\": \"Migrate task alignment tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"9520ff3a-13b8-4b46-9b8d-d004fde12989\",\n      \"content\": \"Remove file access fallbacks after full migration\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"918e4218-f9d2-4032-991f-6c1e2823ad6e\",\n      \"content\": \"Migrate write operations to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"3c1addeb-e2dd-4fec-8c22-36914e9d2b73\",\n      \"content\": \"Extend MCPClient class with Context7 MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"d2824509-031b-495c-8a8d-46e087d35421\",\n      \"content\": \"Integrate Context7 verification into documentation health tool\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e\",\n      \"content\": \"Extend MCPClient class with Sequential Thinking MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"f789741d-cf84-4331-9b95-deec31b8578c\",\n      \"content\": \"Implement run_tests tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"c757651b-5f99-45e1-9a5e-d5fc01bcc2c8\",\n      \"content\": \"Implement analyze_test_coverage tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"ce4d9c05-8dd6-4085-9076-80971046c572\",\n      \"content\": \"Add human contribution suggestion feature to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"8257e637-48fe-4e1f-a268-f9b88d708786\",\n      \"content\": \"Add AI wishlist generation to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\n      \"content\": \"Add human wishlist parsing to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"alignment_score\": 60.0\n}",
+          "created": "2025-11-26T04:02:18.496393",
+          "lastModified": "2025-11-26T04:02:18.496404"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126040232",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T04:02:32.007868",
+      "lastModified": "2025-11-26T04:02:32.087630",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126040232-C-1",
+          "todoId": "AUTO-20251126040232",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\n  \"link_validation\": {\n    \"total_links\": 132,\n    \"broken_internal\": [],\n    \"broken_external\": []\n  },\n  \"format_validation\": {\n    \"format_errors\": [],\n    \"missing_required_fields\": []\n  },\n  \"date_currency\": {\n    \"stale_files\": [\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_LICENSING_ANALYSIS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_FASTMCP_CONFIGURATION.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/PRIVATE_REPOSITORY_SETUP.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PHASE2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      }\n    ],\n    \"missing_dates\": []\n  },\n  \"cross_references\": {\n    \"broken_references\": [],\n    \"orphaned_files\": []\n  },\n  \"health_score\": 85.0\n}",
+          "created": "2025-11-26T04:02:32.054640",
+          "lastModified": "2025-11-26T04:02:32.054650"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126040232-63",
+      "name": "Update stale documentation",
+      "content": "Update 15 stale documents (>90 days old)",
+      "status": "todo",
+      "priority": "medium",
+      "tags": [
+        "documentation",
+        "update"
+      ],
+      "dependencies": [
+        "AUTO-20251126040232"
+      ],
+      "created": "2025-11-26T04:02:32.071527",
+      "lastModified": "2025-11-26T04:02:32.071531"
+    },
+    {
+      "id": "a63dd309-a669-4ecf-a624-37c00d5cfa5f",
+      "content": "Implement MCP in-memory testing pattern",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "testing",
+        "mcp",
+        "infrastructure"
+      ],
+      "long_description": "Add in-memory transport testing using create_connected_server_and_client_session.\n\nDependencies: pytest-anyio, inline-snapshot\n\nPattern:\n```python\n@pytest.fixture\nasync def client_session():\n    async with create_connected_server_and_client_session(app) as session:\n        yield session\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400640Z",
+      "updatedAt": "2025-11-26T04:07:41.400657Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "4f2aec27-cb8e-4e13-aabb-066b86d41bfd",
+      "content": "Fix test_integration.py failures (5 tests)",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "testing",
+        "fix"
+      ],
+      "long_description": "Fix 5 failing integration tests:\n- test_tool_wrappers_import\n- test_resource_handlers_exist\n- test_server_file_exists\n- test_tools_directory_exists\n- test_resources_directory_exists\n\nIssue: Path detection/mocking issues",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400675Z",
+      "updatedAt": "2025-11-26T04:07:41.400678Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "20e84faf-f93f-4fe9-a38a-f3e7d1f84fef",
+      "content": "Fix test_intelligent_automation_base.py failures (5 tests)",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "testing",
+        "fix"
+      ],
+      "long_description": "Fix 5 failing base class tests:\n- test_base_class_init\n- test_tractatus_analysis\n- test_sequential_planning\n- test_run_method\n- test_run_with_error\n\nIssue: Mock configuration for MCP client",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400689Z",
+      "updatedAt": "2025-11-26T04:07:41.400692Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "4dd22de0-7d71-4cf4-9550-b8297c65822c",
+      "content": "Fix test_mcp_client.py failures (4 tests)",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "testing",
+        "fix"
+      ],
+      "long_description": "Fix 4 failing MCP client tests:\n- test_call_tractatus_thinking_not_configured\n- test_call_tractatus_thinking_configured\n- test_call_sequential_thinking_not_configured\n- test_call_sequential_thinking_configured\n\nIssue: MCP server connection mocking",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400699Z",
+      "updatedAt": "2025-11-26T04:07:41.400701Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "fa68b622-eaef-4d85-864a-fbd280a292f2",
+      "content": "Fix test_duplicate_detection_autofix.py failures (3 tests)",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "testing",
+        "fix"
+      ],
+      "long_description": "Fix 3 failing auto-fix tests:\n- test_apply_auto_fix_selects_best_task\n- test_apply_auto_fix_merges_data\n- test_apply_auto_fix_updates_dependencies\n\nIssue: Mock Todo2 state file",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400709Z",
+      "updatedAt": "2025-11-26T04:07:41.400711Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "7977e846-46f6-4559-85e0-65522e8face8",
+      "content": "Fix tool wrapper tests (4 tests) - nested results extraction",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "testing",
+        "fix"
+      ],
+      "long_description": "Fix 4 failing tool wrapper tests:\n- test_scan_dependency_security_success\n- test_add_external_tool_hints_success\n- test_validate_ci_cd_workflow_success\n- test_check_working_copy_health_success\n\nIssue: Result extraction from nested results['results']",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400718Z",
+      "updatedAt": "2025-11-26T04:07:41.400720Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "50097b12-12ca-4bd3-92ee-9b5dc954f4b6",
+      "content": "Add QA prompts to prompts.py",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "prompts",
+        "qa",
+        "enhancement"
+      ],
+      "long_description": "Add QA-specific prompts:\n- qa_full_check: Run tests, coverage, linting\n- test_coverage: Analyze coverage gaps\n- pre_commit_qa: Quick QA before commit\n- release_readiness: Full QA suite for release\n- test_failures: Triage failing tests",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400726Z",
+      "updatedAt": "2025-11-26T04:07:41.400729Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "1ac33c97-74ba-4845-8a60-2846e4cdc631",
+      "content": "Add pytest-anyio and inline-snapshot dependencies",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "testing",
+        "dependencies"
+      ],
+      "long_description": "Add MCP testing dependencies to pyproject.toml:\n- pytest-anyio: Async test support\n- inline-snapshot: Automatic assertion generation\n\nThese are recommended by MCP Python SDK for testing.",
+      "completed": false,
+      "createdAt": "2025-11-26T04:07:41.400737Z",
+      "updatedAt": "2025-11-26T04:07:41.400739Z",
+      "dependencies": [],
+      "estimatedHours": 0.5
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
