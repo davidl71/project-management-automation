@@ -791,6 +791,37 @@ if mcp:
             """[HINT: Coverage analysis. Percentage, gaps, threshold status, report path.]"""
             return _analyze_test_coverage(coverage_file, min_coverage, output_path, format)
 
+        # Helper for sprint automation (shared implementation)
+        def _sprint_automation_impl(
+            max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
+            run_testing_tools, priority_filter, tag_filter, dry_run, output_path
+        ) -> str:
+            return _sprint_automation(
+                max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
+                run_testing_tools, priority_filter, tag_filter, dry_run, output_path,
+            )
+
+        @mcp.tool()
+        def run_sprint_automation(
+            max_iterations: int = 10,
+            auto_approve: bool = True,
+            extract_subtasks: bool = True,
+            run_analysis_tools: bool = True,
+            run_testing_tools: bool = True,
+            priority_filter: Optional[str] = None,
+            tag_filter: Optional[List[str]] = None,
+            dry_run: bool = False,
+            output_path: Optional[str] = None,
+        ) -> str:
+            """[HINT: Sprint automation. Tasks processed, subtasks, blockers, wishlists.]
+
+            Run automated sprint workflow processing tasks.
+            """
+            return _sprint_automation_impl(
+                max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
+                run_testing_tools, priority_filter, tag_filter, dry_run, output_path,
+            )
+
         @mcp.tool()
         def sprint_automation(
             max_iterations: int = 10,
@@ -803,17 +834,10 @@ if mcp:
             dry_run: bool = False,
             output_path: Optional[str] = None,
         ) -> str:
-            """[HINT: Sprint automation. Tasks processed, subtasks, blockers, wishlists.]"""
-            return _sprint_automation(
-                max_iterations,
-                auto_approve,
-                extract_subtasks,
-                run_analysis_tools,
-                run_testing_tools,
-                priority_filter,
-                tag_filter,
-                dry_run,
-                output_path,
+            """[DEPRECATED: Use run_sprint_automation] Alias for backward compatibility."""
+            return _sprint_automation_impl(
+                max_iterations, auto_approve, extract_subtasks, run_analysis_tools,
+                run_testing_tools, priority_filter, tag_filter, dry_run, output_path,
             )
 
         @mcp.tool()
@@ -832,11 +856,8 @@ if mcp:
 
             return _simplify_rules(parsed_files, dry_run, output_dir)
 
-        @mcp.tool()
-        def project_scorecard(
-            output_format: str = "text", include_recommendations: bool = True, output_path: Optional[str] = None
-        ) -> str:
-            """[HINT: Scorecard. Overall score, component scores, production readiness, recommendations.]"""
+        # Helper for scorecard (shared implementation)
+        def _scorecard_impl(output_format: str, include_recommendations: bool, output_path: Optional[str]) -> str:
             result = _generate_project_scorecard(output_format, include_recommendations, output_path)
             return json.dumps(
                 {
@@ -851,8 +872,24 @@ if mcp:
             )
 
         @mcp.tool()
-        def project_overview(output_format: str = "text", output_path: Optional[str] = None) -> str:
-            """[HINT: Overview. One-page: info, scores, metrics, tasks, risks, roadmap.]"""
+        def generate_project_scorecard(
+            output_format: str = "text", include_recommendations: bool = True, output_path: Optional[str] = None
+        ) -> str:
+            """[HINT: Scorecard. Overall score, component scores, production readiness, recommendations.]
+
+            Generate comprehensive project health scorecard with all metrics.
+            """
+            return _scorecard_impl(output_format, include_recommendations, output_path)
+
+        @mcp.tool()
+        def project_scorecard(
+            output_format: str = "text", include_recommendations: bool = True, output_path: Optional[str] = None
+        ) -> str:
+            """[DEPRECATED: Use generate_project_scorecard] Alias for backward compatibility."""
+            return _scorecard_impl(output_format, include_recommendations, output_path)
+
+        # Helper for overview (shared implementation)
+        def _overview_impl(output_format: str, output_path: Optional[str]) -> str:
             result = _generate_project_overview(output_format, output_path)
             return json.dumps(
                 {
@@ -863,6 +900,19 @@ if mcp:
                 },
                 separators=(",", ":"),
             )
+
+        @mcp.tool()
+        def generate_project_overview(output_format: str = "text", output_path: Optional[str] = None) -> str:
+            """[HINT: Overview. One-page: info, scores, metrics, tasks, risks, roadmap.]
+
+            Generate one-page project overview for stakeholders.
+            """
+            return _overview_impl(output_format, output_path)
+
+        @mcp.tool()
+        def project_overview(output_format: str = "text", output_path: Optional[str] = None) -> str:
+            """[DEPRECATED: Use generate_project_overview] Alias for backward compatibility."""
+            return _overview_impl(output_format, output_path)
 
         @mcp.tool()
         def consolidate_tags(
@@ -1074,14 +1124,14 @@ if mcp:
             return json.dumps(_fetch(repo, state), separators=(",", ":"))
 
         @mcp.tool()
-        def unified_security_report(
+        def generate_security_report(
             repo: str = "davidl71/project-management-automation",
             include_dismissed: bool = False,
         ) -> str:
             """
             [HINT: Unified security. Combines Dependabot + pip-audit findings.]
 
-            Get comprehensive security report combining:
+            Generate comprehensive security report combining:
             - GitHub Dependabot alerts
             - Local pip-audit scan
             - Comparison and recommendations
@@ -1090,6 +1140,16 @@ if mcp:
                 repo: GitHub repo in owner/repo format
                 include_dismissed: Include dismissed alerts
             """
+            from .tools.dependabot_integration import get_unified_security_report
+
+            return json.dumps(get_unified_security_report(repo, include_dismissed), separators=(",", ":"))
+
+        @mcp.tool()
+        def unified_security_report(
+            repo: str = "davidl71/project-management-automation",
+            include_dismissed: bool = False,
+        ) -> str:
+            """[DEPRECATED: Use generate_security_report] Alias for backward compatibility."""
             from .tools.dependabot_integration import get_unified_security_report
 
             return json.dumps(get_unified_security_report(repo, include_dismissed), separators=(",", ":"))
@@ -1188,7 +1248,7 @@ if mcp:
             return json.dumps(result, separators=(",", ":"))
 
         @mcp.tool()
-        def session_summary(
+        def get_session_summary(
             date: Optional[str] = None,
             include_consultations: bool = True,
         ) -> str:
@@ -1210,7 +1270,16 @@ if mcp:
             return json.dumps(result, separators=(",", ":"))
 
         @mcp.tool()
-        def sprint_memories() -> str:
+        def session_summary(
+            date: Optional[str] = None,
+            include_consultations: bool = True,
+        ) -> str:
+            """[DEPRECATED: Use get_session_summary] Alias for backward compatibility."""
+            result = generate_session_summary(date, include_consultations)
+            return json.dumps(result, separators=(",", ":"))
+
+        @mcp.tool()
+        def get_sprint_memories() -> str:
             """
             [HINT: Sprint memories. Recent insights for sprint planning/review.]
 
@@ -1219,6 +1288,12 @@ if mcp:
             Returns recent insights, debug solutions, and patterns
             that could inform sprint decisions.
             """
+            result = get_memories_for_sprint()
+            return json.dumps(result, separators=(",", ":"))
+
+        @mcp.tool()
+        def sprint_memories() -> str:
+            """[DEPRECATED: Use get_sprint_memories] Alias for backward compatibility."""
             result = get_memories_for_sprint()
             return json.dumps(result, separators=(",", ":"))
 
@@ -1581,10 +1656,115 @@ mkdir -p "$EXARP_CACHE_DIR" 2>/dev/null
 alias exarp="uvx exarp"
 alias pma="uvx exarp"
 
-# Quick tools via uvx
-alias xs="uvx --from exarp python -c 'from project_management_automation.tools.project_scorecard import generate_project_scorecard; r=generate_project_scorecard(); print(r.get(\"formatted_output\",\"\"))'"
-alias xo="uvx --from exarp python -c 'from project_management_automation.tools.project_overview import generate_project_overview; r=generate_project_overview(); print(r.get(\"formatted_output\",\"\"))'"
-alias xw="uvx --from exarp python -c 'from project_management_automation.tools.wisdom import get_wisdom, format_text; print(format_text(get_wisdom(50)))'"
+# ═══════════════════════════════════════════════════════════════
+# FULL TOOLS WITH CACHING AND FALLBACK
+# ═══════════════════════════════════════════════════════════════
+
+# Helper: Get project-specific cache dir
+_exarp_project_cache() {{
+    local proj_hash=$(pwd | shasum | cut -c1-8)
+    echo "$EXARP_CACHE_DIR/projects/$proj_hash"
+}}
+
+# Scorecard with caching and offline fallback
+xs() {{
+    local cache_dir=$(_exarp_project_cache)
+    local cache_file="$cache_dir/scorecard.txt"
+    mkdir -p "$cache_dir" 2>/dev/null
+    
+    # Try uvx first
+    local result
+    result=$(uvx --from exarp python3 -c "
+from project_management_automation.tools.project_scorecard import generate_project_scorecard
+r = generate_project_scorecard()
+print(r.get('formatted_output', ''))
+" 2>/dev/null)
+    
+    if [[ -n "$result" ]]; then
+        echo "$result"
+        echo "$result" > "$cache_file"
+        date +%s > "$cache_file.ts"
+    elif [[ -f "$cache_file" ]]; then
+        local age=999999
+        [[ -f "$cache_file.ts" ]] && age=$(($(date +%s) - $(cat "$cache_file.ts")))
+        echo "⚠️  Using cached scorecard (uvx unavailable, cached $((age/60))m ago)"
+        echo ""
+        cat "$cache_file"
+    else
+        echo "❌ Scorecard unavailable (no uvx, no cache)"
+        echo "   Try: xl (lite context) or check network"
+    fi
+}}
+
+# Overview with caching and offline fallback
+xo() {{
+    local cache_dir=$(_exarp_project_cache)
+    local cache_file="$cache_dir/overview.txt"
+    mkdir -p "$cache_dir" 2>/dev/null
+    
+    local result
+    result=$(uvx --from exarp python3 -c "
+from project_management_automation.tools.project_overview import generate_project_overview
+r = generate_project_overview()
+print(r.get('formatted_output', ''))
+" 2>/dev/null)
+    
+    if [[ -n "$result" ]]; then
+        echo "$result"
+        echo "$result" > "$cache_file"
+        date +%s > "$cache_file.ts"
+    elif [[ -f "$cache_file" ]]; then
+        local age=999999
+        [[ -f "$cache_file.ts" ]] && age=$(($(date +%s) - $(cat "$cache_file.ts")))
+        echo "⚠️  Using cached overview (uvx unavailable, cached $((age/60))m ago)"
+        echo ""
+        cat "$cache_file"
+    else
+        echo "❌ Overview unavailable (no uvx, no cache)"
+        echo "   Try: xl (lite context) or check network"
+    fi
+}}
+
+# Wisdom with caching and offline fallback
+xw() {{
+    local cache_dir="$EXARP_CACHE_DIR/wisdom"
+    local today=$(date +%Y%m%d)
+    local cache_file="$cache_dir/$today.txt"
+    mkdir -p "$cache_dir" 2>/dev/null
+    
+    local result
+    result=$(uvx --from exarp python3 -c "
+from project_management_automation.tools.wisdom import get_wisdom, format_text
+print(format_text(get_wisdom(50)))
+" 2>/dev/null)
+    
+    if [[ -n "$result" ]]; then
+        echo "$result"
+        echo "$result" > "$cache_file"
+    elif [[ -f "$cache_file" ]]; then
+        echo "⚠️  Using cached wisdom (uvx unavailable)"
+        echo ""
+        cat "$cache_file"
+    else
+        # Try yesterday
+        local yesterday=$(date -v-1d +%Y%m%d 2>/dev/null || date -d "yesterday" +%Y%m%d 2>/dev/null)
+        if [[ -f "$cache_dir/$yesterday.txt" ]]; then
+            echo "⚠️  Using yesterday wisdom (uvx unavailable)"
+            echo ""
+            cat "$cache_dir/$yesterday.txt"
+        else
+            echo "❌ Wisdom unavailable (no uvx, no cache)"
+            echo "   Offline wisdom: The obstacle is the way. - Marcus Aurelius"
+        fi
+    fi
+}}
+
+# Clear cache
+exarp_clear_cache() {{
+    rm -rf "$EXARP_CACHE_DIR/projects" "$EXARP_CACHE_DIR/wisdom"
+    mkdir -p "$EXARP_CACHE_DIR"
+    echo "✅ Exarp cache cleared"
+}}
 
 # ═══════════════════════════════════════════════════════════════
 # SHELL-ONLY FUNCTIONS (instant, no Python startup)
@@ -1767,16 +1947,21 @@ compdef _exarp uvx\\ exarp 2>/dev/null
 
 
 def _print_aliases() -> None:
-    """Print just the aliases."""
+    """Print just the aliases (minimal setup without full functions)."""
     aliases = '''# Exarp Aliases (generated by: exarp --aliases)
 # eval "$(exarp --aliases)"
+# Note: For caching/fallback support, use: eval "$(exarp --shell-setup)"
 
 alias exarp="uvx exarp"
 alias pma="uvx exarp"
-alias xl="uvx --from exarp python -c 'import sys; exec(open(sys.prefix + \"/exarp_lite.py\").read())' 2>/dev/null || echo 'Run: eval \"$(exarp --shell-setup)\"'"
-alias xs="uvx --from exarp python -c 'from project_management_automation.tools.project_scorecard import generate_project_scorecard; r=generate_project_scorecard(); print(r.get(\"formatted_output\",\"\"))'"
-alias xo="uvx --from exarp python -c 'from project_management_automation.tools.project_overview import generate_project_overview; r=generate_project_overview(); print(r.get(\"formatted_output\",\"\"))'"
-alias xw="uvx --from exarp python -c 'from project_management_automation.tools.wisdom import get_wisdom, format_text; print(format_text(get_wisdom(50)))'"
+
+# Simple aliases (no caching - for minimal setup)
+alias xs="uvx --from exarp python3 -c 'from project_management_automation.tools.project_scorecard import generate_project_scorecard; r=generate_project_scorecard(); print(r.get(\"formatted_output\",\"\"))'"
+alias xo="uvx --from exarp python3 -c 'from project_management_automation.tools.project_overview import generate_project_overview; r=generate_project_overview(); print(r.get(\"formatted_output\",\"\"))'"
+alias xw="uvx --from exarp python3 -c 'from project_management_automation.tools.wisdom import get_wisdom, format_text; print(format_text(get_wisdom(50)))'"
+
+# For full features with caching and offline fallback, use:
+#   eval "$(exarp --shell-setup)"
 '''
     print(aliases)
 

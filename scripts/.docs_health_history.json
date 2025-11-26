@@ -1,51 +1,6 @@
 {
   "runs": [
     {
-      "timestamp": "2025-11-26T07:07:18.915560",
-      "health_score": 24.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
-      "timestamp": "2025-11-26T07:12:15.585266",
-      "health_score": 24.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
-      "timestamp": "2025-11-26T07:14:43.246963",
-      "health_score": 24.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
-      "timestamp": "2025-11-26T07:17:38.052206",
-      "health_score": 24.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
-      "timestamp": "2025-11-26T07:49:04.612887",
-      "health_score": 85.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
       "timestamp": "2025-11-26T07:51:40.134195",
       "health_score": 85.0,
       "link_validation": {
@@ -444,6 +399,51 @@
     {
       "timestamp": "2025-11-26T14:36:52.870109",
       "health_score": 85.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-26T14:38:40.125991",
+      "health_score": 85.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-26T15:17:52.857290",
+      "health_score": 19.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-26T15:24:15.900824",
+      "health_score": 19.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-26T15:29:36.162700",
+      "health_score": 19.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-26T15:37:44.989229",
+      "health_score": 19.0,
       "link_validation": {
         "broken": 0
       },
