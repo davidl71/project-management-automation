@@ -17,6 +17,13 @@ from typing import Optional
 
 from .output import split_output, progress_wrapper, compact_json, output_to_human_and_ai
 from .logging_config import configure_logging, get_logger, is_mcp_mode, suppress_noisy_loggers
+from .dev_reload import (
+    is_dev_mode,
+    reload_all_modules,
+    reload_specific_modules,
+    reload_module,
+    get_module_info,
+)
 from .security import (
     # Path validation
     PathBoundaryError,
@@ -104,6 +111,12 @@ __all__ = [
     'get_logger',
     'is_mcp_mode',
     'suppress_noisy_loggers',
+    # Dev reload
+    'is_dev_mode',
+    'reload_all_modules',
+    'reload_specific_modules',
+    'reload_module',
+    'get_module_info',
     # Security - Path validation
     'PathBoundaryError',
     'PathValidator',

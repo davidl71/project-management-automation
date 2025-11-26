@@ -7100,6 +7100,86 @@
       ],
       "created": "2025-11-26T09:52:48.590481",
       "lastModified": "2025-11-26T09:52:48.590486"
+    },
+    {
+      "id": "AUTO-20251126095549",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T09:55:49.216595",
+      "lastModified": "2025-11-26T09:55:49.725616",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126095549-C-1",
+          "todoId": "AUTO-20251126095549",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 22.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":160,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"}],\"orphaned_files\":[\"TEST_COVERAGE_ANALYSIS.md\",\"SECURITY_STATUS.md\",\"TESTING_TOOLS_PROPOSAL.md\",\"EXARP_IMPROVEMENTS_PROGRESS.md\",\"SPRINT_AUTOMATION_PROPOSAL.md\",\"DESIGN_DECISIONS.md\",\"EXARP_OLD_NAME_CHECK_COMPLETE.md\",\"EXARP_OLD_NAME_FIXES_COMPLETE.md\",\"EXARP_RENAMING_COMPLETE.md\",\"DAILY_AUTOMATION_REPORT.md\",\"SEQUENTIAL_THINKING_MCP_INTEGRATION_STATUS.md\",\"EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md\",\"EXARP_RULES_REDUNDANCY_ANALYSIS.md\",\"CONTEXT7_MCP_INTEGRATION_STATUS.md\",\"EXARP_OLD_NAME_REFERENCES_FINAL.md\",\"EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"EXARP_PRIVATE_REPO_QUICK_START.md\",\"EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"INSTALLATION_EXAMPLES.md\",\"EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md\",\"EXARP_MCP_SERVER.md\",\"EXARP_OLD_NAME_REFERENCES_REPORT.md\",\"CI_CD_VALIDATION_REPORT.md\",\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"EXARP_CURSOR_SETUP_COMPLETE.md\",\"EXARP_PHASE2_TASKS.md\",\"DOCS_CLEANUP_PLAN.md\",\"TEST_COVERAGE_FIXES.md\",\"EXARP_PACKAGING_DEPENDENCIES.md\",\"EXTERNAL_TOOL_HINTS_REPORT.md\",\"EXARP_PACKAGING_TODO2_TASKS.md\",\"UNIT_TEST_STATUS.md\",\"EXARP_FASTMCP_SETUP.md\",\"EXARP_IMPROVEMENTS_ANALYSIS.md\",\"EXARP_TOOL_REUSE_ANALYSIS.md\",\"UNIT_TEST_FIXES.md\",\"WORKFLOW.md\",\"AGENTIC_TOOLS_INTEGRATION_PLAN.md\",\"EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"PROJECT_OVERVIEW.md\",\"AUTO_FIX_USAGE.md\",\"EXARP_LICENSING_ANALYSIS.md\",\"UNIT_TEST_FIXES_COMPLETE.md\",\"EXARP_CURSOR_INTEGRATION_STRATEGY.md\",\"EXARP_GITHUB_REPO_SETUP_COMPLETE.md\",\"EXARP_FASTMCP_CONFIGURATION.md\",\"EXARP_INSTALLATION_COMPLETE.md\",\"EXARP_SCRIPT_EXTRACTION_COMPLETE.md\",\"EXARP_REPOSITORY_OPTIMIZATION_COMPLETE.md\",\"IDE_INTEGRATION.md\",\"TOOL_REDUNDANCY_ANALYSIS.md\",\"FILESYSTEM_MCP_INTEGRATION_STATUS.md\",\"EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"TODO2_PRIORITY_ALIGNMENT_ANALYSIS.md\",\"EXARP_PACKAGING_RESOURCES_ANALYSIS.md\",\"EXARP_OLD_NAME_REFERENCES.md\",\"EXARP_COMPARISON_AND_VALUE_PROPOSITION.md\",\"EXARP_PACKAGE_RENAME_COMPLETE.md\",\"EXARP_RESOURCES_PACKAGING_COMPLETE.md\",\"TODO2_DUPLICATE_DETECTION_REPORT.md\",\"EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"DOCUMENTATION_HEALTH_REPORT.md\"]},\"health_score\":22.0}",
+          "created": "2025-11-26T09:55:49.684976",
+          "lastModified": "2025-11-26T09:55:49.684986"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126095549-353",
+      "name": "Update stale documentation",
+      "content": "Update 15 stale documents (>90 days old)",
+      "status": "todo",
+      "priority": "medium",
+      "tags": [
+        "documentation",
+        "update"
+      ],
+      "dependencies": [
+        "AUTO-20251126095549"
+      ],
+      "created": "2025-11-26T09:55:49.705239",
+      "lastModified": "2025-11-26T09:55:49.705244"
+    },
+    {
+      "id": "AUTO-20251126100003",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-11-26T10:00:03.361610",
+      "lastModified": "2025-11-26T10:00:03.425474",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126100003-C-1",
+          "todoId": "AUTO-20251126100003",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 355 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[355 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[355 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-26T10:00:03.387548",
+          "lastModified": "2025-11-26T10:00:03.387558"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126100003-355",
+      "name": "Review Todo2 tasks not in shared TODO",
+      "content": "Review 355 Todo2 tasks that are not in shared TODO table",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "todo-sync",
+        "review"
+      ],
+      "dependencies": [
+        "AUTO-20251126100003"
+      ],
+      "created": "2025-11-26T10:00:03.405975",
+      "lastModified": "2025-11-26T10:00:03.405979"
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"

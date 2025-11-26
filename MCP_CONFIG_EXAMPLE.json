@@ -3,7 +3,8 @@
     "exarp": {
       "command": "/Volumes/SSD1_APFS/project-management-automation/exarp-switch.sh",
       "env": {
-        "EXARP_USE_PYPI": "0"
+        "EXARP_USE_PYPI": "0",
+        "EXARP_DEV_MODE": "1"
       }
     }
   }

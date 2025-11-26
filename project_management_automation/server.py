@@ -313,16 +313,62 @@ def register_tools():
 
             Get the current status of the project management automation server.
             """
+            from .utils.dev_reload import is_dev_mode
             return json.dumps(
                 {
                     "status": "operational",
                     "version": __version__,
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 27 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 28 if TOOLS_AVAILABLE else 2,
                     "project_root": str(project_root),
+                    "dev_mode": is_dev_mode(),
                 },
                 separators=(',', ':'),
             )
+        
+        @mcp.tool()
+        def dev_reload(modules: Optional[List[str]] = None) -> str:
+            """
+            [HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.]
+
+            Reload Python modules without restarting Cursor.
+            Only available when EXARP_DEV_MODE=1 is set in environment.
+            
+            Args:
+                modules: Optional list of specific modules to reload (e.g., ["tools.project_scorecard"]).
+                        If not provided, reloads all package modules.
+            
+            To enable dev mode, add to your MCP config:
+                "env": {"EXARP_DEV_MODE": "1"}
+            """
+            from .utils.dev_reload import (
+                reload_all_modules, 
+                reload_specific_modules,
+                is_dev_mode
+            )
+            
+            if not is_dev_mode():
+                return json.dumps({
+                    "success": False,
+                    "error": "Dev mode not enabled",
+                    "hint": "Add to MCP config: \"env\": {\"EXARP_DEV_MODE\": \"1\"}",
+                    "config_example": {
+                        "mcpServers": {
+                            "exarp": {
+                                "command": "...",
+                                "env": {"EXARP_DEV_MODE": "1"}
+                            }
+                        }
+                    }
+                }, separators=(',', ':'))
+            
+            if modules:
+                result = reload_specific_modules(modules)
+            else:
+                result = reload_all_modules()
+            
+            return json.dumps(result, separators=(',', ':'))
+        
         return server_status
     elif stdio_server_instance:
         # Stdio Server registration (handler-based)
