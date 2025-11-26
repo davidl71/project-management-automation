@@ -7340,7 +7340,213 @@
       ],
       "created": "2025-11-26T10:55:41.831992",
       "lastModified": "2025-11-26T10:55:41.831996"
+    },
+    {
+      "id": "AUTO-20251126105913",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T10:59:13.966994",
+      "lastModified": "2025-11-26T10:59:14.510200",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126105913-C-1",
+          "todoId": "AUTO-20251126105913",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 22.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":160,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":303}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"}],\"orphaned_files\":[\"EXARP_INSTALLATION_COMPLETE.md\",\"TODO2_PRIORITY_ALIGNMENT_ANALYSIS.md\",\"EXARP_REPOSITORY_OPTIMIZATION_COMPLETE.md\",\"DESIGN_DECISIONS.md\",\"EXARP_GITHUB_REPO_SETUP_COMPLETE.md\",\"EXARP_FASTMCP_SETUP.md\",\"EXARP_PACKAGING_RESOURCES_ANALYSIS.md\",\"EXARP_COMPARISON_AND_VALUE_PROPOSITION.md\",\"EXARP_OLD_NAME_REFERENCES_REPORT.md\",\"EXARP_PACKAGING_DEPENDENCIES.md\",\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"DOCS_CLEANUP_PLAN.md\",\"INSTALLATION_EXAMPLES.md\",\"EXARP_OLD_NAME_CHECK_COMPLETE.md\",\"TEST_COVERAGE_FIXES.md\",\"EXARP_SCRIPT_EXTRACTION_COMPLETE.md\",\"EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"EXARP_IMPROVEMENTS_PROGRESS.md\",\"EXARP_FASTMCP_CONFIGURATION.md\",\"EXARP_RENAMING_COMPLETE.md\",\"EXARP_RULES_REDUNDANCY_ANALYSIS.md\",\"DAILY_AUTOMATION_REPORT.md\",\"EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"DOCUMENTATION_HEALTH_REPORT.md\",\"CI_CD_VALIDATION_REPORT.md\",\"AUTO_FIX_USAGE.md\",\"SPRINT_AUTOMATION_PROPOSAL.md\",\"EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"AGENTIC_TOOLS_INTEGRATION_PLAN.md\",\"EXARP_MCP_SERVER.md\",\"EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md\",\"EXARP_TOOL_REUSE_ANALYSIS.md\",\"UNIT_TEST_FIXES.md\",\"TODO2_DUPLICATE_DETECTION_REPORT.md\",\"EXARP_IMPROVEMENTS_ANALYSIS.md\",\"EXARP_RESOURCES_PACKAGING_COMPLETE.md\",\"SEQUENTIAL_THINKING_MCP_INTEGRATION_STATUS.md\",\"EXARP_PRIVATE_REPO_QUICK_START.md\",\"EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"EXARP_PACKAGING_TODO2_TASKS.md\",\"SECURITY_STATUS.md\",\"CONTEXT7_MCP_INTEGRATION_STATUS.md\",\"FILESYSTEM_MCP_INTEGRATION_STATUS.md\",\"WORKFLOW.md\",\"TESTING_TOOLS_PROPOSAL.md\",\"EXARP_OLD_NAME_FIXES_COMPLETE.md\",\"UNIT_TEST_FIXES_COMPLETE.md\",\"EXARP_CURSOR_SETUP_COMPLETE.md\",\"IDE_INTEGRATION.md\",\"EXARP_OLD_NAME_REFERENCES.md\",\"EXARP_CURSOR_INTEGRATION_STRATEGY.md\",\"EXARP_PACKAGE_RENAME_COMPLETE.md\",\"TEST_COVERAGE_ANALYSIS.md\",\"TOOL_REDUNDANCY_ANALYSIS.md\",\"EXTERNAL_TOOL_HINTS_REPORT.md\",\"EXARP_OLD_NAME_REFERENCES_FINAL.md\",\"UNIT_TEST_STATUS.md\",\"EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md\",\"EXARP_PHASE2_TASKS.md\",\"EXARP_LICENSING_ANALYSIS.md\",\"PROJECT_OVERVIEW.md\"]},\"health_score\":22.0}",
+          "created": "2025-11-26T10:59:14.464862",
+          "lastModified": "2025-11-26T10:59:14.464872"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126105914-365",
+      "name": "Update stale documentation",
+      "content": "Update 15 stale documents (>90 days old)",
+      "status": "todo",
+      "priority": "medium",
+      "tags": [
+        "documentation",
+        "update"
+      ],
+      "dependencies": [
+        "AUTO-20251126105913"
+      ],
+      "created": "2025-11-26T10:59:14.487048",
+      "lastModified": "2025-11-26T10:59:14.487053"
+    },
+    {
+      "id": "AUTO-20251126110005",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-11-26T11:00:05.384322",
+      "lastModified": "2025-11-26T11:00:05.483997",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126110005-C-1",
+          "todoId": "AUTO-20251126110005",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 367 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[367 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[367 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-26T11:00:05.420585",
+          "lastModified": "2025-11-26T11:00:05.420595"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126110005-367",
+      "name": "Review Todo2 tasks not in shared TODO",
+      "content": "Review 367 Todo2 tasks that are not in shared TODO table",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "todo-sync",
+        "review"
+      ],
+      "dependencies": [
+        "AUTO-20251126110005"
+      ],
+      "created": "2025-11-26T11:00:05.460359",
+      "lastModified": "2025-11-26T11:00:05.460364"
+    },
+    {
+      "id": "AUTO-20251126110118",
+      "name": "Automation: Test Runner",
+      "content": "Automated Test Runner execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "test-runner"
+      ],
+      "created": "2025-11-26T11:01:18.383265",
+      "lastModified": "2025-11-26T11:01:18.630571",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126110118-C-1",
+          "todoId": "AUTO-20251126110118",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Execution (unknown):** 0 tests run\n- Passed: 0\n- Failed: 0\n\n**Key Findings:**\n{\n  \"framework\": \"pytest\",\n  \"tests_run\": 0,\n  \"tests_passed\": 0,\n  \"tests_failed\": 0,\n  \"tests_skipped\": 0,\n  \"output\": \"\",\n  \"error\": \"/usr/local/opt/python@3.14/bin/python3.14: No module named pytest\\n\",\n  \"returncode\": 1,\n  \"output_file\": \"test-results/junit.xml\",\n  \"status\": \"success\"\n}",
+          "created": "2025-11-26T11:01:18.602410",
+          "lastModified": "2025-11-26T11:01:18.602443"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126110227",
+      "name": "Automation: Dependency Security Scan",
+      "content": "Automated Dependency Security Scan execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "dependency-security-scan"
+      ],
+      "created": "2025-11-26T11:02:27.387787",
+      "lastModified": "2025-11-26T11:02:27.501730",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126110227-C-1",
+          "todoId": "AUTO-20251126110227",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-26T11:02:27.483024",
+          "lastModified": "2025-11-26T11:02:27.483038"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126050019",
+      "title": "Fix test import errors - relative imports beyond top-level package",
+      "description": "11 tests failing with ImportError. Change `from tools.xxx` to `from project_management_automation.tools.xxx` in test files.",
+      "status": "Todo",
+      "priority": "Critical",
+      "tags": [
+        "testing",
+        "imports",
+        "bug"
+      ],
+      "createdAt": "2025-11-26T11:04:07.852052"
+    },
+    {
+      "id": "T-20251126050020",
+      "title": "Fix IntelligentAutomationBase test stubs - missing abstract methods",
+      "description": "5 tests failing because TestAutomation doesn't implement _generate_insights, _generate_report, _get_sequential_problem, _get_tractatus_concept",
+      "status": "Todo",
+      "priority": "Critical",
+      "tags": [
+        "testing",
+        "abstract-class",
+        "bug"
+      ],
+      "createdAt": "2025-11-26T11:04:07.852073"
+    },
+    {
+      "id": "T-20251126050021",
+      "title": "Fix MCPClient tests - property mcp_config has no setter",
+      "description": "4 tests failing trying to set read-only property. Either add setter or mock differently.",
+      "status": "Todo",
+      "priority": "High",
+      "tags": [
+        "testing",
+        "mcp-client",
+        "bug"
+      ],
+      "createdAt": "2025-11-26T11:04:07.852081"
+    },
+    {
+      "id": "T-20251126050022",
+      "title": "Fix Todo2DuplicateDetector tests - missing project_root attribute",
+      "description": "3 tests failing because object has no project_root. Class interface changed.",
+      "status": "Todo",
+      "priority": "High",
+      "tags": [
+        "testing",
+        "duplicate-detection",
+        "bug"
+      ],
+      "createdAt": "2025-11-26T11:04:07.852083"
+    },
+    {
+      "id": "T-20251126050023",
+      "title": "Update test assertions for changed output formats",
+      "description": "7 tests failing because tool output format changed. Update assertions to match current output.",
+      "status": "Todo",
+      "priority": "Medium",
+      "tags": [
+        "testing",
+        "assertions",
+        "maintenance"
+      ],
+      "createdAt": "2025-11-26T11:04:07.852086"
+    },
+    {
+      "id": "T-20251126050024",
+      "title": "Fix deprecated datetime.utcnow() warnings",
+      "description": "working_copy_health.py and nightly_task_automation.py use deprecated utcnow(). Change to datetime.now(datetime.UTC)",
+      "status": "Todo",
+      "priority": "Low",
+      "tags": [
+        "deprecation",
+        "datetime",
+        "maintenance"
+      ],
+      "createdAt": "2025-11-26T11:04:07.852088"
     }
   ],
-  "lastModified": "2025-11-26T03:49:23.485736"
+  "lastModified": "2025-11-26T11:04:07.852092"
 }
