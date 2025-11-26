@@ -2538,6 +2538,176 @@
       "updatedAt": "2025-11-26T04:26:24.752291Z",
       "dependencies": [],
       "estimatedHours": 4
+    },
+    {
+      "id": "81091635-1c7b-487b-abb8-da67b335e010",
+      "content": "Update MCP_CONFIG_EXAMPLE.json to FastMCP format",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "installation",
+        "documentation"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Update config to use FastMCP uv-based format\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/integrations/mcp-json-configuration\n\n**Current format (outdated):**\n```json\n{\n  \"mcpServers\": {\n    \"exarp\": {\n      \"command\": \"/path/to/run_server.sh\",\n      \"args\": []\n    }\n  }\n}\n```\n\n**Target format (FastMCP standard):**\n```json\n{\n  \"mcpServers\": {\n    \"exarp\": {\n      \"command\": \"uv\",\n      \"args\": [\n        \"run\", \"--with\", \"fastmcp\",\n        \"--with\", \"pydantic\", \"--with\", \"networkx\",\n        \"fastmcp\", \"run\",\n        \"/path/to/server.py\"\n      ],\n      \"env\": {\n        \"PROJECT_ROOT\": \"/path/to/project\"\n      }\n    }\n  }\n}\n```\n\n**Config locations:**\n- Cursor: ~/.cursor/mcp.json\n- Claude Desktop: ~/.claude/claude_desktop_config.json\n- VS Code: .vscode/mcp.json",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064380Z",
+      "updatedAt": "2025-11-26T04:30:33.064410Z",
+      "dependencies": [],
+      "estimatedHours": 0.5
+    },
+    {
+      "id": "84c8486a-8f64-4eae-bacf-a50c01ed6fc3",
+      "content": "Add install_mcp.sh script for easy installation",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "installation",
+        "scripts"
+      ],
+      "long_description": "\ufffd\ufffd **Objective:** Create helper script for MCP client installation\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/integrations/mcp-json-configuration\n\n**Script: scripts/install_mcp.sh**\n```bash\n#!/bin/bash\nCLIENT=\"${1:-cursor}\"\n\ncase \"$CLIENT\" in\n  cursor)    CONFIG=\"$HOME/.cursor/mcp.json\" ;;\n  claude)    CONFIG=\"$HOME/.claude/claude_desktop_config.json\" ;;\n  vscode)    CONFIG=\".vscode/mcp.json\" ;;\nesac\n\nfastmcp install mcp-json server.py --name \"Exarp\" | ...\n```\n\n**Also update README with installation instructions.**",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064444Z",
+      "updatedAt": "2025-11-26T04:30:33.064446Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "e9c89f22-8dd8-4c15-a4ff-2aecae28ac49",
+      "content": "Add output schemas for structured tool results",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "tools",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Return typed structured data from tools\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/tools\n\n**Current:** Tools return JSON strings\n**Target:** Tools return typed Pydantic models for automatic hydration\n\n**Example:**\n```python\nfrom pydantic import BaseModel\nfrom datetime import datetime\n\nclass DocsHealthResult(BaseModel):\n    score: int\n    broken_links: int\n    stale_docs: int\n    timestamp: datetime\n    report_path: str\n\n@mcp.tool\ndef check_documentation_health(...) -> DocsHealthResult:\n    return DocsHealthResult(\n        score=85,\n        broken_links=3,\n        stale_docs=5,\n        timestamp=datetime.now(),\n        report_path=\"docs/HEALTH_REPORT.md\"\n    )\n```\n\n**Benefits:**\n- Clients get typed Python objects, not dicts\n- datetime/UUID automatically hydrated\n- Better IDE autocomplete",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064456Z",
+      "updatedAt": "2025-11-26T04:30:33.064458Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "97a7927e-affd-4a0f-8503-486c40525469",
+      "content": "Add meta field with tags to all tools",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "tools",
+        "metadata"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Add metadata for tool filtering\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/tools#filtering-by-tags\n\n**Add tags to each tool:**\n```python\n@mcp.tool(tags={\"daily\", \"quick\", \"docs\"})\ndef check_documentation_health(): ...\n\n@mcp.tool(tags={\"weekly\", \"slow\", \"security\"})  \ndef scan_dependency_security(): ...\n```\n\n**Metadata accessible via:**\n```python\ntools = await client.list_tools()\nfor tool in tools:\n    tags = tool.meta.get('_fastmcp', {}).get('tags', [])\n```\n\n**Tag categories:**\n- Speed: quick, slow\n- Frequency: daily, weekly, sprint\n- Domain: docs, tasks, code, security",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064488Z",
+      "updatedAt": "2025-11-26T04:30:33.064490Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "3a70415b-28e5-4bc0-bd01-bb41cc6607c9",
+      "content": "Add resource templates for dynamic data access",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "resources",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Add resource templates for querying data\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/resources\n\n**New resource templates:**\n```python\n@mcp.resource(\"exarp://tasks/{status}\")\ndef get_tasks_by_status(status: str) -> list:\n    \"\"\"Get tasks filtered by status.\"\"\"\n    return load_tasks(status=status)\n\n@mcp.resource(\"exarp://task/{task_id}\")\ndef get_task(task_id: str) -> dict:\n    \"\"\"Get single task by ID.\"\"\"\n    return load_task(task_id)\n\n@mcp.resource(\"exarp://health/{component}\")\ndef get_health(component: str) -> dict:\n    \"\"\"Get health of specific component.\"\"\"\n    return check_health(component)\n```\n\n**Use cases:**\n- Query tasks without running full tool\n- Access cached analysis results\n- Quick data lookups",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064511Z",
+      "updatedAt": "2025-11-26T04:30:33.064513Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "b5619b2b-d80d-4c5c-be3e-cf9e2489ac98",
+      "content": "Add parameterized prompts with arguments",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "prompts",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Make prompts accept runtime arguments\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/prompts\n\n**Current prompts:** Static strings\n**Target:** Accept arguments for customization\n\n**Example:**\n```python\n@mcp.prompt\ndef task_review(\n    include_stale: bool = True,\n    days_threshold: int = 30,\n    status_filter: str = None\n) -> str:\n    \"\"\"Review tasks with configurable options.\"\"\"\n    prompt = \"Review project tasks:\\n\"\n    if include_stale:\n        prompt += f\"- Include stale tasks (>{days_threshold} days)\\n\"\n    if status_filter:\n        prompt += f\"- Filter to status: {status_filter}\\n\"\n    return prompt\n\n@mcp.prompt  \ndef sprint_planning(\n    sprint_length: int = 14,\n    max_tasks: int = 10\n) -> str:\n    return f\"Plan a {sprint_length}-day sprint with up to {max_tasks} tasks...\"\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064519Z",
+      "updatedAt": "2025-11-26T04:30:33.064521Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "c01ba127-e7cc-4040-a248-86f0fb6fcdaf",
+      "content": "Implement structured logging with FastMCP Context",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "logging",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Use FastMCP context for client-visible logging\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/logging\n\n**Implementation:**\n```python\nfrom fastmcp import Context\n\n@mcp.tool\nasync def sprint_automation(ctx: Context, ...):\n    await ctx.debug(\"Starting sprint automation\")\n    await ctx.info(\"Processing 10 tasks\")\n    await ctx.warning(\"Task T-123 has no description\")\n    await ctx.error(\"Failed to connect to remote agent\")\n    \n    # Logs visible to MCP client\n```\n\n**Log levels:**\n- debug: Detailed diagnostic info\n- info: General operational info\n- warning: Potential issues\n- error: Errors that don't stop execution\n\n**Benefits:**\n- Clients can display logs in real-time\n- Structured log format\n- Log filtering by level",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064527Z",
+      "updatedAt": "2025-11-26T04:30:33.064529Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "39208b18-178d-49a0-b409-f30eb016b508",
+      "content": "Explore sampling for AI-assisted tool execution",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "sampling",
+        "research"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Research using sampling for smart tool behavior\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/sampling\n\n**Use case:** Tools that need LLM assistance\n```python\nfrom fastmcp import Context\n\n@mcp.tool\nasync def smart_task_triage(ctx: Context, tasks: list):\n    # Ask LLM to help categorize tasks\n    response = await ctx.sample(\n        messages=[{\n            \"role\": \"user\",\n            \"content\": f\"Categorize these tasks: {tasks}\"\n        }],\n        max_tokens=500\n    )\n    return parse_categories(response.text)\n```\n\n**Potential uses:**\n- Auto-generate task descriptions\n- Smart duplicate detection\n- Natural language task search\n\n**Note:** Requires client to support sampling",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064535Z",
+      "updatedAt": "2025-11-26T04:30:33.064560Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "4885e06a-b882-473c-a5e5-65c8dc96e447",
+      "content": "Add elicitation for interactive tool clarification",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "elicitation",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Request user input during tool execution\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/elicitation\n\n**Use case:** Tools that need user decisions\n```python\nfrom fastmcp import Context\n\n@mcp.tool\nasync def bulk_update_tasks(ctx: Context, task_ids: list, dry_run: bool = True):\n    if not dry_run:\n        # Ask user to confirm before destructive action\n        confirmed = await ctx.elicit(\n            message=f\"About to update {len(task_ids)} tasks. Continue?\",\n            schema={\"type\": \"boolean\"}\n        )\n        if not confirmed:\n            return {\"status\": \"cancelled\"}\n    \n    # Proceed with update\n    ...\n```\n\n**Potential uses:**\n- Confirm destructive operations\n- Request missing parameters\n- Choose between options\n\n**Note:** Requires client to support elicitation",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064571Z",
+      "updatedAt": "2025-11-26T04:30:33.064586Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "e6957a11-3d6e-4b4a-a962-e776057f2cb4",
+      "content": "Use roots for multi-project workspace support",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "roots",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Support multiple project roots\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/clients/roots\n\n**Use case:** Exarp managing multiple projects\n```python\nfrom fastmcp import Context\n\n@mcp.tool\nasync def check_all_projects_health(ctx: Context):\n    roots = await ctx.list_roots()\n    results = {}\n    for root in roots:\n        results[root.uri] = await check_project_health(root.uri)\n    return results\n```\n\n**Potential uses:**\n- Multi-repo task management\n- Cross-project analysis\n- Workspace-wide searches\n\n**Benefits:**\n- Client tells server which directories to access\n- Security: server only accesses approved paths\n- Multi-project workflows",
+      "completed": false,
+      "createdAt": "2025-11-26T04:30:33.064592Z",
+      "updatedAt": "2025-11-26T04:30:33.064594Z",
+      "dependencies": [],
+      "estimatedHours": 2
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
