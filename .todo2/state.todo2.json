@@ -634,6 +634,60 @@
           "lastModified": "2025-11-26T02:56:31.978273"
         }
       ]
+    },
+    {
+      "id": "71e38ed5-1eef-4c75-97ce-85a715aa8f9c",
+      "content": "Implement pre-commit tool chain workflow",
+      "long_description": "Create a combined pre-commit workflow that chains:\n1. check_documentation_health - verify docs are valid\n2. detect_duplicate_tasks - find duplicate tasks\n\nThis should be a single command that runs both tools in sequence and fails if either fails. Could be implemented as a new MCP tool or as a git hook configuration.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "tool-chaining",
+        "workflow",
+        "pre-commit",
+        "automation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-26T01:22:03.055277Z",
+      "updatedAt": "2025-11-26T01:22:03.055839Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "ce06689f-eec3-47fe-a6c8-5c8da0e721a0",
+      "content": "Implement code review tool chain workflow",
+      "long_description": "Create a combined code review workflow that chains:\n1. analyze_todo2_alignment - check task alignment with project goals\n2. scan_dependency_security - check for security vulnerabilities\n\nThis should be a single command for code review preparation. Could output a combined report suitable for PR reviews.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "tool-chaining",
+        "workflow",
+        "code-review",
+        "automation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-26T01:22:03.055889Z",
+      "updatedAt": "2025-11-26T01:22:03.055905Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "5118ab91-793b-46ed-b847-5191fb2b511f",
+      "content": "Implement release prep tool chain workflow",
+      "long_description": "Create a combined release preparation workflow that chains:\n1. run_tests - execute full test suite\n2. analyze_test_coverage - verify coverage thresholds\n3. validate_ci_cd_workflow - ensure CI/CD is properly configured\n\nThis should be a single command that validates the project is ready for release. Should fail fast if any step fails.",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "tool-chaining",
+        "workflow",
+        "release",
+        "automation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-26T01:22:03.055930Z",
+      "updatedAt": "2025-11-26T01:22:03.056008Z",
+      "dependencies": [],
+      "estimatedHours": 3
     }
   ]
 }
