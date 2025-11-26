@@ -1,15 +1,6 @@
 {
   "runs": [
     {
-      "timestamp": "2025-11-26T08:10:21.101213",
-      "health_score": 85.0,
-      "link_validation": {
-        "broken": 0
-      },
-      "format_errors": 0,
-      "stale_files": 15
-    },
-    {
       "timestamp": "2025-11-26T08:13:54.433274",
       "health_score": 85.0,
       "link_validation": {
@@ -443,6 +434,15 @@
     },
     {
       "timestamp": "2025-11-26T16:38:23.863979",
+      "health_score": 19.0,
+      "link_validation": {
+        "broken": 0
+      },
+      "format_errors": 0,
+      "stale_files": 15
+    },
+    {
+      "timestamp": "2025-11-26T16:51:15.923595",
       "health_score": 19.0,
       "link_validation": {
         "broken": 0

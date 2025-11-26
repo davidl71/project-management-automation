@@ -265,6 +265,7 @@ try:
         from .tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
+        from .tools.prd_generator import generate_prd as _generate_prd
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -301,6 +302,7 @@ try:
         from tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
+        from tools.prd_generator import generate_prd as _generate_prd
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -950,6 +952,31 @@ if mcp:
             Generate one-page project overview for stakeholders.
             """
             return _overview_impl(output_format, output_path)
+
+        @mcp.tool()
+        def generate_prd(
+            project_name: Optional[str] = None,
+            output_path: Optional[str] = None,
+            include_tasks: bool = True,
+            include_architecture: bool = True,
+            include_metrics: bool = True
+        ) -> str:
+            """[HINT: PRD generation. Creates Product Requirements Document from codebase analysis.]
+
+            📊 Output: Structured PRD markdown with user stories, features, requirements
+            🔧 Side Effects: Creates/overwrites PRD file at output_path
+            📁 Analyzes: PROJECT_GOALS.md, README.md, Todo2 tasks, codebase structure
+            ⏱️ Typical Runtime: 2-10 seconds
+
+            Example Prompt:
+            "Generate a PRD for this project and save to docs/PRD.md"
+
+            Related Tools:
+            - analyze_todo2_alignment (align tasks against PRD)
+            - project_scorecard (overall project health)
+            - check_documentation_health (docs quality)
+            """
+            return _generate_prd(project_name, output_path, include_tasks, include_architecture, include_metrics)
 
         @mcp.tool()
         def project_overview(output_format: str = "text", output_path: Optional[str] = None) -> str:
