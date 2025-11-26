@@ -5,14 +5,45 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "project-management-automation-mcp"
 version = "0.1.8"
-description = "MCP server for project management automation tools"
+description = "MCP server for project management automation - health scores, task alignment, security scanning"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
+authors = [
+    { name = "David Lowes", email = "lindog1@users.noreply.github.com" }
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "project-management",
+    "automation",
+    "ai-tools",
+    "fastmcp",
+    "task-management",
+    "code-health",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = [
     "fastmcp>=2.0.0",
     "pydantic>=2.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/davidl71/project-management-automation"
+Repository = "https://github.com/davidl71/project-management-automation"
+Documentation = "https://github.com/davidl71/project-management-automation#readme"
+Issues = "https://github.com/davidl71/project-management-automation/issues"
 
 [project.entry-points."mcp.servers"]
 project-management-automation = "project_management_automation.server:main"
