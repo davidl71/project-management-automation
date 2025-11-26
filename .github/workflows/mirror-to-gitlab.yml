@@ -1,0 +1,50 @@
+# Mirror to GitLab for backup and security scanning
+# Syncs all branches and tags to GitLab on every push
+#
+# Setup required:
+# 1. Create GitLab project: https://gitlab.com/davidl71-group/project-management-automation
+# 2. Create GitLab Personal Access Token with write_repository scope
+# 3. Add GITLAB_TOKEN secret to this GitHub repo
+
+name: Mirror to GitLab
+
+on:
+  push:
+    branches: ['**']
+    tags: ['**']
+  # Also run on schedule to catch any missed syncs
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Mirror to GitLab
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          # Configure git
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions Mirror"
+          
+          # Add GitLab remote
+          git remote add gitlab https://oauth2:${GITLAB_TOKEN}@gitlab.com/davidl71-group/${{ github.event.repository.name }}.git || true
+          
+          # Push all branches
+          echo "Pushing all branches to GitLab..."
+          git push gitlab --all --force
+          
+          # Push all tags
+          echo "Pushing all tags to GitLab..."
+          git push gitlab --tags --force
+          
+          echo "✅ Mirror sync complete!"
+

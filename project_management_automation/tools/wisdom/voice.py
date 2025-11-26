@@ -12,7 +12,7 @@ Usage:
         generate_podcast_audio,
         list_available_voices,
     )
-    
+
     # Generate audio from advisor consultation
     audio_path = synthesize_advisor_quote(
         text="Your quote here",
@@ -21,13 +21,12 @@ Usage:
     )
 """
 
-import os
 import asyncio
+import os
 import subprocess
-from pathlib import Path
-from typing import Dict, Any, Optional, List, Literal
 from datetime import datetime
-import json
+from pathlib import Path
+from typing import Any, Dict, List, Literal, Optional
 
 # Backend type
 TTSBackend = Literal["elevenlabs", "edge-tts", "pyttsx3", "auto"]
@@ -49,7 +48,7 @@ ADVISOR_VOICES = {
     "edge-tts": {
         # Microsoft Edge TTS voices
         "bofh": "en-US-GuyNeural",
-        "stoic": "en-GB-RyanNeural", 
+        "stoic": "en-GB-RyanNeural",
         "zen": "en-US-ChristopherNeural",
         "trickster": "en-AU-WilliamNeural",
         "perfectionist": "en-US-EricNeural",
@@ -79,30 +78,27 @@ def get_available_backend() -> Optional[TTSBackend]:
     if os.getenv("ELEVENLABS_API_KEY"):
         try:
             import elevenlabs
+
             return "elevenlabs"
         except ImportError:
             pass
-    
+
     # Check edge-tts
     try:
-        result = subprocess.run(
-            ["edge-tts", "--version"],
-            capture_output=True,
-            text=True,
-            timeout=5
-        )
+        result = subprocess.run(["edge-tts", "--version"], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
             return "edge-tts"
     except (FileNotFoundError, subprocess.TimeoutExpired):
         pass
-    
+
     # Check pyttsx3
     try:
         import pyttsx3
+
         return "pyttsx3"
     except ImportError:
         pass
-    
+
     return None
 
 
@@ -112,24 +108,24 @@ def list_available_voices(backend: TTSBackend = "auto") -> Dict[str, Any]:
         backend = get_available_backend()
         if not backend:
             return {"error": "No TTS backend available", "backends_checked": ["elevenlabs", "edge-tts", "pyttsx3"]}
-    
+
     result = {
         "backend": backend,
         "advisor_voices": {},
     }
-    
+
     if backend == "elevenlabs":
         result["advisor_voices"] = ADVISOR_VOICES["elevenlabs"]
         result["note"] = "Set ELEVENLABS_API_KEY env var. pip install elevenlabs"
-        
+
     elif backend == "edge-tts":
         result["advisor_voices"] = ADVISOR_VOICES["edge-tts"]
         result["note"] = "pip install edge-tts. Free Microsoft voices."
-        
+
     elif backend == "pyttsx3":
         result["advisor_voices"] = ADVISOR_VOICES["pyttsx3"]
         result["note"] = "pip install pyttsx3. Uses system voices."
-    
+
     return result
 
 
@@ -141,21 +137,21 @@ def _synthesize_elevenlabs(
 ) -> Path:
     """Synthesize using ElevenLabs API."""
     from elevenlabs.client import ElevenLabs
-    
+
     client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
-    
+
     audio = client.text_to_speech.convert(
         text=text,
         voice_id=voice_id,
         model_id=model_id,
         output_format="mp3_44100_128",
     )
-    
+
     # Write audio to file
     with open(output_path, "wb") as f:
         for chunk in audio:
             f.write(chunk)
-    
+
     return output_path
 
 
@@ -166,7 +162,7 @@ async def _synthesize_edge_tts_async(
 ) -> Path:
     """Synthesize using edge-tts (async)."""
     import edge_tts
-    
+
     communicate = edge_tts.Communicate(text, voice)
     await communicate.save(str(output_path))
     return output_path
@@ -187,7 +183,7 @@ def _synthesize_edge_tts(
                 ["edge-tts", "--voice", voice, "--text", text, "--write-media", str(output_path)],
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
             if result.returncode != 0:
                 raise RuntimeError(f"edge-tts failed: {result.stderr}")
@@ -206,28 +202,24 @@ def _synthesize_pyttsx3(
 ) -> Path:
     """Synthesize using pyttsx3 (system voices)."""
     import pyttsx3
-    
+
     engine = pyttsx3.init()
     engine.setProperty("rate", rate)
-    
+
     # pyttsx3 saves as wav, we may need to convert
     wav_path = output_path.with_suffix(".wav")
     engine.save_to_file(text, str(wav_path))
     engine.runAndWait()
-    
+
     # If mp3 requested, try to convert
     if output_path.suffix.lower() == ".mp3":
         try:
-            subprocess.run(
-                ["ffmpeg", "-i", str(wav_path), "-y", str(output_path)],
-                capture_output=True,
-                timeout=30
-            )
+            subprocess.run(["ffmpeg", "-i", str(wav_path), "-y", str(output_path)], capture_output=True, timeout=30)
             wav_path.unlink()  # Remove wav after conversion
         except (FileNotFoundError, subprocess.TimeoutExpired):
             # ffmpeg not available, return wav
             return wav_path
-    
+
     return output_path
 
 
@@ -239,13 +231,13 @@ def synthesize_advisor_quote(
 ) -> Dict[str, Any]:
     """
     Synthesize an advisor quote to audio.
-    
+
     Args:
         text: The quote text to synthesize
         advisor: Advisor ID (bofh, stoic, zen, etc.)
         output_path: Output file path (default: auto-generated)
         backend: TTS backend to use (auto, elevenlabs, edge-tts, pyttsx3)
-    
+
     Returns:
         Dict with audio_path, backend_used, duration_estimate, etc.
     """
@@ -257,10 +249,11 @@ def synthesize_advisor_quote(
                 "success": False,
                 "error": "No TTS backend available. Install one of: elevenlabs, edge-tts, pyttsx3",
             }
-    
+
     # Generate output path if not provided
     if output_path is None:
         from ...utils import find_project_root
+
         project_root = find_project_root()
         audio_dir = project_root / ".exarp" / "audio"
         audio_dir.mkdir(parents=True, exist_ok=True)
@@ -269,24 +262,24 @@ def synthesize_advisor_quote(
     else:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     try:
         if backend == "elevenlabs":
             voice_info = ADVISOR_VOICES["elevenlabs"].get(advisor, ADVISOR_VOICES["elevenlabs"]["default"])
             _synthesize_elevenlabs(text, voice_info["voice_id"], output_path)
-            
+
         elif backend == "edge-tts":
             voice = ADVISOR_VOICES["edge-tts"].get(advisor, ADVISOR_VOICES["edge-tts"]["default"])
             _synthesize_edge_tts(text, voice, output_path)
-            
+
         elif backend == "pyttsx3":
             voice_settings = ADVISOR_VOICES["pyttsx3"].get(advisor, ADVISOR_VOICES["pyttsx3"]["default"])
             _synthesize_pyttsx3(text, voice_settings["rate"], output_path)
-        
+
         # Estimate duration (rough: ~150 words per minute)
         word_count = len(text.split())
         duration_estimate = word_count / 150 * 60  # seconds
-        
+
         return {
             "success": True,
             "audio_path": str(output_path),
@@ -296,7 +289,7 @@ def synthesize_advisor_quote(
             "word_count": word_count,
             "duration_estimate_seconds": round(duration_estimate, 1),
         }
-        
+
     except Exception as e:
         return {
             "success": False,
@@ -315,14 +308,14 @@ def generate_podcast_audio(
 ) -> Dict[str, Any]:
     """
     Generate a podcast-style audio file from advisor consultations.
-    
+
     Args:
         consultations: List of consultation dicts (from export_for_podcast)
         output_path: Output file path
         backend: TTS backend to use
         include_intro: Add intro narration
         include_transitions: Add transitions between segments
-    
+
     Returns:
         Dict with audio_path, total_duration, segments_generated, etc.
     """
@@ -333,10 +326,11 @@ def generate_podcast_audio(
                 "success": False,
                 "error": "No TTS backend available",
             }
-    
+
     # Generate output path
     if output_path is None:
         from ...utils import find_project_root
+
         project_root = find_project_root()
         audio_dir = project_root / ".exarp" / "podcasts"
         audio_dir.mkdir(parents=True, exist_ok=True)
@@ -344,12 +338,12 @@ def generate_podcast_audio(
         output_path = audio_dir / f"advisor_podcast_{timestamp}.mp3"
     else:
         output_path = Path(output_path)
-    
+
     # Generate individual segments
     segments = []
     temp_dir = Path(output_path).parent / "temp_segments"
     temp_dir.mkdir(parents=True, exist_ok=True)
-    
+
     try:
         # Intro
         if include_intro:
@@ -362,32 +356,32 @@ def generate_podcast_audio(
             )
             if intro_result.get("success"):
                 segments.append(intro_result["audio_path"])
-        
+
         # Process each consultation
         for i, consultation in enumerate(consultations):
             advisor = consultation.get("advisor", "default")
             quote = consultation.get("quote", "")
             context = consultation.get("context", "")
             metric = consultation.get("metric", "")
-            
+
             # Build segment text
             segment_parts = []
             if include_transitions and metric:
                 segment_parts.append(f"On {metric}:")
             segment_parts.append(quote)
-            
+
             segment_text = " ".join(segment_parts)
-            
+
             result = synthesize_advisor_quote(
                 segment_text,
                 advisor=advisor,
-                output_path=str(temp_dir / f"{i+1:02d}_{advisor}.mp3"),
+                output_path=str(temp_dir / f"{i + 1:02d}_{advisor}.mp3"),
                 backend=backend,
             )
-            
+
             if result.get("success"):
                 segments.append(result["audio_path"])
-        
+
         # Combine segments using ffmpeg if available
         if len(segments) > 1:
             try:
@@ -396,29 +390,42 @@ def generate_podcast_audio(
                 with open(list_file, "w") as f:
                     for seg in segments:
                         f.write(f"file '{seg}'\n")
-                
+
                 subprocess.run(
-                    ["ffmpeg", "-f", "concat", "-safe", "0", "-i", str(list_file), 
-                     "-c", "copy", "-y", str(output_path)],
+                    [
+                        "ffmpeg",
+                        "-f",
+                        "concat",
+                        "-safe",
+                        "0",
+                        "-i",
+                        str(list_file),
+                        "-c",
+                        "copy",
+                        "-y",
+                        str(output_path),
+                    ],
                     capture_output=True,
-                    timeout=120
+                    timeout=120,
                 )
-                
+
                 # Cleanup temp files
                 for seg in segments:
                     Path(seg).unlink(missing_ok=True)
                 list_file.unlink(missing_ok=True)
                 temp_dir.rmdir()
-                
+
             except (FileNotFoundError, subprocess.TimeoutExpired):
                 # ffmpeg not available, just return first segment
                 import shutil
+
                 shutil.copy(segments[0], output_path)
-        
+
         elif len(segments) == 1:
             import shutil
+
             shutil.copy(segments[0], output_path)
-        
+
         return {
             "success": True,
             "audio_path": str(output_path),
@@ -426,7 +433,7 @@ def generate_podcast_audio(
             "segments_generated": len(segments),
             "consultations_processed": len(consultations),
         }
-        
+
     except Exception as e:
         return {
             "success": False,
@@ -442,12 +449,13 @@ def check_tts_backends() -> Dict[str, Any]:
         "recommended": None,
         "details": {},
     }
-    
+
     # Check ElevenLabs
     elevenlabs_available = False
     if os.getenv("ELEVENLABS_API_KEY"):
         try:
             import elevenlabs
+
             elevenlabs_available = True
             result["available_backends"].append("elevenlabs")
             result["details"]["elevenlabs"] = {
@@ -465,7 +473,7 @@ def check_tts_backends() -> Dict[str, Any]:
             "status": "not_configured",
             "setup": "Set ELEVENLABS_API_KEY env var, pip install elevenlabs",
         }
-    
+
     # Check edge-tts
     try:
         subprocess.run(["edge-tts", "--version"], capture_output=True, timeout=5)
@@ -480,10 +488,11 @@ def check_tts_backends() -> Dict[str, Any]:
             "status": "not_installed",
             "install": "pip install edge-tts",
         }
-    
+
     # Check pyttsx3
     try:
         import pyttsx3
+
         result["available_backends"].append("pyttsx3")
         result["details"]["pyttsx3"] = {
             "status": "available",
@@ -495,7 +504,7 @@ def check_tts_backends() -> Dict[str, Any]:
             "status": "not_installed",
             "install": "pip install pyttsx3",
         }
-    
+
     # Set recommendation
     if "elevenlabs" in result["available_backends"]:
         result["recommended"] = "elevenlabs"
@@ -503,6 +512,5 @@ def check_tts_backends() -> Dict[str, Any]:
         result["recommended"] = "edge-tts"
     elif "pyttsx3" in result["available_backends"]:
         result["recommended"] = "pyttsx3"
-    
-    return result
 
+    return result

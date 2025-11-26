@@ -13,6 +13,13 @@
       "description": "🎙️ FUTURE FORK PROJECT - Automated developer radio/TV station for project updates, music, and alerts. Streams to YouTube Live with AI-generated content, royalty-free music, and real-time project notifications. Designed as standalone subproject for future extraction.\n\n## Fork-Ready Design\n- Self-contained module structure\n- Independent configuration\n- Documented APIs and interfaces\n- Separate dependency management\n\n## Core Features\n- 24/7 YouTube Live streaming\n- AI podcast generation (Podcastfy/Ollama)\n- Royalty-free music integration\n- Project update narration (TTS)\n- Alert system for user interaction\n- Legal compliance framework\n\n## Related Memory IDs\n- Research: 55d4f7f4-ed03-474f-a4c7-46ad33b23116\n- Legal Approach: 62c5d97b-da81-4651-b91e-b82bc37cae71",
       "createdAt": "2025-11-26T10:10:51.936Z",
       "updatedAt": "2025-11-26T10:10:51.936Z"
+    },
+    {
+      "id": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "name": "Web Presence & Personal Brand",
+      "description": "Migration of ldoneit.com from Wix, revival of lindog1.com for personal blog/opensource portfolio, YouTube channel strategy, and consolidation of Google Drive assets to GitHub. Encompasses IT consulting site, personal blog, CV/resume, opensource contributions showcase, and content creation strategy for AI Adventures, Music/Counterpoint, and Synthetic Financing channels.",
+      "createdAt": "2025-11-26T12:11:50.928Z",
+      "updatedAt": "2025-11-26T12:11:50.928Z"
     }
   ],
   "tasks": [
@@ -1006,6 +1013,246 @@
       ],
       "estimatedHours": 2,
       "level": 1
+    },
+    {
+      "id": "77de9675-64e5-47ff-bc52-ef0c5923dc22",
+      "name": "Audit Google Drive folder and plan GitHub migration",
+      "details": "Audit the Google Drive folder (https://drive.google.com/drive/folders/1-_FgyFDpVyomo2w3DdnfWeDP10BQ0Aoh) to understand what's stored there. Determine if it's being tracked properly, what should migrate to GitHub repos, and what should remain in Drive. Create migration plan with file categorization.\n\n**Acceptance Criteria:**\n- Complete inventory of Google Drive folder contents\n- Categorization: code → GitHub, documents → GitHub/repo, media → decision needed\n- Migration plan document created\n- Identify any secrets/credentials that need special handling",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:01.312Z",
+      "updatedAt": "2025-11-26T12:12:01.312Z",
+      "dependsOn": [],
+      "priority": 9,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "google-drive",
+        "migration",
+        "audit",
+        "github"
+      ],
+      "level": 0
+    },
+    {
+      "id": "7c50d60c-eb6d-40bc-be93-3f30d12b10cc",
+      "name": "Create ldoneit.com GitHub repo with Hugo scaffolding",
+      "details": "Create new public GitHub repo davidl71/ldoneit.com with Hugo static site scaffolding for IT consulting business. Set up GitHub Actions for auto-deployment to GitHub Pages.\n\n**Structure:**\n- content/_index.md, about.md, services/, skills.md, testimonials.md, contact.md\n- Hugo theme: Professional consulting theme (Winston or Meghna)\n- .github/workflows/deploy.yml for GitHub Pages\n- CNAME file for custom domain\n\n**Acceptance Criteria:**\n- Repo created and cloned\n- Hugo site initialized with appropriate theme\n- GitHub Actions workflow configured\n- README with setup instructions",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:06.384Z",
+      "updatedAt": "2025-11-26T12:12:06.384Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "ldoneit",
+        "hugo",
+        "github-pages",
+        "wix-migration"
+      ],
+      "level": 0
+    },
+    {
+      "id": "020de98b-8702-4c70-85a7-6e7ff8bd913a",
+      "name": "Create lindog1.com GitHub repo with Hugo scaffolding",
+      "details": "Create new public GitHub repo davidl71/lindog1.com (or repurpose davidblog) with Hugo static site scaffolding for personal blog and opensource portfolio.\n\n**Structure:**\n- content/blog/ (AI adventures, music, IBM i)\n- content/projects/ (exarp, synthetic-financing, mariadb-ibmi, counterpoint)\n- content/cv/ (online CV + PDF download)\n- Hugo theme: Developer blog theme (Stack or Blowfish)\n- .github/workflows/deploy.yml for GitHub Pages\n\n**Decision needed:** Create new repo or repurpose existing davidblog repo?\n\n**Acceptance Criteria:**\n- Repo created/configured\n- Hugo site initialized with dev blog theme\n- Project showcase sections configured\n- Blog categories set up",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:19.447Z",
+      "updatedAt": "2025-11-26T12:12:19.447Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "lindog1",
+        "hugo",
+        "github-pages",
+        "personal-blog"
+      ],
+      "level": 0
+    },
+    {
+      "id": "365e3fa5-538a-48e8-8e8b-cca95e103cb8",
+      "name": "Set up LaTeX CV with automated PDF generation",
+      "details": "Configure Ldcv repo (or integrate into lindog1.com) with LaTeX CV source and automated PDF generation via GitHub Actions.\n\n**Structure:**\n- david_lowes_cv.tex (LaTeX source)\n- Makefile or GitHub Actions for PDF compilation\n- Generated PDF committed or downloadable as release artifact\n- Link from lindog1.com/cv/\n\n**Content to include:**\n- Professional experience (20+ years IT)\n- Skills matrix from ldoneit.com\n- Opensource contributions\n- Education/certifications\n\n**Acceptance Criteria:**\n- LaTeX CV template selected and customized\n- GitHub Actions workflow compiles PDF on push\n- PDF accessible for download\n- Linked from personal site",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:24.313Z",
+      "updatedAt": "2025-11-26T12:12:24.313Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "cv",
+        "latex",
+        "github-actions",
+        "automation"
+      ],
+      "level": 0
+    },
+    {
+      "id": "aa611a37-9117-4f6e-bbc6-4d801c951c65",
+      "name": "Migrate ldoneit.com content from Wix to Hugo",
+      "details": "Manually extract and migrate content from current Wix site (ldoneit.com) to new Hugo site. Wix doesn't allow direct export.\n\n**Content to migrate:**\n- About Me section (20 years IT experience, Tel Aviv/SF/Worldwide)\n- Services: IT Problem Investigation, Design & Implementation, Project Coordination\n- Skills: Programming (Puppet, Bash, CMake, C/C++, R, Ruby, LaTeX), OS (Linux, AIX, Solaris, BSD, IBM i, Windows), Storage (NetApp, Nexenta), Virtualization (VMware, PowerVM, OpenStack)\n- Testimonials: Yuri Livshitz, Dmitriy Morozovsky quotes\n- Contact info: davidlowes@lindoneit.com, +972 54 3000810, 28 Menachem Begin Tel-Aviv\n- Images: Download from Wix Media Library\n\n**Acceptance Criteria:**\n- All text content converted to Markdown\n- Images downloaded and added to static/images/\n- Site renders correctly locally\n- Contact form solution identified (Formspree, Netlify Forms, etc.)",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:37.074Z",
+      "updatedAt": "2025-11-26T12:12:37.074Z",
+      "dependsOn": [
+        "7c50d60c-eb6d-40bc-be93-3f30d12b10cc"
+      ],
+      "priority": 7,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "ldoneit",
+        "content-migration",
+        "wix",
+        "markdown"
+      ],
+      "level": 0
+    },
+    {
+      "id": "5953a180-5fcd-4baf-8a4b-b780ec17d0ab",
+      "name": "Configure DNS for ldoneit.com and lindog1.com",
+      "details": "Update DNS records for both domains to point to GitHub Pages.\n\n**DNS Records needed for each domain:**\n- A @ 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153\n- CNAME www davidl71.github.io\n\n**Steps:**\n- Add CNAME files to repos\n- Enable HTTPS in GitHub Pages settings\n- Verify domain ownership\n- Test both www and apex domain access\n\n**Acceptance Criteria:**\n- Both domains propagated and accessible\n- HTTPS working on both\n- www redirects configured\n- Old Wix site can be decommissioned",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:40.353Z",
+      "updatedAt": "2025-11-26T12:12:40.353Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "dns",
+        "github-pages",
+        "deployment"
+      ],
+      "level": 0
+    },
+    {
+      "id": "1c61c251-99d1-43d6-b54c-068d712392e8",
+      "name": "Create YouTube channel strategy document",
+      "details": "Plan YouTube channel structure for content creation across different topics.\n\n**Channels to plan:**\n1. Current channel - Music/Counterpoint content\n2. NEW: AI Adventures / Exarp - MCP servers, Cursor workflows, AI coding\n3. NEW: Synthetic Financing - Box spreads, options education, trading tools\n\n**For each channel:**\n- Channel name and branding\n- Content categories\n- Upload schedule\n- Cross-promotion strategy\n- Equipment/software needs\n- Initial video ideas (3-5 per channel)\n\n**Link to sites:**\n- lindog1.com/music → Counterpoint channel\n- lindog1.com/ai-adventures → AI Adventures channel\n- ldoneit.com or private → Synthetic Financing channel\n\n**Acceptance Criteria:**\n- Strategy document created\n- Channel names finalized\n- Branding guidelines defined\n- Content calendar template created",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:46.036Z",
+      "updatedAt": "2025-11-26T12:12:46.036Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "youtube",
+        "content-strategy",
+        "branding"
+      ],
+      "level": 0
+    },
+    {
+      "id": "c616fef9-6df0-4fdd-88e0-57ef4990b3ad",
+      "name": "Revive counterpoint_videos project with Cursor/Exarp",
+      "details": "Analyze and revive the counterpoint_videos GitHub repo (last updated Sept 2018). Explore how Cursor and Exarp can help modernize the project.\n\n**Current state:**\n- LilyPond scores for species counterpoint (1a-6a)\n- Scripts for rendering\n- Uses ly2video for video generation\n\n**Revival tasks:**\n1. Review existing content quality\n2. Update LilyPond scores if needed\n3. Modernize build scripts\n4. Create new exercises\n5. Generate videos for YouTube\n6. Link with gradus_ad_parnassum repo\n7. Integrate with openmusictheory.github.io fork\n\n**Cursor/Exarp assistance:**\n- AI-assisted counterpoint composition (following Fux's rules)\n- Automated video generation pipeline\n- Task tracking for content creation\n\n**Acceptance Criteria:**\n- Repo reviewed and issues identified\n- Build scripts updated and working\n- At least one new video generated\n- Plan for ongoing content creation",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:12:53.649Z",
+      "updatedAt": "2025-11-26T12:12:53.649Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 7,
+      "status": "pending",
+      "tags": [
+        "music",
+        "counterpoint",
+        "lilypond",
+        "youtube",
+        "revival"
+      ],
+      "level": 0
+    },
+    {
+      "id": "5484e73a-54e0-429b-98ff-8f18c6a09c09",
+      "name": "Document mariadb-on-ibmi opensource contributions",
+      "details": "Create comprehensive documentation for the mariadb-on-ibmi GitHub organization work to showcase on lindog1.com.\n\n**Organization repos to document:**\n- db2iengine - DB2i Storage Engine for MariaDB\n- zenddbi - Zend Database for i (MariaDB-based)\n- server - MariaDB server IBM i port\n- mariadb-connector-c - C/C++ connector\n- Specs - RPM specs for MariaDB PASE\n- ublu - Midrange Life Cycle Extension Language\n- CMake - CMake with IBM i patches\n\n**Documentation to create:**\n- Overview of the integration project\n- Architecture diagram\n- Build instructions\n- Use cases and benefits\n- Contribution history\n- Future roadmap\n\n**Showcase on lindog1.com/projects/mariadb-ibmi**\n\n**Acceptance Criteria:**\n- Project overview document created\n- Architecture diagram included\n- Build documentation verified\n- Page created on lindog1.com",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:13:00.268Z",
+      "updatedAt": "2025-11-26T12:13:00.268Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "mariadb",
+        "ibmi",
+        "opensource",
+        "documentation"
+      ],
+      "level": 0
+    },
+    {
+      "id": "ac843ec6-6a00-4c07-bcaf-3adb49dc75b3",
+      "name": "Create opensource contributions summary page",
+      "details": "Create a comprehensive summary of all opensource contributions for lindog1.com portfolio.\n\n**Your forked repos (contributions/interests):**\n- FinanceDatabase - 300k+ symbols database\n- mainframeadventures, cobol-programming-course, learn_cobol - IBM mainframe\n- MutopiaProject, openmusictheory.github.io, mozart2 - Music\n- server (MariaDB), php-zendserver-docker, ZendServerPuppet - MariaDB/Zend\n- homebrew-cask, formulae.brew.sh, awesome-linters - Dev tools\n- pikvm, bladeRF-adsb, cgm-remote-monitor - Hardware/IoT\n- p3270, cics-process-management, VirtualBank - IBM integration\n\n**Your original repos:**\n- project-management-automation (Exarp)\n- counterpoint_videos, gradus_ad_parnassum\n- rquants\n- mariadb-on-ibmi org\n\n**Page structure:**\n- Categories with descriptions\n- Links to repos\n- Contribution highlights\n- Technologies used\n\n**Acceptance Criteria:**\n- Summary page created for lindog1.com\n- All repos categorized\n- Descriptions written\n- Links verified",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:13:09.439Z",
+      "updatedAt": "2025-11-26T12:13:09.439Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "opensource",
+        "portfolio",
+        "documentation"
+      ],
+      "level": 0
+    },
+    {
+      "id": "2fe3bc52-7005-473e-9264-09124685be40",
+      "name": "Set up GitLab mirror for private GitHub repos",
+      "details": "Configure GitLab (davidl71-group) to mirror private GitHub repositories for backup and security scanning.\n\n**GitLab Group:** https://gitlab.com/davidl71-group/\n**Learn GitLab:** https://gitlab.com/davidl71-group/davidl71-project/-/learn_gitlab\n\n**Repos to Mirror (16 private, non-fork):**\n1. ib_box_spread_full_universal (priority - main trading system)\n2. box-spread-cpp\n3. box-spread-python\n4. box-spread-notebooks\n5. trading-mcp-servers\n6. trading-setup-docs\n7. trading-tools-docs\n8. trading-automation-docs\n9. trading-architecture-docs\n10. trading-api-docs\n11. trading-automation-tools\n12. trading-build-tools\n13. homebrew-ib-box-spread\n14. Ldcv\n15. davidblog\n\n**Setup Steps:**\n1. Create GitHub Personal Access Token (PAT) with repo scope\n2. Create GitLab projects for each repo to mirror\n3. Configure pull mirroring from GitHub → GitLab\n4. Enable GitLab security scanning (SAST, dependency scanning)\n5. Set up scheduled sync (every 4 hours recommended)\n\n**Note:** Pull mirroring requires GitLab Premium on gitlab.com, but is free on self-hosted GitLab CE.\n\n**Acceptance Criteria:**\n- All priority trading repos mirrored to GitLab\n- Security scanning enabled and running\n- Mirror sync verified working\n- Documentation of mirror setup",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:19:59.586Z",
+      "updatedAt": "2025-11-26T12:19:59.586Z",
+      "dependsOn": [],
+      "priority": 8,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "gitlab",
+        "mirror",
+        "security",
+        "backup"
+      ],
+      "level": 0
+    },
+    {
+      "id": "ba3a5fb8-e756-4e98-938f-96c853804daf",
+      "name": "Evaluate GitLab self-hosting options",
+      "details": "Research and document options for self-hosting GitLab CE for trading code privacy.\n\n**Options to evaluate:**\n1. Home server (Mac Mini, NUC, Raspberry Pi?)\n2. Cloud VPS (DigitalOcean, Linode, Vultr)\n3. Docker on existing infrastructure\n4. Proxmox/VM setup\n\n**Requirements to document:**\n- Hardware specs needed\n- Network requirements\n- Backup strategy\n- Maintenance overhead\n- Cost comparison\n\n**Decision factors:**\n- Code privacy importance\n- Maintenance time available\n- Budget constraints\n- Existing infrastructure\n\n**Acceptance Criteria:**\n- Requirements document created\n- Cost analysis completed\n- Recommendation made (self-host vs cloud GitLab)\n- If self-host: installation guide drafted",
+      "projectId": "0ccc30aa-380a-43bd-8448-84141cca95e2",
+      "completed": false,
+      "createdAt": "2025-11-26T12:20:04.746Z",
+      "updatedAt": "2025-11-26T12:20:04.746Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 5,
+      "status": "pending",
+      "tags": [
+        "gitlab",
+        "self-hosting",
+        "infrastructure",
+        "evaluation"
+      ],
+      "level": 0
     }
   ],
   "subtasks": [],
