@@ -22,7 +22,7 @@ class TestPromptRegistration:
         from prompts import PROMPTS
         assert PROMPTS is not None
         assert isinstance(PROMPTS, dict)
-        assert len(PROMPTS) == 14
+        assert len(PROMPTS) >= 14  # At least base prompts, more with persona prompts
 
     def test_all_prompts_defined(self):
         """Test that all expected prompts are defined."""

@@ -58,7 +58,7 @@ class TestMCPServerIntegration:
 
     def test_tool_wrappers_import(self):
         """Test that tool wrapper files exist and are readable."""
-        tools_dir = Path(__file__).parent.parent / 'tools'
+        tools_dir = Path(__file__).parent.parent / 'project_management_automation' / 'tools'
         tool_files = [
             'docs_health.py',
             'todo2_alignment.py',
@@ -72,7 +72,7 @@ class TestMCPServerIntegration:
 
     def test_resource_handlers_exist(self):
         """Test that resource handler files exist."""
-        resources_dir = Path(__file__).parent.parent / 'resources'
+        resources_dir = Path(__file__).parent.parent / 'project_management_automation' / 'resources'
         resource_files = [
             'status.py',
             'history.py',
@@ -86,7 +86,7 @@ class TestMCPServerIntegration:
 
     def test_server_file_exists(self):
         """Test that server.py file exists and is readable."""
-        server_file = Path(__file__).parent.parent / 'server.py'
+        server_file = Path(__file__).parent.parent / 'project_management_automation' / 'server.py'
         assert server_file.exists(), "server.py should exist"
         assert server_file.is_file(), "server.py should be a file"
         assert server_file.stat().st_size > 0, "server.py should not be empty"
@@ -98,7 +98,7 @@ class TestMCPServerIntegration:
 
     def test_tools_directory_exists(self):
         """Test that tools directory exists with expected files."""
-        tools_dir = Path(__file__).parent.parent / 'tools'
+        tools_dir = Path(__file__).parent.parent / 'project_management_automation' / 'tools'
         assert tools_dir.exists(), "tools directory should exist"
         assert tools_dir.is_dir(), "tools should be a directory"
 
@@ -118,7 +118,7 @@ class TestMCPServerIntegration:
 
     def test_resources_directory_exists(self):
         """Test that resources directory exists with expected files."""
-        resources_dir = Path(__file__).parent.parent / 'resources'
+        resources_dir = Path(__file__).parent.parent / 'project_management_automation' / 'resources'
         assert resources_dir.exists(), "resources directory should exist"
         assert resources_dir.is_dir(), "resources should be a directory"
 

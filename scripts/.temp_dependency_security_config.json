@@ -1,0 +1,57 @@
+{
+  "scan_configs": {
+    "python": {
+      "enabled": true,
+      "files": [
+        "requirements.txt"
+      ],
+      "tools": {
+        "pip_audit": {
+          "enabled": true
+        },
+        "osv_scanner": {
+          "enabled": false
+        }
+      }
+    },
+    "rust": {
+      "enabled": false,
+      "files": [
+        "Cargo.toml",
+        "Cargo.lock"
+      ],
+      "tools": {
+        "cargo_audit": {
+          "enabled": false
+        }
+      }
+    },
+    "npm": {
+      "enabled": false,
+      "files": [
+        "package.json",
+        "package-lock.json"
+      ],
+      "tools": {
+        "npm_audit": {
+          "enabled": false
+        }
+      }
+    }
+  },
+  "severity_levels": {
+    "critical": 4,
+    "high": 3,
+    "medium": 2,
+    "low": 1
+  },
+  "output_file": "docs/DEPENDENCY_SECURITY_REPORT.md",
+  "trend_tracking": {
+    "enabled": true,
+    "history_file": "scripts/.dependency_security_history.json"
+  },
+  "create_todo2_tasks": {
+    "enabled": true,
+    "min_severity": "high"
+  }
+}
