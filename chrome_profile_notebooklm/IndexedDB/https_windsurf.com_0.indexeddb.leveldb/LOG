@@ -1,6 +1,0 @@
-2025/11/15-10:28:04.289 341213 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_windsurf.com_0.indexeddb.leveldb since it was missing.
-2025/11/15-10:28:04.635 341213 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_windsurf.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/15-10:28:05.790 341213 Level-0 table #5: started
-2025/11/15-10:28:05.830 341213 Level-0 table #5: 1316 bytes OK
-2025/11/15-10:28:06.106 341213 Delete type=0 #3
-2025/11/15-10:28:06.106 3411e8 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

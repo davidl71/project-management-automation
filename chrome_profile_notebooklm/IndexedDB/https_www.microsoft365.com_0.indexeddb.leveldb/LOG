@@ -1,6 +1,0 @@
-2024/11/17-19:03:54.369 8503 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.microsoft365.com_0.indexeddb.leveldb since it was missing.
-2024/11/17-19:03:54.470 8503 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.microsoft365.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/17-19:04:34.333 8503 Level-0 table #5: started
-2024/11/17-19:04:34.339 8503 Level-0 table #5: 18282 bytes OK
-2024/11/17-19:04:34.447 8503 Delete type=0 #3
-2024/11/17-19:04:34.449 8503 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

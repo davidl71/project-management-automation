@@ -1,9 +1,0 @@
-2025/11/25-20:47:56.472 1d3781 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.ynet.co.il_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/25-20:47:56.472 1d3781 Recovering log #253
-2025/11/25-20:47:56.473 1d3781 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.ynet.co.il_0.indexeddb.leveldb/000253.log 
-2025/11/25-20:47:56.615 1d3781 Compacting 1@1 + 1@2 files
-2025/11/25-20:47:56.642 1d3781 Generated table #256@1: 1636 keys, 239428 bytes
-2025/11/25-20:47:56.643 1d3781 Compacted 1@1 + 1@2 files => 239428 bytes
-2025/11/25-20:47:56.717 1d3781 compacted to: files[ 0 0 1 0 0 0 0 ]
-2025/11/25-20:47:56.717 1d3781 Delete type=2 #254
-2025/11/25-20:47:56.718 1d3781 Delete type=2 #251

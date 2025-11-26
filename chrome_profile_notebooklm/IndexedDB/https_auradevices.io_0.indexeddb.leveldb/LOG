@@ -1,7 +1,0 @@
-2025/11/09-03:34:50.527 372f0b Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_auradevices.io_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/09-03:34:50.527 372f0b Recovering log #3
-2025/11/09-03:34:50.616 372f0b Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_auradevices.io_0.indexeddb.leveldb/000003.log 
-2025/11/09-03:34:52.737 372f0b Level-0 table #5: started
-2025/11/09-03:34:52.746 372f0b Level-0 table #5: 32342 bytes OK
-2025/11/09-03:34:52.757 372f0b Delete type=0 #3
-2025/11/09-03:34:52.758 372f0b Manual compaction at level-0 from (begin) .. (end); will stop at (end)

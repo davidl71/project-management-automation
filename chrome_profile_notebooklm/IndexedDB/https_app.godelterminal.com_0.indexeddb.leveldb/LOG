@@ -1,4 +1,0 @@
-2025/11/17-23:29:52.365 7878 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_app.godelterminal.com_0.indexeddb.leveldb since it was missing.
-2025/11/17-23:29:52.379 7878 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_app.godelterminal.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/17-23:29:52.666 7878 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
-2025/11/17-23:30:11.709 7a75 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)

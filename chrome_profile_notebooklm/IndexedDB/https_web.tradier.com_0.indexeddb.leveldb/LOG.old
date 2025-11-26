@@ -1,7 +1,0 @@
-2025/11/18-21:20:47.464 7878 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_web.tradier.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/18-21:20:47.464 7878 Recovering log #3
-2025/11/18-21:20:47.483 7878 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_web.tradier.com_0.indexeddb.leveldb/000003.log 
-2025/11/18-21:21:00.372 7a72 Level-0 table #5: started
-2025/11/18-21:21:00.375 7a72 Level-0 table #5: 1236 bytes OK
-2025/11/18-21:21:00.389 7a72 Delete type=0 #3
-2025/11/18-21:21:00.392 7a72 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

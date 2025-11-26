@@ -1,6 +1,0 @@
-2025/11/19-23:36:39.493 391651 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_iconsolutions.com_0.indexeddb.leveldb since it was missing.
-2025/11/19-23:36:39.510 391651 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_iconsolutions.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/19-23:39:57.999 391651 Level-0 table #5: started
-2025/11/19-23:39:58.003 391651 Level-0 table #5: 1140 bytes OK
-2025/11/19-23:39:58.018 391651 Delete type=0 #3
-2025/11/19-23:39:58.019 391651 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

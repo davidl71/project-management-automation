@@ -1,6 +1,0 @@
-2025/11/10-00:27:24.006 2dfb0 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_dro-lopes.medium.com_0.indexeddb.leveldb since it was missing.
-2025/11/10-00:27:24.701 2dfb0 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_dro-lopes.medium.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/10-00:27:51.276 2dfaf Level-0 table #5: started
-2025/11/10-00:27:51.451 2dfaf Level-0 table #5: 19280 bytes OK
-2025/11/10-00:27:51.773 2dfaf Delete type=0 #3
-2025/11/10-00:27:51.773 2dfaf Manual compaction at level-0 from (begin) .. (end); will stop at (end)

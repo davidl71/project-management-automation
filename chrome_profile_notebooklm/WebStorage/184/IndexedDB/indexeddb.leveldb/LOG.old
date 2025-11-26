@@ -1,6 +1,0 @@
-2024/03/19-16:09:56.184 f703 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/WebStorage/184/IndexedDB/indexeddb.leveldb since it was missing.
-2024/03/19-16:09:56.259 f703 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/WebStorage/184/IndexedDB/indexeddb.leveldb/MANIFEST-000001
-2024/03/19-16:10:43.318 8403 Level-0 table #5: started
-2024/03/19-16:10:43.322 8403 Level-0 table #5: 9064 bytes OK
-2024/03/19-16:10:43.343 8403 Delete type=0 #3
-2024/03/19-16:10:43.344 8403 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

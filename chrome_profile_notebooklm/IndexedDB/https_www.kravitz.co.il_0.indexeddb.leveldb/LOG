@@ -1,4 +1,0 @@
-2025/11/01-23:18:38.489 3f2e07 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.kravitz.co.il_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/01-23:18:38.489 3f2e07 Recovering log #7
-2025/11/01-23:18:38.490 3f2e07 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.kravitz.co.il_0.indexeddb.leveldb/000007.log 
-2025/11/01-23:18:39.146 3f2e16 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)

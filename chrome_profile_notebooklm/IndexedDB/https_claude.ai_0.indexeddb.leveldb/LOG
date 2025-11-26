@@ -1,6 +1,0 @@
-2025/11/05-01:05:59.600 6c0c Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_claude.ai_0.indexeddb.leveldb since it was missing.
-2025/11/05-01:05:59.619 6c0c Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_claude.ai_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/05-01:06:03.067 6c0c Level-0 table #5: started
-2025/11/05-01:06:03.071 6c0c Level-0 table #5: 1309 bytes OK
-2025/11/05-01:06:03.091 6c0c Delete type=0 #3
-2025/11/05-01:06:03.092 6c0c Manual compaction at level-0 from (begin) .. (end); will stop at (end)

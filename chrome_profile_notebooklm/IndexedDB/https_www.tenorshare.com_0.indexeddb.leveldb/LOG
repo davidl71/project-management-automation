@@ -1,7 +1,0 @@
-2025/04/30-19:57:26.062 553ed Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.tenorshare.com_0.indexeddb.leveldb since it was missing.
-2025/04/30-19:57:26.095 553ed Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.tenorshare.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/04/30-19:57:26.263 556e6 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
-2025/04/30-20:30:28.006 553ed Level-0 table #5: started
-2025/04/30-20:30:28.013 553ed Level-0 table #5: 1817 bytes OK
-2025/04/30-20:30:28.028 553ed Delete type=0 #3
-2025/04/30-20:30:28.029 553ed Manual compaction at level-0 from (begin) .. (end); will stop at (end)

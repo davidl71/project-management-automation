@@ -1,7 +1,0 @@
-2025/10/27-00:23:52.018 28ff07 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_myaccount.payoneer.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/10/27-00:23:52.019 28ff07 Recovering log #3
-2025/10/27-00:23:52.029 28ff07 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_myaccount.payoneer.com_0.indexeddb.leveldb/000003.log 
-2025/10/27-00:23:56.282 29036f Level-0 table #5: started
-2025/10/27-00:23:56.286 29036f Level-0 table #5: 1281 bytes OK
-2025/10/27-00:23:56.304 29036f Delete type=0 #3
-2025/10/27-00:23:56.304 29036f Manual compaction at level-0 from (begin) .. (end); will stop at (end)

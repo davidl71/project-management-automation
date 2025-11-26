@@ -1,1 +1,0 @@
-helpers.Snitch=class Snitch{async getCurrentTab(){let[e]=await chrome.tabs.query({active:!0,currentWindow:!0});return e}};

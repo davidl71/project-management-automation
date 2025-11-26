@@ -1,6 +1,0 @@
-2025/11/10-20:53:57.146 57a42 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_prdtaseaccount.eu.auth0.com_0.indexeddb.leveldb since it was missing.
-2025/11/10-20:53:57.170 57a42 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_prdtaseaccount.eu.auth0.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/11/10-20:54:06.047 57a32 Level-0 table #5: started
-2025/11/10-20:54:06.063 57a32 Level-0 table #5: 3991 bytes OK
-2025/11/10-20:54:06.084 57a32 Delete type=0 #3
-2025/11/10-20:54:06.085 57a32 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
