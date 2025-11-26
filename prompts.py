@@ -140,15 +140,23 @@ DAILY_CHECKIN = """Daily check-in workflow for project health monitoring.
 
 Run these tools every morning (5 min):
 1. server_status - Verify server is operational
-2. list_tasks_awaiting_clarification - Identify any blockers needing decisions
-3. check_working_copy_health - Verify Git status across agents
+2. project_scorecard - Get current health metrics and overall score
+3. consult_advisor stage="daily_checkin" - Get wisdom from your daily advisor (Pistis Sophia)
+4. list_tasks_awaiting_clarification - Identify any blockers needing decisions
+5. check_working_copy_health - Verify Git status across agents
 
-This gives you a quick overview of project state before starting work.
+The advisor will provide wisdom matched to your current project health:
+- Score < 30%: 🔥 Chaos mode - urgent guidance for every action
+- Score 30-60%: 🏗️ Building mode - focus on fundamentals
+- Score 60-80%: 🌱 Maturing mode - strategic advice
+- Score 80-100%: 🎯 Mastery mode - reflective wisdom
 
 For automated daily maintenance, use run_daily_automation_tool which handles:
 - Documentation health checks
 - Task alignment verification
-- Duplicate detection"""
+- Duplicate detection
+
+Tip: Use get_advisor_briefing with your scorecard metrics for a focused morning briefing."""
 
 # Sprint Workflow Prompts
 
@@ -271,34 +279,38 @@ Use this for:
 - Documentation
 - Dashboards"""
 
-PROJECT_SCORECARD = """Generate a comprehensive project health scorecard.
+PROJECT_SCORECARD = """Generate a comprehensive project health scorecard with trusted advisor wisdom.
 
 Run the project_scorecard tool to get a complete assessment across all dimensions:
 
-Metrics evaluated:
+Metrics evaluated (each with a trusted advisor):
+- Security (😈 BOFH) - Paranoid security checks
+- Testing (🏛️ Stoics) - Discipline through test coverage
+- Documentation (🎓 Confucius) - Teaching through docs
+- Completion (⚔️ Sun Tzu) - Strategic task execution
+- Alignment (☯️ Tao) - Balance and purpose
+- Clarity (🎭 Gracián) - Pragmatic task clarity
+- CI/CD (⚗️ Kybalion) - Cause and effect automation
+- Dogfooding (🔧 Murphy) - Use your own tools!
 - Overall score (0-100%) with production readiness
-- Documentation health and coverage ratio
-- Test coverage and quality
-- Security posture (8 critical controls)
-- CI/CD readiness
-- Task alignment with project goals (MCP keywords)
-- Task clarity (estimates, tags, descriptions)
-- Parallelizability (tasks ready for multi-agent execution)
-- Task completion rate
 
 Output options:
 - output_format="text" - Human-readable scorecard (default)
 - output_format="markdown" - Markdown for documentation
 - output_format="json" - Structured data for programmatic use
 
+After running the scorecard, consult advisors for your lowest-scoring metrics:
+- consult_advisor metric="<lowest_metric>" score=<score>
+- get_advisor_briefing overall_score=<score> <metric>_score=<score> ...
+
 The scorecard identifies:
 - Production blockers
-- Priority actions for score improvement
+- Priority actions for score improvement (with advisor wisdom)
 - Quick wins (<2h each)
 - Estimated effort to reach target scores
 
 Use this for:
-- Daily/weekly project status
+- Daily/weekly project status with advisor guidance
 - Sprint planning decisions
 - Release readiness checks
 - Project health dashboards"""
