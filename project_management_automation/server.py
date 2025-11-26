@@ -249,6 +249,7 @@ try:
         from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         from .tools.project_overview import generate_project_overview as _generate_project_overview
         from .tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
+        from .tools.task_hierarchy_analyzer import analyze_task_hierarchy as _analyze_task_hierarchy
         TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
@@ -279,6 +280,7 @@ try:
         from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
         from tools.project_overview import generate_project_overview as _generate_project_overview
         from tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
+        from tools.task_hierarchy_analyzer import analyze_task_hierarchy as _analyze_task_hierarchy
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -303,7 +305,7 @@ def register_tools():
                     "status": "operational",
                     "version": "0.1.7",
                     "tools_available": TOOLS_AVAILABLE,
-                    "total_tools": 26 if TOOLS_AVAILABLE else 1,
+                    "total_tools": 27 if TOOLS_AVAILABLE else 1,
                     "project_root": str(project_root),
                 },
                 indent=2,
@@ -1185,6 +1187,36 @@ if mcp:
                 Formatted consolidation report with stats and task changes
             """
             return _tag_consolidation(dry_run, custom_rules, remove_tags, output_path)
+
+        @mcp.tool()
+        def analyze_task_hierarchy(
+            output_format: str = "text",
+            output_path: Optional[str] = None,
+            include_recommendations: bool = True
+        ) -> str:
+            """
+            [HINT: Hierarchy analysis. Returns component groups, hierarchy recommendations,
+            extraction candidates, decision matrix.]
+
+            Analyze tasks to recommend hierarchy (T-COMPONENT-*) vs tags organization.
+
+            Identifies:
+            - Components that should have explicit hierarchies
+            - Components where tags are sufficient
+            - Extraction candidates (potential standalone packages)
+
+            Args:
+                output_format: Output format - "text", "json", or "markdown"
+                output_path: Optional path to save report
+                include_recommendations: Include specific hierarchy recommendations
+
+            Returns:
+                Analysis with decision matrix and recommendations
+            """
+            result = _analyze_task_hierarchy(output_format, output_path, include_recommendations)
+            if output_format == "json":
+                return json.dumps(result, indent=2)
+            return result.get("formatted_output", json.dumps(result, indent=2))
 
     # Register prompts
     try:
