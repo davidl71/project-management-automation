@@ -71,11 +71,31 @@ pma = "project_management_automation.server:main"
 
 [tool.setuptools.packages.find]
 include = ["project_management_automation*"]
-exclude = ["tests*", "*test*", "test_*"]
+exclude = [
+    "tests*",
+    "*test*", 
+    "test_*",
+    "*.todo2*",
+    "*__pycache__*",
+]
 
 # Include prompts.py and error_handler.py as modules (exclude root server.py and __init__.py)
 [tool.setuptools]
 py-modules = ["prompts", "error_handler"]
+
+# Exclude package data that shouldn't be in the wheel
+[tool.setuptools.package-data]
+"*" = []  # Don't include any package data by default
+
+[tool.setuptools.exclude-package-data]
+"*" = [
+    "*.todo2.json*",
+    "*.bak",
+    "*.log",
+    "*.pyc",
+    "__pycache__/*",
+    ".DS_Store",
+]
 
 # Dynamic versioning from version.py
 [tool.setuptools.dynamic]
