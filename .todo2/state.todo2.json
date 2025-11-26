@@ -2130,6 +2130,108 @@
       "updatedAt": "2025-11-26T04:07:41.400739Z",
       "dependencies": [],
       "estimatedHours": 0.5
+    },
+    {
+      "id": "ae0f2619-fe1d-4b06-824e-5b28c2f011f3",
+      "content": "Implement review_task_relevance tool",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "tool",
+        "task-review",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Create tool to detect obsolete/stale tasks\n\n\ud83d\udccb **Acceptance Criteria:**\n- Detect obsolete tasks (work already exists in codebase)\n- Detect stale tasks (no updates >30 days)\n- Detect orphan tasks (reference deleted files/features)\n- Return recommendations for each category\n\n**Implementation:**\n- Compare task descriptions against file names, function names, class names\n- Check task updatedAt timestamps\n- Validate file paths mentioned in tasks still exist\n\n**HINT format:**\n`[HINT: Task relevance. Returns obsolete count, stale count, recommendations.]`\n\n**Triggers:**\n- /exarp/sprint_automation (before sprint)\n- /exarp/run_daily_automation (weekly check)\n- prompt: task_review",
+      "completed": false,
+      "createdAt": "2025-11-26T04:12:41.973251Z",
+      "updatedAt": "2025-11-26T04:12:41.973267Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "24164ac7-4dde-400e-a7e5-aecf955db770",
+      "content": "Implement infer_task_completion tool",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "tool",
+        "task-review",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Infer task completion from codebase evidence\n\n\ufffd\ufffd **Acceptance Criteria:**\n- Check if files mentioned in task exist\n- Check if functions/classes described exist\n- Check if related tests pass\n- Return confidence score for each task\n\n**Implementation:**\n- Parse task descriptions for file paths, function names, class names\n- Use grep/AST to verify existence\n- Run related tests if identifiable\n- Calculate confidence: high (>80%), medium (50-80%), low (<50%)\n\n**HINT format:**\n`[HINT: Completion inference. Returns likely-done count, evidence, confidence.]`\n\n**Triggers:**\n- /exarp/sprint_automation (end of sprint)\n- /exarp/nightly_task_automation (identify done tasks)\n- prompt: task_completion_check",
+      "completed": false,
+      "createdAt": "2025-11-26T04:12:41.973284Z",
+      "updatedAt": "2025-11-26T04:12:41.973286Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "ce383516-0612-47d1-9503-e4c02c53410b",
+      "content": "Implement bulk_update_tasks tool",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "tool",
+        "task-review",
+        "enhancement"
+      ],
+      "long_description": "\ufffd\ufffd **Objective:** Bulk update multiple tasks at once\n\n\ud83d\udccb **Acceptance Criteria:**\n- Cancel multiple tasks by IDs\n- Mark multiple tasks done with evidence\n- Change priority for multiple tasks\n- Add/remove tags in bulk\n- Dry-run mode for preview\n\n**Implementation:**\n- Accept list of task IDs and operation\n- Operations: cancel, complete, set_priority, add_tag, remove_tag\n- Return summary of changes\n\n**HINT format:**\n`[HINT: Bulk update. Returns updated count, status changes, dry_run preview.]`\n\n**Triggers:**\n- After review_task_relevance (cleanup obsolete)\n- After infer_task_completion (mark done)\n- prompt: task_cleanup",
+      "completed": false,
+      "createdAt": "2025-11-26T04:12:41.973295Z",
+      "updatedAt": "2025-11-26T04:12:41.973297Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "199abf3e-03a6-4a35-be52-48829c9ab431",
+      "content": "Add task_review meta prompt to prompts.py",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "prompts",
+        "task-review",
+        "enhancement"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Add comprehensive task review workflow prompt\n\n\ud83d\udccb **Workflow:**\n1. detect_duplicate_tasks - Find duplicates first\n2. review_task_relevance - Identify obsolete/stale tasks\n3. infer_task_completion - Check which tasks might be done\n4. analyze_todo2_alignment - Verify remaining tasks align with goals\n5. bulk_update_tasks - Apply recommended changes\n\n**Use Cases:**\n- Before sprint planning\n- Monthly task hygiene\n- After major feature completion\n\n**Add to PROMPTS dict in prompts.py:**\n```python\n\"task_review\": {\n    \"name\": \"Comprehensive Task Review\",\n    \"description\": TASK_REVIEW_WORKFLOW,\n    \"arguments\": []\n}\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:12:41.973304Z",
+      "updatedAt": "2025-11-26T04:12:41.973306Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "a8bdfd92-5b69-413a-9fa0-fa5adbd71aca",
+      "content": "Add task review to sprint_automation tool chain",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "integration",
+        "task-review",
+        "sprint"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Integrate task review into sprint automation\n\n\ud83d\udccb **Changes to automate_sprint.py:**\n1. Add review_task_relevance before processing tasks\n2. Add infer_task_completion to identify already-done work\n3. Auto-suggest bulk_update for cleanup\n4. Report obsolete/stale tasks in sprint summary\n\n**Sprint Automation Flow (Updated):**\n1. Batch approve ready tasks\n2. **NEW: Review task relevance**\n3. **NEW: Infer task completion**\n4. Run analysis tools (docs health, alignment, etc.)\n5. Process background tasks\n6. **NEW: Suggest bulk cleanup**\n7. Generate sprint report",
+      "completed": false,
+      "createdAt": "2025-11-26T04:12:41.973316Z",
+      "updatedAt": "2025-11-26T04:12:41.973318Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "b61547c2-362e-4cf8-ad50-9da5f9398217",
+      "content": "Add task review to daily_automation tool chain",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "integration",
+        "task-review",
+        "daily"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Add weekly task relevance check to daily automation\n\n\ud83d\udccb **Changes to automate_daily.py:**\nAdd new task to DAILY_TASKS:\n```python\n'task_relevance': {\n    'name': 'Task Relevance Check',\n    'script': 'scripts/automate_task_relevance.py',\n    'description': 'Weekly task relevance check',\n    'run_frequency': 'weekly',  # Only run on Fridays\n    'slow': False\n}\n```\n\n**Daily Automation Flow (Updated):**\n- Mon-Thu: Normal daily tasks\n- Fri: Include task relevance check\n- Generate weekly hygiene report",
+      "completed": false,
+      "createdAt": "2025-11-26T04:12:41.973327Z",
+      "updatedAt": "2025-11-26T04:12:41.973329Z",
+      "dependencies": [],
+      "estimatedHours": 1
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
