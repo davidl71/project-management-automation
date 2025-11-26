@@ -7,12 +7,16 @@ Exports:
     - split_output: Separate human/AI output for token efficiency
     - progress_wrapper: Progress reporting wrapper
     - compact_json: Compact JSON serialization
+    - configure_logging: MCP-aware logging configuration
+    - get_logger: Get MCP-aware logger
+    - is_mcp_mode: Check if running as MCP server
 """
 
 from pathlib import Path
 from typing import Optional
 
 from .output import split_output, progress_wrapper, compact_json, output_to_human_and_ai
+from .logging_config import configure_logging, get_logger, is_mcp_mode, suppress_noisy_loggers
 
 
 def find_project_root(start_path: Optional[Path] = None) -> Path:
@@ -69,6 +73,10 @@ __all__ = [
     'split_output',
     'progress_wrapper',
     'compact_json',
-    'output_to_human_and_ai'
+    'output_to_human_and_ai',
+    'configure_logging',
+    'get_logger',
+    'is_mcp_mode',
+    'suppress_noisy_loggers'
 ]
 

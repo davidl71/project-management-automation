@@ -20,23 +20,22 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
+# Import MCP-aware logging (quiet in MCP mode, verbose in CLI)
+from project_management_automation.utils.logging_config import configure_logging
+
+# Configure logging for this module
+logger = configure_logging(__name__, level=logging.INFO)
+
 # Import MCP client (relative import for package)
 try:
     from .mcp_client import get_mcp_client
     MCP_AVAILABLE = True
 except ImportError:
     MCP_AVAILABLE = False
-    logger.warning("MCP client not available, using fallback implementations")
+    logger.debug("MCP client not available, using fallback implementations")
 
 # Project root detection - will be set by subclasses or tools
 project_root = None
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 
 class IntelligentAutomationBase(ABC):

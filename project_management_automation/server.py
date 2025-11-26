@@ -26,6 +26,11 @@ Recommended workflow:
 
 import os
 import sys
+
+# Set MCP mode flag BEFORE any logging imports
+# This tells our logging utilities to suppress console output
+os.environ["EXARP_MCP_MODE"] = "1"
+
 import json
 import logging
 import time
@@ -35,25 +40,14 @@ from typing import Any, Dict, List, Optional
 from functools import wraps
 
 # Version - keep in sync with pyproject.toml
-__version__ = "0.1.13"
+__version__ = "0.1.14"
 
-# Use FastMCP's logging utility (outputs to stderr with Rich formatting)
-# This is MCP-compatible: stdout = JSON-RPC only, stderr = logging
-try:
-    from fastmcp.utilities.logging import get_logger
-    logger = get_logger("exarp")
-    logger.setLevel(logging.INFO)
-except ImportError:
-    # Fallback to standard logging if FastMCP not available
-    logger = logging.getLogger(__name__)
-    handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
-    logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
+# Import our MCP-aware logging utilities
+from .utils.logging_config import configure_logging, suppress_noisy_loggers, is_mcp_mode
 
-# Suppress noisy MCP framework logs
-for log_name in ["mcp", "mcp.server", "mcp.server.lowlevel", "mcp.server.stdio", "fastmcp"]:
-    logging.getLogger(log_name).setLevel(logging.WARNING)
+# Configure logging (quiet in MCP mode, verbose in CLI)
+logger = configure_logging("exarp", level=logging.INFO)
+suppress_noisy_loggers()
 
 # Robust project root detection
 def _find_project_root(start_path: Path) -> Path:
@@ -204,17 +198,7 @@ if MCP_AVAILABLE:
         pass  # Version info logged after banner
 
     # Re-apply logger suppression after initialization (in case FastMCP added new loggers)
-    logging.getLogger("mcp").setLevel(logging.WARNING)
-    logging.getLogger("mcp.server").setLevel(logging.WARNING)
-    logging.getLogger("mcp.server.lowlevel").setLevel(logging.WARNING)
-    logging.getLogger("mcp.server.lowlevel.server").setLevel(logging.WARNING)
-    logging.getLogger("mcp.server.stdio").setLevel(logging.WARNING)
-    logging.getLogger("fastmcp").setLevel(logging.WARNING)
-    # Suppress any logger that might have been created by FastMCP
-    # FastMCP might create loggers with different names, so we suppress common patterns
-    for logger_name in logging.Logger.manager.loggerDict:
-        if any(x in logger_name for x in ['mcp', 'fastmcp', 'stdio']):
-            logging.getLogger(logger_name).setLevel(logging.WARNING)
+    suppress_noisy_loggers()
 # Import automation tools (handle both relative and absolute imports)
 try:
     # Try relative imports first (when run as module)
