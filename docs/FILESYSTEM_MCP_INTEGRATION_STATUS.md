@@ -1,5 +1,13 @@
 # Filesystem MCP Integration Status
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Docker, Python, Rust, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Docker patterns? use context7"
+> - "Show me Docker examples examples use context7"
+> - "Docker best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date**: 2025-11-25  
 **Status**: ✅ **Available and Configured**  
 **Priority**: High (Core Functionality)

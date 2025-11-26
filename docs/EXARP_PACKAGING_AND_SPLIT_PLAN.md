@@ -1,5 +1,13 @@
 # Exarp MCP Server - Packaging and Repository Split Plan
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on JavaScript, Pydantic, Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use JavaScript patterns? use context7"
+> - "Show me JavaScript examples examples use context7"
+> - "JavaScript best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date**: 2025-11-26
 **Purpose**: Plan npm/PyPI packaging and repository split for exarp MCP server
 

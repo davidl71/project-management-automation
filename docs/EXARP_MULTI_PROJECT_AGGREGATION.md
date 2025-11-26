@@ -1,5 +1,13 @@
 # Exarp Multi-Project Aggregation Strategy
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on FastAPI, Pandas, Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use FastAPI async endpoints? use context7"
+> - "Show me FastAPI examples examples use context7"
+> - "FastAPI best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date**: 2025-11-26
 **Status**: Proposal
 **Purpose**: Aggregate tasks from multiple projects/repositories into unified overview with priorities and interactive digest

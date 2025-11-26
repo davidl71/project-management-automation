@@ -1,5 +1,13 @@
 # Exarp Phase 2 - Task Details
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on CMake, JavaScript, Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use CMake patterns? use context7"
+> - "Show me CMake examples examples use context7"
+> - "CMake best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date**: 2025-11-26
 **Status**: Tasks Created
 

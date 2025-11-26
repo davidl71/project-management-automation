@@ -84,12 +84,13 @@ def add_external_tool_hints(
         analyzer = ExternalToolHintsAutomation(config, project_root)
         results = analyzer.run()
 
-        # Extract key metrics
-        files_scanned = results.get('files_scanned', 0)
-        files_modified = results.get('files_modified', 0)
-        files_skipped = results.get('files_skipped', 0)
-        hints_added = results.get('hints_added', [])
-        hints_skipped = results.get('hints_skipped', [])
+        # Extract key metrics - analysis results are nested in results['results']
+        analysis_results = results.get('results', {})
+        files_scanned = analysis_results.get('files_scanned', 0)
+        files_modified = analysis_results.get('files_modified', 0)
+        files_skipped = analysis_results.get('files_skipped', 0)
+        hints_added = analysis_results.get('hints_added', [])
+        hints_skipped = analysis_results.get('hints_skipped', [])
 
         # Format response
         response_data = {

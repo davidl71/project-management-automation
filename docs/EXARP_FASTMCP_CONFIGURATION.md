@@ -1,5 +1,13 @@
 # Exarp FastMCP Configuration
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on NumPy, Pandas, Pydantic, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use NumPy patterns? use context7"
+> - "Show me NumPy examples examples use context7"
+> - "NumPy best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date**: 2025-11-26
 **FastMCP Version**: 2.12.0+
 **Reference**: [FastMCP Server Configuration](https://gofastmcp.com/deployment/server-configuration)
