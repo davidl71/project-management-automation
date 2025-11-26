@@ -94,9 +94,9 @@ def scan_dependency_security(
         analyzer = DependencySecurityAnalyzer(config_path, project_root)
         results = analyzer.run()
 
-        # Extract key metrics
-        summary = results.get('summary', {})
-        scan_results = results
+        # Extract key metrics - scan_results are nested in results['results']
+        scan_results = results.get('results', {})
+        summary = scan_results.get('summary', {})
 
         # Format response
         response_data = {
