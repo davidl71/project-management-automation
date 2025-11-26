@@ -1,0 +1,122 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      dry_run:
+        description: 'Dry run (no actual release)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for release notes
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install build twine
+
+      # Manual release (workflow_dispatch)
+      - name: Create Release (manual)
+        if: github.event_name == 'workflow_dispatch'
+        id: manual_release
+        run: |
+          cd project_management_automation
+          
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "=== DRY RUN ==="
+            python version.py --release --bump ${{ inputs.bump }} --dry-run
+          else
+            # Generate release notes first
+            NOTES=$(python version.py --release-notes)
+            echo "$NOTES" > ../RELEASE_NOTES.md
+            
+            # Bump version
+            python version.py --bump ${{ inputs.bump }}
+            NEW_VERSION=$(python version.py --base)
+            
+            # Commit and tag
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: Release v${NEW_VERSION}"
+            git tag -a "v${NEW_VERSION}" -m "Release v${NEW_VERSION}"
+            git push origin main --tags
+            
+            echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+            echo "tag=v${NEW_VERSION}" >> $GITHUB_OUTPUT
+          fi
+
+      # Tag-triggered release
+      - name: Generate Release Notes (tag)
+        if: github.event_name == 'push'
+        id: release_notes
+        run: |
+          cd project_management_automation
+          python version.py --release-notes > ../RELEASE_NOTES.md
+          echo "Generated release notes:"
+          cat ../RELEASE_NOTES.md
+
+      - name: Build Package
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)
+        run: |
+          python -m build
+
+      - name: Create GitHub Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: RELEASE_NOTES.md
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release (manual)
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run == false
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.manual_release.outputs.version }}
+          body_path: RELEASE_NOTES.md
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to PyPI
+        if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == false)) && vars.PUBLISH_TO_PYPI == 'true'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*
+
