@@ -39,8 +39,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from functools import wraps
 
-# Version - keep in sync with pyproject.toml
-__version__ = "0.1.15"
+# Dynamic version from version.py
+from .version import __version__, get_version_info
 
 # Import our MCP-aware logging utilities
 from .utils.logging_config import configure_logging, suppress_noisy_loggers, is_mcp_mode

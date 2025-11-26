@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "exarp"
-version = "0.1.13"
+dynamic = ["version"]
 description = "MCP server for project management automation - health scores, task alignment, security scanning"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -76,6 +76,10 @@ exclude = ["tests*", "*test*", "test_*"]
 # Include prompts.py and error_handler.py as modules (exclude root server.py and __init__.py)
 [tool.setuptools]
 py-modules = ["prompts", "error_handler"]
+
+# Dynamic versioning from version.py
+[tool.setuptools.dynamic]
+version = {attr = "project_management_automation.version.BASE_VERSION"}
 
 [tool.ruff]
 target-version = "py39"
