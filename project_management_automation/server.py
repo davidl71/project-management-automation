@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Optional
 from functools import wraps
 
 # Version - keep in sync with pyproject.toml
-__version__ = "0.1.11"
+__version__ = "0.1.12"
 
 # Use FastMCP's logging utility (outputs to stderr with Rich formatting)
 # This is MCP-compatible: stdout = JSON-RPC only, stderr = logging
@@ -1097,25 +1097,28 @@ def main():
     tools_str = f"{tools_count}"
     resources_str = "Available" if resources_ok else "Unavailable"
     
-    banner = f"""
-╭────────────────────────────────────────────────────────╮
-│                                                        │
-│    ███████╗██╗  ██╗ █████╗ ██████╗ ██████╗             │
-│    ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔══██╗            │
-│    █████╗   ╚███╔╝ ███████║██████╔╝██████╔╝            │
-│    ██╔══╝   ██╔██╗ ██╔══██║██╔══██╗██╔═══╝             │
-│    ███████╗██╔╝ ██╗██║  ██║██║  ██║██║                 │
-│    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝                 │
-│                                                        │
-│    Project Management Automation MCP Server            │
-│                                                        │
-│    Version:    {version_str:<39}│
-│    Tools:      {tools_str:<39}│
-│    Resources:  {resources_str:<39}│
-│    Transport:  STDIO                                   │
-│                                                        │
-╰────────────────────────────────────────────────────────╯
-"""
+    # Fixed-width banner (56 chars inner width + 2 for borders = 58 total)
+    BOX_WIDTH = 56
+    banner_lines = [
+        "╭" + "─" * BOX_WIDTH + "╮",
+        "│" + " " * BOX_WIDTH + "│",
+        "│    ███████╗██╗  ██╗ █████╗ ██████╗ ██████╗             │",
+        "│    ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔══██╗            │",
+        "│    █████╗   ╚███╔╝ ███████║██████╔╝██████╔╝            │",
+        "│    ██╔══╝   ██╔██╗ ██╔══██║██╔══██╗██╔═══╝             │",
+        "│    ███████╗██╔╝ ██╗██║  ██║██║  ██║██║                 │",
+        "│    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝                 │",
+        "│" + " " * BOX_WIDTH + "│",
+        "│    Project Management Automation MCP Server            │",
+        "│" + " " * BOX_WIDTH + "│",
+        f"│    Version:    {version_str:<39}│",
+        f"│    Tools:      {tools_str:<39}│",
+        f"│    Resources:  {resources_str:<39}│",
+        "│    Transport:  STDIO                                   │",
+        "│" + " " * BOX_WIDTH + "│",
+        "╰" + "─" * BOX_WIDTH + "╯",
+    ]
+    banner = "\n".join(banner_lines)
     print(banner, file=sys.stderr)
     
     # Run server without FastMCP's banner

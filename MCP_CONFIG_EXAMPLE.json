@@ -1,9 +1,10 @@
 {
   "mcpServers": {
     "exarp": {
-      "command": "uvx",
-      "args": ["exarp"],
-      "description": "Project management automation - health scores, task alignment, security scanning (PyPI: pip install exarp)"
+      "command": "/Volumes/SSD1_APFS/project-management-automation/exarp-switch.sh",
+      "env": {
+        "EXARP_USE_PYPI": "0"
+      }
     }
   }
 }
