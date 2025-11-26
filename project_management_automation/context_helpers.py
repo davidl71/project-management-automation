@@ -248,6 +248,168 @@ def get_session_id(ctx: "Context") -> Optional[str]:
         return None
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# ELICITATION (Interactive User Input)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+from dataclasses import dataclass
+from typing import TypeVar, Union
+from enum import Enum
+
+T = TypeVar("T")
+
+
+class ElicitAction(str, Enum):
+    """Possible user actions for elicitation."""
+    ACCEPT = "accept"
+    DECLINE = "decline"
+    CANCEL = "cancel"
+
+
+@dataclass
+class ElicitResult:
+    """Result of an elicitation request."""
+    action: ElicitAction
+    data: Any = None
+
+
+async def elicit(
+    ctx: "Context",
+    message: str,
+    response_type: type = str,
+) -> ElicitResult:
+    """
+    Request user input through the client.
+    
+    Elicitation allows tools to interactively gather information
+    from users during execution.
+    
+    Args:
+        ctx: FastMCP Context object
+        message: Message to display to user
+        response_type: Expected response type (str, int, bool, or dataclass)
+    
+    Returns:
+        ElicitResult with action and data
+    
+    Example:
+        result = await elicit(ctx, "Enter your name:", str)
+        if result.action == ElicitAction.ACCEPT:
+            name = result.data
+    """
+    try:
+        if hasattr(ctx, "elicit"):
+            result = await ctx.elicit(message, response_type=response_type)
+            return ElicitResult(
+                action=ElicitAction(result.action),
+                data=result.data if hasattr(result, "data") else None,
+            )
+    except Exception as e:
+        logger.debug(f"Elicitation not available: {e}")
+    
+    # Fallback: return decline (elicitation not supported)
+    return ElicitResult(action=ElicitAction.DECLINE)
+
+
+async def elicit_confirmation(
+    ctx: "Context",
+    message: str,
+) -> bool:
+    """
+    Request yes/no confirmation from user.
+    
+    Args:
+        ctx: FastMCP Context object
+        message: Confirmation message
+    
+    Returns:
+        True if accepted, False otherwise
+    """
+    result = await elicit(ctx, message, bool)
+    return result.action == ElicitAction.ACCEPT and result.data is True
+
+
+async def elicit_choice(
+    ctx: "Context",
+    message: str,
+    choices: List[str],
+) -> Optional[str]:
+    """
+    Request user to select from choices.
+    
+    Args:
+        ctx: FastMCP Context object
+        message: Selection message
+        choices: List of options
+    
+    Returns:
+        Selected choice or None if cancelled
+    """
+    from typing import Literal
+    
+    # Build choice type dynamically
+    choice_str = f"Select one of: {', '.join(choices)}"
+    result = await elicit(ctx, f"{message}\n{choice_str}", str)
+    
+    if result.action == ElicitAction.ACCEPT and result.data in choices:
+        return result.data
+    return None
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ROOTS (Filesystem Access)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+async def list_roots(ctx: "Context") -> List[str]:
+    """
+    List filesystem roots available to the server.
+    
+    Roots define which directories the client has given
+    the server access to.
+    
+    Returns:
+        List of root paths
+    """
+    try:
+        if hasattr(ctx, "list_roots"):
+            roots = await ctx.list_roots()
+            return [str(r.uri) if hasattr(r, "uri") else str(r) for r in roots]
+    except Exception as e:
+        logger.debug(f"Roots listing not available: {e}")
+    return []
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# NOTIFICATIONS (List Changes)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+async def notify_tools_changed(ctx: "Context") -> None:
+    """Notify client that the tool list has changed."""
+    try:
+        if hasattr(ctx, "send_tool_list_changed"):
+            await ctx.send_tool_list_changed()
+    except Exception as e:
+        logger.debug(f"Tool notification not available: {e}")
+
+
+async def notify_resources_changed(ctx: "Context") -> None:
+    """Notify client that the resource list has changed."""
+    try:
+        if hasattr(ctx, "send_resource_list_changed"):
+            await ctx.send_resource_list_changed()
+    except Exception as e:
+        logger.debug(f"Resource notification not available: {e}")
+
+
+async def notify_prompts_changed(ctx: "Context") -> None:
+    """Notify client that the prompt list has changed."""
+    try:
+        if hasattr(ctx, "send_prompt_list_changed"):
+            await ctx.send_prompt_list_changed()
+    except Exception as e:
+        logger.debug(f"Prompt notification not available: {e}")
+
+
 __all__ = [
     # Progress
     "report_progress",
@@ -263,11 +425,23 @@ __all__ = [
     # Resources
     "read_resource",
     "list_resources",
-    # LLM
+    # LLM Sampling
     "sample_llm",
     # Request info
     "get_request_id",
     "get_client_id",
     "get_session_id",
+    # Elicitation
+    "ElicitAction",
+    "ElicitResult",
+    "elicit",
+    "elicit_confirmation",
+    "elicit_choice",
+    # Roots
+    "list_roots",
+    # Notifications
+    "notify_tools_changed",
+    "notify_resources_changed",
+    "notify_prompts_changed",
 ]
 

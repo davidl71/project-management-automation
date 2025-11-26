@@ -1339,6 +1339,64 @@
           "lastModified": "2025-11-27T01:40:02.378481"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251127014242-435884",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-27T01:42:42.435906",
+      "lastModified": "2025-11-27T01:42:42.512520",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127014242-435884-C-1",
+          "todoId": "AUTO-20251127014242-435884",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":272,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":85.0}",
+          "created": "2025-11-27T01:42:42.503880",
+          "lastModified": "2025-11-27T01:42:42.503890"
+        }
+      ]
+    },
+    {
+      "id": "API-001",
+      "name": "Research: Cursor Cloud Agents API integration",
+      "long_description": "Research Cursor's Cloud Agents API for potential EXARP integration.\n\nAPI Details (from https://cursor.com/docs/api):\n- Availability: Beta (All Plans) - accessible to non-Enterprise users\n- Purpose: Programmatically create and manage AI-powered coding agents\n- Endpoint: https://cursor.com/dashboard?tab=integrations (for API keys)\n\nResearch Areas:\n1. API capabilities and limitations\n2. Authentication requirements (Basic Auth with API key)\n3. Rate limiting (standard rate limiting applies)\n4. Use cases for EXARP:\n   - Automated agent spawning for background tasks\n   - Multi-agent coordination\n   - Workflow automation triggers\n5. Integration patterns with existing EXARP tools\n\nDependencies: None\nOutput: Integration feasibility report with recommendations",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "research",
+        "cursor-api",
+        "integration",
+        "cloud-agents"
+      ],
+      "created": "2025-11-26T23:47:35.861820+00:00",
+      "lastModified": "2025-11-26T23:47:35.862068+00:00",
+      "dependencies": []
+    },
+    {
+      "id": "MODE-001-UPDATE",
+      "name": "Research: Update mode detection with Cursor API findings",
+      "long_description": "Update MODE-001 research with Cursor API insights.\n\nCursor API Findings (from https://cursor.com/docs/api):\n\nEnterprise-Only APIs (not accessible to most users):\n- Analytics API: Team usage patterns, AI metrics, model usage\n- AI Code Tracking API: Track AI contributions at commit level\n- Admin API: Usage data and spending\n\nAvailable to All Plans:\n- Cloud Agents API (Beta): Agent management\n\nImplications for Mode Detection:\n1. Enterprise users COULD use Analytics API for precise mode tracking\n2. Non-Enterprise users must rely on local inference:\n   - Tool call frequency patterns\n   - File edit patterns (multi-file vs single-file)\n   - Session duration analysis\n   - Request complexity heuristics\n\nRecommendations:\n1. Primary approach: Local pattern inference (works for all users)\n2. Optional enhancement: Cursor API integration for Enterprise users\n3. Consider Cloud Agents API for workflow triggers\n\nUpdate MODE-001 with these findings and adjust implementation plan.",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "research",
+        "mode-awareness",
+        "cursor-api",
+        "enhancement"
+      ],
+      "created": "2025-11-26T23:47:35.862074+00:00",
+      "lastModified": "2025-11-26T23:47:35.862077+00:00",
+      "dependencies": [
+        "MODE-001"
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",

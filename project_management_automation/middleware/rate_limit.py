@@ -61,7 +61,7 @@ class RateLimitMiddleware(Middleware):
     def _get_bucket_key(self, context: MiddlewareContext, tool_name: str) -> str:
         """Generate bucket key based on settings."""
         if self.per_client:
-            client_id = getattr(context.fastmcp_context, "client_id", "unknown")
+            client_id = getattr(context.fastmcp_context, "client_id", "unknown") if hasattr(context, "fastmcp_context") else "unknown"
             return f"{client_id}:{tool_name}"
         return tool_name
     
