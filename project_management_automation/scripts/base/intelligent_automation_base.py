@@ -191,8 +191,14 @@ class IntelligentAutomationBase(ABC):
         logger.info(f"Sequential planning complete (fallback): {len(self.sequential_session['steps'])} steps planned")
 
     def _create_todo2_task(self) -> None:
-        """Create Todo2 task for tracking automation execution."""
-        logger.info("Creating Todo2 task...")
+        """Create or reuse Todo2 task for tracking automation execution.
+        
+        Prevents duplicate task creation by:
+        1. Checking for existing task with same name
+        2. Reusing in-progress tasks
+        3. Creating new task only if needed with unique ID
+        """
+        logger.info("Creating/reusing Todo2 task...")
 
         try:
             # Load Todo2 state
@@ -201,11 +207,41 @@ class IntelligentAutomationBase(ABC):
                 with open(todo2_path, 'r') as f:
                     todo2_data = json.load(f)
 
-                # Create task entry
-                task_id = f"AUTO-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+                task_name = f"Automation: {self.automation_name}"
+                
+                # Check for existing task with same name
+                existing_tasks = [
+                    t for t in todo2_data.get('todos', [])
+                    if t.get('name') == task_name
+                ]
+                
+                # Look for reusable task (in_progress or recent todo)
+                reusable_task = None
+                for t in existing_tasks:
+                    if t.get('status') in ('in_progress', 'todo'):
+                        reusable_task = t
+                        break
+                
+                if reusable_task:
+                    # Reuse existing task
+                    reusable_task['status'] = 'in_progress'
+                    reusable_task['lastModified'] = datetime.now().isoformat()
+                    self.todo2_task = reusable_task
+                    logger.info(f"Reusing Todo2 task: {reusable_task['id']}")
+                    
+                    # Save updated state
+                    with open(todo2_path, 'w') as f:
+                        json.dump(todo2_data, f, indent=2)
+                    return
+
+                # Create new task with unique ID (include microseconds + counter)
+                import random
+                unique_suffix = f"{datetime.now().strftime('%f')[:4]}{random.randint(10, 99)}"
+                task_id = f"AUTO-{datetime.now().strftime('%Y%m%d%H%M%S')}-{unique_suffix}"
+                
                 task = {
                     'id': task_id,
-                    'name': f"Automation: {self.automation_name}",
+                    'name': task_name,
                     'content': f"Automated {self.automation_name} execution",
                     'status': 'in_progress',
                     'priority': 'medium',
@@ -311,7 +347,10 @@ class IntelligentAutomationBase(ABC):
             logger.warning(f"Failed to store Todo2 results: {e}")
 
     def _create_followup_tasks(self, analysis_results: Dict) -> None:
-        """Create follow-up tasks based on findings."""
+        """Create follow-up tasks based on findings.
+        
+        Prevents duplicates by checking if task with same name already exists.
+        """
         if not self.todo2_task:
             return
 
@@ -326,11 +365,32 @@ class IntelligentAutomationBase(ABC):
                 with open(todo2_path, 'r') as f:
                     todo2_data = json.load(f)
 
+                # Get existing task names for duplicate checking
+                existing_names = {
+                    t.get('name') for t in todo2_data.get('todos', [])
+                }
+                
+                created_count = 0
+                skipped_count = 0
+                
                 for followup in followup_tasks:
+                    task_name = followup['name']
+                    
+                    # Skip if task with same name already exists
+                    if task_name in existing_names:
+                        logger.debug(f"Skipping duplicate follow-up task: {task_name}")
+                        skipped_count += 1
+                        continue
+                    
+                    # Create unique ID with random suffix
+                    import random
+                    unique_suffix = f"{datetime.now().strftime('%f')[:4]}{random.randint(10, 99)}"
+                    task_id = f"T-{datetime.now().strftime('%Y%m%d%H%M%S')}-{unique_suffix}"
+                    
                     task = {
-                        'id': f"T-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(todo2_data.get('todos', []))}",
-                        'name': followup['name'],
-                        'content': followup.get('description', followup['name']),
+                        'id': task_id,
+                        'name': task_name,
+                        'content': followup.get('description', task_name),
                         'status': 'todo',
                         'priority': followup.get('priority', 'medium'),
                         'tags': followup.get('tags', ['automation', 'followup']),
@@ -343,13 +403,18 @@ class IntelligentAutomationBase(ABC):
                         todo2_data['todos'] = []
 
                     todo2_data['todos'].append(task)
+                    existing_names.add(task_name)  # Track newly created
                     self.results['followup_tasks'].append(task['id'])
+                    created_count += 1
 
                 # Save back
                 with open(todo2_path, 'w') as f:
                     json.dump(todo2_data, f, indent=2)
 
-                logger.info(f"Created {len(followup_tasks)} follow-up tasks")
+                if created_count > 0:
+                    logger.info(f"Created {created_count} follow-up tasks (skipped {skipped_count} duplicates)")
+                elif skipped_count > 0:
+                    logger.info(f"All {skipped_count} follow-up tasks already exist")
         except Exception as e:
             logger.warning(f"Failed to create follow-up tasks: {e}")
 
