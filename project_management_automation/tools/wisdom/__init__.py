@@ -4,7 +4,7 @@ Wisdom System - Daily inspirational quotes based on project health.
 A multi-source wisdom engine that provides quotes matched to project status,
 designed for extraction to standalone package when needed.
 
-Available Sources (15 total):
+Available Sources (18 total):
 - random: Randomly pick from any source (daily consistent) 🎲
 - pistis_sophia: Gnostic mysticism (default)
 - pirkei_avot, proverbs, ecclesiastes, psalms: Jewish texts via Sefaria.org
@@ -17,6 +17,11 @@ Available Sources (15 total):
 - murphy: Murphy's Laws (pragmatism)
 - shakespeare: The Bard (drama)
 - confucius: The Analects (ethics)
+- kybalion: Hermetic Philosophy (mental models) ⚗️ [NEW]
+- gracian: Art of Worldly Wisdom (pragmatic maxims) 🎭 [NEW]
+- enochian: John Dee's mystical calls 🔮 [NEW]
+
+Credits: Many texts from https://sacred-texts.com/ (public domain)
 
 Usage:
     from project_management_automation.tools.wisdom import get_wisdom, list_sources

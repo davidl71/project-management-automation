@@ -4,7 +4,7 @@ Multi-Source Wisdom System for Exarp
 Provides inspirational/humorous quotes from various public domain texts
 matched to project health status.
 
-Available Sources:
+Available Sources (17 local + 4 Sefaria API):
 - random: Randomly pick from any source (daily consistent)
 - pistis_sophia: Gnostic mysticism (default)
 - bofh: Bastard Operator From Hell (tech humor)
@@ -16,11 +16,16 @@ Available Sources:
 - murphy: Murphy's Laws (pragmatism)
 - shakespeare: The Bard (drama)
 - confucius: The Analects (ethics)
+- kybalion: Hermetic Philosophy (mental models)     [NEW from sacred-texts.com]
+- gracian: Art of Worldly Wisdom (pragmatic maxims) [NEW from sacred-texts.com]
+- enochian: John Dee's mystical calls               [NEW from sacred-texts.com]
 
 Configuration:
 - EXARP_WISDOM_SOURCE=<source_name>  (default: pistis_sophia, use "random" for variety)
 - EXARP_DISABLE_WISDOM=1             (disable all wisdom)
 - .exarp_wisdom_config               (JSON config file)
+
+Credits: Many texts sourced from https://sacred-texts.com/ (public domain)
 """
 
 import os
@@ -339,6 +344,111 @@ WISDOM_SOURCES = {
             {"quote": "What you do not want done to yourself, do not do to others.", "source": "Analects", "encouragement": "Write code you'd want to maintain."},
             {"quote": "Only the wisest and stupidest of men never change.", "source": "Analects", "encouragement": "Stay adaptable."},
             {"quote": "When you see a worthy person, endeavor to emulate them.", "source": "Analects", "encouragement": "Learn from the best."},
+        ],
+    },
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # THE KYBALION - Hermetic Philosophy (Three Initiates, 1908)
+    # Source: https://sacred-texts.com/eso/kyb/index.htm (Public Domain)
+    # Perfect for: understanding systems, mental models, cause and effect
+    # ─────────────────────────────────────────────────────────────────────────────
+    "kybalion": {
+        "name": "The Kybalion (Hermetic Philosophy)",
+        "icon": "⚗️",
+        "chaos": [
+            {"quote": "THE ALL is MIND; The Universe is Mental.", "source": "Principle of Mentalism", "encouragement": "Your mental model shapes your code."},
+            {"quote": "As above, so below; as below, so above.", "source": "Principle of Correspondence", "encouragement": "Patterns repeat at every scale."},
+            {"quote": "Nothing rests; everything moves; everything vibrates.", "source": "Principle of Vibration", "encouragement": "Change is the only constant."},
+        ],
+        "lower_aeons": [
+            {"quote": "Everything is Dual; everything has poles; everything has its pair of opposites.", "source": "Principle of Polarity", "encouragement": "Bugs and features are matters of degree."},
+            {"quote": "Everything flows, out and in; everything has its tides.", "source": "Principle of Rhythm", "encouragement": "Sprints have natural rhythms."},
+            {"quote": "The Principles of Truth are Seven; he who knows these, understandingly, possesses the Magic Key.", "source": "The Kybalion", "encouragement": "Master the fundamentals."},
+        ],
+        "middle_aeons": [
+            {"quote": "Every Cause has its Effect; every Effect has its Cause.", "source": "Principle of Cause and Effect", "encouragement": "Debug systematically."},
+            {"quote": "Gender is in everything; everything has its Masculine and Feminine Principles.", "source": "Principle of Gender", "encouragement": "Balance creation and refinement."},
+            {"quote": "The half-wise, recognizing the unreality of the Universe, imagine that they may defy its Laws. Such are vain and presumptuous fools.", "source": "The Kybalion", "encouragement": "Respect the constraints."},
+        ],
+        "upper_aeons": [
+            {"quote": "Mind may be transmuted, from state to state; degree to degree; pole to pole; vibration to vibration.", "source": "The Kybalion", "encouragement": "Refactoring transforms understanding."},
+            {"quote": "The wise ones serve on the higher planes, but rule on the lower.", "source": "The Kybalion", "encouragement": "Lead by example, delegate wisely."},
+            {"quote": "Nothing escapes the Principle of Cause and Effect, but there are many Planes of Causation.", "source": "The Kybalion", "encouragement": "Look for root causes."},
+        ],
+        "treasury": [
+            {"quote": "The lips of Wisdom are closed, except to the ears of Understanding.", "source": "The Kybalion", "encouragement": "Documentation for those who seek."},
+            {"quote": "Where falls the footsteps of the Master, the ears of those ready for his Teaching open wide.", "source": "The Kybalion", "encouragement": "Teach those who are ready."},
+            {"quote": "When the ears of the student are ready to hear, then cometh the lips to fill them with Wisdom.", "source": "The Kybalion", "encouragement": "The learner appears when ready."},
+        ],
+    },
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # THE ART OF WORLDLY WISDOM - Baltasar Gracián (1647)
+    # Source: https://sacred-texts.com/eso/aww/index.htm (Public Domain)
+    # Perfect for: pragmatic wisdom, strategy, dealing with people, career
+    # ─────────────────────────────────────────────────────────────────────────────
+    "gracian": {
+        "name": "Art of Worldly Wisdom (Gracián)",
+        "icon": "🎭",
+        "chaos": [
+            {"quote": "Never open the door to a lesser evil, for other and greater ones invariably slink in after it.", "source": "Maxim 76", "encouragement": "Fix the bug now, not later."},
+            {"quote": "Know how to ask. There is nothing more difficult for some, nothing easier for others.", "source": "Maxim 213", "encouragement": "Ask for help early."},
+            {"quote": "Begin with another's to end with your own.", "source": "Maxim 144", "encouragement": "Understand requirements first."},
+        ],
+        "lower_aeons": [
+            {"quote": "A single lie destroys a whole reputation for integrity.", "source": "Maxim 181", "encouragement": "Honesty in commit messages."},
+            {"quote": "Know how to make use of stupidity: The wisest man plays this card at times.", "source": "Maxim 240", "encouragement": "Rubber duck debugging works."},
+            {"quote": "Never contend with a man who has nothing to lose.", "source": "Maxim 172", "encouragement": "Pick your battles."},
+        ],
+        "middle_aeons": [
+            {"quote": "Think with the few and speak with the many.", "source": "Maxim 43", "encouragement": "Design privately, communicate widely."},
+            {"quote": "The things we remember best are those better forgotten.", "source": "Maxim 262", "encouragement": "Document the weird edge cases."},
+            {"quote": "Do not wait till you are a sinking sun.", "source": "Maxim 110", "encouragement": "Know when to refactor."},
+        ],
+        "upper_aeons": [
+            {"quote": "Have knowledge and courage, they make for greatness.", "source": "Maxim 185", "encouragement": "Learn continuously, ship boldly."},
+            {"quote": "Know how to withdraw. If it is a great lesson in life to know how to deny, it is a still greater to know how to deny oneself.", "source": "Maxim 33", "encouragement": "Say no to scope creep."},
+            {"quote": "The sole advantage of power is that you can do more good.", "source": "Maxim 286", "encouragement": "Use your influence wisely."},
+        ],
+        "treasury": [
+            {"quote": "Attempt easy tasks as if they were difficult, and difficult as if they were easy.", "source": "Maxim 204", "encouragement": "Respect all code equally."},
+            {"quote": "Fortune pays you sometimes for the intensity of her favors by the shortness of their duration.", "source": "Maxim 38", "encouragement": "Enjoy the wins, prepare for challenges."},
+            {"quote": "Leave off hungry. One ought to remove even from the nectar of pleasure the cup from the lips.", "source": "Maxim 60", "encouragement": "Ship before perfect."},
+        ],
+    },
+    
+    # ─────────────────────────────────────────────────────────────────────────────
+    # ENOCHIAN - Mystical Calls of John Dee (1580s)
+    # Source: https://sacred-texts.com/eso/enoch/index.htm (Public Domain)
+    # Perfect for: invoking focus, ceremonial starts, mystical debugging
+    # ─────────────────────────────────────────────────────────────────────────────
+    "enochian": {
+        "name": "Enochian Mysticism (John Dee)",
+        "icon": "🔮",
+        "chaos": [
+            {"quote": "I reign over you, saith the God of Justice, in power exalted above the firmaments of wrath.", "source": "First Call", "encouragement": "Take command of the chaos."},
+            {"quote": "Can the wings of the winds understand your voices of wonder?", "source": "First Call", "encouragement": "Communicate with precision."},
+            {"quote": "Move and show yourselves! Open the mysteries of your creation!", "source": "First Call", "encouragement": "Debug with intention."},
+        ],
+        "lower_aeons": [
+            {"quote": "The spirits of the fourth angle are nine, mighty in the firmament of waters.", "source": "Fourth Call", "encouragement": "Structure brings power."},
+            {"quote": "Arise! Move! and appear before the covenant of his mouth.", "source": "Second Call", "encouragement": "Honor your commitments."},
+            {"quote": "Visit us in peace and comfort. Conclude us receivers of your mysteries.", "source": "Calls", "encouragement": "Seek understanding calmly."},
+        ],
+        "middle_aeons": [
+            {"quote": "Behold the face of your God, the beginning of comfort.", "source": "Third Call", "encouragement": "Find joy in the work."},
+            {"quote": "Whose works shall be a song of honor.", "source": "Calls", "encouragement": "Take pride in clean code."},
+            {"quote": "Move therefore, and show yourselves!", "source": "Calls", "encouragement": "Make your intentions visible."},
+        ],
+        "upper_aeons": [
+            {"quote": "Gather up your garments, and harken unto my voice.", "source": "Calls", "encouragement": "Prepare for deployment."},
+            {"quote": "In power and presence come to us.", "source": "Calls", "encouragement": "Bring your full attention."},
+            {"quote": "Whose voices the winged creatures speak.", "source": "Calls", "encouragement": "Let your work speak for itself."},
+        ],
+        "treasury": [
+            {"quote": "I am your God, that hath created the world.", "source": "Calls", "encouragement": "You are the creator of your domain."},
+            {"quote": "Arise, saith the First. Move therefore unto his servants.", "source": "Calls", "encouragement": "Lead by action."},
+            {"quote": "The work is finished.", "source": "Calls", "encouragement": "Ship it."},
         ],
     },
 }
