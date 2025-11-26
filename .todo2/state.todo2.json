@@ -2827,6 +2827,159 @@
       "updatedAt": "2025-11-26T04:33:21.986777Z",
       "dependencies": [],
       "estimatedHours": 1
+    },
+    {
+      "id": "5bce55cc-cf8a-47ec-a838-9fbba2a4218d",
+      "content": "Create fastmcp.json for declarative server configuration",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "fastmcp",
+        "configuration",
+        "deployment"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Replace CLI args with portable fastmcp.json\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/deployment/server-configuration\n\n**Create fastmcp.json:**\n```json\n{\n  \"$schema\": \"https://gofastmcp.com/public/schemas/fastmcp.json/v1.json\",\n  \"source\": {\n    \"path\": \"project_management_automation/server.py\",\n    \"entrypoint\": \"mcp\"\n  },\n  \"environment\": {\n    \"type\": \"uv\",\n    \"python\": \">=3.10\",\n    \"dependencies\": [\n      \"fastmcp\",\n      \"pydantic\",\n      \"networkx\",\n      \"mcp\"\n    ]\n  },\n  \"deployment\": {\n    \"transport\": \"stdio\",\n    \"log_level\": \"INFO\",\n    \"env\": {\n      \"PROJECT_ROOT\": \".\"\n    }\n  }\n}\n```\n\n**Benefits:**\n- Simple: `fastmcp run` instead of complex CLI\n- Portable: Works with Cursor, Claude Desktop, VS Code\n- Declarative: Single source of truth\n- IDE support: JSON schema for autocomplete",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552379Z",
+      "updatedAt": "2025-11-26T04:36:04.552394Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "54d52e17-d0ed-44d1-ab5b-03089df4acc8",
+      "content": "Create multi-environment fastmcp.json configs",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "configuration",
+        "environments"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Separate configs for dev/prod environments\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/deployment/server-configuration\n\n**Files to create:**\n\n1. **dev.fastmcp.json** - Development with HTTP + debug:\n```json\n{\n  \"source\": {\"path\": \"server.py\", \"entrypoint\": \"mcp\"},\n  \"environment\": {\"editable\": \".\"},\n  \"deployment\": {\n    \"transport\": \"http\",\n    \"port\": 8000,\n    \"log_level\": \"DEBUG\"\n  }\n}\n```\n\n2. **prod.fastmcp.json** - Production with stdio:\n```json\n{\n  \"source\": {\"path\": \"server.py\", \"entrypoint\": \"mcp\"},\n  \"environment\": {\"requirements\": \"requirements.txt\"},\n  \"deployment\": {\n    \"transport\": \"stdio\",\n    \"log_level\": \"WARNING\"\n  }\n}\n```\n\n**Usage:**\n```bash\nfastmcp run dev.fastmcp.json   # Development\nfastmcp run prod.fastmcp.json  # Production\nfastmcp run                    # Default (fastmcp.json)\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552412Z",
+      "updatedAt": "2025-11-26T04:36:04.552415Z",
+      "dependencies": [],
+      "estimatedHours": 0.5
+    },
+    {
+      "id": "34b99dab-62bf-4b22-8cc0-cb36266664d7",
+      "content": "Use tool transformation for OpenAPI/function wrapping",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "tools",
+        "patterns"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Auto-generate tools from existing functions\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/patterns/tool-transformation\n\n**Use case:** Convert existing automation scripts to MCP tools automatically\n\n**Pattern:**\n```python\nfrom fastmcp import FastMCP\nfrom fastmcp.tools import tool_from_function\n\n# Existing function\ndef check_health(component: str) -> dict:\n    \"\"\"Check health of a component.\"\"\"\n    return {\"status\": \"ok\", \"component\": component}\n\nmcp = FastMCP(\"Exarp\")\n\n# Transform to MCP tool\nmcp.add_tool(tool_from_function(check_health))\n```\n\n**Benefits:**\n- Reuse existing Python functions\n- Auto-generate from OpenAPI specs\n- Bulk tool registration",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552424Z",
+      "updatedAt": "2025-11-26T04:36:04.552426Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "5432e44f-f0f9-4aad-9586-b1ba90f62c39",
+      "content": "Add FastMCP CLI commands to documentation",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "cli",
+        "documentation"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Document FastMCP CLI usage for Exarp\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/patterns/cli\n\n**Commands to document:**\n\n```bash\n# Run server\nfastmcp run fastmcp.json\nfastmcp run server.py:mcp\n\n# Development with Inspector\nfastmcp dev fastmcp.json\n\n# Inspect server capabilities\nfastmcp inspect fastmcp.json\n\n# Install to MCP client\nfastmcp install mcp-json fastmcp.json --name \"Exarp\"\n\n# Override config at runtime\nfastmcp run fastmcp.json --port 8080 --log-level DEBUG\n```\n\n**Update INSTALL.md with:**\n- fastmcp run usage\n- fastmcp dev for debugging\n- fastmcp inspect for verification",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552437Z",
+      "updatedAt": "2025-11-26T04:36:04.552440Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "04bec4af-b071-4743-86e4-961837152795",
+      "content": "Add inline-snapshot for test assertions",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "testing",
+        "patterns"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Use inline-snapshot for automatic assertion generation\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/patterns/testing\n\n**Installation:**\n```bash\npip install inline-snapshot pytest-asyncio\n```\n\n**Usage pattern:**\n```python\nfrom inline_snapshot import snapshot\nimport pytest\n\n@pytest.mark.asyncio\nasync def test_docs_health():\n    async with client:\n        result = await client.call_tool(\"check_documentation_health\", {})\n        \n        # First run: generates snapshot automatically\n        # Subsequent runs: validates against snapshot\n        assert result.data == snapshot({\n            \"score\": 85,\n            \"broken_links\": 0,\n            \"stale_docs\": 5\n        })\n```\n\n**Benefits:**\n- Auto-generate expected values\n- Update snapshots with --update-snapshots\n- Clear diffs on failure",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552447Z",
+      "updatedAt": "2025-11-26T04:36:04.552449Z",
+      "dependencies": [],
+      "estimatedHours": 1.5
+    },
+    {
+      "id": "adbb993f-2edd-45ad-9ea9-d5a282b7a669",
+      "content": "Explore FastMCP contrib modules for extensions",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "contrib",
+        "research"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Evaluate contrib modules for Exarp\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/patterns/contrib\n\n**Available contrib modules:**\n- OpenAI sampling handler\n- Claude sampling handler\n- Common tool transformations\n- Utility decorators\n\n**Research:**\n1. Review available contrib modules\n2. Identify useful extensions for Exarp\n3. Evaluate integration complexity\n4. Document recommended modules\n\n**Potential uses:**\n- Pre-built sampling handlers\n- Common tool patterns\n- Authentication helpers",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552455Z",
+      "updatedAt": "2025-11-26T04:36:04.552457Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "7d4f974d-4c63-42a6-8696-c78451a1b23e",
+      "content": "Refactor tools to use class method decorators",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "patterns",
+        "refactoring"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Use class-based tool organization\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/patterns/decorating-methods\n\n**Current:** Tools as standalone functions\n**Target:** Tools organized in classes\n\n**Pattern:**\n```python\nfrom fastmcp import FastMCP\n\nmcp = FastMCP(\"Exarp\")\n\nclass TaskTools:\n    \"\"\"Task management tools.\"\"\"\n    \n    @mcp.tool\n    def list_tasks(self, status: str = None) -> list:\n        \"\"\"List tasks with optional status filter.\"\"\"\n        return load_tasks(status=status)\n    \n    @mcp.tool\n    def create_task(self, content: str, priority: str = \"medium\") -> dict:\n        \"\"\"Create a new task.\"\"\"\n        return save_task(content, priority)\n\n# Register class\ntask_tools = TaskTools()\n```\n\n**Benefits:**\n- Better code organization\n- Shared state in class\n- Easier testing with mocks\n- Logical grouping of related tools",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552464Z",
+      "updatedAt": "2025-11-26T04:36:04.552466Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "9cfd0ded-6e7f-4dc5-ac2c-d4297b0cff47",
+      "content": "Create UPGRADING.md for FastMCP version migrations",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "documentation",
+        "maintenance"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Document FastMCP upgrade process\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/development/upgrade-guide\n\n**Create docs/UPGRADING.md:**\n\n```markdown\n# Upgrading FastMCP\n\n## Current Version\nFastMCP 2.x\n\n## Upgrade Checklist\n1. Check changelog for breaking changes\n2. Update requirements.txt\n3. Run tests\n4. Update fastmcp.json if schema changed\n5. Test all tools manually\n\n## Version History\n- 2.13.x: Storage backends, token verification\n- 2.12.x: fastmcp.json configuration\n- 2.11.x: Tag filtering, introspection\n- 2.10.x: Structured outputs\n```\n\n**Maintenance:**\n- Subscribe to FastMCP releases\n- Review changelog periodically\n- Test after updates",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552474Z",
+      "updatedAt": "2025-11-26T04:36:04.552476Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "aa2a3781-d067-4eec-ba93-60bc4644b3cb",
+      "content": "Align test structure with FastMCP test patterns",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "testing",
+        "refactoring"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Follow FastMCP recommended test structure\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/development/tests\n\n**Current structure:**\n```\ntests/\n  test_tools.py\n  test_integration.py\n```\n\n**Target structure:**\n```\ntests/\n  unit/\n    test_tools.py\n    test_resources.py\n    test_prompts.py\n  integration/\n    test_server.py\n    test_client.py\n  conftest.py  # Shared fixtures\n```\n\n**conftest.py:**\n```python\nimport pytest\nfrom fastmcp import FastMCP\nfrom fastmcp.client import Client\n\n@pytest.fixture\nasync def client():\n    from project_management_automation.server import mcp\n    async with Client(mcp) as c:\n        yield c\n\n@pytest.fixture\ndef mcp_server():\n    from project_management_automation.server import mcp\n    return mcp\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:36:04.552484Z",
+      "updatedAt": "2025-11-26T04:36:04.552486Z",
+      "dependencies": [],
+      "estimatedHours": 2
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
