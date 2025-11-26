@@ -381,6 +381,130 @@ _exarp_tools() {
 compdef _exarp_tools exarp 2>/dev/null
 
 # ═══════════════════════════════════════════════════════════════
+# iTERM2 INTEGRATION
+# ═══════════════════════════════════════════════════════════════
+
+# Detect iTerm2 shell integration
+_exarp_iterm2_available() {
+    [[ "$TERM_PROGRAM" == "iTerm.app" ]] && \
+    typeset -f iterm2_set_user_var > /dev/null 2>&1
+}
+
+# Set iTerm2 badge (background text)
+exarp_iterm2_badge() {
+    if ! _exarp_iterm2_available; then
+        return
+    fi
+    
+    local badge_text=""
+    if _exarp_is_project "."; then
+        local name=$(_exarp_project_name ".")
+        local score=$(_exarp_get_score ".")
+        local tasks=$(_exarp_get_tasks ".")
+        badge_text="${name}\n${score}% | ${tasks}"
+    fi
+    
+    # Set badge using iTerm2 escape sequence
+    printf "\e]1337;SetBadgeFormat=%s\a" "$(echo -n "$badge_text" | base64)"
+}
+
+# Set iTerm2 user variables (for status bar)
+exarp_iterm2_vars() {
+    if ! _exarp_iterm2_available; then
+        return
+    fi
+    
+    if _exarp_is_project "."; then
+        local name=$(_exarp_project_name ".")
+        local score=$(_exarp_get_score ".")
+        local tasks=$(_exarp_get_tasks ".")
+        local pending=$(echo "$tasks" | cut -d'/' -f1)
+        
+        # Set user variables for iTerm2 status bar
+        iterm2_set_user_var exarpProject "$name"
+        iterm2_set_user_var exarpScore "$score"
+        iterm2_set_user_var exarpTasks "$pending"
+        
+        # Health indicator
+        local health
+        if (( score >= 80 )); then health="🟢"
+        elif (( score >= 60 )); then health="🟡"
+        elif (( score > 0 )); then health="🔴"
+        else health="⚪"
+        fi
+        iterm2_set_user_var exarpHealth "$health"
+    else
+        iterm2_set_user_var exarpProject ""
+        iterm2_set_user_var exarpScore ""
+        iterm2_set_user_var exarpTasks ""
+        iterm2_set_user_var exarpHealth ""
+    fi
+}
+
+# Set iTerm2 tab title and window title
+exarp_iterm2_title() {
+    if [[ "$TERM_PROGRAM" != "iTerm.app" ]]; then
+        return
+    fi
+    
+    if _exarp_is_project "."; then
+        local name=$(_exarp_project_name ".")
+        local score=$(_exarp_get_score ".")
+        
+        # Tab title: project name + score
+        echo -ne "\e]1;${name} (${score}%)\a"
+        # Window title: full path
+        echo -ne "\e]2;${PWD}\a"
+    fi
+}
+
+# iTerm2 marks for command output (mark start of exarp output)
+exarp_iterm2_mark() {
+    if _exarp_iterm2_available; then
+        printf "\e]1337;SetMark\a"
+    fi
+}
+
+# iTerm2 annotation (highlight important output)
+exarp_iterm2_annotate() {
+    local message="$1"
+    if _exarp_iterm2_available; then
+        printf "\e]1337;AddAnnotation=%s\a" "$message"
+    fi
+}
+
+# Hook to update iTerm2 on directory change
+_exarp_iterm2_chpwd() {
+    if _exarp_iterm2_available; then
+        exarp_iterm2_vars
+        exarp_iterm2_badge
+        exarp_iterm2_title
+    fi
+}
+
+# Register chpwd hook for iTerm2 updates
+if _exarp_iterm2_available; then
+    autoload -Uz add-zsh-hook
+    add-zsh-hook chpwd _exarp_iterm2_chpwd
+    
+    # Initial update
+    _exarp_iterm2_chpwd
+fi
+
+# iTerm2-enhanced context display
+exarp-context-iterm() {
+    exarp_iterm2_mark
+    exarp-context "$@"
+    
+    if _exarp_is_project "." && _exarp_iterm2_available; then
+        local score=$(_exarp_get_score ".")
+        if (( score < 60 )); then
+            exarp_iterm2_annotate "⚠️ Project health is low ($score%)"
+        fi
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════
 # AUTO-INIT
 # ═══════════════════════════════════════════════════════════════
 
@@ -401,3 +525,9 @@ fi
 echo "✅ Exarp plugin loaded"
 echo "   xc - context  xp - projects  xs - score  xo - overview  motd - wisdom"
 echo "   Enable prompt: export EXARP_PROMPT=1 && RPROMPT='\$(exarp_prompt_info)'"
+
+# iTerm2 integration status
+if _exarp_iterm2_available; then
+    echo "   🍎 iTerm2 integration active (badge, status bar, titles)"
+    echo "      Status bar: Add 'Interpolated String' with \(user.exarpProject) \(user.exarpHealth)\(user.exarpScore)%"
+fi
