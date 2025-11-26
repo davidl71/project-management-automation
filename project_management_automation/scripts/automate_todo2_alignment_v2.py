@@ -542,6 +542,8 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 def load_config(config_path: Optional[Path] = None) -> Dict:
     """Load configuration."""
     if config_path is None:
+        from project_management_automation.utils import find_project_root
+        project_root = find_project_root()
         config_path = project_root / 'scripts' / 'todo2_alignment_config.json'
 
     default_config = {
@@ -576,7 +578,8 @@ def main():
         if args.output:
             output_path = args.output
         else:
-            output_path = project_root / config['output_path']
+            from project_management_automation.utils import find_project_root
+            output_path = find_project_root() / config['output_path']
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, 'w') as f:

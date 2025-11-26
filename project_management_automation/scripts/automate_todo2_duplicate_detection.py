@@ -603,6 +603,8 @@ def main():
     args = parser.parse_args()
 
     # Load config
+    from project_management_automation.utils import find_project_root
+    project_root = find_project_root()
     config_path = project_root / args.config
     if config_path.exists():
         with open(config_path, 'r') as f:

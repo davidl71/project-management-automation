@@ -201,14 +201,9 @@ class DailyAutomation:
             # Build command - run as module
             cmd = [sys.executable, '-m', module_name]
 
-            if self.dry_run:
-                cmd.append('--dry-run')
-
-            # Add task-specific arguments
-            if task_id == 'duplicate_detection':
-                cmd.extend(['--auto-fix', 'false'])
-            elif task_id == 'external_tool_hints':
-                cmd.extend(['--dry-run' if self.dry_run else ''])
+            # Note: Most scripts don't support --dry-run flag
+            # Only add task-specific arguments that are actually supported
+            # (duplicate_detection's --auto-fix is a boolean flag, don't pass 'false')
 
             # Run script
             result = subprocess.run(
