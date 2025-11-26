@@ -1,0 +1,41 @@
+2025/11/26-02:38:43.673 49c9 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/chrome-extension_aeblfdkhhhdcdjpifhhbdiojplfjncoa_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/26-02:38:43.674 49c9 Recovering log #1604
+2025/11/26-02:38:43.682 49c9 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/chrome-extension_aeblfdkhhhdcdjpifhhbdiojplfjncoa_0.indexeddb.leveldb/001604.log 
+2025/11/26-06:49:42.871 49e9 Level-0 table #1614: started
+2025/11/26-06:49:42.994 49e9 Level-0 table #1614: 944782 bytes OK
+2025/11/26-06:49:43.073 49e9 Delete type=0 #1604
+2025/11/26-06:52:42.877 49c9 Compacting 1@1 + 6@2 files
+2025/11/26-06:52:42.988 49c9 Generated table #1615@1: 19333 keys, 2145053 bytes
+2025/11/26-06:52:43.171 49c9 Generated table #1616@1: 1511 keys, 2117278 bytes
+2025/11/26-06:52:43.282 49c9 Generated table #1617@1: 32895 keys, 2175437 bytes
+2025/11/26-06:52:43.383 49c9 Generated table #1618@1: 116518 keys, 2269665 bytes
+2025/11/26-06:52:43.516 49c9 Generated table #1619@1: 118734 keys, 2269482 bytes
+2025/11/26-06:52:43.586 49c9 Generated table #1620@1: 49258 keys, 943522 bytes
+2025/11/26-06:52:43.586 49c9 Compacted 1@1 + 6@2 files => 11920437 bytes
+2025/11/26-06:52:43.606 49c9 compacted to: files[ 0 0 17 0 0 0 0 ]
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1609
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1608
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1611
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1610
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1606
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1607
+2025/11/26-06:52:43.607 49c9 Delete type=2 #1614
+2025/11/26-11:55:46.740 49e7 Level-0 table #1622: started
+2025/11/26-11:55:46.837 49e7 Level-0 table #1622: 1502153 bytes OK
+2025/11/26-11:55:46.878 49e7 Delete type=0 #1613
+2025/11/26-11:56:26.473 49e8 Compacting 1@1 + 6@2 files
+2025/11/26-11:56:26.935 49e8 Generated table #1623@1: 19308 keys, 2148576 bytes
+2025/11/26-11:56:27.106 49e8 Generated table #1624@1: 1484 keys, 2114414 bytes
+2025/11/26-11:56:27.248 49e8 Generated table #1625@1: 32363 keys, 2174693 bytes
+2025/11/26-11:56:27.375 49e8 Generated table #1626@1: 108871 keys, 2263547 bytes
+2025/11/26-11:56:27.482 49e8 Generated table #1627@1: 118914 keys, 2271414 bytes
+2025/11/26-11:56:27.564 49e8 Generated table #1628@1: 65007 keys, 1244712 bytes
+2025/11/26-11:56:27.564 49e8 Compacted 1@1 + 6@2 files => 12217356 bytes
+2025/11/26-11:56:27.661 49e8 compacted to: files[ 0 0 17 0 0 0 0 ]
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1618
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1619
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1622
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1620
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1617
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1616
+2025/11/26-11:56:27.668 49e8 Delete type=2 #1615

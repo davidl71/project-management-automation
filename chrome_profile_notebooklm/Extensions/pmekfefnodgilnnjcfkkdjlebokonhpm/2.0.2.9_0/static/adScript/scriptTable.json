@@ -1,0 +1,8 @@
+{
+    "twitch":[
+        "static/adScript/ttv.js"
+    ],
+    "youtube":[
+        "static/adScript/ytb.js"
+    ]
+}

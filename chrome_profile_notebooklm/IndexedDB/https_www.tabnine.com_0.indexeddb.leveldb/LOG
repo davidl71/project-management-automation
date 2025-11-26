@@ -1,0 +1,6 @@
+2025/11/18-10:06:29.068 7878 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.tabnine.com_0.indexeddb.leveldb since it was missing.
+2025/11/18-10:06:29.448 7878 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.tabnine.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/18-10:07:31.075 7878 Level-0 table #5: started
+2025/11/18-10:07:31.081 7878 Level-0 table #5: 848 bytes OK
+2025/11/18-10:07:31.096 7878 Delete type=0 #3
+2025/11/18-10:07:31.096 7878 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

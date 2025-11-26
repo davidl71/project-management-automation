@@ -1,0 +1,18 @@
+2025/11/19-08:52:23.458 3912ca Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_api-community.fiscal.treasury.gov_0.indexeddb.leveldb since it was missing.
+2025/11/19-08:52:23.476 3912ca Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_api-community.fiscal.treasury.gov_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/19-08:52:25.345 391652 Level-0 table #5: started
+2025/11/19-08:52:25.369 391652 Level-0 table #5: 26392 bytes OK
+2025/11/19-08:52:25.401 391652 Delete type=0 #3
+2025/11/19-08:52:25.402 3912ca Manual compaction at level-0 from '\x00\x09\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0a\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/19-09:04:17.168 391651 Level-0 table #7: started
+2025/11/19-09:04:17.201 391651 Level-0 table #7: 1461902 bytes OK
+2025/11/19-09:04:17.222 391651 Delete type=0 #4
+2025/11/19-09:04:17.222 391651 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/11/19-09:04:17.222 391651 Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x08\x01\x1f\x03\x00\x10\xfe\xb6k\xe4yB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 1014 : 1
+2025/11/19-09:04:17.222 391651 Compacting 1@1 + 1@2 files
+2025/11/19-09:04:17.230 391651 Generated table #8@1: 212 keys, 78216 bytes
+2025/11/19-09:04:17.231 391651 Compacted 1@1 + 1@2 files => 78216 bytes
+2025/11/19-09:04:17.246 391651 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/19-09:04:17.247 391651 Delete type=2 #7
+2025/11/19-09:04:17.247 391651 Delete type=2 #5
+2025/11/19-09:04:17.247 391651 Manual compaction at level-1 from '\x00\x08\x01\x1f\x03\x00\x10\xfe\xb6k\xe4yB\x00\x01\x0d\x00c\x00r\x00y\x00p\x00t\x00o\x00a\x00d\x00a\x00p\x00t\x00e\x00r' @ 1014 : 1 .. (end); will stop at (end)

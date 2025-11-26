@@ -1,0 +1,138 @@
+{
+   "dcn_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=DataCollectionNotice&VID=&Locale=ES-ES"
+   },
+   "extension_description": {
+      "message": "Deje de ver anuncios intrusivos de vídeo, emergentes, intersticiales y en banners en la web."
+   },
+   "extension_name": {
+      "description": "The display name for the extension.",
+      "message": "Trend Micro Ad Blocker: bloqueador de anuncios eficaz"
+   },
+   "feedback_copyright": {
+      "message": "Copyright © {YEAR} Trend Micro Incorporated. Reservados todos los derechos."
+   },
+   "feedback_email": {
+      "message": "Dirección de correo electrónico (opcional)"
+   },
+   "feedback_email_invalid": {
+      "message": "La dirección de correo electrónico no es válida"
+   },
+   "feedback_sent": {
+      "message": "Sus comentarios se han enviado."
+   },
+   "gdpr_accept": {
+      "message": "Al instalar este software, acepta las siguientes condiciones:"
+   },
+   "gdpr_agree": {
+      "message": "Aceptar y continuar"
+   },
+   "gdpr_dcn": {
+      "message": "Aviso sobre la recopilación de datos de Trend Micro Ad Blocker"
+   },
+   "gdpr_license": {
+      "message": "Contrato de licencia de Trend Micro"
+   },
+   "gdpr_privacy": {
+      "message": "Aviso de privacidad de Trend Micro"
+   },
+   "license_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=LicenseAgreement&VID=&Locale=ES-ES"
+   },
+   "popup_blank": {
+      "message": "Abrir un sitio web para iniciar el viaje"
+   },
+   "popup_enterComments": {
+      "message": "Introduzca su comentario"
+   },
+   "popup_feedback": {
+      "message": "Comentarios"
+   },
+   "popup_feedback_send": {
+      "message": "Enviar"
+   },
+   "popup_isbroken": {
+      "message": "¿El acceso al sitio está dañado?"
+   },
+   "popup_no": {
+      "message": "No"
+   },
+   "popup_ok": {
+      "message": "Aceptar"
+   },
+   "popup_paused": {
+      "message": "en pausa"
+   },
+   "popup_protection_disabled": {
+      "message": "Protección desactivada"
+   },
+   "popup_protection_enabled": {
+      "message": "Protección activada"
+   },
+   "popup_protection_paused": {
+      "message": "Protección en pausa"
+   },
+   "popup_protection_thispage": {
+      "message": "%0 anuncios bloqueados en esta página"
+   },
+   "popup_protection_thispage_single": {
+      "message": "1 anuncio bloqueado en esta página"
+   },
+   "popup_protection_total": {
+      "message": "%0 anuncios bloqueados en los últimos %1 días"
+   },
+   "popup_protection_total_singleDay": {
+      "message": "%0 anuncios bloqueado en el último día"
+   },
+   "popup_report": {
+      "message": "Notificar sitio interrumpido"
+   },
+   "popup_report_issue1": {
+      "message": "No se ha podido reproducir el vídeo"
+   },
+   "popup_report_issue2": {
+      "message": "No puedo iniciar sesión"
+   },
+   "popup_report_issue3": {
+      "message": "No se han cargado los comentarios"
+   },
+   "popup_report_issue4": {
+      "message": "Falta el contenido"
+   },
+   "popup_report_issue5": {
+      "message": "El sitio me pidió que desactivara"
+   },
+   "popup_report_issue6": {
+      "message": "No se ha cargado la imagen"
+   },
+   "popup_report_issue7": {
+      "message": "Los enlaces o botones no funcionan"
+   },
+   "popup_report_issue8": {
+      "message": "Otra cosa"
+   },
+   "popup_report_pick": {
+      "message": "Seleccione el problema en la lista..."
+   },
+   "popup_report_sent": {
+      "message": "El informe se ha enviado."
+   },
+   "popup_thank": {
+      "message": "¡Gracias!"
+   },
+   "popup_title": {
+      "message": "Bloquear anuncios"
+   },
+   "popup_yes": {
+      "message": "Sí"
+   },
+   "privacy_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=PrivacyPolicy&VID=&Locale=ES-ES"
+   },
+   "welcome_pin": {
+      "message": "Ancle Trend Micro Ad Blocker a la barra de herramientas para facilitar el acceso"
+   },
+   "welcome_title": {
+      "message": "Le damos la bienvenida a Trend Micro Ad Blocker"
+   }
+}

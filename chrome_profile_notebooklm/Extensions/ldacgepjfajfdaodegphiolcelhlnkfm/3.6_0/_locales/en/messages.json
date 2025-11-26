@@ -1,0 +1,41 @@
+{
+   "button_go_to_orders": {
+      "message": "Go to AliExpress orders"
+   },
+   "button_save": {
+      "message": "Save"
+   },
+   "buyer_extra_info": {
+      "message": "Vat Number: 323323232323"
+   },
+   "buyer_informations_header": {
+      "message": "Additional lines for buyer section"
+   },
+   "link_how_to": {
+      "message": "How to?"
+   },
+   "subtitle": {
+      "message": "Extract your AliExpress order details to a printable PDF"
+   },
+   "title": {
+      "message": "Alichrome - Free Invoice generator"
+   },
+   "title_upcase": {
+      "message": "ALIEXPRESS FREE INVOICE"
+   },
+   "welcome_how_to_use": {
+      "message": "How to Use"
+   },
+   "welcome_step1": {
+      "message": "1- Using the add-on is extremely easy. Go to your Aliexpress orders by clicking on the add-on logo, then click on the orange button."
+   },
+   "welcome_step2": {
+      "message": "2- Open the details page for the order in question."
+   },
+   "welcome_step3": {
+      "message": "3- Once on the page opened, click on \"\u003Cb>Download PDF Invoice\u003C/b>\". This action will scrape the data from the page, generate an invoice in PDF form and then open a file saving dialog."
+   },
+   "welcome_step4": {
+      "message": "4- Once saved, the PDF will look similar to this."
+   }
+}

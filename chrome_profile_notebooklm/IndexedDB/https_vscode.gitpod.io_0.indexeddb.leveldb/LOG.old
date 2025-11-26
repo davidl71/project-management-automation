@@ -1,0 +1,15 @@
+2025/11/20-13:37:57.948 391651 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_vscode.gitpod.io_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/20-13:37:57.948 391651 Recovering log #4
+2025/11/20-13:37:57.948 391651 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_vscode.gitpod.io_0.indexeddb.leveldb/000004.log 
+2025/11/20-17:07:43.008 391651 Level-0 table #8: started
+2025/11/20-17:07:43.796 391651 Level-0 table #8: 17319 bytes OK
+2025/11/20-17:07:44.618 391651 Delete type=0 #4
+2025/11/20-17:07:44.619 391651 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/11/20-17:07:44.619 391651 Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x03\x01\x02\x01,\x00w\x00o\x00r\x00k\x00b\x00e\x00n\x00c\x00h\x00.\x00p\x00a\x00n\x00e\x00l\x00.\x00v\x00i\x00e\x00w\x00C\x00o\x00n\x00t\x00a\x00i\x00n\x00e\x00r\x00s\x00W\x00o\x00r\x00k\x00s\x00p\x00a\x00c\x00e\x00S\x00t\x00a\x00t\x00e' @ 1740 : 1
+2025/11/20-17:07:44.619 391651 Compacting 1@1 + 1@2 files
+2025/11/20-17:07:45.649 391651 Generated table #9@1: 287 keys, 41315 bytes
+2025/11/20-17:07:45.649 391651 Compacted 1@1 + 1@2 files => 41315 bytes
+2025/11/20-17:07:46.791 391651 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/20-17:07:46.791 391651 Delete type=2 #5
+2025/11/20-17:07:46.791 391651 Delete type=2 #8
+2025/11/20-17:07:46.792 391651 Manual compaction at level-1 from '\x00\x03\x01\x02\x01,\x00w\x00o\x00r\x00k\x00b\x00e\x00n\x00c\x00h\x00.\x00p\x00a\x00n\x00e\x00l\x00.\x00v\x00i\x00e\x00w\x00C\x00o\x00n\x00t\x00a\x00i\x00n\x00e\x00r\x00s\x00W\x00o\x00r\x00k\x00s\x00p\x00a\x00c\x00e\x00S\x00t\x00a\x00t\x00e' @ 1740 : 1 .. (end); will stop at (end)

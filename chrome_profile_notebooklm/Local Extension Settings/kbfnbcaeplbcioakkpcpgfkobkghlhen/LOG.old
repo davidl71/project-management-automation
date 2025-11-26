@@ -1,0 +1,12 @@
+2025/11/25-14:20:14.451 1d3784 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/Local Extension Settings/kbfnbcaeplbcioakkpcpgfkobkghlhen/MANIFEST-000001
+2025/11/25-14:20:14.452 1d3784 Recovering log #579
+2025/11/25-14:20:16.481 1d3784 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/Local Extension Settings/kbfnbcaeplbcioakkpcpgfkobkghlhen/000579.log 
+2025/11/25-22:51:23.714 1d3781 Level-0 table #584: started
+2025/11/25-22:51:23.729 1d3781 Level-0 table #584: 664499 bytes OK
+2025/11/25-22:51:23.820 1d3781 Delete type=0 #579
+2025/11/25-22:54:13.284 1d3781 Compacting 1@1 + 1@2 files
+2025/11/25-22:54:13.327 1d3781 Generated table #585@1: 30 keys, 38515 bytes
+2025/11/25-22:54:13.327 1d3781 Compacted 1@1 + 1@2 files => 38515 bytes
+2025/11/25-22:54:13.394 1d3781 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/25-22:54:13.395 1d3781 Delete type=2 #584
+2025/11/25-22:54:13.395 1d3781 Delete type=2 #581

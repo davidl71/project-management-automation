@@ -249,7 +249,7 @@ def generate_project_scorecard(
         metrics['tasks'] = {'total': 0, 'pending': 0, 'completed': 0}
     
     # ═══════════════════════════════════════════════════════════════
-    # 7. SECURITY
+    # 7. SECURITY (including CodeQL integration)
     # ═══════════════════════════════════════════════════════════════
     
     # Check for security.py module existence
@@ -258,6 +258,25 @@ def generate_project_scorecard(
     
     # Check security module contents for specific controls
     security_content = security_module.read_text() if security_module_exists else ""
+    
+    # Get CodeQL metrics
+    try:
+        from .codeql_security import get_codeql_security_metrics
+        codeql_metrics = get_codeql_security_metrics()
+    except ImportError:
+        codeql_metrics = {
+            'score': 0,
+            'configured': False,
+            'checks': {
+                'codeql_workflow': False,
+                'codeql_config': False,
+                'no_critical_alerts': True,
+                'no_high_alerts': True,
+            },
+            'alerts': {'total': 0, 'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'source': None},
+            'languages': [],
+            'recommendations': [],
+        }
     
     security_checks = {
         'security_docs': (project_root / 'docs' / 'SECURITY.md').exists(),
@@ -268,10 +287,22 @@ def generate_project_scorecard(
         'path_boundaries': 'PathValidator' in security_content and 'PathBoundaryError' in security_content,
         'rate_limiting': 'RateLimiter' in security_content and 'rate_limit' in security_content,
         'access_control': 'AccessController' in security_content and 'require_access' in security_content,
+        # CodeQL checks
+        'codeql_workflow': codeql_metrics['checks']['codeql_workflow'],
+        'codeql_no_critical': codeql_metrics['checks']['no_critical_alerts'],
+        'codeql_no_high': codeql_metrics['checks']['no_high_alerts'],
     }
     
     passed = sum(1 for v in security_checks.values() if v)
-    scores['security'] = passed / len(security_checks) * 100
+    
+    # Base security score from checks
+    base_security_score = passed / len(security_checks) * 100
+    
+    # Blend with CodeQL score if configured (CodeQL gets 30% weight when enabled)
+    if codeql_metrics['configured']:
+        scores['security'] = (base_security_score * 0.7) + (codeql_metrics['score'] * 0.3)
+    else:
+        scores['security'] = base_security_score
     
     # Count pending security tasks
     security_tasks = [t for t in todos if 'security' in t.get('tags', []) and t.get('status') == 'pending'] if todo2_file.exists() else []
@@ -281,6 +312,12 @@ def generate_project_scorecard(
         'checks_total': len(security_checks),
         'pending_tasks': len(security_tasks),
         'details': security_checks,
+        'codeql': {
+            'configured': codeql_metrics['configured'],
+            'score': round(codeql_metrics['score'], 1),
+            'alerts': codeql_metrics['alerts'],
+            'languages': codeql_metrics['languages'],
+        },
     }
     
     # ═══════════════════════════════════════════════════════════════
@@ -611,6 +648,29 @@ def generate_project_scorecard(
                 'impact': '+25% to security score',
             })
         
+        # CodeQL-specific recommendations
+        if not codeql_metrics['configured']:
+            recommendations.append({
+                'priority': 'high',
+                'area': 'CodeQL',
+                'action': 'Enable CodeQL workflow for automated security scanning',
+                'impact': '+10% to security score',
+            })
+        elif codeql_metrics['alerts']['critical'] > 0:
+            recommendations.append({
+                'priority': 'critical',
+                'area': 'CodeQL',
+                'action': f"Fix {codeql_metrics['alerts']['critical']} critical CodeQL security alerts",
+                'impact': 'Prevent security vulnerabilities',
+            })
+        elif codeql_metrics['alerts']['high'] > 0:
+            recommendations.append({
+                'priority': 'high',
+                'area': 'CodeQL',
+                'action': f"Address {codeql_metrics['alerts']['high']} high-severity CodeQL alerts",
+                'impact': '+15% to CodeQL score',
+            })
+        
         if scores.get('testing', 0) < 50:
             recommendations.append({
                 'priority': 'high',
@@ -718,6 +778,24 @@ def _format_text(data: dict) -> str:
         total = u.get('total_decisions', 0)
         lines.append(f"    Uniqueness: {justified}/{total} decisions justified, {deps} deps")
     
+    # CodeQL Security
+    if 'security' in data['metrics'] and 'codeql' in data['metrics']['security']:
+        cql = data['metrics']['security']['codeql']
+        if cql.get('configured'):
+            alerts = cql.get('alerts', {})
+            alert_str = f"🔐 CodeQL: {alerts.get('total', 0)} alerts"
+            if alerts.get('critical', 0) > 0:
+                alert_str += f" (🔴 {alerts['critical']} critical)"
+            elif alerts.get('high', 0) > 0:
+                alert_str += f" (🟠 {alerts['high']} high)"
+            elif alerts.get('total', 0) == 0:
+                alert_str += " ✅"
+            lines.append(f"    {alert_str}")
+            if cql.get('languages'):
+                lines.append(f"    CodeQL Languages: {', '.join(cql['languages'])}")
+        else:
+            lines.append("    🔐 CodeQL: Not configured")
+    
     # Recommendations
     if data.get('recommendations'):
         lines.append("\n  Recommendations:")
@@ -794,6 +872,24 @@ def _format_markdown(data: dict) -> str:
         justified = u.get('justified_decisions', 0)
         total = u.get('total_decisions', 0)
         lines.append(f"- **Uniqueness:** {justified}/{total} decisions justified, {deps} dependencies ({data['scores'].get('uniqueness', 0):.0f}%)")
+    
+    # CodeQL Security
+    if 'security' in data['metrics'] and 'codeql' in data['metrics']['security']:
+        cql = data['metrics']['security']['codeql']
+        if cql.get('configured'):
+            alerts = cql.get('alerts', {})
+            status = "✅ No alerts" if alerts.get('total', 0) == 0 else f"⚠️ {alerts.get('total', 0)} alerts"
+            lines.append(f"\n### 🔐 CodeQL Security\n")
+            lines.append(f"- **Status:** {status}")
+            lines.append(f"- **Score:** {cql.get('score', 0):.0f}%")
+            if alerts.get('total', 0) > 0:
+                lines.append(f"- **Critical:** {alerts.get('critical', 0)} | **High:** {alerts.get('high', 0)} | **Medium:** {alerts.get('medium', 0)} | **Low:** {alerts.get('low', 0)}")
+            if cql.get('languages'):
+                lines.append(f"- **Languages:** {', '.join(cql['languages'])}")
+        else:
+            lines.append(f"\n### 🔐 CodeQL Security\n")
+            lines.append("- **Status:** Not configured")
+            lines.append("- **Recommendation:** Add `.github/workflows/codeql.yml` for automated security scanning")
     
     # Recommendations
     if data.get('recommendations'):

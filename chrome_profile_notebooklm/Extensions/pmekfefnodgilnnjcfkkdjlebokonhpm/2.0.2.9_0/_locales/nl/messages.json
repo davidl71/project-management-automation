@@ -1,0 +1,138 @@
+{
+   "dcn_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=DataCollectionNotice&VID=&Locale=NL-NL"
+   },
+   "extension_description": {
+      "message": "U hoeft niet langer opdringerige video's, pop-ups en banners met advertenties te bekijken op het web."
+   },
+   "extension_name": {
+      "description": "The display name for the extension.",
+      "message": "Trend Micro Ad Blocker: effectieve advertentieblokkering"
+   },
+   "feedback_copyright": {
+      "message": "Copyright © {YEAR} Trend Micro Incorporated. Alle rechten voorbehouden."
+   },
+   "feedback_email": {
+      "message": "E-mailadres (optioneel)"
+   },
+   "feedback_email_invalid": {
+      "message": "Ongeldig e-mailadres"
+   },
+   "feedback_sent": {
+      "message": "Uw feedback is verzonden."
+   },
+   "gdpr_accept": {
+      "message": "Door deze software te installeren, gaat u akkoord met het volgende:"
+   },
+   "gdpr_agree": {
+      "message": "Akkoord en doorgaan"
+   },
+   "gdpr_dcn": {
+      "message": "Kennisgeving inzake de verzameling van gegevens voor Trend Micro Ad Blocker"
+   },
+   "gdpr_license": {
+      "message": "Trend Micro-licentieovereenkomst"
+   },
+   "gdpr_privacy": {
+      "message": "Trend Micro-privacyverklaring"
+   },
+   "license_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=LicenseAgreement&VID=&Locale=NL-NL"
+   },
+   "popup_blank": {
+      "message": "Open een website om uw reis te beginnen"
+   },
+   "popup_enterComments": {
+      "message": "Voer uw opmerking in"
+   },
+   "popup_feedback": {
+      "message": "Feedback"
+   },
+   "popup_feedback_send": {
+      "message": "Verzenden"
+   },
+   "popup_isbroken": {
+      "message": "Is de site beschadigd?"
+   },
+   "popup_no": {
+      "message": "Nee"
+   },
+   "popup_ok": {
+      "message": "OK"
+   },
+   "popup_paused": {
+      "message": "onderbroken"
+   },
+   "popup_protection_disabled": {
+      "message": "Beveiliging is uitgeschakeld"
+   },
+   "popup_protection_enabled": {
+      "message": "Beveiliging ingeschakeld"
+   },
+   "popup_protection_paused": {
+      "message": "Bescherming onderbroken"
+   },
+   "popup_protection_thispage": {
+      "message": "%0 advertenties geblokkeerd op deze pagina"
+   },
+   "popup_protection_thispage_single": {
+      "message": "1 advertentie geblokkeerd op deze pagina"
+   },
+   "popup_protection_total": {
+      "message": "%0 advertenties geblokkeerd in afgelopen %1 dagen"
+   },
+   "popup_protection_total_singleDay": {
+      "message": "%0 advertenties geblokkeerd in afgelopen %1 dag"
+   },
+   "popup_report": {
+      "message": "Beschadigde site melden"
+   },
+   "popup_report_issue1": {
+      "message": "Video werd niet afgespeeld"
+   },
+   "popup_report_issue2": {
+      "message": "Ik kan me niet aanmelden"
+   },
+   "popup_report_issue3": {
+      "message": "Opmerkingen werden niet geladen"
+   },
+   "popup_report_issue4": {
+      "message": "Inhoud ontbreekt"
+   },
+   "popup_report_issue5": {
+      "message": "Ik werd door de site verzocht het product uit te schakelen"
+   },
+   "popup_report_issue6": {
+      "message": "Installatiekopie werd niet geladen"
+   },
+   "popup_report_issue7": {
+      "message": "Koppelingen of knoppen werkten niet"
+   },
+   "popup_report_issue8": {
+      "message": "Iets anders"
+   },
+   "popup_report_pick": {
+      "message": "Kies uw probleem uit de lijst..."
+   },
+   "popup_report_sent": {
+      "message": "Uw rapport is verzonden."
+   },
+   "popup_thank": {
+      "message": "Bedankt!"
+   },
+   "popup_title": {
+      "message": "Advertenties blokkeren"
+   },
+   "popup_yes": {
+      "message": "Ja"
+   },
+   "privacy_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=PrivacyPolicy&VID=&Locale=NL-NL"
+   },
+   "welcome_pin": {
+      "message": "Zet Trend Micro Ad Blocker vast op uw werkbalk voor eenvoudige toegang"
+   },
+   "welcome_title": {
+      "message": "Welkom bij Trend Micro Ad Blocker"
+   }
+}

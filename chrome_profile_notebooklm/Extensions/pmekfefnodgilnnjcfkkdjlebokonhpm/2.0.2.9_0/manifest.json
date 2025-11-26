@@ -1,0 +1,65 @@
+{
+   "action": {
+      "default_icon": {
+         "16": "./static/images/icon/toolbar-icon-16.png",
+         "32": "./static/images/icon/toolbar-icon-32.png"
+      },
+      "default_popup": "./static/page/popup.html"
+   },
+   "background": {
+      "service_worker": "background.js",
+      "type": "module"
+   },
+   "content_scripts": [ {
+      "js": [ "import-content.js" ],
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "import-advContent.js" ],
+      "matches": [ "https://*.twitch.tv/*", "https://*.youtube.com/*" ],
+      "run_at": "document_start"
+   } ],
+   "declarative_net_request": {
+      "rule_resources": [ {
+         "enabled": true,
+         "id": "ruleset_1",
+         "path": "rules/ruleset_1.json"
+      }, {
+         "enabled": true,
+         "id": "ruleset_2",
+         "path": "rules/ruleset_2.json"
+      }, {
+         "enabled": true,
+         "id": "ruleset_3",
+         "path": "rules/ruleset_3.json"
+      }, {
+         "enabled": true,
+         "id": "ruleset_4",
+         "path": "rules/ruleset_4.json"
+      } ]
+   },
+   "default_locale": "en",
+   "description": "__MSG_extension_description__",
+   "differential_fingerprint": "1.4b29160769ff8694186c4ac08d01ca498fe7c202b4f7352f5b2967a0c697d77c",
+   "host_permissions": [ "http://*/*", "https://*/*" ],
+   "icons": {
+      "48": "./static/images/icon/icon-48.png",
+      "512": "./static/images/icon/icon-512.png",
+      "96": "./static/images/icon/icon-96.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhMDyU/wZIe5Wx26QAOZ4h4Vjr67VoY4pr1gpib2/0HnQTht993gCP50Q5vxPES/S5VYxXSqazAE9Ss4jmDkVvekGDd5ScqenTPilGT79A/clTjGDLfm38mDfvJ1OQE7oBuO/gyqUL7ef2xXQEcyeS1oH0y5GcHd1Q+PGhiET8Ht3n2ZPCsbTTp0tbNES2jEAcS07Y5IA+izaGfI1MscX1n9ZvRRe89iajsILk5CkWescQ44bfyC89nPRIq581RKQQt+2tkB8HtuYksUu72rmT320YxatKnAfgSArHrmxxkxnEKXg7AgoS1i0ZtQNs1kvPuzo+UU5FHN0DwJoHqS42wIDAQAB",
+   "manifest_version": 3,
+   "name": "__MSG_extension_name__",
+   "options_page": "./static/page/option.html",
+   "permissions": [ "activeTab", "storage", "unlimitedStorage", "declarativeNetRequest", "declarativeNetRequestFeedback", "tabs", "webNavigation", "scripting" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.0.2.9",
+   "web_accessible_resources": [ {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "resources": [ "*.html", "*_locales/**/*.json", "*static/adScript/*.json", "static/adScript/*.js" ],
+      "use_dynamic_url": true
+   }, {
+      "matches": [ "http://*/*", "https://*/*", "https://*.twitch.tv/*", "https://*.youtube.com/*" ],
+      "resources": [ "chunks/*-*.js", "content.js", "advContent.js" ]
+   } ]
+}

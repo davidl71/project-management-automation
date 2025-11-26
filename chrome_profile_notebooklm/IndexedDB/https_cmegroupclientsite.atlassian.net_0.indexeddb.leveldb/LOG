@@ -1,0 +1,30 @@
+2025/11/12-10:41:57.757 3411e8 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_cmegroupclientsite.atlassian.net_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/12-10:41:57.757 3411e8 Recovering log #13
+2025/11/12-10:41:57.757 3411e8 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_cmegroupclientsite.atlassian.net_0.indexeddb.leveldb/000013.log 
+2025/11/12-10:42:09.250 341212 Level-0 table #18: started
+2025/11/12-10:42:09.305 341212 Level-0 table #18: 1924130 bytes OK
+2025/11/12-10:42:09.360 341212 Delete type=0 #13
+2025/11/12-10:42:34.506 341212 Compacting 1@1 + 1@2 files
+2025/11/12-10:42:34.540 341212 Generated table #19@1: 3718 keys, 287144 bytes
+2025/11/12-10:42:34.540 341212 Compacted 1@1 + 1@2 files => 287144 bytes
+2025/11/12-10:42:34.565 341212 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/12-10:42:34.565 341212 Delete type=2 #15
+2025/11/12-10:42:34.565 341212 Delete type=2 #18
+2025/11/12-10:44:39.985 341212 Level-0 table #21: started
+2025/11/12-10:44:40.033 341212 Level-0 table #21: 1943453 bytes OK
+2025/11/12-10:44:40.094 341212 Delete type=0 #17
+2025/11/12-10:44:40.598 341213 Compacting 1@1 + 1@2 files
+2025/11/12-10:44:40.616 341213 Generated table #22@1: 4589 keys, 413104 bytes
+2025/11/12-10:44:40.616 341213 Compacted 1@1 + 1@2 files => 413104 bytes
+2025/11/12-10:44:40.638 341213 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/12-10:44:40.639 341213 Delete type=2 #21
+2025/11/12-10:44:40.639 341213 Delete type=2 #19
+2025/11/12-10:44:48.660 341212 Level-0 table #24: started
+2025/11/12-10:44:48.732 341212 Level-0 table #24: 1909471 bytes OK
+2025/11/12-10:44:48.765 341212 Delete type=0 #20
+2025/11/12-10:45:12.954 341212 Compacting 1@1 + 1@2 files
+2025/11/12-10:45:13.050 341212 Generated table #25@1: 5442 keys, 476484 bytes
+2025/11/12-10:45:13.050 341212 Compacted 1@1 + 1@2 files => 476484 bytes
+2025/11/12-10:45:13.103 341212 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/12-10:45:13.103 341212 Delete type=2 #22
+2025/11/12-10:45:13.104 341212 Delete type=2 #24

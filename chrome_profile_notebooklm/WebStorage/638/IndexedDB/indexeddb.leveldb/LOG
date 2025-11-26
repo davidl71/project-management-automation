@@ -1,0 +1,17 @@
+2025/11/19-09:12:52.421 3912ca Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/WebStorage/638/IndexedDB/indexeddb.leveldb/MANIFEST-000001
+2025/11/19-09:12:52.422 3912ca Recovering log #3
+2025/11/19-09:12:52.438 3912ca Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/WebStorage/638/IndexedDB/indexeddb.leveldb/000003.log 
+2025/11/19-09:12:53.961 3912ca Level-0 table #5: started
+2025/11/19-09:12:54.062 3912ca Level-0 table #5: 4784 bytes OK
+2025/11/19-09:12:54.354 3912ca Delete type=0 #3
+2025/11/19-09:12:54.355 3912ca Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/19-09:13:03.867 391652 Level-0 table #7: started
+2025/11/19-09:13:03.956 391652 Level-0 table #7: 3032 bytes OK
+2025/11/19-09:13:04.093 391652 Delete type=0 #4
+2025/11/19-09:13:04.094 3912ca Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/19-09:13:30.270 391651 Compacting 1@1 + 1@2 files
+2025/11/19-09:13:30.455 391651 Generated table #8@1: 40 keys, 4894 bytes
+2025/11/19-09:13:30.455 391651 Compacted 1@1 + 1@2 files => 4894 bytes
+2025/11/19-09:13:30.673 391651 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/19-09:13:30.674 391651 Delete type=2 #7
+2025/11/19-09:13:30.674 391651 Delete type=2 #5

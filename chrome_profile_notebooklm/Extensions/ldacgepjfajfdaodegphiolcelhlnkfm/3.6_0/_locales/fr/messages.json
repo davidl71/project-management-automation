@@ -1,0 +1,26 @@
+{
+   "button_go_to_orders": {
+      "message": "Mes commandes AliExpress"
+   },
+   "button_save": {
+      "message": "Enregistrer"
+   },
+   "buyer_extra_info": {
+      "message": "Numéro de TVA : 323323232323"
+   },
+   "buyer_informations_header": {
+      "message": "Lignes supplémentaires pour la section acheteur"
+   },
+   "link_how_to": {
+      "message": "Comment faire ?"
+   },
+   "subtitle": {
+      "message": "Extraction des détails de la commande vers un PDF"
+   },
+   "title": {
+      "message": "Facture Gratuite pour AliExpress"
+   },
+   "title_upcase": {
+      "message": "FACTURE GRATUITE POUR ALIEXPRESS"
+   }
+}

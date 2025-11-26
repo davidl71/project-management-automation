@@ -1,0 +1,26 @@
+{
+   "button_go_to_orders": {
+      "message": "Ir a pedidos de AliExpress"
+   },
+   "button_save": {
+      "message": "Salvar"
+   },
+   "buyer_extra_info": {
+      "message": "Número de IVA: 323323232323"
+   },
+   "buyer_informations_header": {
+      "message": "Líneas adicionales para la sección del comprador"
+   },
+   "link_how_to": {
+      "message": "¿Cómo?"
+   },
+   "subtitle": {
+      "message": "Extraiga los detalles de su pedido en un PDF imprimible"
+   },
+   "title": {
+      "message": "Factura gratis de AliExpress"
+   },
+   "title_upcase": {
+      "message": "FACTURA GRATIS DE ALIEXPRESS"
+   }
+}

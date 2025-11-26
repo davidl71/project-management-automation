@@ -1008,6 +1008,187 @@ if mcp:
                 "consultation_frequency": SCORE_CONSULTATION_FREQUENCY,
             }, separators=(',', ':'))
 
+        @mcp.tool()
+        def check_tts_backends() -> str:
+            """
+            [HINT: TTS status. Available backends, recommended, installation status.]
+            
+            Check which text-to-speech backends are available for voice synthesis.
+            """
+            from .tools.wisdom.voice import check_tts_backends as _check_backends
+            return json.dumps(_check_backends(), separators=(',', ':'))
+
+        @mcp.tool()
+        def synthesize_advisor_quote(
+            text: str,
+            advisor: str = "default",
+            output_path: str | None = None,
+            backend: str = "auto",
+        ) -> str:
+            """
+            [HINT: Voice synthesis. Generate audio from advisor quote. Backends: elevenlabs/edge-tts/pyttsx3.]
+            
+            Synthesize an advisor quote to audio file.
+            
+            Args:
+                text: The quote text to synthesize
+                advisor: Advisor ID (bofh, stoic, zen, mystic, sage, etc.)
+                output_path: Output file path (default: auto-generated in .exarp/audio/)
+                backend: TTS backend (auto, elevenlabs, edge-tts, pyttsx3)
+            """
+            from .tools.wisdom.voice import synthesize_advisor_quote as _synthesize
+            return json.dumps(_synthesize(text, advisor, output_path, backend), separators=(',', ':'))
+
+        @mcp.tool()
+        def generate_podcast_audio(
+            days: int = 7,
+            output_path: str | None = None,
+            backend: str = "auto",
+        ) -> str:
+            """
+            [HINT: Podcast audio. Generate audio from recent advisor consultations.]
+            
+            Generate podcast-style audio from recent advisor consultations.
+            
+            Args:
+                days: Number of days of consultations to include
+                output_path: Output file path (default: auto-generated in .exarp/podcasts/)
+                backend: TTS backend (auto, elevenlabs, edge-tts, pyttsx3)
+            """
+            from .tools.wisdom.advisors import get_consultation_log
+            from .tools.wisdom.voice import generate_podcast_audio as _generate
+            
+            consultations = get_consultation_log(days=days)
+            return json.dumps(_generate(consultations, output_path, backend), separators=(',', ':'))
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # AI SESSION MEMORY TOOLS
+    # ═══════════════════════════════════════════════════════════════════════════════
+    
+    try:
+        from .tools.session_memory import (
+            save_session_insight,
+            recall_task_context,
+            search_session_memories,
+            generate_session_summary,
+            link_memory_to_task,
+            get_memories_for_sprint,
+        )
+        MEMORY_TOOLS_AVAILABLE = True
+    except ImportError:
+        MEMORY_TOOLS_AVAILABLE = False
+        logger.warning("Memory tools not available")
+
+    if MEMORY_TOOLS_AVAILABLE:
+        @mcp.tool()
+        def save_memory(
+            title: str,
+            content: str,
+            category: str = "insight",
+            task_id: Optional[str] = None,
+        ) -> str:
+            """
+            [HINT: Save memory. Persist AI discoveries for session continuity.]
+            
+            Save a session insight/discovery to persistent memory.
+            
+            Categories:
+            - debug: Error solutions, workarounds, root causes
+            - research: Pre-implementation findings, approach comparisons
+            - architecture: Component relationships, hidden dependencies
+            - preference: User coding style, workflow preferences
+            - insight: Sprint patterns, blockers, optimizations
+            
+            Args:
+                title: Short descriptive title (max 100 chars)
+                content: Full insight content (detailed description)
+                category: One of: debug, research, architecture, preference, insight
+                task_id: Optional task ID to link this memory to
+            """
+            result = save_session_insight(title, content, category, task_id)
+            return json.dumps(result, separators=(',', ':'))
+
+        @mcp.tool()
+        def recall_context(task_id: str, include_related: bool = True) -> str:
+            """
+            [HINT: Recall context. Get memories related to a task before starting work.]
+            
+            Recall all memories related to a task.
+            
+            Use this before starting work on a task to:
+            - See what was previously discovered
+            - Review past approaches tried
+            - Understand decisions already made
+            - Find related debug solutions
+            
+            Args:
+                task_id: Task ID to get context for
+                include_related: Whether to include memories from related tasks
+            """
+            result = recall_task_context(task_id, include_related)
+            return json.dumps(result, separators=(',', ':'))
+
+        @mcp.tool()
+        def search_memories(
+            query: str,
+            category: Optional[str] = None,
+            limit: int = 10,
+        ) -> str:
+            """
+            [HINT: Search memories. Find past insights by text search.]
+            
+            Search past session memories.
+            
+            Use this to find:
+            - Similar problems and their solutions
+            - Past research on a topic
+            - Previous decisions about similar features
+            
+            Args:
+                query: Search query text
+                category: Optional category filter (debug, research, architecture, preference, insight)
+                limit: Maximum results to return
+            """
+            result = search_session_memories(query, category, limit)
+            return json.dumps(result, separators=(',', ':'))
+
+        @mcp.tool()
+        def session_summary(
+            date: Optional[str] = None,
+            include_consultations: bool = True,
+        ) -> str:
+            """
+            [HINT: Session summary. End-of-session learnings and wisdom review.]
+            
+            Generate a summary of a session's learnings.
+            
+            Use this at end of session to:
+            - Review what was learned
+            - See all insights captured
+            - Get combined wisdom (memories + advisor consultations)
+            
+            Args:
+                date: Session date in YYYY-MM-DD format (default: today)
+                include_consultations: Whether to include advisor consultations
+            """
+            result = generate_session_summary(date, include_consultations)
+            return json.dumps(result, separators=(',', ':'))
+
+        @mcp.tool()
+        def sprint_memories() -> str:
+            """
+            [HINT: Sprint memories. Recent insights for sprint planning/review.]
+            
+            Get memories useful for sprint planning/review.
+            
+            Returns recent insights, debug solutions, and patterns
+            that could inform sprint decisions.
+            """
+            result = get_memories_for_sprint()
+            return json.dumps(result, separators=(',', ':'))
+
+        logger.info("Memory tools loaded successfully")
+
     # Register prompts
     try:
         # Try relative imports first (when run as module)
@@ -1191,6 +1372,15 @@ if mcp:
             from .resources.list import get_tools_list_resource
             from .resources.tasks import get_tasks_resource, get_agent_tasks_resource, get_agents_resource
             from .resources.cache import get_cache_status_resource
+            from .resources.memories import (
+                get_memories_resource,
+                get_memories_by_category_resource,
+                get_memories_by_task_resource,
+                get_recent_memories_resource,
+                get_session_memories_resource,
+                get_wisdom_resource,
+            )
+            MEMORIES_AVAILABLE = True
         except ImportError:
             # Fallback to absolute imports (when run as script)
             from resources.status import get_status_resource
@@ -1198,6 +1388,18 @@ if mcp:
             from resources.list import get_tools_list_resource
             from resources.tasks import get_tasks_resource, get_agent_tasks_resource, get_agents_resource
             from resources.cache import get_cache_status_resource
+            try:
+                from resources.memories import (
+                    get_memories_resource,
+                    get_memories_by_category_resource,
+                    get_memories_by_task_resource,
+                    get_recent_memories_resource,
+                    get_session_memories_resource,
+                    get_wisdom_resource,
+                )
+                MEMORIES_AVAILABLE = True
+            except ImportError:
+                MEMORIES_AVAILABLE = False
 
         @mcp.resource("automation://status")
         def get_automation_status() -> str:
@@ -1244,6 +1446,40 @@ if mcp:
             """Get current project scorecard with all health metrics."""
             result = _generate_project_scorecard("json", True, None)
             return json.dumps(result, separators=(',', ':'))
+
+        # Memory resources (AI Session Memory System)
+        if MEMORIES_AVAILABLE:
+            @mcp.resource("automation://memories")
+            def get_all_memories() -> str:
+                """Get all AI session memories - browsable context for session continuity."""
+                return get_memories_resource()
+
+            @mcp.resource("automation://memories/category/{category}")
+            def get_memories_by_category(category: str) -> str:
+                """Get memories filtered by category (debug, research, architecture, preference, insight)."""
+                return get_memories_by_category_resource(category)
+
+            @mcp.resource("automation://memories/task/{task_id}")
+            def get_memories_for_task(task_id: str) -> str:
+                """Get memories linked to a specific task."""
+                return get_memories_by_task_resource(task_id)
+
+            @mcp.resource("automation://memories/recent")
+            def get_recent_memories() -> str:
+                """Get memories from the last 24 hours."""
+                return get_recent_memories_resource()
+
+            @mcp.resource("automation://memories/session/{date}")
+            def get_session_memories(date: str) -> str:
+                """Get memories from a specific session date (YYYY-MM-DD format)."""
+                return get_session_memories_resource(date)
+
+            @mcp.resource("automation://wisdom")
+            def get_combined_wisdom() -> str:
+                """Get combined view of memories and advisor consultations."""
+                return get_wisdom_resource()
+
+            logger.info("Memory resources loaded successfully")
 
         RESOURCES_AVAILABLE = True
         logger.info("Resource handlers loaded successfully")

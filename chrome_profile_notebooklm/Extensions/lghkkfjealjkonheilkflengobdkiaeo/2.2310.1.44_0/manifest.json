@@ -1,0 +1,37 @@
+{
+   "action": {
+      "default_icon": {
+         "128": "/images/128x128.png",
+         "16": "/images/16x16.png",
+         "32": "/images/32x32.png",
+         "48": "/images/48x48.png"
+      },
+      "default_title": "Pay-Back : Cashback & Coupons"
+   },
+   "author": "Cashback Online",
+   "background": {
+      "service_worker": "./background.js"
+   },
+   "default_locale": "he",
+   "description": "max PayBack - כסף בחזרה על הקניות שלך באינטרנט",
+   "differential_fingerprint": "1.3eb15c887b4c734bb6b146913e022ae5e4eb1dda46b9e235abddfadcbd6a1d3b",
+   "homepage_url": "https://www.pay-back.co.il",
+   "host_permissions": [ "\u003Call_urls>" ],
+   "icons": {
+      "128": "/images/128x128.png",
+      "16": "/images/16x16.png",
+      "32": "/images/32x32.png",
+      "48": "/images/48x48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4JfBozlvkfK4PNg1UB4FRvkBtvQJ7b8SIj34cMcG5jDtR8EfJEsa0dBoCX5w9dRo3h0ImCVL9DcN70r0nZyOR3d7jPnzGR+5za1PIgEK+8FES52RtpULQF4RPHkcaVptF4grQ4xi0WhtJs8OiUjIWAREhCty/VD9SSI5X54gLrEa0Nl1tKq9DOaBLd7Ui9oFma9PLmbLwT59sKcqalpeJzMUeZ7Zd3LccYvjRcDVUOGk5IxuWCFrxtSpzD8zuEUPmWaQhlLNrHUBoFgBz6sOTzcOMihBGAMYP8ayUKSDOuMknkFzRDzT9EWjjW/+Kbgf5oDPyFE74nvJmp7LVtJuEQIDAQAB",
+   "manifest_version": 3,
+   "name": "max PayBack Reminder - מקס פייבק",
+   "permissions": [ "storage", "scripting", "tabs", "management" ],
+   "short_name": "max PayBack",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.2310.01.44",
+   "web_accessible_resources": [ {
+      "matches": [ "\u003Call_urls>" ],
+      "resources": [ "inj.html", "dev.html", "dev.js", "widget.html", "iframe.css", "static/css/*", "static/js/*", "static/media/*", "fonts/*", "images/*" ]
+   } ]
+}

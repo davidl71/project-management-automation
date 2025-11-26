@@ -1,0 +1,6 @@
+2024/10/27-23:21:01.046 571b Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_app.ynab.com_0.indexeddb.leveldb since it was missing.
+2024/10/27-23:21:01.690 571b Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_app.ynab.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/10/27-23:21:05.594 a503 Level-0 table #5: started
+2024/10/27-23:21:05.742 a503 Level-0 table #5: 4389 bytes OK
+2024/10/27-23:21:06.170 a503 Delete type=0 #3
+2024/10/27-23:21:06.171 a503 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

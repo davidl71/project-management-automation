@@ -1,0 +1,258 @@
+
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+  
+      #banner {
+        height: 10vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+  
+      #banner>img {
+        height: 2.91vh;
+        width: 20.375vh;
+        margin-left: 3.67%;
+      }
+  
+      #content {
+        height: 78vh;
+        width: 100vw;
+        background-color: #e5e5e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+  
+      #bottom {
+        height: 12vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: row;
+        position: relative;
+      }
+  
+      #bottom>img:first-child {
+        height: 3.75vh;
+        width: 11.25vh;
+        margin-top: 2.25vh;
+        margin-left: 3.43vw;
+      }
+  
+      #bottom>img:last-child {
+        position: absolute;
+        height: 7.5vh;
+        width: 17.5vh;
+        top: 4.5vh;
+        right: 0vw;
+      }
+  
+      #Copyright {
+        margin-left: 1.25vw;
+        margin-top: 3.125vh;
+      }
+  
+      #bottom>div>p {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1.25vh;
+        line-height: 0;
+        color: #777777;
+      }
+  
+      #separator-bottom {
+        width: 1px;
+        height: 7vh;
+        background-color: #dddddd;
+        margin-left: 1.17vw;
+        margin-top: 2.5vh;
+      }
+  
+      #feedbackTitle {
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 3.5vh;
+        color: #222222;
+        letter-spacing: -0.02em;
+        margin-top: 4.5vh;
+        margin-left: 3.6vw;
+      }
+  
+      #feedbackContainer {
+        width: 52.2vw;
+        height: 56.6vh;
+        position: relative;
+        background: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        box-sizing: border-box;
+        border-radius: 8px;
+      }
+  
+      form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+  
+      textarea,
+      input {
+        background: #FFFFFF;
+        resize: none;
+        border: 1px solid #8E8E8E;
+        box-sizing: border-box;
+        border-radius: 4px;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 1.75vh;
+        width: 44.84vw;
+  
+        margin-left: calc(50% - 22.42vw);
+      }
+  
+      #feedbackComment {
+        height: 25vh;
+        margin-top: 4vh;
+      }
+  
+      input[name="email"] {
+        height: 4vh;
+        line-height: 3.4vh;
+        margin-top: 2vh;
+      }
+  
+      #invalid {
+        margin-top: 0.5vh;
+        margin-left: 4.5vw;
+      }
+  
+      .invalidHint {
+        color: #ED0008;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 1.75vh;
+      }
+  
+      .crosssign {
+        display: inline-grid;
+        place-content: center;
+        min-inline-size: 1em;
+        border-radius: 50%;
+        background-color: #ED0008;
+        width: 1em;
+        height: 1em;
+      }
+  
+      .crosssign::before {
+        content: "\D7";
+        color: #fff;
+        font-weight: normal;
+      }
+  
+     .tick{
+      height: 12vh;
+      aspect-ratio: 1;
+      position: absolute;
+      top: 15.25vh;
+      left: calc(50% - 6vh);
+      margin: 0;
+     } 
+     .tick > svg{
+       height: 100%;
+       width: 100%;
+     }
+     #successWording{
+      position: absolute;
+       top: 30.75vh;
+       width: 27.6vw;
+       left: calc(50% - 13.8vw);
+       text-align: center;
+     }
+
+     #successWording > p{
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 2.25vh;
+        text-align: center;
+      color: #222222;
+        font-weight: normal;
+        line-height: 1.25vh;
+      }
+      .send-button {
+        background: linear-gradient(180deg, #EC0008 0%, #D40007 100%);
+        border: 0.5px solid #ED0008;
+        box-sizing: border-box;
+        border-radius: 4px;
+        height: 3.75vh;
+        width: 6.25vw;
+        margin-top: 3vh;
+        margin-left: 42.2vw;
+  
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .send-button:hover {
+        background: linear-gradient(180deg, #CF0007 0%, #B90006 100%);
+        cursor: pointer;
+      }
+  
+      .send-button>span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 1.75vh;
+        line-height: 1.75vh;
+        color: #fff;
+      }
+      .ok-button{
+        margin-top: -3.75vh;
+      }
+
+      .inputAlert{
+        border: 1px solid #ED0008
+      }
+      .sent form {
+        -webkit-animation: scaleLetter 0.5s forwards ease-in;
+        animation: scaleLetter 0.5s forwards ease-in;
+      }
+  
+      @-webkit-keyframes scaleLetter {
+        100% {
+          transform: translateY(-7rem) scale(0.0, 0);
+        }
+      }
+  
+      @keyframes scaleLetter {
+        100% {
+          transform: translateY(-7rem) scale(0, 0);
+        }
+      }
+  
+      @media (orientation: portrait) {
+        .send-button>span {
+          font-size: 1.25vh;
+        }
+  
+        #feedbackTitle {
+          font-size: 2vh;
+        }
+  
+        .tick{
+          height: 7.5vw;
+          width: 7.5vw;
+          left: calc(50% - 3.75vw)
+        }
+        #successWording{
+            top:20vh;
+        }
+        #successWording > p{
+            font-size: 1.75vh; 
+        }
+      }

@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head>
+  <meta charset="UTF-8">
+  <title>Trend Micro Ad Blocker</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="../css/option.css">
+</head>
+
+<body>
+  <div id="banner">
+    <img src="../images/options/abologo@2x.png" alt="">
+  </div>
+  <div id="content">
+    <div id="feedbackContainer">
+      <div id="feedbackTitle" class="localize" data-localize="popup_feedback">Feedback</div>
+      <form>
+        <textarea placeholder="Enter your comment" id="feedbackComment"></textarea>
+        <input id="feedbackEmail" placeholder="Email address(Optional)" name="email">
+
+        <div id="invalid">
+
+          <span class="crosssign"></span>
+          <span class="invalidHint localize" data-localize="feedback_email_invalid">Invalid email address</span>
+        </div>
+
+        <button class="send-button" id="submit" type="submit">
+          <span class="localize" data-localize="popup_feedback_send">Send</span>
+        </button>
+      </form>
+      <div id="sendSuccess">
+        <div class="tick"></div>
+        <div id="successWording">
+          <p class="localize" data-localize="feedback_sent">Your feedback has been sent.</p>
+          <p class="localize" data-localize="popup_thank">Thank you.</p>
+        </div>
+        <button class="send-button ok-button" id="buttonOK">
+          <span class="localize" data-localize="popup_ok">OK</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="bottom">
+    <img src="../images/options/companyLogo@2x.png" alt="">
+    <div id="separator-bottom"></div>
+    <div id="Copyright" class="localize" data-localize="feedback_copyright">
+      <p>Copyright © 2022 Trend Micro Incorporated. All rights reserved.</p>
+    </div>
+    <img src="../images/options/curve@2x .png" alt="">
+  </div>
+
+  <script type="module" src="../js/option.js"></script>
+
+
+
+</body></html>

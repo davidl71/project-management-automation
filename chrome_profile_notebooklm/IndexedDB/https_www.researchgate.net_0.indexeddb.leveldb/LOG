@@ -1,0 +1,6 @@
+2025/11/19-22:27:06.539 391651 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.researchgate.net_0.indexeddb.leveldb since it was missing.
+2025/11/19-22:27:06.564 391651 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.researchgate.net_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/19-22:27:42.985 391651 Level-0 table #5: started
+2025/11/19-22:27:42.993 391651 Level-0 table #5: 1066 bytes OK
+2025/11/19-22:27:43.014 391651 Delete type=0 #3
+2025/11/19-22:27:43.015 391651 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

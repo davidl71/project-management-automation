@@ -1,0 +1,57 @@
+2025/11/26-02:27:45.863 67f5 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/Local Storage/leveldb/MANIFEST-000001
+2025/11/26-02:27:45.866 67f5 Recovering log #10197
+2025/11/26-02:27:46.116 67f5 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/Local Storage/leveldb/010197.log 
+2025/11/26-05:03:57.221 683a Level-0 table #10201: started
+2025/11/26-05:03:57.308 683a Level-0 table #10201: 42508 bytes OK
+2025/11/26-05:03:57.389 683a Delete type=0 #10197
+2025/11/26-05:03:57.390 683a Compacting 4@0 + 4@1 files
+2025/11/26-05:03:57.455 683a Generated table #10202@0: 4243 keys, 2121190 bytes
+2025/11/26-05:03:57.507 683a Generated table #10203@0: 1204 keys, 2101827 bytes
+2025/11/26-05:03:57.565 683a Generated table #10204@0: 2829 keys, 2169500 bytes
+2025/11/26-05:03:57.589 683a Generated table #10205@0: 2716 keys, 836654 bytes
+2025/11/26-05:03:57.589 683a Compacted 4@0 + 4@1 files => 7229171 bytes
+2025/11/26-05:03:57.613 683a compacted to: files[ 0 4 5 0 0 0 0 ]
+2025/11/26-05:03:57.615 683a Delete type=2 #10198
+2025/11/26-05:03:57.615 683a Delete type=2 #10189
+2025/11/26-05:03:57.615 683a Delete type=2 #10201
+2025/11/26-05:03:57.615 683a Delete type=2 #10192
+2025/11/26-05:03:57.615 683a Delete type=2 #10191
+2025/11/26-05:03:57.615 683a Delete type=2 #10190
+2025/11/26-05:03:57.615 683a Delete type=2 #10194
+2025/11/26-05:03:57.615 683a Delete type=2 #10196
+2025/11/26-05:43:27.907 683a Level-0 table #10207: started
+2025/11/26-05:43:27.973 683a Level-0 table #10207: 666890 bytes OK
+2025/11/26-05:43:28.049 683a Delete type=0 #10200
+2025/11/26-05:45:20.321 683a Level-0 table #10209: started
+2025/11/26-05:45:20.562 683a Level-0 table #10209: 667814 bytes OK
+2025/11/26-05:45:20.586 683a Delete type=0 #10206
+2025/11/26-08:15:32.642 683a Level-0 table #10211: started
+2025/11/26-08:15:32.830 683a Level-0 table #10211: 21886 bytes OK
+2025/11/26-08:15:32.858 683a Delete type=0 #10208
+2025/11/26-10:55:20.438 683a Level-0 table #10213: started
+2025/11/26-10:55:20.457 683a Level-0 table #10213: 18764 bytes OK
+2025/11/26-10:55:20.507 683a Delete type=0 #10210
+2025/11/26-10:55:20.509 67f5 Compacting 4@0 + 4@1 files
+2025/11/26-10:55:20.688 67f5 Generated table #10214@0: 4229 keys, 2104892 bytes
+2025/11/26-10:55:20.794 67f5 Generated table #10215@0: 1128 keys, 2102744 bytes
+2025/11/26-10:55:20.950 67f5 Generated table #10216@0: 2950 keys, 2198625 bytes
+2025/11/26-10:55:21.008 67f5 Generated table #10217@0: 2721 keys, 836781 bytes
+2025/11/26-10:55:21.008 67f5 Compacted 4@0 + 4@1 files => 7243042 bytes
+2025/11/26-10:55:21.039 67f5 compacted to: files[ 0 4 5 0 0 0 0 ]
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10213
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10207
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10211
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10205
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10204
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10203
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10202
+2025/11/26-10:55:21.040 67f5 Delete type=2 #10209
+2025/11/26-11:45:40.539 683a Level-0 table #10219: started
+2025/11/26-11:45:40.567 683a Level-0 table #10219: 45447 bytes OK
+2025/11/26-11:45:40.690 683a Delete type=0 #10212
+2025/11/26-11:46:37.917 683a Level-0 table #10221: started
+2025/11/26-11:46:37.941 683a Level-0 table #10221: 17163 bytes OK
+2025/11/26-11:46:37.964 683a Delete type=0 #10218
+2025/11/26-11:55:48.658 683a Level-0 table #10223: started
+2025/11/26-11:55:48.682 683a Level-0 table #10223: 48338 bytes OK
+2025/11/26-11:55:48.709 683a Delete type=0 #10220

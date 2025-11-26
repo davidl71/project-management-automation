@@ -1,0 +1,7 @@
+name: davidl71/project-management-automation-python
+version: 0.0.0
+library: true
+extensionTargets:
+  codeql/python-all: '*'
+dataExtensions:
+  - models/**/*.yml

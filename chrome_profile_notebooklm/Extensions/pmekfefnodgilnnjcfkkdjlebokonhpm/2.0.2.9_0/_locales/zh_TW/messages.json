@@ -1,0 +1,138 @@
+{
+   "dcn_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=DataCollectionNotice&VID=&Locale=ZH-TW"
+   },
+   "extension_description": {
+      "message": "在網頁上不再看到侵擾的影片、彈出式、插播式和橫幅等廣告。"
+   },
+   "extension_name": {
+      "description": "The display name for the extension.",
+      "message": "Trend Micro Ad Blocker: 強大的廣告封鎖程式"
+   },
+   "feedback_copyright": {
+      "message": "版權所有 © {YEAR} Trend Micro Incorporated / 趨勢科技有限公司。保留所有權利。"
+   },
+   "feedback_email": {
+      "message": "電子郵件信箱（選填）"
+   },
+   "feedback_email_invalid": {
+      "message": "電子郵件信箱無效"
+   },
+   "feedback_sent": {
+      "message": "已傳送您的意見反應。"
+   },
+   "gdpr_accept": {
+      "message": "安裝此軟體，即表示您接受下列內容："
+   },
+   "gdpr_agree": {
+      "message": "同意並繼續"
+   },
+   "gdpr_dcn": {
+      "message": "Trend Micro Ad Blocker 資料蒐集注意事項"
+   },
+   "gdpr_license": {
+      "message": "趨勢科技授權合約"
+   },
+   "gdpr_privacy": {
+      "message": "趨勢科技隱私權聲明"
+   },
+   "license_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=LicenseAgreement&VID=&Locale=ZH-TW"
+   },
+   "popup_blank": {
+      "message": "開啟網站以展開您的旅程"
+   },
+   "popup_enterComments": {
+      "message": "輸入您的意見"
+   },
+   "popup_feedback": {
+      "message": "意見反應"
+   },
+   "popup_feedback_send": {
+      "message": "傳送"
+   },
+   "popup_isbroken": {
+      "message": "網站故障了嗎？"
+   },
+   "popup_no": {
+      "message": "否"
+   },
+   "popup_ok": {
+      "message": "確定"
+   },
+   "popup_paused": {
+      "message": "已暫停"
+   },
+   "popup_protection_disabled": {
+      "message": "安全防護已關閉"
+   },
+   "popup_protection_enabled": {
+      "message": "安全防護已啟動"
+   },
+   "popup_protection_paused": {
+      "message": "安全防護已暫停"
+   },
+   "popup_protection_thispage": {
+      "message": "已封鎖此網頁上的 %0 則廣告"
+   },
+   "popup_protection_thispage_single": {
+      "message": "已封鎖此網頁上的 1 則廣告"
+   },
+   "popup_protection_total": {
+      "message": "已封鎖 %0 則廣告 (過去 %1 天內)"
+   },
+   "popup_protection_total_singleDay": {
+      "message": "已封鎖 %0 則廣告 (過去 %1 天內)"
+   },
+   "popup_report": {
+      "message": "回報故障的網站"
+   },
+   "popup_report_issue1": {
+      "message": "影片未播放"
+   },
+   "popup_report_issue2": {
+      "message": "無法登入"
+   },
+   "popup_report_issue3": {
+      "message": "意見無法載入"
+   },
+   "popup_report_issue4": {
+      "message": "內容遺漏"
+   },
+   "popup_report_issue5": {
+      "message": "網站已要求我關閉"
+   },
+   "popup_report_issue6": {
+      "message": "未載入影像"
+   },
+   "popup_report_issue7": {
+      "message": "連結或按鈕無法使用"
+   },
+   "popup_report_issue8": {
+      "message": "其他"
+   },
+   "popup_report_pick": {
+      "message": "從清單中選擇您的問題..."
+   },
+   "popup_report_sent": {
+      "message": "已傳送回報問題"
+   },
+   "popup_thank": {
+      "message": "謝謝您。"
+   },
+   "popup_title": {
+      "message": "封鎖廣告"
+   },
+   "popup_yes": {
+      "message": "是"
+   },
+   "privacy_link": {
+      "message": "http://gr.trendmicro.com/GREntry/NonPayment?Target=AdBlockOneChrome&OS=&SP=&PID=CABO10&FunID=PrivacyPolicy&VID=&Locale=ZH-TW"
+   },
+   "welcome_pin": {
+      "message": "將 Trend Micro Ad Blocker 固定到您的工具列以方便日後使用"
+   },
+   "welcome_title": {
+      "message": "歡迎使用 Trend Micro Ad Blocker"
+   }
+}

@@ -1,0 +1,7 @@
+2025/11/05-23:00:01.606 6fc4 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_usersurvey.dropbox.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/05-23:00:01.609 6fc4 Recovering log #3
+2025/11/05-23:00:01.610 6fc4 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_usersurvey.dropbox.com_0.indexeddb.leveldb/000003.log 
+2025/11/05-23:00:24.770 6fc4 Level-0 table #5: started
+2025/11/05-23:00:24.774 6fc4 Level-0 table #5: 3513 bytes OK
+2025/11/05-23:00:24.790 6fc4 Delete type=0 #3
+2025/11/05-23:00:24.790 6fc4 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

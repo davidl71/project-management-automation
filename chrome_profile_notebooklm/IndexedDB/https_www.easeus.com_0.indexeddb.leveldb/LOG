@@ -1,0 +1,18 @@
+2025/05/29-19:26:55.939 2db9fb Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.easeus.com_0.indexeddb.leveldb since it was missing.
+2025/05/29-19:26:55.997 2db9fb Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.easeus.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/05/29-19:26:56.226 2db9fb Level-0 table #5: started
+2025/05/29-19:26:56.343 2db9fb Level-0 table #5: 666 bytes OK
+2025/05/29-19:26:56.527 2db9fb Delete type=0 #3
+2025/05/29-19:26:56.527 2db9fd Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/05/29-19:26:58.427 2db9fd Level-0 table #7: started
+2025/05/29-19:26:58.610 2db9fd Level-0 table #7: 249 bytes OK
+2025/05/29-19:26:58.914 2db9fd Delete type=0 #4
+2025/05/29-19:26:58.915 2db9fd Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/05/29-19:26:58.915 2db9fd Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x00\x00\x002\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00' @ 21 : 0
+2025/05/29-19:26:58.915 2db9fd Compacting 1@1 + 1@2 files
+2025/05/29-19:26:58.996 2db9fd Generated table #8@1: 6 keys, 253 bytes
+2025/05/29-19:26:58.996 2db9fd Compacted 1@1 + 1@2 files => 253 bytes
+2025/05/29-19:26:59.296 2db9fd compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/05/29-19:26:59.296 2db9fd Delete type=2 #7
+2025/05/29-19:26:59.296 2db9fd Delete type=2 #5
+2025/05/29-19:26:59.297 2db9fd Manual compaction at level-1 from '\x00\x00\x00\x002\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00' @ 21 : 0 .. (end); will stop at (end)

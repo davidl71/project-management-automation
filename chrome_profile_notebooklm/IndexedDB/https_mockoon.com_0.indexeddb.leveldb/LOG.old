@@ -1,0 +1,6 @@
+2025/11/04-18:45:44.136 6fc8 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_mockoon.com_0.indexeddb.leveldb since it was missing.
+2025/11/04-18:45:44.149 6fc8 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_mockoon.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/04-18:45:44.462 6fc7 Level-0 table #5: started
+2025/11/04-18:45:44.506 6fc7 Level-0 table #5: 1792 bytes OK
+2025/11/04-18:45:44.630 6fc7 Delete type=0 #3
+2025/11/04-18:45:44.631 6c0c Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -1,0 +1,15 @@
+2025/05/29-21:15:03.971 2db9fd Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/WebStorage/106/IndexedDB/indexeddb.leveldb/MANIFEST-000001
+2025/05/29-21:15:03.972 2db9fd Recovering log #4
+2025/05/29-21:15:03.972 2db9fd Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/WebStorage/106/IndexedDB/indexeddb.leveldb/000004.log 
+2025/05/29-22:30:43.861 2db9fd Level-0 table #8: started
+2025/05/29-22:30:43.915 2db9fd Level-0 table #8: 246955 bytes OK
+2025/05/29-22:30:43.924 2db9fd Delete type=0 #4
+2025/05/29-22:30:43.925 2db9fb Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/05/29-22:30:43.925 2db9fb Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x03\x00\x00\xc8\x0b\x00S\x00W\x00H\x00e\x00a\x00l\x00t\x00h\x00L\x00o\x00g' @ 840 : 1
+2025/05/29-22:30:43.925 2db9fb Compacting 1@1 + 1@2 files
+2025/05/29-22:30:43.929 2db9fb Generated table #9@1: 62 keys, 3617 bytes
+2025/05/29-22:30:43.929 2db9fb Compacted 1@1 + 1@2 files => 3617 bytes
+2025/05/29-22:30:43.953 2db9fb compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/05/29-22:30:43.954 2db9fb Delete type=2 #5
+2025/05/29-22:30:43.954 2db9fb Delete type=2 #8
+2025/05/29-22:30:43.954 2db9fb Manual compaction at level-1 from '\x00\x03\x00\x00\xc8\x0b\x00S\x00W\x00H\x00e\x00a\x00l\x00t\x00h\x00L\x00o\x00g' @ 840 : 1 .. (end); will stop at (end)

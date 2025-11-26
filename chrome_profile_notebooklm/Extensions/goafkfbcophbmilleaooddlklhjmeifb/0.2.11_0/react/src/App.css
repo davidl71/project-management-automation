@@ -1,0 +1,14 @@
+.App {
+  color: white;
+  text-align: center;
+}
+
+.container {
+  width: 26rem;
+  height: max-content;
+  min-height: 35rem;
+}
+
+body {
+  margin: 0px !important;
+}

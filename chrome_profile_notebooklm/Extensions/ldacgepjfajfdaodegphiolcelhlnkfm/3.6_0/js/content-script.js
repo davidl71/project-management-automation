@@ -1,0 +1,1 @@
+console.log("content-script");let port=chrome.runtime.connect();port.postMessage({action:"open-affiliate-link"});

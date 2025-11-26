@@ -1,0 +1,7 @@
+2025/11/09-10:43:36.581 372f0c Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_business.gett.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/09-10:43:36.581 372f0c Recovering log #3
+2025/11/09-10:43:36.582 372f0c Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_business.gett.com_0.indexeddb.leveldb/000003.log 
+2025/11/09-11:38:41.039 372eae Level-0 table #5: started
+2025/11/09-11:38:41.051 372eae Level-0 table #5: 3695 bytes OK
+2025/11/09-11:38:41.060 372eae Delete type=0 #3
+2025/11/09-11:38:41.060 372eae Manual compaction at level-0 from (begin) .. (end); will stop at (end)

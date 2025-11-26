@@ -1,0 +1,54 @@
+<!--
+  Copyright 2020 Johannes Marbach
+
+  This file is part of AliExpress Invoice Generator, hereafter referred
+  to as the program.
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+        .screenshot_plugin {
+            width:300px;
+            border: 1px solid grey;
+        }
+        .screenshot {
+            width:750px;
+            border: 1px solid grey;
+        }
+    </style>
+  </head>
+  <body>
+      <img src="../img/logo_128.png" style="height:80px">
+      <h1></h1>
+      <p>
+        <i><div id="subtitle"></div></i>
+      </p>
+      <h2><div id="how_to_use"></div></h2>
+      <p><div id="step1"></div></p>
+      <img class="screenshot_plugin" src="../img/screenshots/step1.png">
+      <p><div id="step2"></div></p>
+      <img class="screenshot" src="../img/screenshots/step2.png">
+      <p><div id="step3"></div></p>
+      <img class="screenshot" src="../img/screenshots/step3.png">
+      <p><div id="step4"></div></p>
+      <img class="screenshot" src="../img/screenshots/step4.png">
+      <script type="application/javascript" src="../browser-polyfill.js"></script>
+      <script type="application/javascript" src="welcome.js"></script>
+  </body>
+</html>

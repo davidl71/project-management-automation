@@ -1,0 +1,7 @@
+2025/11/07-16:37:40.031 372f11 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_linear.app_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/07-16:37:40.031 372f11 Recovering log #3
+2025/11/07-16:37:40.125 372f11 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_linear.app_0.indexeddb.leveldb/000003.log 
+2025/11/07-17:40:53.715 372f0b Level-0 table #5: started
+2025/11/07-17:40:54.059 372f0b Level-0 table #5: 203046 bytes OK
+2025/11/07-17:40:54.540 372f0b Delete type=0 #3
+2025/11/07-17:40:54.540 372f0b Manual compaction at level-0 from (begin) .. (end); will stop at (end)

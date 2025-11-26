@@ -1,0 +1,17 @@
+2025/11/05-09:51:57.255 6fc4 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.quantconnect.com_0.indexeddb.leveldb since it was missing.
+2025/11/05-09:51:57.478 6fc4 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.quantconnect.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/05-11:05:15.463 6fc4 Level-0 table #5: started
+2025/11/05-11:05:15.500 6fc4 Level-0 table #5: 1085284 bytes OK
+2025/11/05-11:05:15.665 6fc4 Delete type=0 #3
+2025/11/05-11:53:18.573 6fc4 Level-0 table #7: started
+2025/11/05-11:53:18.622 6fc4 Level-0 table #7: 851147 bytes OK
+2025/11/05-11:53:18.675 6fc4 Delete type=0 #4
+2025/11/05-11:53:18.677 6fc4 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/11/05-11:53:18.677 6fc4 Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x01\x02\x02\x01\x1b\x00/\x002\x000\x002\x005\x001\x001\x000\x005\x00T\x000\x009\x005\x001\x005\x007\x00/\x00w\x00i\x00n\x00d\x00o\x00w\x00.\x00l\x00o\x00g' @ 3978 : 1
+2025/11/05-11:53:18.677 6fc4 Compacting 1@1 + 1@2 files
+2025/11/05-11:53:18.871 6fc4 Generated table #8@1: 285 keys, 34292 bytes
+2025/11/05-11:53:18.871 6fc4 Compacted 1@1 + 1@2 files => 34292 bytes
+2025/11/05-11:53:18.908 6fc4 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/05-11:53:18.908 6fc4 Delete type=2 #7
+2025/11/05-11:53:18.908 6fc4 Delete type=2 #5
+2025/11/05-11:53:18.909 6fc4 Manual compaction at level-1 from '\x00\x01\x02\x02\x01\x1b\x00/\x002\x000\x002\x005\x001\x001\x000\x005\x00T\x000\x009\x005\x001\x005\x007\x00/\x00w\x00i\x00n\x00d\x00o\x00w\x00.\x00l\x00o\x00g' @ 3978 : 1 .. (end); will stop at (end)

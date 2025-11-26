@@ -1,0 +1,6 @@
+2025/11/15-10:16:04.016 3411e8 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.codeant.ai_0.indexeddb.leveldb since it was missing.
+2025/11/15-10:16:04.035 3411e8 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.codeant.ai_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/15-10:17:54.463 341212 Level-0 table #5: started
+2025/11/15-10:17:54.468 341212 Level-0 table #5: 1391 bytes OK
+2025/11/15-10:17:54.487 341212 Delete type=0 #3
+2025/11/15-10:17:54.490 341212 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

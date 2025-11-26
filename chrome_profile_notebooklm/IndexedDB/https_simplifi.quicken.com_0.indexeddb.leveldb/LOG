@@ -1,0 +1,7 @@
+2025/11/05-23:02:31.328 6c0c Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_simplifi.quicken.com_0.indexeddb.leveldb since it was missing.
+2025/11/05-23:02:31.351 6c0c Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_simplifi.quicken.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/05-23:02:31.503 6fc5 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/11/05-23:02:31.620 6fc4 Level-0 table #5: started
+2025/11/05-23:02:31.632 6fc4 Level-0 table #5: 973 bytes OK
+2025/11/05-23:02:31.649 6fc4 Delete type=0 #3
+2025/11/05-23:02:31.650 6fc4 Manual compaction at level-0 from '\x00\x02\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x03\x00\x00\x00' @ 0 : 0; will stop at (end)

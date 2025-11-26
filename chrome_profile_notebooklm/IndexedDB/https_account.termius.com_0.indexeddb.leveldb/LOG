@@ -1,0 +1,13 @@
+2025/11/05-08:54:33.095 6c0c Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_account.termius.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/05-08:54:33.095 6c0c Recovering log #30
+2025/11/05-08:54:33.101 6c0c Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_account.termius.com_0.indexeddb.leveldb/000030.log 
+2025/11/05-08:54:33.152 6fc5 Level-0 table #35: started
+2025/11/05-08:54:33.160 6fc5 Level-0 table #35: 8465 bytes OK
+2025/11/05-08:54:33.206 6fc5 Delete type=0 #30
+2025/11/05-08:54:33.207 6fc5 Manual compaction at level-0 from '\x00\x0e\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x0f\x00\x00\x00' @ 0 : 0; will stop at '\x00\x0e\x00\x00\x05' @ 685 : 1
+2025/11/05-08:54:33.207 6fc5 Compacting 1@0 + 1@1 files
+2025/11/05-08:54:33.240 6fc5 Generated table #36@0: 44 keys, 3448 bytes
+2025/11/05-08:54:33.240 6fc5 Compacted 1@0 + 1@1 files => 3448 bytes
+2025/11/05-08:54:33.297 6fc5 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/11/05-08:54:33.298 6fc5 Delete type=2 #35
+2025/11/05-08:54:33.298 6fc5 Manual compaction at level-0 from '\x00\x0e\x00\x00\x05' @ 685 : 1 .. '\x00\x0f\x00\x00\x00' @ 0 : 0; will stop at (end)

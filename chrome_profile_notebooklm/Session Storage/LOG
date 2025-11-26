@@ -1,0 +1,21 @@
+2025/11/26-02:26:29.814 683a Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/Session Storage/MANIFEST-000001
+2025/11/26-02:26:29.819 683a Recovering log #1618
+2025/11/26-02:26:29.820 683a Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/Session Storage/001618.log 
+2025/11/26-02:33:37.576 683a Level-0 table #1622: started
+2025/11/26-02:33:38.661 683a Level-0 table #1622: 16202 bytes OK
+2025/11/26-02:33:40.581 683a Delete type=0 #1618
+2025/11/26-08:15:27.727 683a Level-0 table #1624: started
+2025/11/26-08:15:27.967 683a Level-0 table #1624: 19333 bytes OK
+2025/11/26-08:15:28.397 683a Delete type=0 #1621
+2025/11/26-11:49:03.442 683a Level-0 table #1626: started
+2025/11/26-11:49:03.616 683a Level-0 table #1626: 28647 bytes OK
+2025/11/26-11:49:03.868 683a Delete type=0 #1623
+2025/11/26-11:49:03.869 683a Compacting 4@0 + 1@1 files
+2025/11/26-11:49:04.067 683a Generated table #1627@0: 220 keys, 33992 bytes
+2025/11/26-11:49:04.067 683a Compacted 4@0 + 1@1 files => 33992 bytes
+2025/11/26-11:49:04.243 683a compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/11/26-11:49:04.245 683a Delete type=2 #1624
+2025/11/26-11:49:04.245 683a Delete type=2 #1619
+2025/11/26-11:49:04.245 683a Delete type=2 #1626
+2025/11/26-11:49:04.245 683a Delete type=2 #1622
+2025/11/26-11:49:04.245 683a Delete type=2 #1616

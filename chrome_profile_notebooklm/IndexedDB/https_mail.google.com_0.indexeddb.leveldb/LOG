@@ -1,0 +1,41 @@
+2025/11/26-08:15:01.079 49e7 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_mail.google.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/26-08:15:01.080 49e7 Recovering log #894
+2025/11/26-08:15:01.396 49e7 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_mail.google.com_0.indexeddb.leveldb/000894.log 
+2025/11/26-08:15:07.065 49c9 Level-0 table #899: started
+2025/11/26-08:15:07.493 49c9 Level-0 table #899: 3146437 bytes OK
+2025/11/26-08:15:08.408 49c9 Delete type=0 #894
+2025/11/26-08:15:13.834 49e9 Compacting 1@1 + 1@2 files
+2025/11/26-08:15:13.965 49e9 Generated table #900@1: 217 keys, 451757 bytes
+2025/11/26-08:15:13.965 49e9 Compacted 1@1 + 1@2 files => 451757 bytes
+2025/11/26-08:15:14.515 49e9 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/26-08:15:14.517 49e9 Delete type=2 #896
+2025/11/26-08:15:14.517 49e9 Delete type=2 #899
+2025/11/26-08:15:24.011 49e7 Level-0 table #902: started
+2025/11/26-08:15:24.095 49e7 Level-0 table #902: 3183345 bytes OK
+2025/11/26-08:15:24.271 49e7 Delete type=0 #898
+2025/11/26-08:15:26.926 49c9 Level-0 table #904: started
+2025/11/26-08:15:27.359 49c9 Level-0 table #904: 3179374 bytes OK
+2025/11/26-08:15:27.724 49c9 Delete type=0 #901
+2025/11/26-08:17:49.848 49e7 Level-0 table #906: started
+2025/11/26-08:17:49.870 49e7 Level-0 table #906: 2333955 bytes OK
+2025/11/26-08:17:49.889 49e7 Delete type=0 #903
+2025/11/26-08:17:49.889 49e7 Manual compaction at level-0 from (begin) .. (end); will stop at '\x00\x01\x01\x02\x01(\x00S\x00t\x00o\x00r\x00e\x00d\x00N\x00e\x00t\x00w\x00o\x00r\x00k\x00F\x00e\x00t\x00c\x00h\x00C\x00o\x00u\x00n\x00t\x00e\x00r\x00s\x00:\x00:\x00S\x00T\x00A\x00T\x00I\x00C\x00_\x00A\x00S\x00S\x00E\x00T' @ 457190 : 0
+2025/11/26-08:17:49.889 49e7 Compacting 2@0 + 1@1 files
+2025/11/26-08:17:49.946 49e7 Generated table #907@0: 1482 keys, 2479957 bytes
+2025/11/26-08:17:49.950 49e7 Generated table #908@0: 14 keys, 12997 bytes
+2025/11/26-08:17:49.950 49e7 Compacted 2@0 + 1@1 files => 2492954 bytes
+2025/11/26-08:17:49.972 49e7 compacted to: files[ 0 2 1 0 0 0 0 ]
+2025/11/26-08:17:49.972 49e7 Delete type=2 #902
+2025/11/26-08:17:49.972 49e7 Delete type=2 #904
+2025/11/26-08:17:49.973 49e7 Delete type=2 #906
+2025/11/26-08:17:49.974 49e7 Manual compaction at level-0 from '\x00\x01\x01\x02\x01(\x00S\x00t\x00o\x00r\x00e\x00d\x00N\x00e\x00t\x00w\x00o\x00r\x00k\x00F\x00e\x00t\x00c\x00h\x00C\x00o\x00u\x00n\x00t\x00e\x00r\x00s\x00:\x00:\x00S\x00T\x00A\x00T\x00I\x00C\x00_\x00A\x00S\x00S\x00E\x00T' @ 457190 : 0 .. (end); will stop at (end)
+2025/11/26-08:17:49.974 49e7 Expanding@1 1+1 (2479957+451757 bytes) to 2+1 (2492954+451757 bytes)
+2025/11/26-08:17:49.974 49e7 Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x01\x01\x02\x01(\x00S\x00t\x00o\x00r\x00e\x00d\x00N\x00e\x00t\x00w\x00o\x00r\x00k\x00F\x00e\x00t\x00c\x00h\x00C\x00o\x00u\x00n\x00t\x00e\x00r\x00s\x00:\x00:\x00S\x00T\x00A\x00T\x00I\x00C\x00_\x00A\x00S\x00S\x00E\x00T' @ 458349 : 1
+2025/11/26-08:17:49.974 49e7 Compacting 2@1 + 1@2 files
+2025/11/26-08:17:49.985 49e7 Generated table #909@1: 191 keys, 494682 bytes
+2025/11/26-08:17:49.985 49e7 Compacted 2@1 + 1@2 files => 494682 bytes
+2025/11/26-08:17:49.999 49e7 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/26-08:17:50.000 49e7 Delete type=2 #908
+2025/11/26-08:17:50.000 49e7 Delete type=2 #900
+2025/11/26-08:17:50.000 49e7 Delete type=2 #907
+2025/11/26-08:17:50.001 49e7 Manual compaction at level-1 from '\x00\x01\x01\x02\x01(\x00S\x00t\x00o\x00r\x00e\x00d\x00N\x00e\x00t\x00w\x00o\x00r\x00k\x00F\x00e\x00t\x00c\x00h\x00C\x00o\x00u\x00n\x00t\x00e\x00r\x00s\x00:\x00:\x00S\x00T\x00A\x00T\x00I\x00C\x00_\x00A\x00S\x00S\x00E\x00T' @ 458349 : 1 .. (end); will stop at (end)

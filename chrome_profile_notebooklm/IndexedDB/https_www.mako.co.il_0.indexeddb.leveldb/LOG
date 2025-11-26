@@ -1,0 +1,6 @@
+2025/06/30-00:51:47.799 65d101 Creating DB /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.mako.co.il_0.indexeddb.leveldb since it was missing.
+2025/06/30-00:51:48.112 65d101 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.mako.co.il_0.indexeddb.leveldb/MANIFEST-000001
+2025/06/30-02:05:22.120 65d103 Level-0 table #5: started
+2025/06/30-02:05:22.130 65d103 Level-0 table #5: 198714 bytes OK
+2025/06/30-02:05:22.156 65d103 Delete type=0 #3
+2025/06/30-02:05:22.157 65d103 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

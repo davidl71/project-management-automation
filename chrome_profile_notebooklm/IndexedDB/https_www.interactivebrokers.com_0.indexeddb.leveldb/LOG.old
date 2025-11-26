@@ -1,0 +1,15 @@
+2025/11/13-06:48:50.277 3411e8 Reusing MANIFEST /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.interactivebrokers.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/11/13-06:48:50.281 3411e8 Recovering log #11
+2025/11/13-06:48:50.282 3411e8 Reusing old log /Users/davidlowes/Library/Application Support/Google/Chrome/Default/IndexedDB/https_www.interactivebrokers.com_0.indexeddb.leveldb/000011.log 
+2025/11/13-06:48:52.794 3411e8 Level-0 table #16: started
+2025/11/13-06:48:52.797 3411e8 Level-0 table #16: 2586 bytes OK
+2025/11/13-06:48:52.810 3411e8 Delete type=0 #11
+2025/11/13-06:48:52.811 341213 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
+2025/11/13-06:48:52.812 341213 Manual compaction at level-1 from (begin) .. (end); will stop at '\x00\x01\x01\x1f\x01\x0b\x00f\x00a\x00q\x00_\x00b\x00r\x00o\x00w\x00s\x00e\x00r\x00\x04\x02\x01\x0b\x00f\x00a\x00q\x00_\x00b\x00r\x00o\x00w\x00s\x00e\x00r\x01\x10\x00f\x00e\x00a\x00t\x00u\x00r\x00e\x00s\x00S\x00e\x00t\x00t\x00i\x00n\x00g\x00s' @ 929 : 1
+2025/11/13-06:48:52.812 341213 Compacting 1@1 + 1@2 files
+2025/11/13-06:48:52.816 341213 Generated table #17@1: 44 keys, 1352 bytes
+2025/11/13-06:48:52.816 341213 Compacted 1@1 + 1@2 files => 1352 bytes
+2025/11/13-06:48:52.837 341213 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/11/13-06:48:52.837 341213 Delete type=2 #16
+2025/11/13-06:48:52.838 341213 Delete type=2 #13
+2025/11/13-06:48:52.839 3411e8 Manual compaction at level-1 from '\x00\x01\x01\x1f\x01\x0b\x00f\x00a\x00q\x00_\x00b\x00r\x00o\x00w\x00s\x00e\x00r\x00\x04\x02\x01\x0b\x00f\x00a\x00q\x00_\x00b\x00r\x00o\x00w\x00s\x00e\x00r\x01\x10\x00f\x00e\x00a\x00t\x00u\x00r\x00e\x00s\x00S\x00e\x00t\x00t\x00i\x00n\x00g\x00s' @ 929 : 1 .. (end); will stop at (end)
