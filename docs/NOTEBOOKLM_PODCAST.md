@@ -1,11 +1,20 @@
-# NotebookLM Podcast Generation Guide
+# Podcast Generation Guide
 
-Generate AI podcasts about your project progress using Exarp's Trusted Advisor System
-and Google's NotebookLM.
+Generate AI podcasts about your project progress using Exarp's Trusted Advisor System.
 
-## Quick Start
+## Recommended Methods (by ease of use)
 
-### 1. Generate Podcast Data
+| Method | Difficulty | Cost | Quality | Notes |
+|--------|------------|------|---------|-------|
+| **Manual NotebookLM** | ⭐ Easy | Free | ⭐⭐⭐⭐⭐ | Upload file manually, click generate |
+| **ElevenLabs API** | ⭐⭐ Medium | $5/mo | ⭐⭐⭐⭐⭐ | Best voice quality, API access |
+| **edge-tts (Local)** | ⭐⭐ Medium | Free | ⭐⭐⭐⭐ | Microsoft voices, offline |
+| **pyttsx3 (Local)** | ⭐ Easy | Free | ⭐⭐⭐ | System voices, fully offline |
+| **NotebookLM MCP** | ⭐⭐⭐⭐⭐ Hard | Free | ⭐⭐⭐⭐⭐ | Google auth issues, LOW PRIORITY |
+
+---
+
+## Step 1: Generate Podcast Data (Same for all methods)
 
 ```bash
 # Export last 7 days of advisor consultations as markdown
@@ -13,22 +22,102 @@ python scripts/export_podcast_data.py --days 7 --output podcast.md
 
 # Or via MCP tool
 /exarp/export_advisor_podcast days=7 output_file="podcast.md"
+
+# For JSON format (APIs)
+python scripts/export_podcast_data.py --days 7 --format json --output podcast.json
 ```
-
-### 2. Upload to NotebookLM
-
-1. Go to [NotebookLM](https://notebooklm.google.com)
-2. Create a new notebook
-3. Click "Add Source" → "Upload"
-4. Upload `podcast.md`
-5. Click "Audio Overview" to generate AI podcast!
-
-NotebookLM will create a ~10 minute conversational podcast between two AI hosts
-discussing your project progress and advisor wisdom.
 
 ---
 
-## NotebookLM MCP Server Integration
+## Method 1: Manual NotebookLM (Easiest) ⭐
+
+1. Go to [NotebookLM](https://notebooklm.google.com)
+2. Create a new notebook
+3. Click **"Add Source" → "Upload"**
+4. Upload `podcast.md`
+5. Click **"Audio Overview"** to generate AI podcast!
+
+NotebookLM creates a ~10 minute conversational podcast between two AI hosts.
+
+---
+
+## Method 2: ElevenLabs API (Best Quality) 🎙️
+
+```bash
+# Install
+pip install elevenlabs
+
+# Set API key
+export ELEVENLABS_API_KEY="your-key-here"
+```
+
+```python
+from elevenlabs import generate, save
+
+# Read the podcast script
+with open("podcast.md") as f:
+    script = f.read()
+
+# Generate audio
+audio = generate(
+    text=script,
+    voice="Adam",  # or "Rachel", "Domi", "Bella"
+    model="eleven_multilingual_v2"
+)
+
+save(audio, "podcast.mp3")
+```
+
+---
+
+## Method 3: edge-tts (Free, High Quality) 🔊
+
+Microsoft's free TTS with natural voices:
+
+```bash
+# Install
+pip install edge-tts
+
+# Generate audio from markdown
+edge-tts --text "$(cat podcast.md)" --voice en-US-GuyNeural --write-media podcast.mp3
+
+# List available voices
+edge-tts --list-voices | grep en-US
+```
+
+Good voices: `en-US-GuyNeural`, `en-US-JennyNeural`, `en-GB-RyanNeural`
+
+---
+
+## Method 4: pyttsx3 (Fully Offline) 💻
+
+Uses your system's built-in voices:
+
+```bash
+pip install pyttsx3
+```
+
+```python
+import pyttsx3
+
+engine = pyttsx3.init()
+engine.setProperty('rate', 150)  # Speed
+
+with open("podcast.md") as f:
+    script = f.read()
+
+engine.save_to_file(script, 'podcast.mp3')
+engine.runAndWait()
+```
+
+---
+
+## Method 5: NotebookLM MCP (Low Priority) ⚠️
+
+> **Note:** Google's authentication blocks automated browsers. This method requires
+> manual intervention and is not recommended for automation.
+
+### Installation
 
 For automated podcast generation, you can use the NotebookLM MCP server.
 
