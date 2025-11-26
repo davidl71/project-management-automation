@@ -40,7 +40,7 @@ class TestAutomationOpportunitiesTool:
     @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
     def test_find_automation_opportunities_success(self, mock_finder_class):
         """Test successful automation opportunity discovery."""
-        from tools.automation_opportunities import find_automation_opportunities
+        from project_management_automation.tools.automation_opportunities import find_automation_opportunities
 
         mock_finder = Mock()
         mock_finder.run.return_value = {
@@ -65,7 +65,7 @@ class TestTodoSyncTool:
     @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
     def test_sync_todo_tasks_success(self, mock_sync_class):
         """Test successful todo task synchronization."""
-        from tools.todo_sync import sync_todo_tasks
+        from project_management_automation.tools.todo_sync import sync_todo_tasks
 
         mock_sync = Mock()
         mock_sync.run.return_value = {
@@ -91,7 +91,7 @@ class TestPWAReviewTool:
     @patch('pathlib.Path.exists', return_value=False)  # No PWA config found
     def test_review_pwa_config_success(self, mock_exists, mock_analyzer_class):
         """Test successful PWA configuration review."""
-        from tools.pwa_review import review_pwa_config
+        from project_management_automation.tools.pwa_review import review_pwa_config
 
         # PWAAnalyzer doesn't have a run() method - it's a simple class
         # The tool directly uses PWAAnalyzer methods
@@ -116,7 +116,7 @@ class TestExternalToolHintsTool:
     @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_success(self, mock_automation_class):
         """Test successful external tool hints addition."""
-        from tools.external_tool_hints import add_external_tool_hints
+        from project_management_automation.tools.external_tool_hints import add_external_tool_hints
 
         mock_automation = Mock()
         mock_automation.run.return_value = {
@@ -141,7 +141,7 @@ class TestDailyAutomationTool:
     @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_success(self, mock_daily_class):
         """Test successful daily automation execution."""
-        from tools.daily_automation import run_daily_automation
+        from project_management_automation.tools.daily_automation import run_daily_automation
 
         mock_daily = Mock()
         mock_daily.run.return_value = {
@@ -176,7 +176,7 @@ class TestCICDValidationTool:
             yaml = MagicMock()
             yaml.safe_load = mock_yaml
         
-        from tools.ci_cd_validation import validate_ci_cd_workflow
+        from project_management_automation.tools.ci_cd_validation import validate_ci_cd_workflow
 
         result = validate_ci_cd_workflow()
         result_data = json.loads(result)
@@ -192,7 +192,7 @@ class TestBatchTaskApprovalTool:
     @patch('tools.batch_task_approval.Path')
     def test_batch_approve_tasks_success(self, mock_path_class, mock_subprocess):
         """Test successful batch task approval."""
-        from tools.batch_task_approval import batch_approve_tasks
+        from project_management_automation.tools.batch_task_approval import batch_approve_tasks
 
         # Mock Path to handle division operations
         mock_project_root = MagicMock()
@@ -226,7 +226,7 @@ class TestNightlyTaskAutomationTool:
     @patch('builtins.open', new_callable=mock_open, read_data='{"todos": []}')
     def test_run_nightly_task_automation_success(self, mock_file, mock_exists, mock_socket_class, mock_fqdn, mock_hostname, mock_subprocess):
         """Test successful nightly task automation."""
-        from tools.nightly_task_automation import run_nightly_task_automation
+        from project_management_automation.tools.nightly_task_automation import run_nightly_task_automation
 
         # Mock socket.socket() for IP address detection
         mock_socket_instance = MagicMock()
@@ -261,7 +261,7 @@ class TestWorkingCopyHealthTool:
     @patch('socket.getfqdn', return_value='localhost')
     def test_check_working_copy_health_success(self, mock_fqdn, mock_hostname, mock_subprocess):
         """Test successful working copy health check."""
-        from tools.working_copy_health import check_working_copy_health
+        from project_management_automation.tools.working_copy_health import check_working_copy_health
 
         # Mock git status and ifconfig commands
         def mock_subprocess_side_effect(*args, **kwargs):
@@ -296,7 +296,7 @@ class TestTaskClarificationTools:
     @patch('pathlib.Path.exists', return_value=True)
     def test_resolve_task_clarification_success(self, mock_exists, mock_subprocess):
         """Test successful task clarification resolution."""
-        from tools.task_clarification_resolution import resolve_task_clarification
+        from project_management_automation.tools.task_clarification_resolution import resolve_task_clarification
 
         # Mock subprocess result
         mock_result = Mock()
@@ -320,7 +320,7 @@ class TestTaskClarificationTools:
     @patch('pathlib.Path.exists', return_value=True)
     def test_resolve_multiple_clarifications_success(self, mock_exists, mock_subprocess):
         """Test successful multiple clarifications resolution."""
-        from tools.task_clarification_resolution import resolve_multiple_clarifications
+        from project_management_automation.tools.task_clarification_resolution import resolve_multiple_clarifications
 
         # Mock subprocess result
         mock_result = Mock()
@@ -340,7 +340,7 @@ class TestTaskClarificationTools:
     @patch('builtins.open', new_callable=mock_open, read_data='{"todos": [{"id": "T-1", "status": "Review"}]}')
     def test_list_tasks_awaiting_clarification_success(self, mock_file, mock_exists):
         """Test successful list of tasks awaiting clarification."""
-        from tools.task_clarification_resolution import list_tasks_awaiting_clarification
+        from project_management_automation.tools.task_clarification_resolution import list_tasks_awaiting_clarification
 
         result = list_tasks_awaiting_clarification()
         
@@ -357,7 +357,7 @@ class TestGitHooksTool:
     @patch('pathlib.Path.write_text')
     def test_setup_git_hooks_success(self, mock_write, mock_mkdir, mock_exists):
         """Test successful git hooks setup."""
-        from tools.git_hooks import setup_git_hooks
+        from project_management_automation.tools.git_hooks import setup_git_hooks
 
         result = setup_git_hooks(dry_run=True)
         result_data = json.loads(result)
@@ -374,7 +374,7 @@ class TestPatternTriggersTool:
     @patch('builtins.open', new_callable=mock_open)
     def test_setup_pattern_triggers_success(self, mock_file, mock_write, mock_exists):
         """Test successful pattern triggers setup."""
-        from tools.pattern_triggers import setup_pattern_triggers
+        from project_management_automation.tools.pattern_triggers import setup_pattern_triggers
 
         result = setup_pattern_triggers(dry_run=True)
         result_data = json.loads(result)
@@ -391,7 +391,7 @@ class TestSimplifyRulesTool:
     @patch('pathlib.Path.write_text')
     def test_simplify_rules_success(self, mock_write, mock_read, mock_exists):
         """Test successful rules simplification."""
-        from tools.simplify_rules import simplify_rules
+        from project_management_automation.tools.simplify_rules import simplify_rules
 
         result = simplify_rules(dry_run=True)
         result_data = json.loads(result)

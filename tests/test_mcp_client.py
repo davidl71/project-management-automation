@@ -62,7 +62,8 @@ class TestMCPClient:
         from project_management_automation.scripts.base.mcp_client import MCPClient
 
         client = MCPClient(project_root=Path("/test"))
-        client.mcp_config = {}  # No tractatus_thinking configured
+        client._mcp_config = {}  # No tractatus_thinking configured
+        client._config_loaded = True
 
         result = client.call_tractatus_thinking("start", concept="test")
 
@@ -75,7 +76,8 @@ class TestMCPClient:
         from project_management_automation.scripts.base.mcp_client import MCPClient
 
         client = MCPClient(project_root=Path("/test"))
-        client.mcp_config = {"tractatus_thinking": {}}
+        client._mcp_config = {"tractatus_thinking": {}}
+        client._config_loaded = True
 
         result = client.call_tractatus_thinking("start", concept="test concept")
 
@@ -90,7 +92,8 @@ class TestMCPClient:
         from project_management_automation.scripts.base.mcp_client import MCPClient
 
         client = MCPClient(project_root=Path("/test"))
-        client.mcp_config = {}  # No sequential_thinking configured
+        client._mcp_config = {}  # No sequential_thinking configured
+        client._config_loaded = True
 
         result = client.call_sequential_thinking("start", problem="test")
 
@@ -103,7 +106,8 @@ class TestMCPClient:
         from project_management_automation.scripts.base.mcp_client import MCPClient
 
         client = MCPClient(project_root=Path("/test"))
-        client.mcp_config = {"sequential_thinking": {}}
+        client._mcp_config = {"sequential_thinking": {}}
+        client._config_loaded = True
 
         result = client.call_sequential_thinking("start", problem="test problem")
 

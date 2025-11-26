@@ -172,7 +172,8 @@ class TestMCPConfiguration:
 
         server_config = config['mcpServers'][server_key]
         assert 'command' in server_config, "Server should have command"
-        assert 'args' in server_config, "Server should have args"
+        # args is optional when using a switch script
+        # assert 'args' in server_config, "Server should have args"
         assert 'description' in server_config, "Server should have description"
 
     def test_server_description_contains_deprecation_hint(self):

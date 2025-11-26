@@ -20,7 +20,7 @@ class TestResourceHandlers:
 
     def test_status_resource_handler(self):
         """Test automation://status resource handler."""
-        from resources.status import get_status_resource
+        from project_management_automation.resources.status import get_status_resource
         
         result = get_status_resource()
         result_data = json.loads(result)
@@ -34,7 +34,7 @@ class TestResourceHandlers:
 
     def test_history_resource_handler(self):
         """Test automation://history resource handler."""
-        from resources.history import get_history_resource
+        from project_management_automation.resources.history import get_history_resource
         
         result = get_history_resource()
         result_data = json.loads(result)
@@ -45,7 +45,7 @@ class TestResourceHandlers:
 
     def test_tools_list_resource_handler(self):
         """Test automation://tools resource handler."""
-        from resources.list import get_tools_list_resource
+        from project_management_automation.resources.list import get_tools_list_resource
         
         result = get_tools_list_resource()
         result_data = json.loads(result)
@@ -58,7 +58,7 @@ class TestResourceHandlers:
 
     def test_tasks_resource_handler(self):
         """Test automation://tasks resource handler."""
-        from resources.tasks import get_tasks_resource
+        from project_management_automation.resources.tasks import get_tasks_resource
         
         # Mock Todo2 file
         mock_tasks_data = {
@@ -67,7 +67,7 @@ class TestResourceHandlers:
             ]
         }
         
-        with patch('resources.tasks.Path') as mock_path:
+        with patch('project_management_automation.resources.tasks.Path') as mock_path:
             mock_todo2_path = Mock()
             mock_todo2_path.exists.return_value = True
             mock_todo2_path.read_text.return_value = json.dumps(mock_tasks_data)
@@ -81,7 +81,7 @@ class TestResourceHandlers:
 
     def test_tasks_by_agent_resource_handler(self):
         """Test automation://tasks/agent/{agent_name} resource handler."""
-        from resources.tasks import get_agent_tasks_resource
+        from project_management_automation.resources.tasks import get_agent_tasks_resource
         
         # Mock Todo2 file
         mock_tasks_data = {
@@ -90,7 +90,7 @@ class TestResourceHandlers:
             ]
         }
         
-        with patch('resources.tasks.Path') as mock_path:
+        with patch('project_management_automation.resources.tasks.Path') as mock_path:
             mock_todo2_path = Mock()
             mock_todo2_path.exists.return_value = True
             mock_todo2_path.read_text.return_value = json.dumps(mock_tasks_data)
@@ -104,7 +104,7 @@ class TestResourceHandlers:
 
     def test_tasks_by_status_resource_handler(self):
         """Test automation://tasks/status/{status} resource handler."""
-        from resources.tasks import get_tasks_resource
+        from project_management_automation.resources.tasks import get_tasks_resource
         
         # Mock Todo2 file
         mock_tasks_data = {
@@ -113,7 +113,7 @@ class TestResourceHandlers:
             ]
         }
         
-        with patch('resources.tasks.Path') as mock_path:
+        with patch('project_management_automation.resources.tasks.Path') as mock_path:
             mock_todo2_path = Mock()
             mock_todo2_path.exists.return_value = True
             mock_todo2_path.read_text.return_value = json.dumps(mock_tasks_data)
@@ -127,7 +127,7 @@ class TestResourceHandlers:
 
     def test_cache_resource_handler(self):
         """Test automation://cache resource handler."""
-        from resources.cache import get_cache_status_resource
+        from project_management_automation.resources.cache import get_cache_status_resource
         
         result = get_cache_status_resource()
         result_data = json.loads(result)
@@ -178,7 +178,7 @@ class TestResourceJSONFormat:
 
     def test_status_resource_json_valid(self):
         """Test that status resource returns valid JSON."""
-        from resources.status import get_status_resource
+        from project_management_automation.resources.status import get_status_resource
         
         result = get_status_resource()
         # Should not raise exception
@@ -187,7 +187,7 @@ class TestResourceJSONFormat:
 
     def test_history_resource_json_valid(self):
         """Test that history resource returns valid JSON."""
-        from resources.history import get_history_resource
+        from project_management_automation.resources.history import get_history_resource
         
         result = get_history_resource()
         result_data = json.loads(result)
@@ -195,7 +195,7 @@ class TestResourceJSONFormat:
 
     def test_tools_list_resource_json_valid(self):
         """Test that tools list resource returns valid JSON."""
-        from resources.list import get_tools_list_resource
+        from project_management_automation.resources.list import get_tools_list_resource
         
         result = get_tools_list_resource()
         result_data = json.loads(result)

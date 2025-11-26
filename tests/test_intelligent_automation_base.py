@@ -39,13 +39,13 @@ class TestIntelligentAutomationBase:
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
             
-            def _get_sequential_thinking_problem(self) -> str:
+            def _get_sequential_problem(self) -> str:
                 return "Test problem"
             
-            def _generate_insights(self, analysis_results: dict) -> dict:
-                return {'insights': []}
+            def _generate_insights(self, analysis_results: dict) -> str:
+                return "Test insights"
             
-            def _generate_report(self, analysis_results: dict, insights: dict) -> str:
+            def _generate_report(self, analysis_results: dict, insights: str) -> str:
                 return "Test report"
 
         config = {'test': 'value'}
@@ -81,6 +81,15 @@ class TestIntelligentAutomationBase:
             
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
+            
+            def _get_sequential_problem(self) -> str:
+                return "Test problem"
+            
+            def _generate_insights(self, analysis_results: dict) -> str:
+                return "Test insights"
+            
+            def _generate_report(self, analysis_results: dict, insights: str) -> str:
+                return "Test report"
 
         automation = TestAutomation({}, "Test", Path("/test"))
         automation._tractatus_analysis()
@@ -107,8 +116,17 @@ class TestIntelligentAutomationBase:
             def _execute_analysis(self) -> dict:
                 return {'status': 'success', 'results': {}}
             
-            def _get_sequential_thinking_problem(self) -> str:
+            def _get_tractatus_concept(self) -> str:
+                return "Test concept"
+            
+            def _get_sequential_problem(self) -> str:
                 return "How do we test this?"
+            
+            def _generate_insights(self, analysis_results: dict) -> str:
+                return "Test insights"
+            
+            def _generate_report(self, analysis_results: dict, insights: str) -> str:
+                return "Test report"
 
         automation = TestAutomation({}, "Test", Path("/test"))
         automation._sequential_planning()
@@ -133,8 +151,14 @@ class TestIntelligentAutomationBase:
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
             
-            def _get_sequential_thinking_problem(self) -> str:
+            def _get_sequential_problem(self) -> str:
                 return "Test problem"
+            
+            def _generate_insights(self, analysis_results: dict) -> str:
+                return "Test insights"
+            
+            def _generate_report(self, analysis_results: dict, insights: str) -> str:
+                return "Test report"
 
         automation = TestAutomation({}, "Test", Path("/test"))
         result = automation.run()
@@ -159,8 +183,14 @@ class TestIntelligentAutomationBase:
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
             
-            def _get_sequential_thinking_problem(self) -> str:
+            def _get_sequential_problem(self) -> str:
                 return "Test problem"
+            
+            def _generate_insights(self, analysis_results: dict) -> str:
+                return "Test insights"
+            
+            def _generate_report(self, analysis_results: dict, insights: str) -> str:
+                return "Test report"
 
         automation = TestAutomation({}, "Test", Path("/test"))
         
