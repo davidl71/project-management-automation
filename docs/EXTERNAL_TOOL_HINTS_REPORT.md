@@ -1,36 +1,68 @@
 # External Tool Hints Automation Report
 
-**Date**: 2025-11-26 11:26:40
+**Date**: 2025-11-26 23:25:24
 **Mode**: DRY RUN
 
 ## Summary
 
-- **Files Scanned**: 83
-- **Files Modified**: 4
-- **Files Skipped**: 79
+- **Files Scanned**: 90
+- **Files Modified**: 12
+- **Files Skipped**: 78
 
 ## Insights
 
-✅ Added Context7 hints to 4 documentation files
-📚 Libraries detected: 5 unique libraries
-📊 Coverage: 4.8% of files received hints
+✅ Added Context7 hints to 12 documentation files
+📚 Libraries detected: 8 unique libraries
+📊 Coverage: 13.3% of files received hints
 
 ## Hints Added
+
+- **docs/CURSOR_IDE_BEST_PRACTICES.md**
+  - Libraries: Pydantic, React, Python, FastAPI
+  - Type: top
+
+- **docs/PRD.md**
+  - Libraries: Pydantic, Python, TypeScript
+  - Type: top
 
 - **docs/PROJECT_OVERVIEW.md**
   - Libraries: Python
   - Type: top
 
+- **docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md**
+  - Libraries: Python, FastAPI
+  - Type: top
+
 - **docs/DESIGN_DECISIONS.md**
-  - Libraries: Pydantic, Uvicorn, Python, FastAPI
+  - Libraries: Pydantic, FastAPI, Python, Uvicorn
+  - Type: top
+
+- **docs/EXTERNAL_TOOL_HINTS_REPORT.md**
+  - Libraries: Rust, Python, Uvicorn, React, FastAPI, TypeScript, Pydantic, Docker
+  - Type: top
+
+- **docs/PERSONA_ALIGNMENT_GUIDE.md**
+  - Libraries: Python
   - Type: top
 
 - **docs/IDE_INTEGRATION.md**
   - Libraries: Python
   - Type: top
 
+- **docs/MCP_EXTENSION_EVALUATION.md**
+  - Libraries: Rust
+  - Type: top
+
+- **docs/NOTEBOOKLM_PODCAST.md**
+  - Libraries: Python
+  - Type: top
+
 - **docs/SECURITY.md**
   - Libraries: Docker, Python
+  - Type: top
+
+- **docs/design/EXARP_EXTENSION_ARCHITECTURE.md**
+  - Libraries: Python, TypeScript
   - Type: top
 
 ## Files Skipped (Sample)

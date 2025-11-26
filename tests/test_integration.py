@@ -160,15 +160,16 @@ class TestMCPConfiguration:
 
         assert 'mcpServers' in config, "mcpServers key should exist"
         
-        # Check for either 'exarp' or 'project-management-automation' server name
+        # Check for any of the valid exarp server names
         server_key = None
-        if 'exarp' in config['mcpServers']:
-            server_key = 'exarp'
-        elif 'project-management-automation' in config['mcpServers']:
-            server_key = 'project-management-automation'
+        valid_names = ['exarp', 'exarp_pma', 'project-management-automation']
+        for name in valid_names:
+            if name in config['mcpServers']:
+                server_key = name
+                break
         
         assert server_key is not None, \
-            "exarp or project-management-automation server should be configured"
+            f"One of {valid_names} server should be configured"
 
         server_config = config['mcpServers'][server_key]
         assert 'command' in server_config, "Server should have command"
