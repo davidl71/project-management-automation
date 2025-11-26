@@ -3201,6 +3201,74 @@
       "updatedAt": "2025-11-26T04:40:19.184234Z",
       "dependencies": [],
       "estimatedHours": 4
+    },
+    {
+      "id": "d0dae95a-42cc-43a9-82fb-f53cb7ec70f5",
+      "content": "\ud83d\udea8 CRITICAL: Implement project boundary enforcement for all paths",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "critical",
+        "path-validation"
+      ],
+      "long_description": "\ud83d\udea8 **CRITICAL SECURITY VULNERABILITY**\n\n\ud83d\udccb **Issue:** No path boundary enforcement - tools can read/write ANYWHERE on host filesystem\n\n**Vulnerable patterns:**\n- output_path=\"/etc/passwd\" \u2192 Write anywhere\n- config_path=\"/etc/shadow\" \u2192 Read anywhere  \n- workflow_path=\"../../../etc/cron.d/evil\" \u2192 Path traversal\n\n**Affected tools (13+):**\n- validate_ci_cd_workflow (workflow_path, output_path)\n- scan_dependency_security (config_path)\n- add_external_tool_hints (output_path)\n- sprint_automation (output_path)\n- setup_pattern_triggers (config_path)\n- analyze_todo2_alignment (output_path)\n- check_documentation_health (output_path)\n\n**REQUIRED FIX - Create utils.validate_path():**\n\n```python\ndef validate_path(path: str, project_root: Path, \n                  allow_read: bool = True, \n                  allow_write: bool = False) -> Path:\n    \"\"\"\n    Validate path is within project boundaries.\n    \n    Raises:\n        SecurityError: If path escapes project root\n    \"\"\"\n    resolved = Path(path).resolve()\n    project_resolved = project_root.resolve()\n    \n    # Check path is within project\n    try:\n        resolved.relative_to(project_resolved)\n    except ValueError:\n        raise SecurityError(\n            f\"Path '{path}' escapes project boundary. \"\n            f\"Must be within '{project_resolved}'\"\n        )\n    \n    # Check for symlink escape\n    if resolved.is_symlink():\n        target = resolved.resolve()\n        try:\n            target.relative_to(project_resolved)\n        except ValueError:\n            raise SecurityError(\n                f\"Symlink '{path}' points outside project\"\n            )\n    \n    return resolved\n```\n\n**Apply to ALL tools accepting paths.**",
+      "completed": false,
+      "createdAt": "2025-11-26T04:42:51.313952Z",
+      "updatedAt": "2025-11-26T04:42:51.313968Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "03030fb2-0819-4281-96ec-940b5ad58d0f",
+      "content": "Add subprocess command sanitization and allowlist",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "subprocess",
+        "sanitization"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Prevent command injection via subprocess\n\n**Current risk:** 27 subprocess.run() calls, some with user-influenced paths\n\n**Issues found:**\n- Git commands with arbitrary cwd\n- pip/npm/cargo commands with paths\n- SSH commands to remote agents\n\n**REQUIRED FIX - Subprocess wrapper:**\n\n```python\nALLOWED_COMMANDS = {\n    'git': ['status', 'log', 'branch', 'fetch', 'rev-list', 'rev-parse'],\n    'pip-audit': ['--format', '--strict', '--requirement'],\n    'npm': ['audit', '--json'],\n    'cargo': ['audit', '--json'],\n    'pytest': ['--cov', '--cov-report'],\n}\n\ndef safe_subprocess(\n    cmd: List[str],\n    cwd: Optional[Path] = None,\n    project_root: Path = None,\n    **kwargs\n) -> subprocess.CompletedProcess:\n    \"\"\"\n    Safe subprocess wrapper with command validation.\n    \"\"\"\n    if not cmd:\n        raise SecurityError(\"Empty command\")\n    \n    base_cmd = cmd[0]\n    if base_cmd not in ALLOWED_COMMANDS:\n        raise SecurityError(f\"Command not in allowlist: {base_cmd}\")\n    \n    # Validate cwd is within project\n    if cwd:\n        validate_path(str(cwd), project_root, allow_read=True)\n    \n    # Never use shell=True\n    return subprocess.run(cmd, cwd=cwd, shell=False, **kwargs)\n```\n\n**Apply to all 27 subprocess calls.**",
+      "completed": false,
+      "createdAt": "2025-11-26T04:42:51.313988Z",
+      "updatedAt": "2025-11-26T04:42:51.313991Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "9b1fd87a-adb5-4b6b-8b4b-b985aef8376b",
+      "content": "Add file operation sandboxing for read/write",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "filesystem",
+        "sandboxing"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Sandbox all file operations to project directory\n\n**Current risk:** open(), Path.read_text(), shutil operations can access ANY file\n\n**REQUIRED FIX - Safe file operations:**\n\n```python\ndef safe_read(path: str, project_root: Path) -> str:\n    \"\"\"Read file only if within project.\"\"\"\n    validated = validate_path(path, project_root, allow_read=True)\n    return validated.read_text()\n\ndef safe_write(path: str, content: str, project_root: Path) -> None:\n    \"\"\"Write file only if within project.\"\"\"\n    validated = validate_path(path, project_root, allow_write=True)\n    validated.parent.mkdir(parents=True, exist_ok=True)\n    validated.write_text(content)\n\ndef safe_open(path: str, mode: str, project_root: Path):\n    \"\"\"Open file only if within project.\"\"\"\n    allow_write = 'w' in mode or 'a' in mode\n    validated = validate_path(path, project_root, \n                             allow_read='r' in mode,\n                             allow_write=allow_write)\n    return open(validated, mode)\n```\n\n**Also consider:**\n- Maximum file size limits\n- File type restrictions (no .exe, .sh unless explicit)\n- Rate limiting for file operations",
+      "completed": false,
+      "createdAt": "2025-11-26T04:42:51.314000Z",
+      "updatedAt": "2025-11-26T04:42:51.314002Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "78a5d8f1-f9cc-488e-86e1-a9ecdc730ae0",
+      "content": "Add environment variable validation and sanitization",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "environment",
+        "validation"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Validate environment variables used for paths\n\n**Current risk:** PROJECT_ROOT and WORKSPACE_PATH trusted without validation\n\n**Vulnerable code:**\n```python\nenv_root = os.getenv('PROJECT_ROOT') or os.getenv('WORKSPACE_PATH')\nif env_root:\n    root_path = Path(env_root)  # Directly used!\n```\n\n**Attack:** Set PROJECT_ROOT=/etc to make all operations target /etc\n\n**REQUIRED FIX:**\n\n```python\ndef get_validated_project_root() -> Path:\n    \"\"\"Get project root with validation.\"\"\"\n    env_root = os.getenv('PROJECT_ROOT')\n    \n    if env_root:\n        path = Path(env_root).resolve()\n        \n        # Sanity checks\n        if not path.exists():\n            raise SecurityError(f\"PROJECT_ROOT does not exist: {path}\")\n        \n        # Must be a directory\n        if not path.is_dir():\n            raise SecurityError(f\"PROJECT_ROOT is not a directory: {path}\")\n        \n        # Must contain project markers\n        markers = ['.git', '.todo2', 'pyproject.toml', 'setup.py']\n        if not any((path / m).exists() for m in markers):\n            raise SecurityError(\n                f\"PROJECT_ROOT lacks project markers: {path}\"\n            )\n        \n        # Must not be system directories\n        forbidden = ['/etc', '/usr', '/bin', '/sbin', '/var', '/tmp']\n        for f in forbidden:\n            if str(path).startswith(f):\n                raise SecurityError(f\"PROJECT_ROOT cannot be system dir: {path}\")\n        \n        return path\n    \n    # Fall back to marker-based detection\n    return find_project_root()\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:42:51.314009Z",
+      "updatedAt": "2025-11-26T04:42:51.314011Z",
+      "dependencies": [],
+      "estimatedHours": 2
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
