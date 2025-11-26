@@ -44,6 +44,183 @@ alias xc="exarp-context"
 alias xp="exarp-projects"
 
 # ═══════════════════════════════════════════════════════════════
+# SHELL-ONLY FUNCTIONS (no Python/MCP required)
+# ═══════════════════════════════════════════════════════════════
+
+# Fast task count using only shell (no Python)
+_exarp_tasks_fast() {
+    local dir="${1:-.}"
+    local todo_file="$dir/.todo2/state.todo2.json"
+    
+    if [[ ! -f "$todo_file" ]]; then
+        echo "0/0"
+        return
+    fi
+    
+    # Use grep/awk for speed (no Python startup time)
+    local total=$(grep -c '"id"' "$todo_file" 2>/dev/null || echo 0)
+    local done=$(grep -c '"status":\s*"done\|completed"' "$todo_file" 2>/dev/null || echo 0)
+    local pending=$((total - done))
+    echo "$pending/$total"
+}
+
+# Fast project detection (shell only)
+_exarp_detect_fast() {
+    local dir="${1:-.}"
+    [[ -d "$dir/.todo2" ]] || [[ -d "$dir/.git" ]] || \
+    [[ -f "$dir/pyproject.toml" ]] || [[ -f "$dir/package.json" ]] || \
+    [[ -f "$dir/Cargo.toml" ]] || [[ -f "$dir/go.mod" ]]
+}
+
+# Fast project name (shell only)
+_exarp_name_fast() {
+    local dir="${1:-.}"
+    
+    if [[ -f "$dir/pyproject.toml" ]]; then
+        grep -m1 'name.*=' "$dir/pyproject.toml" 2>/dev/null | sed 's/.*"\([^"]*\)".*/\1/' | head -1
+    elif [[ -f "$dir/package.json" ]]; then
+        grep -m1 '"name"' "$dir/package.json" 2>/dev/null | sed 's/.*"\([^"]*\)"[^"]*$/\1/'
+    elif [[ -f "$dir/Cargo.toml" ]]; then
+        grep -m1 'name.*=' "$dir/Cargo.toml" 2>/dev/null | sed 's/.*"\([^"]*\)".*/\1/' | head -1
+    else
+        basename "$(realpath "$dir" 2>/dev/null || echo "$dir")"
+    fi
+}
+
+# Git stats (shell only)
+_exarp_git_stats() {
+    local dir="${1:-.}"
+    if [[ ! -d "$dir/.git" ]]; then
+        echo "no-git"
+        return
+    fi
+    
+    cd "$dir" 2>/dev/null || return
+    local branch=$(git branch --show-current 2>/dev/null)
+    local commits=$(git rev-list --count HEAD 2>/dev/null || echo 0)
+    local dirty=$(git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+    
+    if (( dirty > 0 )); then
+        echo "$branch+$dirty"
+    else
+        echo "$branch"
+    fi
+}
+
+# Lightweight context (NO Python required)
+exarp-lite() {
+    local dir="${1:-.}"
+    
+    if ! _exarp_detect_fast "$dir"; then
+        echo "📁 Not a project directory"
+        return 1
+    fi
+    
+    local name=$(_exarp_name_fast "$dir")
+    local tasks=$(_exarp_tasks_fast "$dir")
+    local git=$(_exarp_git_stats "$dir")
+    
+    # File counts
+    local py_files=$(find "$dir" -name "*.py" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local js_files=$(find "$dir" -name "*.js" -o -name "*.ts" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local total_files=$(find "$dir" -type f 2>/dev/null | wc -l | tr -d ' ')
+    
+    echo ""
+    echo "┌─────────────────────────────────────────────────────────────┐"
+    echo "│  ⚡ EXARP LITE (shell-only, no MCP)                         │"
+    echo "├─────────────────────────────────────────────────────────────┤"
+    printf "│  %-58s│\n" "Project: $name"
+    printf "│  %-58s│\n" "Tasks: $tasks (pending/total)"
+    printf "│  %-58s│\n" "Git: $git"
+    printf "│  %-58s│\n" "Files: $total_files total ($py_files py, $js_files js/ts)"
+    echo "└─────────────────────────────────────────────────────────────┘"
+    echo ""
+}
+
+# Alias for lite mode
+alias xl="exarp-lite"
+
+# Quick task list (shell only, reads JSON directly)
+exarp-tasks-lite() {
+    local dir="${1:-.}"
+    local todo_file="$dir/.todo2/state.todo2.json"
+    local limit="${2:-10}"
+    
+    if [[ ! -f "$todo_file" ]]; then
+        echo "No .todo2/state.todo2.json found"
+        return 1
+    fi
+    
+    echo ""
+    echo "┌─────────────────────────────────────────────────────────────┐"
+    printf "│  📋 PENDING TASKS (top %-2s)                                 │\n" "$limit"
+    echo "├─────────────────────────────────────────────────────────────┤"
+    
+    # Use Python one-liner for reliable JSON parsing (still fast, no imports)
+    local output
+    output=$(python3 -c "
+import json
+with open('$todo_file') as f:
+    data = json.load(f)
+count = 0
+for t in data.get('todos', []):
+    status = t.get('status', '')
+    if status in ['pending', 'in_progress', 'Todo', 'In Progress']:
+        content = t.get('content', 'No content')[:54]
+        print(content)
+        count += 1
+        if count >= $limit:
+            break
+" 2>/dev/null)
+    
+    if [[ -z "$output" ]]; then
+        echo "│  No pending tasks found                                     │"
+    else
+        echo "$output" | while read -r task; do
+            printf "│  • %-56s│\n" "$task"
+        done
+    fi
+    
+    echo "└─────────────────────────────────────────────────────────────┘"
+    echo ""
+}
+
+alias xt="exarp-tasks-lite"
+
+# Multi-project scan (shell only)
+exarp-projects-lite() {
+    local dir="${1:-.}"
+    
+    echo ""
+    echo "┌─────────────────────────────────────────────────────────────┐"
+    echo "│  🗂️  PROJECTS (lite scan)                                   │"
+    echo "├─────────────────────────────────────────────────────────────┤"
+    echo "│  Name                          Tasks     Git               │"
+    echo "├─────────────────────────────────────────────────────────────┤"
+    
+    local count=0
+    for subdir in "$dir"/*/; do
+        if _exarp_detect_fast "$subdir"; then
+            local name=$(_exarp_name_fast "$subdir")
+            local tasks=$(_exarp_tasks_fast "$subdir")
+            local git=$(_exarp_git_stats "$subdir")
+            printf "│  %-28s %-9s %-17s│\n" "${name:0:28}" "$tasks" "${git:0:17}"
+            ((count++))
+        fi
+    done
+    
+    if (( count == 0 )); then
+        echo "│  No projects found                                          │"
+    fi
+    
+    echo "└─────────────────────────────────────────────────────────────┘"
+    echo "  Found $count project(s)"
+    echo ""
+}
+
+alias xpl="exarp-projects-lite"
+
+# ═══════════════════════════════════════════════════════════════
 # CONTEXT DETECTION
 # ═══════════════════════════════════════════════════════════════
 
@@ -523,7 +700,8 @@ fi
 # RPROMPT='$(exarp_prompt_info) '$RPROMPT
 
 echo "✅ Exarp plugin loaded"
-echo "   xc - context  xp - projects  xs - score  xo - overview  motd - wisdom"
+echo "   Full:  xc - context   xp - projects   xs - score   xo - overview"
+echo "   Lite:  xl - context   xpl - projects  xt - tasks   (no Python needed)"
 echo "   Enable prompt: export EXARP_PROMPT=1 && RPROMPT='\$(exarp_prompt_info)'"
 
 # iTerm2 integration status
