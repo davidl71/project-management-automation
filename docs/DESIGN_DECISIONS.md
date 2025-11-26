@@ -474,6 +474,111 @@ async def project_scorecard(ctx: Context, ...) -> str:
 
 ---
 
+## Trusted Advisor System
+
+**Decision:** Assign wisdom sources as "trusted advisors" to scorecard metrics, tools, and workflow stages  
+**Alternatives Considered:** Random quotes, single source, no integration  
+**Why This Design:**
+
+### Advisor Assignments
+
+Each metric, tool, and workflow stage has a designated advisor chosen for philosophical alignment:
+
+| Metric | Advisor | Rationale |
+|--------|---------|-----------|
+| **Security** | 😈 BOFH | Paranoid about security, expects users to break everything |
+| **Testing** | 🏛️ Stoics | Discipline through adversity - tests reveal truth |
+| **Documentation** | 🎓 Confucius | Teaching requires good documentation |
+| **Completion** | ⚔️ Sun Tzu | Strategy and decisive execution |
+| **Alignment** | ☯️ Tao | Balance, flow, and purpose |
+| **Clarity** | 🎭 Gracián | Pragmatic maxims, clear thinking |
+| **CI/CD** | ⚗️ Kybalion | Cause and effect - CI/CD is pure causation |
+| **Dogfooding** | 🔧 Murphy | If it can break, it will - use your own tools! |
+| **Uniqueness** | 🎭 Shakespeare | Creative differentiation, memorable design |
+| **Codebase** | 🔮 Enochian | Mystical structure, hidden patterns |
+
+### Workflow Stage Advisors
+
+| Stage | Advisor | When to Consult |
+|-------|---------|-----------------|
+| **daily_checkin** | 📜 Pistis Sophia | Start each day with enlightenment journey wisdom |
+| **planning** | ⚔️ Sun Tzu | Strategy and prioritization before work |
+| **implementation** | 💻 Tao of Programming | During coding, let the code flow naturally |
+| **debugging** | 😈 BOFH | Knows all the ways things break |
+| **review** | 🏛️ Stoics | Accept harsh truths with equanimity |
+| **retrospective** | 🎓 Confucius | Learning and teaching from experience |
+| **celebration** | 🎭 Shakespeare | Celebrate with drama and poetry! |
+
+### Score-Based Consultation Frequency
+
+| Score Range | Mode | Consultation Frequency |
+|-------------|------|----------------------|
+| **0-30%** | 🔥 Chaos | Every action - you need guidance |
+| **30-60%** | 🏗️ Building | Start of work and review |
+| **60-80%** | 🌱 Maturing | Planning and major milestones |
+| **80-100%** | 🎯 Mastery | Weekly reflection |
+
+### MCP Tools
+
+```bash
+# Consult advisor for a metric
+/exarp/consult_advisor metric="security" score=45.0 context="Reviewing auth"
+
+# Get daily briefing based on scores
+/exarp/get_advisor_briefing overall_score=72.0 security_score=100 testing_score=50
+
+# Export logs for podcast/video generation
+/exarp/export_advisor_podcast days=7 output_file="podcast_data.json"
+
+# List all advisor assignments
+/exarp/list_advisors
+```
+
+### Consultation Logging
+
+All consultations are logged in JSONL format at `.exarp/advisor_logs/consultations_YYYY-MM.jsonl`:
+
+```json
+{
+  "timestamp": "2025-11-26T12:00:00Z",
+  "advisor": "bofh",
+  "advisor_name": "BOFH (Bastard Operator From Hell)",
+  "metric": "security",
+  "score_at_time": 100.0,
+  "consultation_mode": "mastery",
+  "quote": "The problem exists between keyboard and chair.",
+  "encouragement": "Check your assumptions before blaming the code.",
+  "context": "Reviewing security controls after scorecard"
+}
+```
+
+### Podcast/Video Export
+
+The `export_advisor_podcast` tool generates structured data for AI-generated media:
+
+```json
+{
+  "title": "Exarp Project Progress - Week of 2025-11-26",
+  "episodes": [
+    {
+      "date": "2025-11-26",
+      "advisors": ["bofh", "stoic", "confucius"],
+      "metrics": ["security", "testing", "documentation"],
+      "notable_quotes": [...],
+      "narrative_prompt": "On 2025-11-26, the team consulted 3 advisors..."
+    }
+  ]
+}
+```
+
+This data can be fed to:
+- **NotebookLM** for AI podcast generation
+- **ElevenLabs** for voice narration
+- **Synthesia/HeyGen** for avatar videos
+- **Custom scripts** for progress reports
+
+---
+
 ## Justified External Dependencies
 
 | Dependency | Purpose | Why Included |

@@ -81,6 +81,23 @@ except ImportError:
     PISTIS_SOPHIA_AVAILABLE = False
     get_pistis_sophia_wisdom = None
 
+# Trusted Advisor System
+from .advisors import (
+    METRIC_ADVISORS,
+    TOOL_ADVISORS,
+    STAGE_ADVISORS,
+    SCORE_CONSULTATION_FREQUENCY,
+    get_advisor_for_metric,
+    get_advisor_for_tool,
+    get_advisor_for_stage,
+    get_consultation_mode,
+    consult_advisor,
+    format_consultation,
+    get_daily_briefing,
+    get_consultation_log,
+    export_for_podcast,
+)
+
 __all__ = [
     # Core API (stable)
     "get_wisdom",
@@ -96,6 +113,21 @@ __all__ = [
     # Feature flags
     "SEFARIA_AVAILABLE",
     "PISTIS_SOPHIA_AVAILABLE",
+    
+    # Trusted Advisor System
+    "METRIC_ADVISORS",
+    "TOOL_ADVISORS",
+    "STAGE_ADVISORS",
+    "SCORE_CONSULTATION_FREQUENCY",
+    "get_advisor_for_metric",
+    "get_advisor_for_tool",
+    "get_advisor_for_stage",
+    "get_consultation_mode",
+    "consult_advisor",
+    "format_consultation",
+    "get_daily_briefing",
+    "get_consultation_log",
+    "export_for_podcast",
 ]
 
 # INTENTIONAL: Wisdom module has its own version, separate from Exarp.

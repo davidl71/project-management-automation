@@ -894,6 +894,120 @@ if mcp:
                 return json.dumps(result, separators=(',', ':'))
             return result.get("formatted_output", json.dumps(result, separators=(',', ':')))
 
+        # ═══════════════════════════════════════════════════════════════════
+        # TRUSTED ADVISOR SYSTEM TOOLS
+        # ═══════════════════════════════════════════════════════════════════
+        
+        @mcp.tool()
+        def consult_advisor(
+            metric: Optional[str] = None,
+            tool: Optional[str] = None,
+            stage: Optional[str] = None,
+            score: float = 50.0,
+            context: str = ""
+        ) -> str:
+            """
+            [HINT: Trusted advisor. Wisdom from assigned advisors by metric/tool/stage.]
+            
+            Consult a trusted advisor assigned to a metric, tool, or workflow stage.
+            Advisors provide wisdom matched to project health and context.
+            
+            Args:
+                metric: Scorecard metric (security, testing, documentation, etc.)
+                tool: Tool name (project_scorecard, sprint_automation, etc.)
+                stage: Workflow stage (daily_checkin, planning, review, etc.)
+                score: Current score for wisdom tier selection (0-100)
+                context: What you're working on (for logging)
+            
+            Returns:
+                Advisor wisdom with quote, encouragement, and rationale
+            """
+            from .tools.wisdom.advisors import consult_advisor as _consult_advisor
+            result = _consult_advisor(
+                metric=metric,
+                tool=tool,
+                stage=stage,
+                score=score,
+                context=context,
+                log=True
+            )
+            return json.dumps(result, separators=(',', ':'))
+        
+        @mcp.tool()
+        def get_advisor_briefing(
+            overall_score: float = 50.0,
+            security_score: float = 50.0,
+            testing_score: float = 50.0,
+            documentation_score: float = 50.0,
+            completion_score: float = 50.0,
+            alignment_score: float = 50.0
+        ) -> str:
+            """
+            [HINT: Daily briefing. Advisor wisdom for lowest-scoring metrics.]
+            
+            Get a daily briefing from trusted advisors based on current scores.
+            Focuses on the metrics needing the most attention.
+            
+            Args:
+                overall_score: Overall project score (0-100)
+                security_score: Security metric score
+                testing_score: Testing metric score
+                documentation_score: Documentation metric score
+                completion_score: Completion metric score
+                alignment_score: Alignment metric score
+            """
+            from .tools.wisdom.advisors import get_daily_briefing
+            metric_scores = {
+                "security": security_score,
+                "testing": testing_score,
+                "documentation": documentation_score,
+                "completion": completion_score,
+                "alignment": alignment_score,
+            }
+            briefing = get_daily_briefing(overall_score, metric_scores)
+            return briefing
+        
+        @mcp.tool()
+        def export_advisor_podcast(
+            days: int = 7,
+            output_file: Optional[str] = None
+        ) -> str:
+            """
+            [HINT: Podcast export. Consultation logs formatted for AI video/podcast generation.]
+            
+            Export advisor consultation data for AI-generated podcast or video.
+            Creates structured narrative data from consultation logs.
+            
+            Args:
+                days: Days of history to include (default: 7)
+                output_file: Optional path to save JSON export
+            """
+            from .tools.wisdom.advisors import export_for_podcast
+            output_path = Path(output_file) if output_file else None
+            result = export_for_podcast(days=days, output_path=output_path)
+            return json.dumps(result, separators=(',', ':'))
+        
+        @mcp.tool()
+        def list_advisors() -> str:
+            """
+            [HINT: List advisors. All metric/tool/stage advisor assignments with rationale.]
+            
+            List all trusted advisor assignments showing which advisor
+            is assigned to each metric, tool, and workflow stage.
+            """
+            from .tools.wisdom.advisors import (
+                METRIC_ADVISORS,
+                TOOL_ADVISORS,
+                STAGE_ADVISORS,
+                SCORE_CONSULTATION_FREQUENCY
+            )
+            return json.dumps({
+                "metric_advisors": METRIC_ADVISORS,
+                "tool_advisors": TOOL_ADVISORS,
+                "stage_advisors": STAGE_ADVISORS,
+                "consultation_frequency": SCORE_CONSULTATION_FREQUENCY,
+            }, separators=(',', ':'))
+
     # Register prompts
     try:
         # Try relative imports first (when run as module)
