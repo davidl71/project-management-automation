@@ -23,7 +23,7 @@ from typing import Dict, List, Optional
 # Project root will be passed to __init__
 
 # Import base class
-from .base.intelligent_automation_base import IntelligentAutomationBase
+from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
 # Configure logging (will be configured after project_root is set)
 logger = logging.getLogger(__name__)

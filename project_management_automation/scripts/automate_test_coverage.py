@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 # Import base class
-from .base.intelligent_automation_base import IntelligentAutomationBase
+from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
 logger = logging.getLogger(__name__)
 
