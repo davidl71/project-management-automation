@@ -549,8 +549,34 @@ class IntelligentAutomationBase(ABC):
         return []
 
     def _format_findings(self, analysis_results: Dict) -> str:
-        """Format findings for Todo2 comment."""
-        return json.dumps(analysis_results, indent=2)
+        """Format findings for Todo2 comment.
+        
+        Filters out large lists to prevent bloating the todo2 file.
+        Max comment size: 10KB
+        """
+        # Filter out large lists (like full task dumps)
+        filtered = {}
+        for key, value in analysis_results.items():
+            if isinstance(value, list):
+                if len(value) > 10:
+                    # Summarize large lists
+                    filtered[key] = f"[{len(value)} items - see logs for details]"
+                elif len(json.dumps(value)) > 5000:
+                    # Truncate lists with large items
+                    filtered[key] = f"[{len(value)} items - truncated]"
+                else:
+                    filtered[key] = value
+            elif isinstance(value, dict) and len(json.dumps(value)) > 5000:
+                # Truncate large dicts
+                filtered[key] = "{...truncated...}"
+            else:
+                filtered[key] = value
+        
+        # Use compact JSON, limit total size
+        result = json.dumps(filtered, separators=(',', ':'))
+        if len(result) > 10000:
+            return result[:10000] + "...truncated"
+        return result
 
     def _fallback_component_extraction(self, concept: str) -> List[str]:
         """Fallback component extraction."""
