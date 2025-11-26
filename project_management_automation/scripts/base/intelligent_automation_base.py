@@ -96,6 +96,9 @@ class IntelligentAutomationBase(ABC):
             # Step 5: Execute analysis (implemented by subclasses)
             analysis_results = self._execute_analysis()
 
+            # Store analysis results for tool wrappers to access
+            self.results['results'] = analysis_results
+
             # Step 6: Generate insights using Tractatus
             insights = self._generate_insights(analysis_results)
 

@@ -7,11 +7,13 @@ Refactored to use IntelligentAutomationBase with:
 - Sequential Thinking for workflow planning
 - Todo2 integration for tracking
 - NetworkX for task dependency graph analysis
+- Generic PROJECT_GOALS.md support for any project type
 """
 
 import argparse
 import json
 import logging
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -52,34 +54,125 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         self.agentic_tools_path = self.project_root / '.agentic-tools-mcp' / 'tasks' / 'tasks.json'
         self.todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         self.docs_path = self.project_root / 'docs'
-        self.strategy_framework_path = self.docs_path / 'INVESTMENT_STRATEGY_FRAMEWORK.md'
+        
+        # Load goals from PROJECT_GOALS.md (generic) or fall back to defaults
+        self.goals_path = self.project_root / 'PROJECT_GOALS.md'
+        self.strategy_phases, self.infrastructure_keywords = self._load_project_goals()
 
-        # Strategy phases
-        self.strategy_phases = {
+    def _load_project_goals(self) -> tuple:
+        """Load project goals from PROJECT_GOALS.md file.
+        
+        Returns:
+            Tuple of (strategy_phases dict, infrastructure_keywords list)
+        """
+        default_infrastructure = [
+            'research', 'analysis', 'review', 'investigation',
+            'config', 'configuration', 'setup', 'infrastructure',
+            'testing', 'test', 'unittest', 'pytest',
+            'documentation', 'docs', 'readme',
+            'build', 'package', 'release', 'version',
+            'refactor', 'cleanup', 'optimization',
+            'migration', 'upgrade', 'deprecation'
+        ]
+        
+        if not self.goals_path.exists():
+            logger.warning(f"PROJECT_GOALS.md not found at {self.goals_path}, using defaults")
+            return self._get_default_phases(), default_infrastructure
+        
+        try:
+            with open(self.goals_path, 'r') as f:
+                content = f.read()
+            
+            phases = {}
+            infrastructure = default_infrastructure.copy()
+            
+            # Parse phases: ### Phase N: Name
+            phase_pattern = r'###\s+Phase\s+(\d+):\s+([^\n]+)'
+            keyword_pattern = r'\*\*Keywords\*\*:\s*([^\n]+)'
+            
+            # Find all phase sections
+            phase_matches = list(re.finditer(phase_pattern, content))
+            
+            for i, match in enumerate(phase_matches):
+                phase_num = match.group(1)
+                phase_name = match.group(2).strip()
+                phase_key = f'phase{phase_num}'
+                
+                # Find keywords after this phase header
+                start_pos = match.end()
+                end_pos = phase_matches[i + 1].start() if i + 1 < len(phase_matches) else len(content)
+                section_content = content[start_pos:end_pos]
+                
+                keyword_match = re.search(keyword_pattern, section_content)
+                if keyword_match:
+                    keywords_str = keyword_match.group(1).strip()
+                    keywords = [k.strip().lower() for k in keywords_str.split(',')]
+                    phases[phase_key] = {
+                        'name': phase_name,
+                        'keywords': keywords
+                    }
+                    logger.debug(f"Loaded {phase_key}: {phase_name} with {len(keywords)} keywords")
+            
+            # Parse infrastructure keywords section
+            infra_section = re.search(
+                r'##\s+Infrastructure Keywords[^\n]*\n(.*?)(?=\n##|\Z)',
+                content,
+                re.DOTALL | re.IGNORECASE
+            )
+            if infra_section:
+                # Extract bullet points or comma-separated keywords
+                infra_content = infra_section.group(1)
+                # Look for bullet points
+                bullet_keywords = re.findall(r'-\s*([^,\n]+(?:,\s*[^,\n]+)*)', infra_content)
+                for bullet in bullet_keywords:
+                    for kw in bullet.split(','):
+                        kw = kw.strip().lower()
+                        if kw and kw not in infrastructure:
+                            infrastructure.append(kw)
+            
+            if phases:
+                logger.info(f"Loaded {len(phases)} phases from PROJECT_GOALS.md")
+                return phases, infrastructure
+            else:
+                logger.warning("No phases found in PROJECT_GOALS.md, using defaults")
+                return self._get_default_phases(), infrastructure
+                
+        except Exception as e:
+            logger.error(f"Error loading PROJECT_GOALS.md: {e}")
+            return self._get_default_phases(), default_infrastructure
+    
+    def _get_default_phases(self) -> Dict:
+        """Return default phases for generic projects."""
+        return {
             'phase1': {
-                'name': 'Foundation (Weeks 1-2)',
-                'keywords': ['portfolio aggregation', 'multi-account', 'position import',
-                           'currency conversion', 'swiftness', 'discount bank', 'multi-broker'],
+                'name': 'Foundation',
+                'keywords': ['setup', 'infrastructure', 'configuration', 'foundation', 'core'],
             },
             'phase2': {
-                'name': 'Core Calculations (Weeks 3-6)',
-                'keywords': ['cash flow', 'greeks', 'convexity', 'barbell', 'nlopt',
-                           'cpi', 'loan', 'bond'],
+                'name': 'Core Features',
+                'keywords': ['feature', 'implementation', 'integration', 'api', 'service'],
             },
             'phase3': {
-                'name': 'Advanced Features (Weeks 7-12)',
-                'keywords': ['cash management', 't-bill', 'bond ladder', 'etf',
-                           'rebalancing', 'allocation'],
+                'name': 'Enhancement',
+                'keywords': ['enhancement', 'optimization', 'improvement', 'refactor'],
+            },
+            'phase4': {
+                'name': 'Quality',
+                'keywords': ['testing', 'quality', 'coverage', 'ci', 'cd', 'validation'],
+            },
+            'phase5': {
+                'name': 'Documentation',
+                'keywords': ['documentation', 'docs', 'guide', 'readme', 'api'],
             }
         }
 
     def _get_tractatus_concept(self) -> str:
         """Tractatus concept: What is task alignment?"""
-        return "What is task alignment? Task Alignment = Strategy Relevance × Priority Match × Dependency Completeness × Currency"
+        return "What is task alignment? Task Alignment = Project Goals Relevance × Priority Match × Dependency Completeness × Currency"
 
     def _get_sequential_problem(self) -> str:
         """Sequential problem: How do we analyze task alignment?"""
-        return "How do we systematically analyze Todo2 task alignment with investment strategy framework?"
+        return "How do we systematically analyze Todo2 task alignment with project goals framework?"
 
     def _execute_analysis(self) -> Dict:
         """Execute Todo2 alignment analysis."""
@@ -213,12 +306,8 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
             # Identify misaligned or infrastructure tasks
             if priority == 'high' and not aligned_phases:
-                infrastructure_keywords = [
-                    'research', 'config', 'infrastructure', 'testing',
-                    'documentation', 'setup', 'build', 'analysis', 'alignment',
-                    'review', 'prioritization', 'coordination', 'automation'
-                ]
-                if any(keyword in task_text for keyword in infrastructure_keywords):
+                # Use infrastructure keywords loaded from PROJECT_GOALS.md
+                if any(keyword in task_text for keyword in self.infrastructure_keywords):
                     analysis['infrastructure_tasks'].append({
                         'id': task_id,
                         'content': task.get('content', ''),
@@ -334,10 +423,13 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
 """
 
-        return f"""# Todo2 Task Priority Alignment Analysis
+        # Generate phase summary
+        phase_summary = self._generate_phase_summary(analysis_results)
+        
+        return f"""# Todo2 Task Alignment Analysis
 
 *Generated: {timestamp}*
-*Generated By: Intelligent Todo2 Alignment Analyzer*
+*Goals Source: {self.goals_path.name if self.goals_path.exists() else 'Default phases'}*
 
 ## Executive Summary
 
@@ -346,9 +438,16 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 **Key Metrics:**
 - Total Tasks: {analysis_results.get('total_tasks', 0)}
 - High Priority: {analysis_results.get('by_priority', {}).get('high', 0)}
-- Strategy Critical: {len(analysis_results.get('strategy_critical', []))}
+- Goal-Aligned Critical: {len(analysis_results.get('strategy_critical', []))}
 - Misaligned: {len(analysis_results.get('misaligned_tasks', []))}
+- Infrastructure: {len(analysis_results.get('infrastructure_tasks', []))}
 - Blocked: {len(analysis_results.get('blocked_tasks', []))}
+
+---
+
+## Phase Alignment
+
+{phase_summary}
 
 ---
 
@@ -361,6 +460,24 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
 *This report was generated using intelligent automation with Tractatus Thinking, Sequential Thinking, and NetworkX analysis.*
 """
+    
+    def _generate_phase_summary(self, analysis_results: Dict) -> str:
+        """Generate phase-by-phase summary."""
+        lines = []
+        by_phase = analysis_results.get('by_phase', {})
+        
+        for phase_key, phase_info in self.strategy_phases.items():
+            phase_data = by_phase.get(phase_key, {})
+            total = phase_data.get('total', 0)
+            high_priority = phase_data.get('high_priority', 0)
+            
+            status_icon = '✅' if total > 0 else '⬜'
+            lines.append(f"| {status_icon} **{phase_info['name']}** | {total} tasks | {high_priority} high-priority |")
+        
+        if lines:
+            header = "| Phase | Tasks | High Priority |\n|-------|-------|---------------|\n"
+            return header + '\n'.join(lines)
+        return "*No phase data available*"
 
     def _needs_networkx(self) -> bool:
         """NetworkX is useful for task dependency analysis."""

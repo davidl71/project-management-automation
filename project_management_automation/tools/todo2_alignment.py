@@ -78,16 +78,22 @@ def analyze_todo2_alignment(
         analyzer = Todo2AlignmentAnalyzerV2(config, project_root)
         results = analyzer.run()
 
-        # Extract key metrics
+        # Extract key metrics from analysis results
         analysis_results = results.get('results', {})
-        alignment_scores = analysis_results.get('alignment_scores', {})
         misaligned_tasks = analysis_results.get('misaligned_tasks', [])
+        infrastructure_tasks = analysis_results.get('infrastructure_tasks', [])
+        stale_tasks = analysis_results.get('stale_tasks', [])
+        alignment_score = analysis_results.get('alignment_score', 0)
 
-        # Format response
+        # Format response with correct keys from analyzer
         response_data = {
-            'total_tasks_analyzed': len(analysis_results.get('tasks_analyzed', [])),
+            'total_tasks_analyzed': analysis_results.get('total_tasks', 0),
             'misaligned_count': len(misaligned_tasks),
-            'average_alignment_score': alignment_scores.get('average', 0),
+            'infrastructure_count': len(infrastructure_tasks),
+            'stale_count': len(stale_tasks),
+            'average_alignment_score': alignment_score,
+            'by_priority': analysis_results.get('by_priority', {}),
+            'by_status': analysis_results.get('by_status', {}),
             'report_path': str(Path(config['output_path']).absolute()),
             'tasks_created': len(results.get('followup_tasks', [])) if create_followup_tasks else 0,
             'status': results.get('status', 'unknown')

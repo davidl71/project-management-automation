@@ -1,0 +1,639 @@
+{
+  "todos": [
+    {
+      "id": "99e386f1-613f-46c9-ac70-844f8a8fb251",
+      "content": "Tag and build package v0.1.5",
+      "long_description": "Tag and build fresh package for project-management-automation repository.\n\n**Completed:**\n- Bumped version from 0.1.4 to 0.1.5 in pyproject.toml\n- Created git tag v0.1.5 with release notes\n- Built source distribution (.tar.gz) and wheel (.whl)\n- Pushed tag to remote repository\n\n**Package files created:**\n- project_management_automation_mcp-0.1.5-py3-none-any.whl (68 KB)\n- project_management_automation_mcp-0.1.5.tar.gz (59 KB)\n\n**Release includes:**\n- 72 EXARP documentation files moved from ib_box_spread_full_universal\n- .cursor configuration directory with development commands and rules\n- Repository structure cleanup complete",
+      "priority": "medium",
+      "status": "done",
+      "tags": [
+        "packaging",
+        "release",
+        "v0.1.5"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T00:07:19.810Z",
+      "updatedAt": "2025-11-25T00:07:19.810Z",
+      "dependencies": [],
+      "estimatedHours": 0
+    },
+    {
+      "id": "c9630040-7860-4f84-9a2a-10d2ee24adc0",
+      "content": "Fix license format deprecation warning in pyproject.toml",
+      "long_description": "Fix setuptools deprecation warning about license format in pyproject.toml.\n\n**Fixed:**\nChanged from deprecated TOML table format:\n  license = {text = \"MIT\"}\n\nTo SPDX string format:\n  license = \"MIT\"\n\n**Benefits:**\n- Eliminates deprecation warnings during package build\n- Ensures compatibility with setuptools>=77.0.0 requirements\n- Build now completes without license format warnings\n\n**Status:** Completed and pushed to repository",
+      "priority": "medium",
+      "status": "done",
+      "tags": [
+        "packaging",
+        "pyproject.toml",
+        "deprecation-fix"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T00:07:22.506Z",
+      "updatedAt": "2025-11-25T00:07:22.506Z",
+      "dependencies": [],
+      "estimatedHours": 0
+    },
+    {
+      "id": "5ac9a82a-48c8-4fa1-a8e0-8e8ce683b22e",
+      "content": "Add MCP client library dependency for agentic-tools integration",
+      "long_description": "\ud83c\udfaf **Objective:** Add MCP client library dependency to enable calling agentic-tools MCP server programmatically\n\n\ud83d\udccb **Acceptance Criteria:**\n- `mcp>=1.0.0` added to `pyproject.toml` dependencies\n- MCP client library installed and verified\n- Documentation updated with dependency information\n- Version compatibility verified\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Dependency addition, installation verification, documentation update\n- **Excluded:** Actual MCP client implementation (separate task)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Add `mcp = \"^1.0.0\"` to `[project.dependencies]` in `pyproject.toml`\n- Verify package installation works\n- Check for compatibility with Python 3.9+\n- Document MCP client library usage\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `pyproject.toml` (add mcp dependency)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark dependency added)\n- Create: `docs/MCP_CLIENT_LIBRARY.md` (optional documentation)\n\n\ud83e\uddea **Testing Requirements:**\n- Verify `pip install -e .` installs mcp package\n- Test import: `from mcp import ClientSession, StdioServerParameters`\n- Verify package version meets requirements\n- Test basic MCP client connection (optional)\n\n\u26a0\ufe0f **Edge Cases:**\n- Python version compatibility\n- Dependency conflicts with existing packages\n- Installation failures on different systems\n\n\ud83d\udcda **Dependencies:** None (foundation task)",
+      "priority": "critical",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "infrastructure"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:09.865Z",
+      "updatedAt": "2025-11-25T01:11:09.865Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "d8863dae-ee14-403c-8be5-eb03dda95e7b",
+      "content": "Extend MCPClient class with agentic-tools MCP support",
+      "long_description": "\ud83c\udfaf **Objective:** Extend existing MCPClient class to support agentic-tools MCP server calls (list_todos, create_task, update_task, etc.)\n\n\ud83d\udccb **Acceptance Criteria:**\n- `MCPClient` class extended with agentic-tools methods\n- Async methods implemented: `list_todos()`, `create_task()`, `update_task()`, `get_task()`, `delete_task()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Fallback to file access for backward compatibility\n- Unit tests created for all methods\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool migration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (simple vs advanced)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for agentic-tools\n- Implement async/await patterns throughout\n- Add connection pooling (singleton pattern or connection manager)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support project ID detection from project root\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_agentic_tools.py` (unit tests)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark infrastructure complete)\n\n\ud83e\uddea **Testing Requirements:**\n- Test `list_todos()` with valid project ID\n- Test `create_task()` creates task successfully\n- Test `update_task()` updates task correctly\n- Test error handling when MCP unavailable\n- Test fallback to file access works\n- Test connection pooling efficiency\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server not available (fallback needed)\n- Invalid project ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n\ud83d\udcda **Dependencies:** Task 1 (MCP client dependency must be added first)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "infrastructure",
+        "async"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:14.969Z",
+      "updatedAt": "2025-11-25T01:11:14.969Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "44d2e835-7843-4b61-a212-3443230267b0",
+      "content": "Migrate duplicate detection tool to use agentic-tools MCP",
+      "long_description": "\ud83c\udfaf **Objective:** Replace direct file access in duplicate detection tool with agentic-tools MCP calls\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/duplicate_detection.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_duplicate_detection.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (auto-fix remains as file write for now)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/duplicate_detection.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_duplicate_detection.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test duplicate detection works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n\ud83d\udcda **Dependencies:** Task 2 (MCPClient extension must be complete)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "migration",
+        "duplicate-detection"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:21.127Z",
+      "updatedAt": "2025-11-25T01:11:21.127Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2",
+      "content": "Migrate task alignment tool to use agentic-tools MCP",
+      "long_description": "\ud83c\udfaf **Objective:** Replace direct file access in task alignment tool with agentic-tools MCP calls\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/todo2_alignment.py` uses `list_todos()` instead of file read\n- `project_management_automation/scripts/automate_todo2_alignment_v2.py` uses MCP client\n- All file reads replaced with MCP calls\n- Error handling with fallback to file access\n- Tests updated and passing\n- Performance maintained or improved\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Read operations migration, error handling, fallback logic\n- **Excluded:** Write operations (task creation remains as file write for now)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Replace `_load_todo2_tasks()` file read with `mcp_client.list_todos(project_id)`\n- Add async/await where needed\n- Implement fallback to file access if MCP fails\n- Update error messages to indicate MCP usage\n- Maintain backward compatibility during migration\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/todo2_alignment.py` (use MCP client)\n- Update: `project_management_automation/scripts/automate_todo2_alignment_v2.py` (use MCP client)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark tool migrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test task alignment works with MCP\n- Test fallback to file access when MCP unavailable\n- Test with empty task list\n- Test with large task lists (100+ tasks)\n- Verify performance is acceptable\n- Test error handling\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server unavailable (fallback)\n- Project ID not found (error handling)\n- Empty task list (handled correctly)\n- Large task lists (performance)\n- Network timeouts (retry logic)\n\n\ud83d\udcda **Dependencies:** Task 2 (MCPClient extension must be complete)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "migration",
+        "task-alignment"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:25.126Z",
+      "updatedAt": "2025-11-25T01:11:25.126Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "9520ff3a-13b8-4b46-9b8d-d004fde12989",
+      "content": "Remove file access fallbacks after full migration",
+      "long_description": "\ud83c\udfaf **Objective:** Remove all direct file access code and fallbacks after successful MCP migration\n\n\ud83d\udccb **Acceptance Criteria:**\n- All direct file I/O code removed from tools\n- All fallback to file access removed\n- Codebase only uses agentic-tools MCP for Todo2 operations\n- Documentation updated to reflect MCP-only approach\n- Tests updated to remove file-based tests\n- Cleanup complete with no leftover file access code\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Code removal, test cleanup, documentation updates\n- **Excluded:** MCP implementation code (keep that)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Remove all `.todo2/state.todo2.json` file reads/writes\n- Remove fallback logic that uses file access\n- Remove file-based test fixtures\n- Update documentation to reflect MCP-only approach\n- Update error messages to reflect MCP requirement\n- Ensure all tools work correctly without file fallback\n\n\ud83d\udcc1 **Files/Components:**\n- Update: All tool files (remove file access code)\n- Update: Base class (remove file access code)\n- Update: Tests (remove file-based tests)\n- Update: Documentation (reflect MCP-only approach)\n- Update: `docs/AGENTIC_TOOLS_INTEGRATION_PLAN.md` (mark migration complete)\n\n\ud83e\uddea **Testing Requirements:**\n- Verify all tools work without file fallback\n- Test error handling when MCP unavailable (proper error messages)\n- Verify no file access code remains\n- Test cleanup doesn't break functionality\n- Verify documentation is accurate\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server unavailable (proper error messages, no fallback)\n- Missing project ID (proper error handling)\n- Invalid MCP responses (error handling)\n\n\ud83d\udcda **Dependencies:** Tasks 3-5 (all read/write operations must be migrated first)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "cleanup",
+        "finalization"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:37.750Z",
+      "updatedAt": "2025-11-25T01:11:37.750Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "918e4218-f9d2-4032-991f-6c1e2823ad6e",
+      "content": "Migrate write operations to use agentic-tools MCP",
+      "long_description": "\ud83c\udfaf **Objective:** Replace direct file writes with agentic-tools MCP calls (create_task, update_task, delete_task)\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/nightly_task_automation.py` uses `update_task()` instead of file write\n- `tools/task_clarification_resolution.py` uses `update_task()` instead of file write\n- `tools/batch_task_approval.py` uses `update_task()` for batch operations\n- Base class uses `create_task()` for task creation\n- All file writes replaced with MCP calls\n- Error handling with fallback to file access\n\n\ud83d\udeab **Scope:** Write operations migration, batch operations, error handling\n\n\ud83d\udd27 **Technical Requirements:**\n- Replace file writes with `mcp_client.create_task()`, `update_task()`, `delete_task()`\n- Add async/await where needed\n- Implement batch operations for multiple updates\n- Implement fallback to file access if MCP fails\n\n\ud83d\udcc1 **Files:** Update tools (nightly_task_automation, task_clarification_resolution, batch_task_approval), base class\n\n\ud83e\uddea **Testing:** Test task creation/updates work, batch operations, fallback, error handling\n\n\ud83d\udcda **Dependencies:** Task 2 (MCPClient extension), Tasks 3-4 (read operations should be migrated first)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "agentic-tools",
+        "migration",
+        "write-operations"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:11:43.669Z",
+      "updatedAt": "2025-11-25T01:11:43.669Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "3c1addeb-e2dd-4fec-8c22-36914e9d2b73",
+      "content": "Extend MCPClient class with Context7 MCP support",
+      "long_description": "\ud83c\udfaf **Objective:** Extend existing MCPClient class to support Context7 MCP server calls (resolve-library-id, get-library-docs)\n\n\ud83d\udccb **Acceptance Criteria:**\n- `MCPClient` class extended with Context7 methods\n- Async methods implemented: `resolve_library_id()`, `get_library_docs()`\n- Connection pooling implemented for efficiency\n- Error handling and retry logic added\n- Helper methods for common operations\n- Unit tests created for all methods\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** MCP client extension, async methods, connection pooling, error handling, tests\n- **Excluded:** Actual tool integration (separate tasks)\n- **Clarification Required:** Connection pooling strategy (reuse agentic-tools session or separate)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp` library's `stdio_client` and `ClientSession` for Context7\n- Implement async/await patterns throughout\n- Add connection pooling (reuse agentic-tools session or separate)\n- Implement retry logic with exponential backoff\n- Add comprehensive error handling\n- Support mode parameter (code/info) for get-library-docs\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `project_management_automation/scripts/base/mcp_client.py` (extend class)\n- Create: `tests/test_mcp_client_context7.py` (unit tests)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark infrastructure complete)\n\n\ud83e\uddea **Testing Requirements:**\n- Test `resolve_library_id()` with valid library names\n- Test `get_library_docs()` with valid library IDs\n- Test error handling when MCP unavailable\n- Test connection pooling efficiency\n- Test retry logic on failures\n\n\u26a0\ufe0f **Edge Cases:**\n- MCP server not available (error handling)\n- Invalid library name/ID (error handling)\n- Connection failures (retry logic)\n- Concurrent requests (connection pooling)\n- Async context management\n\n\ud83d\udcda **Dependencies:** Task 1 from agentic-tools integration (MCP client dependency must be added first)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "infrastructure",
+        "async"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:24.596Z",
+      "updatedAt": "2025-11-25T01:13:24.596Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "d2824509-031b-495c-8a8d-46e087d35421",
+      "content": "Integrate Context7 verification into documentation health tool",
+      "long_description": "\ud83c\udfaf **Objective:** Add Context7 verification step to documentation health tool to verify external library references\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/docs_health.py` uses Context7 to verify external library references\n- `project_management_automation/scripts/automate_docs_health_v2.py` includes Context7 verification\n- External library references verified via Context7\n- Documentation currency checked (library exists, docs available)\n- Verification results included in health report\n- Error handling when Context7 unavailable (graceful degradation)\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification step, report enhancement, error handling\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Verification strategy (all refs or sampling)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Use `mcp_client.get_library_docs()` to check documentation availability\n- Add verification results to health report\n- Graceful degradation if Context7 unavailable (skip verification, warn)\n- Include verified/unverified counts in report\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/docs_health.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_docs_health_v2.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test verification works with valid libraries\n- Test verification fails gracefully with invalid libraries\n- Test graceful degradation when Context7 unavailable\n- Test verification results appear in report\n- Test performance impact is acceptable\n\n\u26a0\ufe0f **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (error handling)\n- Network timeouts (retry logic)\n- Large number of references (performance)\n\n\ud83d\udcda **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "documentation-health",
+        "verification"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:28.678Z",
+      "updatedAt": "2025-11-25T01:13:28.678Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "8306d84e-db17-40be-8f5d-8dd7bd7b59da",
+      "content": "Integrate Context7 verification into external tool hints tool",
+      "long_description": "\ud83c\udfaf **Objective:** Use Context7 to verify libraries exist before adding external tool hints to documentation\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/external_tool_hints.py` verifies libraries exist via Context7 before adding hints\n- `project_management_automation/scripts/automate_external_tool_hints.py` includes Context7 verification\n- Only add hints for verified libraries\n- Report skipped libraries (not found in Context7)\n- Error handling when Context7 unavailable (skip verification, add hints anyway)\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 verification, hint filtering, reporting\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to verify libraries exist\n- Only add hints for verified libraries\n- Include verification status in report\n- Graceful degradation if Context7 unavailable (add hints anyway, warn)\n- Report verified/skipped counts\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/external_tool_hints.py` (add Context7 verification)\n- Update: `project_management_automation/scripts/automate_external_tool_hints.py` (integrate verification)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test hints only added for verified libraries\n- Test invalid libraries are skipped\n- Test graceful degradation when Context7 unavailable\n- Test verification status appears in report\n- Test performance impact is acceptable\n\n\u26a0\ufe0f **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Invalid library names (skip, report)\n- Network timeouts (retry logic)\n- Large number of libraries (performance)\n\n\ud83d\udcda **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "external-tool-hints",
+        "verification"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:32.887Z",
+      "updatedAt": "2025-11-25T01:13:32.887Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "ea7d35b1-f26e-4452-b4b6-26225269288b",
+      "content": "Integrate Context7 best practices into dependency security tool",
+      "long_description": "\ud83c\udfaf **Objective:** Use Context7 to get current security best practices for dependencies during security scanning\n\n\ud83d\udccb **Acceptance Criteria:**\n- `tools/dependency_security.py` uses Context7 to get security best practices\n- `project_management_automation/scripts/automate_dependency_security.py` includes Context7 integration\n- Security best practices retrieved for scanned dependencies\n- Best practices included in security report\n- Error handling when Context7 unavailable (skip best practices, scan continues)\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Context7 integration, best practices retrieval, report enhancement\n- **Excluded:** Context7 server setup (assumed configured)\n- **Clarification Required:** Which dependencies to query (all or only vulnerable)\n\n\ud83d\udd27 **Technical Requirements:**\n- Use `mcp_client.resolve_library_id()` to get library IDs\n- Use `mcp_client.get_library_docs()` with topic=\"security best practices\" and mode=\"info\"\n- Include best practices in security report\n- Graceful degradation if Context7 unavailable (skip best practices, warn)\n- Query Context7 for top dependencies or only vulnerable ones\n\n\ud83d\udcc1 **Files/Components:**\n- Update: `tools/dependency_security.py` (add Context7 integration)\n- Update: `project_management_automation/scripts/automate_dependency_security.py` (integrate Context7)\n- Update: `docs/CONTEXT7_MCP_INTEGRATION_STATUS.md` (mark tool integrated)\n\n\ud83e\uddea **Testing Requirements:**\n- Test best practices retrieved for dependencies\n- Test best practices included in report\n- Test graceful degradation when Context7 unavailable\n- Test performance impact is acceptable\n- Test with various dependency types (Python, Rust, npm)\n\n\u26a0\ufe0f **Edge Cases:**\n- Context7 server unavailable (graceful degradation)\n- Dependencies not found in Context7 (skip, continue)\n- Network timeouts (retry logic)\n- Large number of dependencies (performance, batching)\n\n\ud83d\udcda **Dependencies:** Context7 MCPClient extension task (Context7 support must be in MCPClient first)",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "context7",
+        "dependency-security",
+        "best-practices"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:13:38.148Z",
+      "updatedAt": "2025-11-25T01:13:38.148Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e",
+      "content": "Extend MCPClient class with Sequential Thinking MCP support",
+      "long_description": "Replace simplified fallback with full Sequential Thinking MCP integration. Support all operations: start, add_step, refine, navigate, export. Use mcp library's stdio_client and ClientSession. Implement async/await patterns, connection pooling, error handling, and retry logic. Create unit tests for all operations. Update mcp_client.py and add tests/test_mcp_client_sequential_thinking.py.\n\nDependencies: MCP client dependency task from agentic-tools integration must be completed first.",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "infrastructure",
+        "async"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:14.911Z",
+      "updatedAt": "2025-11-25T01:17:14.911Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "8e63aa74-5a3e-4419-8389-7452eb3b2339",
+      "content": "Integrate Sequential Thinking into documentation health tool",
+      "long_description": "Add Sequential Thinking workflow generation to documentation health tool. Use mcp_client.call_sequential_thinking() to create step-by-step fix workflows for identified issues. Export workflows in markdown format and include in health report. Implement graceful degradation when Sequential Thinking unavailable (skip workflow, warn). Update tools/docs_health.py and automate_docs_health_v2.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "documentation-health",
+        "workflow-generation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:17.420Z",
+      "updatedAt": "2025-11-25T01:17:17.420Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "70d51598-ad43-41e2-826a-65279c482a7e",
+      "content": "Integrate Sequential Thinking into task alignment tool",
+      "long_description": "Add Sequential Thinking workflow generation to task alignment tool. Use mcp_client.call_sequential_thinking() to create step-by-step realignment workflows for misaligned tasks. Export workflows in markdown format and include in alignment report. Implement graceful degradation when Sequential Thinking unavailable. Update tools/todo2_alignment.py and automate_todo2_alignment_v2.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "task-alignment",
+        "workflow-generation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:19.056Z",
+      "updatedAt": "2025-11-25T01:17:19.056Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "decff4b4-e571-42a4-bfe2-4c42fb34c5a0",
+      "content": "Integrate Sequential Thinking into duplicate detection tool",
+      "long_description": "Add Sequential Thinking workflow generation to duplicate detection tool. Use mcp_client.call_sequential_thinking() to create step-by-step consolidation workflows for duplicate task groups. Export workflows in markdown format and include in duplicate detection report. Implement graceful degradation when Sequential Thinking unavailable. Update tools/duplicate_detection.py and automate_todo2_duplicate_detection.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "duplicate-detection",
+        "workflow-generation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:21.001Z",
+      "updatedAt": "2025-11-25T01:17:21.001Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "49ba9ba6-f370-46b2-a066-3ae46d8a9f28",
+      "content": "Integrate Sequential Thinking into automation opportunities tool",
+      "long_description": "Add Sequential Thinking workflow generation to automation opportunities tool. Use mcp_client.call_sequential_thinking() to create step-by-step implementation plans for high-value opportunities. Export workflows in markdown format and include in automation opportunities report. Implement graceful degradation when Sequential Thinking unavailable. Option to create workflows for all opportunities or only high-value ones. Update tools/automation_opportunities.py and automate_automation_opportunities.py.\n\nDependencies: Sequential Thinking MCPClient extension task must be completed first.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "integration",
+        "mcp",
+        "sequential-thinking",
+        "automation-opportunities",
+        "workflow-generation"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T01:17:23.415Z",
+      "updatedAt": "2025-11-25T01:17:23.415Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "f9a83c81-81c3-4b08-a9c7-9a7ee57842a2",
+      "content": "Fix remaining test failures in test_tools_expanded.py",
+      "long_description": "Fix 14 remaining test failures in test_tools_expanded.py:\n\n1. Server Status Tool - Test via MCP server instance instead of direct import\n2. PWA Review Tool - Mock PWAAnalyzer.analyze() method instead of run()\n3. CI/CD Validation Tool - Add pyyaml to test dependencies or improve yaml mocking\n4. Batch Task Approval Tool - Fix Path mocking for script path resolution\n5. Nightly Task Automation Tool - Fix socket module mocking (use 'socket' not 'tools.nightly_task_automation.socket')\n6. Working Copy Health Tool - Handle both dict and JSON string return types\n7-14. Other tool tests - Improve subprocess and Path mocking\n\nPriority: Medium\nEstimated: 3 hours",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "testing",
+        "test-fixes",
+        "mocking"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T07:45:19.006Z",
+      "updatedAt": "2025-11-25T07:45:19.006Z",
+      "dependencies": [],
+      "estimatedHours": 0
+    },
+    {
+      "id": "fa24fae5-c4fb-4530-8d82-c6c51491018a",
+      "content": "Add missing tool tests for 4 untested tools",
+      "long_description": "Add tests for tools that don't have corresponding automation scripts or use subprocess directly:\n\n1. server_status - Test via MCP server registration\n2. Tools using subprocess directly - Improve test coverage\n3. Tools without IntelligentAutomationBase - Add appropriate tests\n\nPriority: Medium\nEstimated: 2 hours",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "testing",
+        "test-coverage",
+        "tools"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T07:45:22.751Z",
+      "updatedAt": "2025-11-25T07:45:22.751Z",
+      "dependencies": [],
+      "estimatedHours": 0
+    },
+    {
+      "id": "08dbbe0e-676f-4b0d-a276-a5f1bc5a2d38",
+      "content": "Add pyyaml to test dependencies",
+      "long_description": "Add pyyaml to test dependencies (requirements-test.txt or pyproject.toml test dependencies) to fix CI/CD validation tool test.\n\nPriority: Low\nEstimated: 15 minutes",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "testing",
+        "dependencies"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T07:45:25.899Z",
+      "updatedAt": "2025-11-25T07:45:25.899Z",
+      "dependencies": [],
+      "estimatedHours": 0
+    },
+    {
+      "id": "f789741d-cf84-4331-9b95-deec31b8578c",
+      "content": "Implement run_tests tool for Exarp",
+      "long_description": "Create run_tests MCP tool to execute test suites with flexible options. Support pytest, unittest, and ctest frameworks with auto-detection. Generate JUnit XML reports and return pass/fail counts.",
+      "priority": "high",
+      "status": "done",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase1"
+      ],
+      "completed": true,
+      "createdAt": "2025-11-25T08:06:12.477Z",
+      "updatedAt": "2025-11-25T08:10:12.510Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "c757651b-5f99-45e1-9a5e-d5fc01bcc2c8",
+      "content": "Implement analyze_test_coverage tool for Exarp",
+      "long_description": "Create analyze_test_coverage MCP tool to generate coverage reports and identify gaps. Parse coverage.py, gcov, lcov formats. Generate HTML reports and compare against thresholds.",
+      "priority": "high",
+      "status": "done",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase2"
+      ],
+      "completed": true,
+      "createdAt": "2025-11-25T08:06:15.246Z",
+      "updatedAt": "2025-11-25T08:10:14.000Z",
+      "dependencies": [],
+      "estimatedHours": 5
+    },
+    {
+      "id": "98da663e-bfc6-4ff1-a7f7-8e73a7ea55bf",
+      "content": "Implement suggest_test_cases tool for Exarp",
+      "long_description": "Create suggest_test_cases MCP tool to suggest test cases based on code analysis. Analyze function signatures, identify edge cases, suggest parameter combinations, and generate test templates.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase3",
+        "ai"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T08:06:17.918Z",
+      "updatedAt": "2025-11-25T08:06:17.918Z",
+      "dependencies": [],
+      "estimatedHours": 6
+    },
+    {
+      "id": "cb760617-2368-4edc-aeab-cde5b68fe387",
+      "content": "Implement validate_test_structure tool for Exarp",
+      "long_description": "Create validate_test_structure MCP tool to validate test organization and patterns. Check naming conventions, validate organization, check for missing test files, and validate test patterns.",
+      "priority": "medium",
+      "status": "pending",
+      "tags": [
+        "testing",
+        "exarp",
+        "implementation",
+        "phase4"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T08:06:20.469Z",
+      "updatedAt": "2025-11-25T08:06:20.469Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "d213337c-5aba-4c3f-abfd-1ecee9833b5c",
+      "content": "Implement sprint_automation tool for Exarp",
+      "long_description": "Create sprint_automation MCP tool to systematically process all background-capable tasks with minimal prompts. Extract subtasks, auto-approve safe tasks, run analysis/testing tools, process background tasks, and identify blockers.",
+      "priority": "critical",
+      "status": "done",
+      "tags": [
+        "sprint",
+        "automation",
+        "exarp",
+        "implementation",
+        "orchestration"
+      ],
+      "completed": true,
+      "createdAt": "2025-11-25T08:18:31.683Z",
+      "updatedAt": "2025-11-25T08:24:17.683Z",
+      "dependencies": [],
+      "estimatedHours": 8
+    },
+    {
+      "id": "ce4d9c05-8dd6-4085-9076-80971046c572",
+      "content": "Add human contribution suggestion feature to sprint_automation",
+      "long_description": "Add feature to identify tasks better handled by humans (design decisions, user preferences, strategy, creative work). Generate suggestions for human contributions and integrate into sprint report.",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "sprint",
+        "human-contribution",
+        "ai-wishlist",
+        "exarp"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:33.922Z",
+      "updatedAt": "2025-11-25T08:18:33.922Z",
+      "dependencies": [],
+      "estimatedHours": 4
+    },
+    {
+      "id": "8257e637-48fe-4e1f-a268-f9b88d708786",
+      "content": "Add AI wishlist generation to sprint_automation",
+      "long_description": "Add feature for sprint_automation to generate its own wishlist of tasks it wants to work on (based on automation opportunities, test coverage gaps, documentation needs, etc.). Store wishlist in structured format.",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "sprint",
+        "ai-wishlist",
+        "automation",
+        "exarp"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:36.113Z",
+      "updatedAt": "2025-11-25T08:18:36.113Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "6a420472-b6ba-4f69-a10d-9465a2bfc468",
+      "content": "Add human wishlist parsing to sprint_automation",
+      "long_description": "Add feature to parse human wishlists from external sources: git commit messages, plain text files (WISHLIST.md, TODO.md, etc.), code comments, and issue trackers. Integrate human wishlist with AI wishlist for unified task prioritization.",
+      "priority": "high",
+      "status": "pending",
+      "tags": [
+        "sprint",
+        "human-wishlist",
+        "parsing",
+        "git",
+        "exarp"
+      ],
+      "completed": false,
+      "createdAt": "2025-11-25T08:18:38.353Z",
+      "updatedAt": "2025-11-25T08:18:38.353Z",
+      "dependencies": [],
+      "estimatedHours": 5
+    },
+    {
+      "id": "AUTO-20251126025132",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-26T02:51:32.114570",
+      "lastModified": "2025-11-26T02:51:32.124006",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126025132-C-1",
+          "todoId": "AUTO-20251126025132",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\n**Key Findings:**\n{\n  \"total_tasks\": 28,\n  \"by_priority\": {\n    \"high\": 13,\n    \"medium\": 13,\n    \"low\": 0,\n    \"critical\": 2\n  },\n  \"by_status\": {\n    \"todo\": 0,\n    \"in_progress\": 0,\n    \"review\": 0,\n    \"done\": 5\n  },\n  \"by_phase\": {\n    \"phase1\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase2\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase3\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    }\n  },\n  \"strategy_critical\": [],\n  \"misaligned_tasks\": [],\n  \"stale_tasks\": [],\n  \"blocked_tasks\": [],\n  \"infrastructure_tasks\": [\n    {\n      \"id\": \"d8863dae-ee14-403c-8be5-eb03dda95e7b\",\n      \"content\": \"Extend MCPClient class with agentic-tools MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"44d2e835-7843-4b61-a212-3443230267b0\",\n      \"content\": \"Migrate duplicate detection tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2\",\n      \"content\": \"Migrate task alignment tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"9520ff3a-13b8-4b46-9b8d-d004fde12989\",\n      \"content\": \"Remove file access fallbacks after full migration\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"918e4218-f9d2-4032-991f-6c1e2823ad6e\",\n      \"content\": \"Migrate write operations to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"3c1addeb-e2dd-4fec-8c22-36914e9d2b73\",\n      \"content\": \"Extend MCPClient class with Context7 MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"d2824509-031b-495c-8a8d-46e087d35421\",\n      \"content\": \"Integrate Context7 verification into documentation health tool\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e\",\n      \"content\": \"Extend MCPClient class with Sequential Thinking MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"f789741d-cf84-4331-9b95-deec31b8578c\",\n      \"content\": \"Implement run_tests tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"c757651b-5f99-45e1-9a5e-d5fc01bcc2c8\",\n      \"content\": \"Implement analyze_test_coverage tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"ce4d9c05-8dd6-4085-9076-80971046c572\",\n      \"content\": \"Add human contribution suggestion feature to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"8257e637-48fe-4e1f-a268-f9b88d708786\",\n      \"content\": \"Add AI wishlist generation to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\n      \"content\": \"Add human wishlist parsing to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"alignment_score\": 60.0\n}",
+          "created": "2025-11-26T02:51:32.121429",
+          "lastModified": "2025-11-26T02:51:32.121438"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126025227",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-26T02:52:27.994830",
+      "lastModified": "2025-11-26T02:52:28.007597",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126025227-C-1",
+          "todoId": "AUTO-20251126025227",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\n**Key Findings:**\n{\n  \"total_tasks\": 28,\n  \"by_priority\": {\n    \"high\": 13,\n    \"medium\": 13,\n    \"low\": 0,\n    \"critical\": 2\n  },\n  \"by_status\": {\n    \"todo\": 0,\n    \"in_progress\": 0,\n    \"review\": 0,\n    \"done\": 5\n  },\n  \"by_phase\": {\n    \"phase1\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase2\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase3\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    }\n  },\n  \"strategy_critical\": [],\n  \"misaligned_tasks\": [],\n  \"stale_tasks\": [],\n  \"blocked_tasks\": [],\n  \"infrastructure_tasks\": [\n    {\n      \"id\": \"d8863dae-ee14-403c-8be5-eb03dda95e7b\",\n      \"content\": \"Extend MCPClient class with agentic-tools MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"44d2e835-7843-4b61-a212-3443230267b0\",\n      \"content\": \"Migrate duplicate detection tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2\",\n      \"content\": \"Migrate task alignment tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"9520ff3a-13b8-4b46-9b8d-d004fde12989\",\n      \"content\": \"Remove file access fallbacks after full migration\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"918e4218-f9d2-4032-991f-6c1e2823ad6e\",\n      \"content\": \"Migrate write operations to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"3c1addeb-e2dd-4fec-8c22-36914e9d2b73\",\n      \"content\": \"Extend MCPClient class with Context7 MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"d2824509-031b-495c-8a8d-46e087d35421\",\n      \"content\": \"Integrate Context7 verification into documentation health tool\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e\",\n      \"content\": \"Extend MCPClient class with Sequential Thinking MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"f789741d-cf84-4331-9b95-deec31b8578c\",\n      \"content\": \"Implement run_tests tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"c757651b-5f99-45e1-9a5e-d5fc01bcc2c8\",\n      \"content\": \"Implement analyze_test_coverage tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"ce4d9c05-8dd6-4085-9076-80971046c572\",\n      \"content\": \"Add human contribution suggestion feature to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"8257e637-48fe-4e1f-a268-f9b88d708786\",\n      \"content\": \"Add AI wishlist generation to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\n      \"content\": \"Add human wishlist parsing to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"alignment_score\": 60.0\n}",
+          "created": "2025-11-26T02:52:28.005077",
+          "lastModified": "2025-11-26T02:52:28.005086"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126025324",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-26T02:53:24.915020",
+      "lastModified": "2025-11-26T02:53:24.927903",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126025324-C-1",
+          "todoId": "AUTO-20251126025324",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\n**Key Findings:**\n{\n  \"total_tasks\": 28,\n  \"by_priority\": {\n    \"high\": 13,\n    \"medium\": 13,\n    \"low\": 0,\n    \"critical\": 2\n  },\n  \"by_status\": {\n    \"todo\": 0,\n    \"in_progress\": 0,\n    \"review\": 0,\n    \"done\": 5\n  },\n  \"by_phase\": {\n    \"phase1\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase2\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase3\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    }\n  },\n  \"strategy_critical\": [],\n  \"misaligned_tasks\": [],\n  \"stale_tasks\": [],\n  \"blocked_tasks\": [],\n  \"infrastructure_tasks\": [\n    {\n      \"id\": \"d8863dae-ee14-403c-8be5-eb03dda95e7b\",\n      \"content\": \"Extend MCPClient class with agentic-tools MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"44d2e835-7843-4b61-a212-3443230267b0\",\n      \"content\": \"Migrate duplicate detection tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2\",\n      \"content\": \"Migrate task alignment tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"9520ff3a-13b8-4b46-9b8d-d004fde12989\",\n      \"content\": \"Remove file access fallbacks after full migration\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"918e4218-f9d2-4032-991f-6c1e2823ad6e\",\n      \"content\": \"Migrate write operations to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"3c1addeb-e2dd-4fec-8c22-36914e9d2b73\",\n      \"content\": \"Extend MCPClient class with Context7 MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"d2824509-031b-495c-8a8d-46e087d35421\",\n      \"content\": \"Integrate Context7 verification into documentation health tool\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e\",\n      \"content\": \"Extend MCPClient class with Sequential Thinking MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"f789741d-cf84-4331-9b95-deec31b8578c\",\n      \"content\": \"Implement run_tests tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"c757651b-5f99-45e1-9a5e-d5fc01bcc2c8\",\n      \"content\": \"Implement analyze_test_coverage tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"ce4d9c05-8dd6-4085-9076-80971046c572\",\n      \"content\": \"Add human contribution suggestion feature to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"8257e637-48fe-4e1f-a268-f9b88d708786\",\n      \"content\": \"Add AI wishlist generation to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\n      \"content\": \"Add human wishlist parsing to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"alignment_score\": 60.0\n}",
+          "created": "2025-11-26T02:53:24.925880",
+          "lastModified": "2025-11-26T02:53:24.925889"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126025401",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-26T02:54:01.718645",
+      "lastModified": "2025-11-26T02:54:03.159108",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126025401-C-1",
+          "todoId": "AUTO-20251126025401",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\n**Key Findings:**\n{\n  \"total_tasks\": 28,\n  \"by_priority\": {\n    \"high\": 13,\n    \"medium\": 13,\n    \"low\": 0,\n    \"critical\": 2\n  },\n  \"by_status\": {\n    \"todo\": 0,\n    \"in_progress\": 0,\n    \"review\": 0,\n    \"done\": 5\n  },\n  \"by_phase\": {\n    \"phase1\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase2\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    },\n    \"phase3\": {\n      \"total\": 0,\n      \"high_priority\": 0,\n      \"aligned\": 0\n    }\n  },\n  \"strategy_critical\": [],\n  \"misaligned_tasks\": [],\n  \"stale_tasks\": [],\n  \"blocked_tasks\": [],\n  \"infrastructure_tasks\": [\n    {\n      \"id\": \"d8863dae-ee14-403c-8be5-eb03dda95e7b\",\n      \"content\": \"Extend MCPClient class with agentic-tools MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"44d2e835-7843-4b61-a212-3443230267b0\",\n      \"content\": \"Migrate duplicate detection tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2\",\n      \"content\": \"Migrate task alignment tool to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"9520ff3a-13b8-4b46-9b8d-d004fde12989\",\n      \"content\": \"Remove file access fallbacks after full migration\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"918e4218-f9d2-4032-991f-6c1e2823ad6e\",\n      \"content\": \"Migrate write operations to use agentic-tools MCP\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"3c1addeb-e2dd-4fec-8c22-36914e9d2b73\",\n      \"content\": \"Extend MCPClient class with Context7 MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"d2824509-031b-495c-8a8d-46e087d35421\",\n      \"content\": \"Integrate Context7 verification into documentation health tool\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e\",\n      \"content\": \"Extend MCPClient class with Sequential Thinking MCP support\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"f789741d-cf84-4331-9b95-deec31b8578c\",\n      \"content\": \"Implement run_tests tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"c757651b-5f99-45e1-9a5e-d5fc01bcc2c8\",\n      \"content\": \"Implement analyze_test_coverage tool for Exarp\",\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"ce4d9c05-8dd6-4085-9076-80971046c572\",\n      \"content\": \"Add human contribution suggestion feature to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"8257e637-48fe-4e1f-a268-f9b88d708786\",\n      \"content\": \"Add AI wishlist generation to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\n      \"content\": \"Add human wishlist parsing to sprint_automation\",\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"alignment_score\": 60.0\n}",
+          "created": "2025-11-26T02:54:03.151982",
+          "lastModified": "2025-11-26T02:54:03.151991"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251126025631",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-26T02:56:31.777848",
+      "lastModified": "2025-11-26T02:56:31.985900",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126025631-C-1",
+          "todoId": "AUTO-20251126025631",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\n  \"total_tasks\": 28,\n  \"by_priority\": {\n    \"high\": 13,\n    \"medium\": 13,\n    \"low\": 0,\n    \"critical\": 2\n  },\n  \"by_status\": {\n    \"todo\": 0,\n    \"in_progress\": 0,\n    \"review\": 0,\n    \"done\": 5\n  },\n  \"by_phase\": {\n    \"phase1\": {\n      \"total\": 25,\n      \"high_priority\": 10,\n      \"aligned\": 25\n    },\n    \"phase2\": {\n      \"total\": 23,\n      \"high_priority\": 10,\n      \"aligned\": 23\n    },\n    \"phase3\": {\n      \"total\": 25,\n      \"high_priority\": 13,\n      \"aligned\": 25\n    },\n    \"phase4\": {\n      \"total\": 25,\n      \"high_priority\": 12,\n      \"aligned\": 25\n    },\n    \"phase5\": {\n      \"total\": 13,\n      \"high_priority\": 7,\n      \"aligned\": 13\n    }\n  },\n  \"strategy_critical\": [\n    {\n      \"id\": \"d8863dae-ee14-403c-8be5-eb03dda95e7b\",\n      \"content\": \"Extend MCPClient class with agentic-tools MCP support\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"44d2e835-7843-4b61-a212-3443230267b0\",\n      \"content\": \"Migrate duplicate detection tool to use agentic-tools MCP\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"39ab15be-0f7e-4de8-a424-f8bc4bfbb6d2\",\n      \"content\": \"Migrate task alignment tool to use agentic-tools MCP\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"9520ff3a-13b8-4b46-9b8d-d004fde12989\",\n      \"content\": \"Remove file access fallbacks after full migration\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"918e4218-f9d2-4032-991f-6c1e2823ad6e\",\n      \"content\": \"Migrate write operations to use agentic-tools MCP\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"3c1addeb-e2dd-4fec-8c22-36914e9d2b73\",\n      \"content\": \"Extend MCPClient class with Context7 MCP support\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"d2824509-031b-495c-8a8d-46e087d35421\",\n      \"content\": \"Integrate Context7 verification into documentation health tool\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"dfde3a1d-e12e-4a8f-90f6-e9f837ce0f6e\",\n      \"content\": \"Extend MCPClient class with Sequential Thinking MCP support\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"f789741d-cf84-4331-9b95-deec31b8578c\",\n      \"content\": \"Implement run_tests tool for Exarp\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"c757651b-5f99-45e1-9a5e-d5fc01bcc2c8\",\n      \"content\": \"Implement analyze_test_coverage tool for Exarp\",\n      \"phases\": [\n        \"phase1\",\n        \"phase2\",\n        \"phase3\",\n        \"phase4\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    },\n    {\n      \"id\": \"ce4d9c05-8dd6-4085-9076-80971046c572\",\n      \"content\": \"Add human contribution suggestion feature to sprint_automation\",\n      \"phases\": [\n        \"phase3\",\n        \"phase4\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"8257e637-48fe-4e1f-a268-f9b88d708786\",\n      \"content\": \"Add AI wishlist generation to sprint_automation\",\n      \"phases\": [\n        \"phase3\",\n        \"phase4\",\n        \"phase5\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": \"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\n      \"content\": \"Add human wishlist parsing to sprint_automation\",\n      \"phases\": [\n        \"phase3\"\n      ],\n      \"priority\": \"high\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"misaligned_tasks\": [],\n  \"stale_tasks\": [],\n  \"blocked_tasks\": [],\n  \"infrastructure_tasks\": [],\n  \"alignment_score\": 100.0\n}",
+          "created": "2025-11-26T02:56:31.978263",
+          "lastModified": "2025-11-26T02:56:31.978273"
+        }
+      ]
+    }
+  ]
+}
