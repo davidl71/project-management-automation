@@ -3269,6 +3269,125 @@
       "updatedAt": "2025-11-26T04:42:51.314011Z",
       "dependencies": [],
       "estimatedHours": 2
+    },
+    {
+      "id": "f152bae4-3480-421c-9524-d1282db02a73",
+      "content": "Add rate limiting to prevent DoS attacks on tools",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "dos",
+        "rate-limiting"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Prevent denial of service via excessive tool calls\n\n**Current risk:** No rate limiting - unlimited tool calls possible\n- scan_dependency_security: 300s timeout, CPU intensive\n- sprint_automation: max_iterations=10 but no call limit\n- run_tests: 300s timeout, resource intensive\n\n**Implementation:**\n```python\nfrom functools import wraps\nfrom collections import defaultdict\nimport time\n\n# Per-tool rate limits\nRATE_LIMITS = {\n    'scan_dependency_security': (1, 300),   # 1 call per 300s\n    'sprint_automation': (3, 3600),          # 3 calls per hour\n    'run_tests': (5, 300),                   # 5 calls per 5 min\n    'default': (10, 60)                      # 10 calls per minute\n}\n\ncall_history = defaultdict(list)\n\ndef rate_limited(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        tool_name = func.__name__\n        limit, window = RATE_LIMITS.get(tool_name, RATE_LIMITS['default'])\n        now = time.time()\n        \n        # Clean old entries\n        call_history[tool_name] = [\n            t for t in call_history[tool_name] \n            if now - t < window\n        ]\n        \n        if len(call_history[tool_name]) >= limit:\n            raise RateLimitError(\n                f\"Rate limit exceeded for {tool_name}\"\n            )\n        \n        call_history[tool_name].append(now)\n        return func(*args, **kwargs)\n    return wrapper\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499185Z",
+      "updatedAt": "2025-11-26T04:45:35.499202Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "c2353e52-07a8-4c97-9eed-7e2b54ed8f54",
+      "content": "Sanitize error messages to prevent information disclosure",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "information-disclosure",
+        "errors"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Prevent sensitive data leakage in error messages\n\n**Current risk:** 261 exception handlers with str(e) - may expose:\n- File paths\n- Stack traces\n- Internal state\n- Database info\n\n**Example vulnerability:**\n```python\nexcept Exception as e:\n    return {\"error\": str(e)}  # Leaks: /home/user/.ssh/id_rsa not found\n```\n\n**Fix pattern:**\n```python\nclass SafeError:\n    \"\"\"Error wrapper that sanitizes messages.\"\"\"\n    \n    SENSITIVE_PATTERNS = [\n        r'/home/[^/]+',\n        r'/Users/[^/]+', \n        r'password',\n        r'secret',\n        r'key=',\n        r'token=',\n    ]\n    \n    @staticmethod\n    def sanitize(error: Exception) -> str:\n        msg = str(error)\n        for pattern in SafeError.SENSITIVE_PATTERNS:\n            msg = re.sub(pattern, '[REDACTED]', msg, flags=re.I)\n        return msg\n\n# Usage\nexcept Exception as e:\n    logger.error(f\"Internal error: {e}\")  # Full error to logs\n    return {\"error\": SafeError.sanitize(e)}  # Sanitized to client\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499219Z",
+      "updatedAt": "2025-11-26T04:45:35.499222Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "c9527c5a-76b4-4d5f-923e-f80106ff307a",
+      "content": "Add JSON payload size limits to prevent memory exhaustion",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "dos",
+        "validation"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Prevent memory exhaustion via large JSON payloads\n\n**Current risk:** 57 json.load/loads calls with no size validation\n- Attacker could send multi-GB JSON payload\n- Memory exhaustion / server crash\n\n**Vulnerable code:**\n```python\nwith open(config_path, 'r') as f:\n    config = json.load(f)  # No size limit!\n```\n\n**Fix pattern:**\n```python\nMAX_JSON_SIZE = 10 * 1024 * 1024  # 10MB\n\ndef safe_json_load(file_path: Path, max_size: int = MAX_JSON_SIZE) -> dict:\n    \"\"\"Load JSON with size limit.\"\"\"\n    size = file_path.stat().st_size\n    if size > max_size:\n        raise ValueError(f\"JSON file too large: {size} bytes (max: {max_size})\")\n    \n    with open(file_path, 'r') as f:\n        return json.load(f)\n\ndef safe_json_loads(data: str, max_size: int = MAX_JSON_SIZE) -> dict:\n    \"\"\"Parse JSON string with size limit.\"\"\"\n    if len(data) > max_size:\n        raise ValueError(f\"JSON data too large: {len(data)} bytes\")\n    return json.loads(data)\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499231Z",
+      "updatedAt": "2025-11-26T04:45:35.499233Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "8f0cb9fa-c532-44aa-9c24-e756f4bb2b7a",
+      "content": "Validate remote agent hostnames to prevent SSRF",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "ssrf",
+        "network"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Prevent SSRF via remote agent configuration\n\n\ud83d\udccb **References:** \n- https://www.techtarget.com/searchenterpriseai/tip/MCP-security-risks-and-mitigation-strategies\n- https://www.docker.com/blog/mcp-security-issues-threatening-ai-infrastructure/\n\n**Current risk:** Remote agents from environment variables\n```python\n# EXARP_REMOTE_AGENTS env var directly parsed and SSH'd to\nremote_agents = json.loads(os.environ.get(\"EXARP_REMOTE_AGENTS\", \"{}\"))\n_ssh_command(host, command)  # No hostname validation!\n```\n\n**Attack:** Set EXARP_REMOTE_AGENTS='{\"evil\": {\"host\": \"169.254.169.254\"}}'\n\u2192 SSH to AWS metadata service\n\n**Fix:**\n```python\nALLOWED_HOST_PATTERNS = [\n    r'^192\\.168\\.',        # Local network\n    r'^10\\.',               # Private network\n    r'^172\\.(1[6-9]|2[0-9]|3[01])\\.',  # Private\n    r'^localhost$',\n]\n\nBLOCKED_HOSTS = [\n    '169.254.169.254',       # AWS metadata\n    '127.0.0.1',             # Localhost (prevent loops)\n    'metadata.google.internal',\n]\n\ndef validate_host(hostname: str) -> bool:\n    if hostname in BLOCKED_HOSTS:\n        raise SecurityError(f\"Blocked host: {hostname}\")\n    \n    # Resolve to IP and check\n    ip = socket.gethostbyname(hostname)\n    if ip in BLOCKED_HOSTS:\n        raise SecurityError(f\"Blocked IP: {ip}\")\n    \n    return True\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499240Z",
+      "updatedAt": "2025-11-26T04:45:35.499242Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "1bdca8f9-b6cb-4e3c-aab6-3de590dcedfc",
+      "content": "Add access control / authorization for sensitive tools",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "authorization",
+        "access-control"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Restrict access to dangerous tools\n\n\ud83d\udccb **Reference:** https://www.techradar.com/pro/mcps-biggest-security-loophole-is-identity-fragmentation\n\n**Current risk:** All tools accessible to all callers\n- No distinction between read/write operations\n- No confirmation for destructive actions\n- No permission levels\n\n**Tool categories:**\n```python\nTOOL_PERMISSIONS = {\n    'read_only': [\n        'server_status',\n        'list_tasks_awaiting_clarification',\n        'check_working_copy_health',\n    ],\n    'write': [\n        'resolve_task_clarification',\n        'batch_approve_tasks',\n        'detect_duplicate_tasks',  # with auto_fix\n    ],\n    'dangerous': [\n        'run_nightly_task_automation',\n        'sprint_automation',\n        'setup_git_hooks',\n    ],\n}\n\nCONFIRMATION_REQUIRED = [\n    'batch_approve_tasks',\n    'detect_duplicate_tasks',  # when auto_fix=True\n    'run_nightly_task_automation',\n]\n```\n\n**Implementation:**\n1. Require explicit confirmation for dangerous ops\n2. Add dry_run default=True for write operations\n3. Log all write operations with caller info\n4. Consider JWT scopes for tool access",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499249Z",
+      "updatedAt": "2025-11-26T04:45:35.499252Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "47d8f5ec-a49f-483d-8cb3-2559d9adf50f",
+      "content": "Add credential rotation and secure secret management",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "credentials",
+        "secrets"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Secure handling of API keys and credentials\n\n\ud83d\udccb **References:**\n- https://www.techtarget.com/searchenterpriseai/tip/MCP-security-risks-and-mitigation-strategies\n- https://www.docker.com/blog/mcp-security-issues-threatening-ai-infrastructure/\n\n**Current issues:**\n1. API keys in environment variables (visible in process list)\n2. No credential validation\n3. Config files may contain secrets\n\n**Current code:**\n```python\napi_key = os.getenv('OPENAI_API_KEY') or config.get('api_key')\n```\n\n**Improvements:**\n1. **Never log credentials:**\n```python\ndef safe_log_config(config: dict) -> dict:\n    safe = config.copy()\n    for key in ['api_key', 'secret', 'password', 'token']:\n        if key in safe:\n            safe[key] = '[REDACTED]'\n    return safe\n```\n\n2. **Validate credential format:**\n```python\ndef validate_api_key(key: str, provider: str) -> bool:\n    patterns = {\n        'openai': r'^sk-[a-zA-Z0-9]{48}$',\n        'anthropic': r'^sk-ant-[a-zA-Z0-9-]+$',\n    }\n    return bool(re.match(patterns.get(provider, r'.+'), key))\n```\n\n3. **Document secure practices in SECURITY.md**",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499258Z",
+      "updatedAt": "2025-11-26T04:45:35.499260Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "4b09422f-c8a7-415b-ab12-ffb58e3e5fdf",
+      "content": "Add security headers and response validation",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "response",
+        "headers"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Secure tool responses\n\n\ud83d\udccb **Reference:** https://blogs.infosys.com/emerging-technology-solutions/iedps/the-hidden-dangers-security-vulnerabilities-of-mcp-servers.html\n\n**Issues to address:**\n\n1. **Response size limits:**\n```python\nMAX_RESPONSE_SIZE = 1024 * 1024  # 1MB\n\ndef validate_response(response: str) -> str:\n    if len(response) > MAX_RESPONSE_SIZE:\n        return json.dumps({\n            \"error\": \"Response too large\",\n            \"truncated\": True,\n            \"size\": len(response)\n        })\n    return response\n```\n\n2. **Content type validation:**\n```python\ndef validate_content_type(response: dict) -> dict:\n    # Ensure response doesn't contain executable code markers\n    content = json.dumps(response)\n    if '<script>' in content or 'javascript:' in content:\n        raise SecurityError(\"Potential XSS in response\")\n    return response\n```\n\n3. **Sanitize file paths in responses:**\n```python\ndef sanitize_paths_in_response(response: dict, project_root: Path) -> dict:\n    # Replace absolute paths with relative\n    content = json.dumps(response)\n    content = content.replace(str(project_root), '.')\n    return json.loads(content)\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:45:35.499266Z",
+      "updatedAt": "2025-11-26T04:45:35.499268Z",
+      "dependencies": [],
+      "estimatedHours": 2
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
