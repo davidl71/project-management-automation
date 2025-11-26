@@ -1,0 +1,297 @@
+.\" Exarp MCP Server Manual Page
+.\" Install: sudo cp exarp.1 /usr/local/share/man/man1/
+.TH EXARP 1 "November 2025" "Exarp 0.1.8" "User Commands"
+.SH NAME
+exarp \- MCP server for project management automation
+.SH SYNOPSIS
+.B exarp
+.PP
+.B python -m project_management_automation.server
+.PP
+.B pma
+.SH DESCRIPTION
+.B Exarp
+(formerly project-management-automation) is a Model Context Protocol (MCP)
+server that provides AI assistants with tools for project health monitoring,
+task management, documentation analysis, and security scanning.
+.PP
+The server exposes tools that can be called by MCP-compatible clients like
+Cursor, Claude Desktop, or VS Code with MCP extensions.
+.SH TOOLS
+.SS "Project Health"
+.TP
+.B server_status
+Returns server status, version, and available tools count.
+.TP
+.B project_scorecard
+Generate comprehensive project health scorecard with metrics for codebase,
+tests, tasks, documentation, security, and CI/CD.
+.TP
+.B project_overview
+Generate one-page project summary in text, markdown, HTML, or slides format.
+.SS "Documentation"
+.TP
+.B check_documentation_health
+Analyze documentation structure, find broken links, validate formatting.
+Returns health score 0-100.
+.TP
+.B add_external_tool_hints
+Automatically add Context7 hints to documentation files.
+.SS "Task Management"
+.TP
+.B analyze_todo2_alignment
+Analyze task alignment with PROJECT_GOALS.md. Returns misaligned tasks
+and average alignment score.
+.TP
+.B detect_duplicate_tasks
+Find duplicate or similar tasks. Supports auto_fix mode.
+.TP
+.B consolidate_tags
+Analyze and standardize Todo2 task tags.
+.TP
+.B task_hierarchy_analyzer
+Recommend hierarchical task structures for complex components.
+.TP
+.B batch_approve_tasks
+Batch approve tasks that don't need clarification.
+.TP
+.B sync_todo_tasks
+Synchronize between shared TODO table and Todo2.
+.SS "Security"
+.TP
+.B scan_dependency_security
+Scan Python, Rust, and npm dependencies for vulnerabilities.
+Returns vulnerability count by severity.
+.SS "Automation"
+.TP
+.B run_daily_automation
+Run routine daily maintenance tasks (docs health, alignment, duplicates).
+.TP
+.B run_nightly_task_automation
+Execute background-capable tasks in parallel across agents.
+.TP
+.B sprint_automation
+Comprehensive sprint automation with subtask extraction and analysis.
+.TP
+.B find_automation_opportunities
+Discover new automation opportunities in the codebase.
+.SS "CI/CD & Git"
+.TP
+.B validate_ci_cd_workflow
+Validate GitHub Actions workflows and runner configurations.
+.TP
+.B setup_git_hooks
+Configure git hooks for automatic tool execution.
+.TP
+.B setup_pattern_triggers
+Setup file/git/task pattern-based automation triggers.
+.TP
+.B check_working_copy_health
+Check git working copy status across agents.
+.SS "Testing"
+.TP
+.B run_tests
+Execute test suites with pytest, unittest, or ctest.
+.TP
+.B analyze_test_coverage
+Generate coverage reports and identify gaps.
+.SS "Other"
+.TP
+.B review_pwa_config
+Review PWA configuration and generate recommendations.
+.TP
+.B resolve_task_clarification
+Resolve a single task's clarification question.
+.TP
+.B resolve_multiple_clarifications
+Batch resolve task clarifications from JSON.
+.TP
+.B list_tasks_awaiting_clarification
+List tasks in Review status awaiting decisions.
+.TP
+.B simplify_rules
+Simplify Cursor rules based on automation capabilities.
+.SH PROMPTS
+Exarp provides MCP prompts for common workflows:
+.TP
+.B daily_checkin
+Daily project health check workflow.
+.TP
+.B sprint_start
+Sprint planning and task organization.
+.TP
+.B sprint_end
+Sprint review and retrospective.
+.TP
+.B project_health
+Comprehensive health assessment.
+.TP
+.B scorecard
+Generate project scorecard.
+.TP
+.B project_overview
+Generate one-page summary.
+.TP
+.B automation_setup
+One-time automation configuration.
+.SH RESOURCES
+.TP
+.B exarp://status
+Current server status and health.
+.TP
+.B exarp://tools
+List of available tools.
+.TP
+.B exarp://history
+Recent automation run history.
+.SH CONFIGURATION
+.SS "MCP Client Configuration"
+Add to your MCP client config (e.g., .cursor/mcp.json):
+.PP
+.RS
+.nf
+{
+  "mcpServers": {
+    "exarp": {
+      "command": "/path/to/venv/bin/python",
+      "args": ["-m", "project_management_automation.server"],
+      "env": {
+        "PYTHONPATH": "/path/to/project-management-automation"
+      }
+    }
+  }
+}
+.fi
+.RE
+.SS "Environment Variables"
+.TP
+.B EXARP_PROJECT_ROOT
+Override automatic project root detection.
+.TP
+.B EXARP_LOG_LEVEL
+Logging level (DEBUG, INFO, WARNING, ERROR).
+.TP
+.B EXARP_WISDOM_SOURCE
+Daily wisdom source (pistis_sophia, bofh, tao, stoic, bible, etc.).
+.TP
+.B EXARP_WISDOM_DISABLED
+Set to 1 to disable daily wisdom in scorecards.
+.SH FILES
+.TP
+.I pyproject.toml
+Project configuration and metadata.
+.TP
+.I PROJECT_GOALS.md
+Project goals for task alignment analysis.
+.TP
+.I .todo2/state.todo2.json
+Todo2 task state file.
+.TP
+.I .cursor/mcp.json
+MCP server configuration for Cursor.
+.TP
+.I .github/workflows/ci.yml
+CI/CD workflow for GitHub Actions.
+.TP
+.I scripts/dependency_security_config.json
+Security scanner configuration.
+.SH EXIT STATUS
+.TP
+.B 0
+Server started successfully or tool completed.
+.TP
+.B 1
+Error during startup or tool execution.
+.SH EXAMPLES
+.PP
+Start the server directly:
+.RS
+.B python -m project_management_automation.server
+.RE
+.PP
+Run a tool from command line:
+.RS
+.B python -m project_management_automation.tools.project_scorecard
+.RE
+.PP
+Generate HTML overview:
+.RS
+.B python -m project_management_automation.tools.project_overview \\
+.B "    output_format=html output_path=docs/OVERVIEW.html
+.RE
+.PP
+Run daily automation:
+.RS
+.B python -m project_management_automation.scripts.automate_daily
+.RE
+.PP
+Scan for security vulnerabilities:
+.RS
+.B python -m project_management_automation.tools.dependency_security \\
+.B "    languages='["python"]'
+.RE
+.SH INSTALLATION
+.PP
+From PyPI (when published):
+.RS
+.B pip install project-management-automation-mcp
+.RE
+.PP
+From source:
+.RS
+.nf
+git clone https://github.com/davidl71/project-management-automation
+cd project-management-automation
+pip install -e .
+.fi
+.RE
+.PP
+Verify installation:
+.RS
+.B exarp --version
+.RE
+.SH ARCHITECTURE
+.PP
+Exarp is built on FastMCP and follows the Model Context Protocol specification.
+.PP
+.nf
+┌─────────────────────────────────────────────────────────┐
+│                    MCP CLIENT                           │
+│            (Cursor, Claude, VS Code)                    │
+└─────────────────────┬───────────────────────────────────┘
+                      │ MCP Protocol (JSON-RPC)
+┌─────────────────────▼───────────────────────────────────┐
+│                  EXARP SERVER                           │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐   │
+│  │  Tools  │  │ Prompts │  │Resources│  │ Wisdom  │   │
+│  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘   │
+│       └────────────┴────────────┴────────────┘        │
+│                         │                              │
+│  ┌──────────────────────▼──────────────────────────┐  │
+│  │           Automation Scripts                     │  │
+│  │  (docs_health, alignment, security, sprint)     │  │
+│  └──────────────────────┬──────────────────────────┘  │
+└─────────────────────────┼───────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────┐
+│                   PROJECT FILES                         │
+│   .todo2/  pyproject.toml  PROJECT_GOALS.md  docs/     │
+└─────────────────────────────────────────────────────────┘
+.fi
+.SH SEE ALSO
+.BR exarp-zsh (1),
+.BR python (1),
+.BR git (1)
+.PP
+MCP Specification: https://modelcontextprotocol.io
+.PP
+FastMCP: https://gofastmcp.com
+.PP
+Project: https://github.com/davidl71/project-management-automation
+.SH BUGS
+Report bugs at: https://github.com/davidl71/project-management-automation/issues
+.SH AUTHOR
+David Lowes
+.SH COPYRIGHT
+MIT License. Copyright (c) 2025.
+
