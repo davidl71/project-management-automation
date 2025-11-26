@@ -426,6 +426,54 @@ async def project_scorecard(ctx: Context, ...) -> str:
 
 ---
 
+## Developer Experience
+
+### Hot Reload (dev_reload tool)
+
+**Decision:** Custom module reloading without server restart  
+**Alternatives Considered:** watchdog auto-reload, uvicorn --reload, manual restart  
+**Why Custom:**
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Manual restart** | Simple | Slow (10-15s each time), loses context |
+| **watchdog** | Automatic | Heavy dependency, MCP context issues |
+| **uvicorn --reload** | Built-in | HTTP only, not for stdio MCP |
+| **Our dev_reload** | Instant (~2s), on-demand | Must call manually |
+
+**Implementation:**
+
+```python
+# Enable in MCP config:
+"env": {"EXARP_DEV_MODE": "1"}
+
+# Reload all modules:
+/exarp/dev_reload
+
+# Reload specific module:
+/exarp/dev_reload modules=["tools.project_scorecard"]
+```
+
+**How It Works:**
+1. Finds all loaded `project_management_automation.*` modules
+2. Sorts by depth (deepest first) for correct dependency order
+3. Uses `importlib.reload()` to hot-reload each module
+4. Reports success/failure for each module
+
+**Limitations (acceptable trade-offs):**
+- ⚠️ Initial restart needed to enable dev mode
+- ⚠️ New files need restart (can't reload what's not loaded)
+- ⚠️ Class instances won't pick up new methods automatically
+
+**Metrics:**
+| Metric | Restart | dev_reload |
+|--------|---------|------------|
+| Time to apply changes | 10-15s | ~2s |
+| Context preserved | ❌ Lost | ✅ Kept |
+| Modules updated | All | 42 |
+
+---
+
 ## Justified External Dependencies
 
 | Dependency | Purpose | Why Included |
