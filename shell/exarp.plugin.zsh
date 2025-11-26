@@ -2,6 +2,9 @@
 # Source this file or add to your .zshrc:
 #   source /path/to/exarp.plugin.zsh
 # Or symlink to ~/.oh-my-zsh/custom/plugins/exarp/exarp.plugin.zsh
+#
+# MOTD: Set EXARP_MOTD=1 to show project health + wisdom on shell start
+# Disable: Set EXARP_MOTD=0 or unset EXARP_MOTD
 
 # ═══════════════════════════════════════════════════════════════
 # ALIASES
@@ -84,5 +87,73 @@ compdef _exarp_tools exarp
 # }
 # RPROMPT='$(exarp_prompt_info)'
 
-echo "✅ Exarp plugin loaded. Try: exarp, xs (score), xh (health), xo (overview)"
+# ═══════════════════════════════════════════════════════════════
+# MOTD (Message of the Day)
+# ═══════════════════════════════════════════════════════════════
+
+# Show project health + wisdom on shell start
+# Enable: export EXARP_MOTD=1 (or EXARP_MOTD=score|overview|wisdom)
+# Disable: export EXARP_MOTD=0 or unset
+
+exarp-motd() {
+    local mode="${1:-score}"
+    
+    # Check if we're in a project with exarp
+    if [[ ! -f "pyproject.toml" ]] && [[ ! -f ".todo2/state.todo2.json" ]]; then
+        return 0
+    fi
+    
+    echo ""
+    echo "┌─────────────────────────────────────────────────────────────┐"
+    echo "│  🌟 EXARP - Project Health & Wisdom                         │"
+    echo "└─────────────────────────────────────────────────────────────┘"
+    echo ""
+    
+    case "$mode" in
+        overview|o)
+            python -m project_management_automation.tools.project_overview output_format=text 2>/dev/null | head -40
+            ;;
+        wisdom|w)
+            python -c "
+from project_management_automation.tools.project_scorecard import generate_project_scorecard
+result = generate_project_scorecard(output_format='text', include_recommendations=False)
+# Extract just the wisdom section
+output = result.get('formatted_output', '')
+if 'DAILY WISDOM' in output:
+    print(output[output.find('DAILY WISDOM')-5:])
+else:
+    print(output[-500:] if len(output) > 500 else output)
+" 2>/dev/null
+            ;;
+        score|s|*)
+            python -c "
+from project_management_automation.tools.project_scorecard import generate_project_scorecard
+result = generate_project_scorecard(output_format='text', include_recommendations=False)
+print(result.get('formatted_output', 'Unable to generate scorecard')[:1500])
+" 2>/dev/null
+            ;;
+    esac
+    echo ""
+}
+
+# Shorter aliases for MOTD modes
+alias motd="exarp-motd"
+alias motd-score="exarp-motd score"
+alias motd-overview="exarp-motd overview"
+alias motd-wisdom="exarp-motd wisdom"
+
+# Auto-show MOTD on shell start if enabled
+if [[ "${EXARP_MOTD:-0}" != "0" ]]; then
+    # Only show once per day (cache in /tmp)
+    local today=$(date +%Y%m%d)
+    local cache_file="/tmp/exarp_motd_${today}"
+    
+    if [[ ! -f "$cache_file" ]]; then
+        exarp-motd "${EXARP_MOTD}"
+        touch "$cache_file"
+    fi
+fi
+
+echo "✅ Exarp plugin loaded. Try: exarp, xs, xh, xo, motd"
+echo "   Enable MOTD: export EXARP_MOTD=1 (or score|overview|wisdom)"
 
