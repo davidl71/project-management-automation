@@ -1,0 +1,16 @@
+{
+  "languages": ["python"],
+  "python": {
+    "requirements_files": [
+      "requirements.txt",
+      "requirements-dev.txt"
+    ],
+    "tool": "pip-audit",
+    "ignore_vulnerabilities": []
+  },
+  "severity_threshold": "medium",
+  "fail_on_vulnerabilities": false,
+  "output_format": "json",
+  "report_path": "docs/SECURITY_SCAN_REPORT.md"
+}
+
