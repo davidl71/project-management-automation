@@ -652,7 +652,9 @@ class PRDGenerator:
             for persona in sections["target_users"]:
                 advisor_icon = persona.get("advisor_icon", "🧙")
                 advisor_name = persona.get("trusted_advisor", "sage").replace("_", " ").title()
-                lines.append(f"| **{persona['name']}** | {persona['role']} | {advisor_icon} {advisor_name} | {persona['goal']} |")
+                lines.append(
+                    f"| **{persona['name']}** | {persona['role']} | {advisor_icon} {advisor_name} | {persona['goal']} |"
+                )
             lines.append("")
 
             # Detailed persona descriptions

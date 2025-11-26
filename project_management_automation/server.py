@@ -266,6 +266,11 @@ try:
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
         from .tools.prd_generator import generate_prd as _generate_prd
+        from .tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
+        from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
+        from .tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
+        from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
+        from .tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -303,6 +308,11 @@ try:
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
         from tools.prd_generator import generate_prd as _generate_prd
+        from tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
+        from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
+        from tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
+        from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
+        from tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -977,6 +987,93 @@ if mcp:
             - check_documentation_health (docs quality)
             """
             return _generate_prd(project_name, output_path, include_tasks, include_architecture, include_metrics)
+
+        @mcp.tool()
+        def analyze_prd_alignment(output_path: Optional[str] = None) -> str:
+            """[HINT: PRD alignment. Task-to-persona mapping, advisor assignments, recommendations.]
+
+            📊 Output: Alignment scores by persona, unaligned tasks, recommendations
+            🔧 Side Effects: None (read-only analysis)
+            📁 Analyzes: PRD.md, Todo2 tasks, PROJECT_GOALS.md
+            ⏱️ Typical Runtime: 1-5 seconds
+
+            Example Prompt:
+            "Analyze how well my tasks align with PRD personas"
+            """
+            return _analyze_prd_alignment(output_path)
+
+        @mcp.tool()
+        def recommend_workflow_mode(
+            task_description: Optional[str] = None,
+            task_id: Optional[str] = None,
+            include_rationale: bool = True
+        ) -> str:
+            """[HINT: Workflow mode. AGENT vs ASK recommendation based on task complexity.]
+
+            📊 Output: Recommended mode (AGENT/ASK), confidence, rationale
+            🔧 Side Effects: None (advisory only)
+            📁 Analyzes: Task description, tags, complexity indicators
+            ⏱️ Typical Runtime: <1 second
+
+            Example Prompt:
+            "Should I use AGENT or ASK mode for implementing user authentication?"
+            """
+            return _recommend_workflow_mode(task_description, task_id, include_rationale)
+
+        @mcp.tool()
+        def generate_cursorignore(
+            include_indexing: bool = True,
+            analyze_project: bool = True,
+            dry_run: bool = False
+        ) -> str:
+            """[HINT: Cursorignore. Generates .cursorignore/.cursorindexingignore for AI context.]
+
+            📊 Output: Generated ignore patterns, files created/updated
+            🔧 Side Effects: Creates/updates .cursorignore and .cursorindexingignore
+            📁 Analyzes: Project structure for smart pattern detection
+            ⏱️ Typical Runtime: 1-3 seconds
+
+            Example Prompt:
+            "Generate cursorignore files to optimize AI context"
+            """
+            return _generate_cursorignore(include_indexing, None, analyze_project, dry_run)
+
+        @mcp.tool()
+        def check_definition_of_done(
+            task_id: Optional[str] = None,
+            changed_files: Optional[str] = None,
+            auto_check: bool = True,
+            output_path: Optional[str] = None
+        ) -> str:
+            """[HINT: Definition of Done. Validates task completion criteria before review.]
+
+            📊 Output: DoD checklist with pass/fail/skip status
+            🔧 Side Effects: None (read-only validation)
+            📁 Analyzes: Tests, linter, secrets, docstrings
+            ⏱️ Typical Runtime: 5-30 seconds (runs tests)
+
+            Example Prompt:
+            "Check if my changes are ready for review"
+            """
+            return _check_definition_of_done(task_id, changed_files, auto_check, output_path)
+
+        @mcp.tool()
+        def generate_cursor_rules(
+            rules: Optional[str] = None,
+            overwrite: bool = False,
+            analyze_only: bool = False
+        ) -> str:
+            """[HINT: Cursor rules. Generates .mdc rules files from project analysis.]
+
+            📊 Output: Generated rule files, project analysis
+            🔧 Side Effects: Creates .cursor/rules/*.mdc files
+            📁 Analyzes: Project structure, languages, frameworks
+            ⏱️ Typical Runtime: 1-3 seconds
+
+            Example Prompt:
+            "Generate Cursor rules for my Python MCP project"
+            """
+            return _generate_cursor_rules(rules, overwrite, analyze_only)
 
         @mcp.tool()
         def project_overview(output_format: str = "text", output_path: Optional[str] = None) -> str:
