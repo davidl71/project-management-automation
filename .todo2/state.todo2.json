@@ -2980,6 +2980,108 @@
       "updatedAt": "2025-11-26T04:36:04.552486Z",
       "dependencies": [],
       "estimatedHours": 2
+    },
+    {
+      "id": "19aeceeb-36a2-4dd9-83f2-d07566937051",
+      "content": "Add input validation to prevent prompt injection attacks",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "mcp",
+        "validation"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Protect Exarp tools from indirect prompt injection\n\n\ud83d\udccb **Reference:** https://developer.microsoft.com/blog/protecting-against-indirect-injection-attacks-mcp\n\n**Threat:** Indirect Prompt Injection (XPIA)\n- Malicious instructions embedded in external content\n- AI misinterprets embedded instructions as user commands\n- Can lead to data exfiltration or unintended actions\n\n**Implementation:**\n- Sanitize inputs with regex patterns for injection markers\n- Remove patterns like \"ignore previous instructions\", \"[INST]\", etc.\n- Apply to: tool inputs, file content, external data\n\n**Validation points:**\n- Tool input parameters\n- File content before analysis\n- External data from URLs/APIs",
+      "completed": false,
+      "createdAt": "2025-11-26T04:38:36.846262Z",
+      "updatedAt": "2025-11-26T04:38:36.846278Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "46dec127-30c6-4732-873d-07663cf69103",
+      "content": "Implement tool description security review process",
+      "status": "pending",
+      "priority": "high",
+      "tags": [
+        "security",
+        "mcp",
+        "tool-poisoning"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Prevent tool poisoning attacks via docstrings\n\n\ud83d\udccb **Reference:** https://developer.microsoft.com/blog/protecting-against-indirect-injection-attacks-mcp\n\n**Threat:** Tool Poisoning\n- Malicious instructions embedded in tool descriptions\n- LLMs use tool metadata to decide which tools to invoke\n- Compromised descriptions can manipulate model behavior\n- \"Rug pull\" attacks: tool definitions changed after approval\n\n**Mitigation:**\n1. Review all tool docstrings for injection patterns\n2. Keep descriptions factual - avoid instructions to AI\n3. Version control - track changes to tool definitions\n4. Checksums - detect unauthorized modifications\n\n**Tasks:**\n- Audit all existing tool docstrings\n- Create docstring security guidelines\n- Add CI check for suspicious patterns in docstrings",
+      "completed": false,
+      "createdAt": "2025-11-26T04:38:36.846300Z",
+      "updatedAt": "2025-11-26T04:38:36.846302Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "48511512-2acd-4524-89ad-e1d2ba83fb60",
+      "content": "Add delimiters and datamarking for trusted/untrusted data",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "mcp",
+        "datamarking"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Help AI distinguish trusted from untrusted input\n\n\ud83d\udccb **Reference:** https://developer.microsoft.com/blog/protecting-against-indirect-injection-attacks-mcp\n\n**Technique:** Delimiters and Datamarking\n- Explicitly outline input text boundaries\n- Mark trusted vs untrusted data sections\n- Help AI recognize and separate inputs\n\n**Implementation:**\n- mark_untrusted_content() - wrap external content with <UNTRUSTED_CONTENT>\n- mark_trusted_content() - wrap system output with <SYSTEM_OUTPUT>\n- Add note that content should not be interpreted as instructions\n\n**Apply to:**\n- File content analysis tools\n- External API responses\n- User-provided task descriptions",
+      "completed": false,
+      "createdAt": "2025-11-26T04:38:36.846312Z",
+      "updatedAt": "2025-11-26T04:38:36.846314Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "6e0b5209-1508-4217-9a0a-fdde6e6923c6",
+      "content": "Document MCP security best practices for Exarp",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "documentation",
+        "mcp"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Create security guidelines for Exarp development\n\n\ud83d\udccb **Reference:** https://developer.microsoft.com/blog/protecting-against-indirect-injection-attacks-mcp\n\n**Create docs/SECURITY.md covering:**\n\n1. Threat Model\n   - Indirect Prompt Injection (XPIA)\n   - Tool Poisoning\n\n2. Mitigation Strategies\n   - Input Validation\n   - Tool Definition Security\n   - Supply Chain Security\n   - Authentication\n\n3. Security Checklist\n   - Docstring review process\n   - Input sanitization requirements\n   - Logging requirements",
+      "completed": false,
+      "createdAt": "2025-11-26T04:38:36.846323Z",
+      "updatedAt": "2025-11-26T04:38:36.846326Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "303d0f30-3d80-43bc-a1cb-ed9d96c09775",
+      "content": "Add tool invocation logging for security auditing",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "security",
+        "logging",
+        "auditing"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Log all tool calls for security monitoring\n\n\ud83d\udccb **Reference:** https://developer.microsoft.com/blog/protecting-against-indirect-injection-attacks-mcp\n\n**Implementation:**\n- Create @audit_tool_call decorator\n- Log: tool name, timestamp, args, result status\n- Use dedicated security logger\n\n**Log entries:**\n- Tool name, timestamp\n- Input parameters (sanitized)\n- Result status\n- Error details if failed\n\n**Integration:**\n- JSON log format for SIEM\n- Rotation policy\n- Alert on suspicious patterns",
+      "completed": false,
+      "createdAt": "2025-11-26T04:38:36.846335Z",
+      "updatedAt": "2025-11-26T04:38:36.846337Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "4cde739a-d630-4b6b-89a6-fc7004a7d37b",
+      "content": "Implement supply chain security checks for dependencies",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "security",
+        "supply-chain",
+        "dependencies"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Verify integrity of all dependencies\n\n\ud83d\udccb **Reference:** https://developer.microsoft.com/blog/protecting-against-indirect-injection-attacks-mcp\n\n**Supply chain extends to:**\n- Code packages (Python, npm)\n- Foundation models\n- Context providers (MCP servers)\n\n**Implementation:**\n1. Lock dependencies with hashes (pip-compile --generate-hashes)\n2. Add pip-audit to CI/CD with --strict flag\n3. Monitor with Dependabot + weekly pip-audit scans\n4. Document approved dependency sources\n\n**Already have:**\n- scan_dependency_security tool\n- pip-audit integration\n\n**Add:**\n- Hash verification in CI\n- Approved versions list\n- Vulnerability response process",
+      "completed": false,
+      "createdAt": "2025-11-26T04:38:36.846346Z",
+      "updatedAt": "2025-11-26T04:38:36.846348Z",
+      "dependencies": [],
+      "estimatedHours": 2
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
