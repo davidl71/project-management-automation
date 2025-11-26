@@ -86,7 +86,7 @@ def sprint_automation(
         from project_management_automation.scripts.automate_sprint import SprintAutomation
         from project_management_automation.utils import find_project_root
         
-        project_root = find_project_root(Path(__file__).parent.parent.parent.parent)
+        project_root = find_project_root()
 
         config = {
             'max_iterations': max_iterations,

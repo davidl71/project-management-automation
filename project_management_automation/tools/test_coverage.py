@@ -66,7 +66,7 @@ def analyze_test_coverage(
         from project_management_automation.scripts.automate_test_coverage import TestCoverageAnalyzer
         from project_management_automation.utils import find_project_root
         
-        project_root = find_project_root(Path(__file__).parent.parent.parent.parent)
+        project_root = find_project_root()
 
         config = {
             'coverage_file': coverage_file,

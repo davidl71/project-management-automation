@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
+from ..utils import find_project_root
+
 
 def resolve_task_clarification(
     task_id: str,
@@ -32,7 +34,7 @@ def resolve_task_clarification(
     Returns:
         Dictionary with resolution result
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    project_root = find_project_root()
     script_path = project_root / "scripts" / "resolve_task_clarifications.py"
     state_file = project_root / ".todo2" / "state.todo2.json"
 
@@ -114,7 +116,7 @@ def resolve_multiple_clarifications(
     Returns:
         Dictionary with resolution results
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    project_root = find_project_root()
     script_path = project_root / "scripts" / "resolve_task_clarifications.py"
     state_file = project_root / ".todo2" / "state.todo2.json"
 
@@ -194,7 +196,7 @@ def list_tasks_awaiting_clarification() -> Dict[str, Any]:
     Returns:
         Dictionary with list of tasks awaiting clarification
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    project_root = find_project_root()
     state_file = project_root / ".todo2" / "state.todo2.json"
 
     if not state_file.exists():

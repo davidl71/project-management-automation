@@ -71,7 +71,7 @@ def add_external_tool_hints(
         from project_management_automation.utils import find_project_root
 
         # Find project root
-        project_root = find_project_root(Path(__file__).parent.parent.parent.parent)
+        project_root = find_project_root()
 
         # Build config
         config = {

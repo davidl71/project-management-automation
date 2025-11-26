@@ -68,7 +68,7 @@ def run_tests(
         from project_management_automation.scripts.automate_run_tests import TestRunner
         from project_management_automation.utils import find_project_root
         
-        project_root = find_project_root(Path(__file__).parent.parent.parent.parent)
+        project_root = find_project_root()
 
         config = {
             'test_path': test_path or 'tests/',

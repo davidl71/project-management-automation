@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
+from ..utils import find_project_root
+
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -40,7 +42,7 @@ def setup_pattern_triggers(
     Returns:
         JSON string with setup results
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    project_root = find_project_root()
 
     # Default patterns if not provided
     if patterns is None:

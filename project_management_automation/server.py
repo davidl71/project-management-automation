@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Optional
 from functools import wraps
 
 # Version - keep in sync with pyproject.toml
-__version__ = "0.1.12"
+__version__ = "0.1.13"
 
 # Use FastMCP's logging utility (outputs to stderr with Rich formatting)
 # This is MCP-compatible: stdout = JSON-RPC only, stderr = logging

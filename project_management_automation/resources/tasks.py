@@ -10,24 +10,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
+from ..utils import find_project_root
+
 logger = logging.getLogger(__name__)
-
-
-def _find_project_root() -> Path:
-    """Find project root directory."""
-    current = Path(__file__).parent.parent.parent.parent
-    for _ in range(5):
-        if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists():
-            return current
-        if current.parent == current:
-            break
-        current = current.parent
-    return current
 
 
 def _load_todo2_state() -> Dict[str, Any]:
     """Load Todo2 state file."""
-    project_root = _find_project_root()
+    project_root = find_project_root()
     todo2_file = project_root / '.todo2' / 'state.todo2.json'
 
     if not todo2_file.exists():

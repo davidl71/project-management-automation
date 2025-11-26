@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
 
+from ..utils import find_project_root
+
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -31,7 +33,7 @@ def simplify_rules(
     Returns:
         JSON string with simplification results
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    project_root = find_project_root()
 
     # Default rule files if not specified
     if rule_files is None:

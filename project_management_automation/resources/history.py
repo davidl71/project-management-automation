@@ -10,6 +10,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
+from ..utils import find_project_root
+
 logger = logging.getLogger(__name__)
 
 
@@ -24,7 +26,7 @@ def get_history_resource(limit: int = 50) -> str:
         JSON string with execution history
     """
     try:
-        project_root = Path(__file__).parent.parent.parent.parent
+        project_root = find_project_root()
         history_files = [
             project_root / 'scripts' / '.docs_health_history.json',
             project_root / 'scripts' / '.todo2_alignment_history.json',

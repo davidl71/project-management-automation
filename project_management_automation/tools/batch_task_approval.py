@@ -10,6 +10,8 @@ import sys
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
+from ..utils import find_project_root
+
 
 def batch_approve_tasks(
     status: str = "Review",
@@ -33,7 +35,7 @@ def batch_approve_tasks(
     Returns:
         Dictionary with approval results including count, task IDs, and status
     """
-    project_root = Path(__file__).parent.parent.parent.parent
+    project_root = find_project_root()
     batch_script = project_root / "scripts" / "batch_update_todos.py"
 
     if not batch_script.exists():

@@ -1,9 +1,11 @@
 {
   "mcpServers": {
     "exarp": {
-      "command": "uvx",
-      "args": ["exarp"],
-      "description": "Project management automation - health scores, task alignment, security scanning (PyPI)"
+      "command": "/Volumes/SSD1_APFS/project-management-automation/exarp-switch.sh",
+      "env": {
+        "EXARP_USE_PYPI": "0"
+      },
+      "description": "Project management automation - health scores, task alignment, security scanning (local dev)"
     },
     "tractatus_thinking": {
       "command": "uvx",
