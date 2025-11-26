@@ -1642,6 +1642,46 @@
       ],
       "created": "2025-11-26T03:42:23.034752",
       "lastModified": "2025-11-26T03:42:23.034756"
+    },
+    {
+      "id": "AUTO-20251126034706",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-26T03:47:06.798430",
+      "lastModified": "2025-11-26T03:47:06.937178",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251126034706-C-1",
+          "todoId": "AUTO-20251126034706",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\n  \"link_validation\": {\n    \"total_links\": 132,\n    \"broken_internal\": [],\n    \"broken_external\": []\n  },\n  \"format_validation\": {\n    \"format_errors\": [],\n    \"missing_required_fields\": []\n  },\n  \"date_currency\": {\n    \"stale_files\": [\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_LICENSING_ANALYSIS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_FASTMCP_CONFIGURATION.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/PRIVATE_REPOSITORY_SETUP.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      },\n      {\n        \"file\": \"docs/EXARP_PHASE2_TASKS.md\",\n        \"last_updated\": \"2025-01-27\",\n        \"days_old\": 303\n      }\n    ],\n    \"missing_dates\": []\n  },\n  \"cross_references\": {\n    \"broken_references\": [],\n    \"orphaned_files\": []\n  },\n  \"health_score\": 85.0\n}",
+          "created": "2025-11-26T03:47:06.925140",
+          "lastModified": "2025-11-26T03:47:06.925150"
+        }
+      ]
+    },
+    {
+      "id": "T-20251126034706-66",
+      "name": "Update stale documentation",
+      "content": "Update 15 stale documents (>90 days old)",
+      "status": "todo",
+      "priority": "medium",
+      "tags": [
+        "documentation",
+        "update"
+      ],
+      "dependencies": [
+        "AUTO-20251126034706"
+      ],
+      "created": "2025-11-26T03:47:06.931326",
+      "lastModified": "2025-11-26T03:47:06.931331"
     }
   ],
   "lastModified": "2025-11-26T03:29:33.754436"
