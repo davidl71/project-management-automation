@@ -2708,6 +2708,125 @@
       "updatedAt": "2025-11-26T04:30:33.064594Z",
       "dependencies": [],
       "estimatedHours": 2
+    },
+    {
+      "id": "794ab931-4dd9-4083-a198-bd3aedad06f1",
+      "content": "Add response caching middleware for expensive tools",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "caching",
+        "performance"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Cache results of expensive/slow tools\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/storage-backends\n\n**Implementation:**\n```python\nfrom fastmcp.server.middleware.caching import ResponseCachingMiddleware\nfrom key_value.aio.stores.disk import DiskStore\n\nmcp = FastMCP(\"Exarp\")\n\n# Cache expensive tool results to disk\nmcp.add_middleware(ResponseCachingMiddleware(\n    cache_storage=DiskStore(directory=\".cache/exarp\")\n))\n```\n\n**Cacheable tools (slow/expensive):**\n- scan_dependency_security (~30s)\n- check_documentation_health (~10s)\n- analyze_todo2_alignment (~5s)\n\n**Cache strategy:**\n- TTL: 1 hour for security scans\n- TTL: 15 min for docs health\n- Invalidate on file changes\n\n**Benefits:**\n- Faster repeated queries\n- Reduced CPU usage\n- Persistent across restarts",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986698Z",
+      "updatedAt": "2025-11-26T04:33:21.986711Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "124cdbad-0cba-410c-8349-e2f9fa5c9aea",
+      "content": "Add disk storage for persistent tool state",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "storage",
+        "persistence"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Persist tool state across server restarts\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/storage-backends\n\n**Use cases:**\n- Last run timestamps for daily/weekly tools\n- Cached analysis results\n- Sprint automation state\n\n**Implementation:**\n```python\nfrom key_value.aio.stores.disk import DiskStore\n\n# Persistent state storage\nstate_store = DiskStore(directory=\".exarp/state\")\n\n@mcp.tool\nasync def get_last_run(tool_name: str):\n    return await state_store.get(f\"last_run:{tool_name}\")\n\n@mcp.tool  \nasync def record_run(tool_name: str):\n    await state_store.set(\n        f\"last_run:{tool_name}\",\n        datetime.now().isoformat()\n    )\n```\n\n**Stored state:**\n- Tool execution history\n- Analysis snapshots\n- User preferences",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986729Z",
+      "updatedAt": "2025-11-26T04:33:21.986732Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "330f5ab6-87ed-454f-9652-cd18038534c7",
+      "content": "Add LLM sampling for intelligent task analysis",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "fastmcp",
+        "sampling",
+        "ai"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Use LLM for smart task operations\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/sampling\n\n**Use cases:**\n\n1. **Smart duplicate detection:**\n```python\n@mcp.tool\nasync def smart_duplicate_detection(ctx: Context, tasks: list):\n    response = await ctx.sample(\n        f\"Are these tasks duplicates? Compare semantically:\\n{tasks}\",\n        system_prompt=\"Return JSON: {is_duplicate: bool, reason: str}\",\n        temperature=0.1\n    )\n    return json.loads(response.text)\n```\n\n2. **Task description enhancement:**\n```python\n@mcp.tool\nasync def enhance_task_description(ctx: Context, task_id: str):\n    task = load_task(task_id)\n    response = await ctx.sample(\n        f\"Improve this task description for clarity: {task['content']}\",\n        system_prompt=\"Return a clearer, more actionable task description\"\n    )\n    return response.text\n```\n\n3. **Intelligent categorization:**\n- Auto-tag tasks based on content\n- Suggest priority based on description\n- Infer dependencies from task text",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986740Z",
+      "updatedAt": "2025-11-26T04:33:21.986742Z",
+      "dependencies": [],
+      "estimatedHours": 3
+    },
+    {
+      "id": "6f8d90d4-c8ed-4b91-bce0-5b82efaa0ea8",
+      "content": "Add sampling fallback handler with OpenAI",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "sampling",
+        "openai"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Enable sampling even when client doesn't support it\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/sampling\n\n**Problem:** Not all MCP clients support sampling\n**Solution:** Server-side OpenAI fallback\n\n**Implementation:**\n```python\nfrom fastmcp.experimental.sampling.handlers.openai import OpenAISamplingHandler\nfrom openai import OpenAI\n\nmcp = FastMCP(\n    name=\"Exarp\",\n    sampling_handler=OpenAISamplingHandler(\n        default_model=\"gpt-4o-mini\",\n        client=OpenAI(api_key=os.getenv(\"OPENAI_API_KEY\"))\n    ),\n    sampling_handler_behavior=\"fallback\"  # Only when client doesn't support\n)\n```\n\n**Modes:**\n- \"fallback\": Use client LLM first, fall back to OpenAI\n- \"always\": Always use server's OpenAI (bypass client)\n\n**Benefits:**\n- Guaranteed LLM access for tools\n- Consistent behavior across clients\n- Control over model selection",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986749Z",
+      "updatedAt": "2025-11-26T04:33:21.986751Z",
+      "dependencies": [],
+      "estimatedHours": 1.5
+    },
+    {
+      "id": "b691b9d2-2137-4d79-9239-bbc3a9120758",
+      "content": "Add JWT token verification for secure deployments",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "security",
+        "auth"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Secure Exarp for multi-user/production deployments\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/auth/token-verification\n\n**Implementation (JWKS endpoint):**\n```python\nfrom fastmcp.server.auth.providers.jwt import JWTVerifier\n\nverifier = JWTVerifier(\n    jwks_uri=\"https://auth.company.com/.well-known/jwks.json\",\n    issuer=\"https://auth.company.com\",\n    audience=\"exarp-mcp-server\"\n)\n\nmcp = FastMCP(name=\"Exarp\", auth=verifier)\n```\n\n**Implementation (symmetric/internal):**\n```python\nverifier = JWTVerifier(\n    public_key=os.environ[\"JWT_SECRET\"],\n    algorithm=\"HS256\",\n    issuer=\"internal-auth\",\n    audience=\"exarp\"\n)\n```\n\n**Benefits:**\n- Protect tools from unauthorized access\n- Per-user authorization\n- Audit trail via token claims\n- Integration with existing auth infrastructure",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986758Z",
+      "updatedAt": "2025-11-26T04:33:21.986761Z",
+      "dependencies": [],
+      "estimatedHours": 2
+    },
+    {
+      "id": "1bad2dab-51e5-43ec-bb31-fab8f551918d",
+      "content": "Add StaticTokenVerifier for development mode",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "security",
+        "development"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Simple token auth for local development\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/auth/token-verification\n\n**Implementation:**\n```python\nfrom fastmcp.server.auth.providers.jwt import StaticTokenVerifier\n\nverifier = StaticTokenVerifier(\n    tokens={\n        \"dev-admin-token\": {\n            \"client_id\": \"admin@local\",\n            \"scopes\": [\"read\", \"write\", \"admin\"]\n        },\n        \"dev-readonly-token\": {\n            \"client_id\": \"reader@local\",\n            \"scopes\": [\"read\"]\n        }\n    }\n)\n\n# Only enable in development\nif os.getenv(\"ENV\") == \"development\":\n    mcp = FastMCP(name=\"Exarp\", auth=verifier)\n```\n\n**Use cases:**\n- Local development without auth infrastructure\n- Testing scope-based access control\n- Demo environments",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986767Z",
+      "updatedAt": "2025-11-26T04:33:21.986769Z",
+      "dependencies": [],
+      "estimatedHours": 1
+    },
+    {
+      "id": "0b0eda34-61c6-4bba-b7ab-ae4d5d882e4b",
+      "content": "Add environment-based auth configuration",
+      "status": "pending",
+      "priority": "low",
+      "tags": [
+        "fastmcp",
+        "security",
+        "config"
+      ],
+      "long_description": "\ud83c\udfaf **Objective:** Configure auth via environment variables\n\n\ud83d\udccb **Reference:** https://gofastmcp.com/servers/auth/token-verification\n\n**Environment variables:**\n```bash\n# Enable JWT verification\nexport FASTMCP_SERVER_AUTH=fastmcp.server.auth.providers.jwt.JWTVerifier\nexport FASTMCP_SERVER_AUTH_JWT_JWKS_URI=\"https://auth.company.com/.well-known/jwks.json\"\nexport FASTMCP_SERVER_AUTH_JWT_ISSUER=\"https://auth.company.com\"\nexport FASTMCP_SERVER_AUTH_JWT_AUDIENCE=\"exarp-mcp-server\"\nexport FASTMCP_SERVER_AUTH_JWT_REQUIRED_SCOPES=\"exarp:read,exarp:write\"\n```\n\n**Benefits:**\n- Same code for dev/staging/prod\n- No secrets in code\n- 12-factor app compliance\n- Easy deployment configuration\n\n**Server code:**\n```python\n# Auth automatically configured from environment\nmcp = FastMCP(name=\"Exarp\")\n```",
+      "completed": false,
+      "createdAt": "2025-11-26T04:33:21.986775Z",
+      "updatedAt": "2025-11-26T04:33:21.986777Z",
+      "dependencies": [],
+      "estimatedHours": 1
     }
   ],
   "lastModified": "2025-11-26T03:49:23.485736"
