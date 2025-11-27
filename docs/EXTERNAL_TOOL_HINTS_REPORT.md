@@ -1,28 +1,28 @@
 # External Tool Hints Automation Report
 
-**Date**: 2025-11-27 01:59:57
+**Date**: 2025-11-27 02:09:35
 **Mode**: DRY RUN
 
 ## Summary
 
-- **Files Scanned**: 92
-- **Files Modified**: 13
+- **Files Scanned**: 93
+- **Files Modified**: 14
 - **Files Skipped**: 79
 
 ## Insights
 
-✅ Added Context7 hints to 13 documentation files
+✅ Added Context7 hints to 14 documentation files
 📚 Libraries detected: 8 unique libraries
-📊 Coverage: 14.1% of files received hints
+📊 Coverage: 15.1% of files received hints
 
 ## Hints Added
 
 - **docs/CURSOR_IDE_BEST_PRACTICES.md**
-  - Libraries: FastAPI, Python, React, Pydantic
+  - Libraries: React, Pydantic, Python, FastAPI
   - Type: top
 
 - **docs/PRD.md**
-  - Libraries: Python, TypeScript, Pydantic
+  - Libraries: TypeScript, Python, Pydantic
   - Type: top
 
 - **docs/PROJECT_OVERVIEW.md**
@@ -30,15 +30,19 @@
   - Type: top
 
 - **docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md**
-  - Libraries: FastAPI, Python
+  - Libraries: Python, FastAPI
   - Type: top
 
 - **docs/DESIGN_DECISIONS.md**
-  - Libraries: FastAPI, Python, Uvicorn, Pydantic
+  - Libraries: Uvicorn, Python, Pydantic, FastAPI
+  - Type: top
+
+- **docs/DYNAMIC_TOOL_LOADING.md**
+  - Libraries: Python
   - Type: top
 
 - **docs/EXTERNAL_TOOL_HINTS_REPORT.md**
-  - Libraries: TypeScript, Docker, Uvicorn, Pydantic, FastAPI, React, Rust, Python
+  - Libraries: Uvicorn, Docker, Rust, Pydantic, TypeScript, React, Python, FastAPI
   - Type: top
 
 - **docs/PERSONA_ALIGNMENT_GUIDE.md**
@@ -66,7 +70,7 @@
   - Type: top
 
 - **docs/design/EXARP_EXTENSION_ARCHITECTURE.md**
-  - Libraries: Python, TypeScript
+  - Libraries: TypeScript, Python
   - Type: top
 
 ## Files Skipped (Sample)

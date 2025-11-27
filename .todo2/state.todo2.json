@@ -1541,6 +1541,78 @@
           "lastModified": "2025-11-27T02:00:05.432445"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251127020021-260190",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-27T02:00:21.260159",
+      "lastModified": "2025-11-27T02:00:21.337933",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127020021-260190-C-1",
+          "todoId": "AUTO-20251127020021-260190",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":272,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":85.0}",
+          "created": "2025-11-27T02:00:21.329914",
+          "lastModified": "2025-11-27T02:00:21.329923"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127020935-464188",
+      "name": "Automation: Dependency Security Scan",
+      "content": "Automated Dependency Security Scan execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "dependency-security-scan"
+      ],
+      "created": "2025-11-27T02:09:35.464170",
+      "lastModified": "2025-11-27T02:09:35.544264",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127020935-464188-C-1",
+          "todoId": "AUTO-20251127020935-464188",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T02:09:35.539631",
+          "lastModified": "2025-11-27T02:09:35.539643"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127020935-564980",
+      "name": "Automation: External Tool Hints Automation",
+      "content": "Automated External Tool Hints Automation execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "external-tool-hints-automation"
+      ],
+      "created": "2025-11-27T02:09:35.565017",
+      "lastModified": "2025-11-27T02:09:35.803559",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127020935-564980-C-1",
+          "todoId": "AUTO-20251127020935-564980",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 14 documentation files\n\ud83d\udcda Libraries detected: 8 unique libraries\n\ud83d\udcca Coverage: 15.1% of files received hints\n\n**Key Findings:**\n- Added hints to 14 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: React, Pydantic, Python\n  - docs/PRD.md: TypeScript, Python, Pydantic\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: Python, FastAPI\n  - docs/DESIGN_DECISIONS.md: Uvicorn, Python, Pydantic",
+          "created": "2025-11-27T02:09:35.794178",
+          "lastModified": "2025-11-27T02:09:35.794188"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",

@@ -247,7 +247,7 @@ if MCP_AVAILABLE:
     # ═══════════════════════════════════════════════════════════════════════
     if not USE_STDIO and FastMCP and mcp:
         try:
-            from .middleware import SecurityMiddleware, LoggingMiddleware
+            from .middleware import SecurityMiddleware, LoggingMiddleware, ToolFilterMiddleware
             
             # Add security middleware (rate limiting + path validation + access control)
             mcp.add_middleware(SecurityMiddleware(
@@ -263,7 +263,12 @@ if MCP_AVAILABLE:
                 slow_threshold_ms=5000,  # Warn on slow tools
             ))
             
-            logger.debug("✅ Middleware registered: SecurityMiddleware, LoggingMiddleware")
+            # Add tool filter middleware (dynamic tool loading)
+            # Reduces context pollution by showing only relevant tools per workflow mode
+            # See: https://www.jlowin.dev/blog/stop-converting-rest-apis-to-mcp
+            mcp.add_middleware(ToolFilterMiddleware(enabled=True))
+            
+            logger.debug("✅ Middleware registered: SecurityMiddleware, LoggingMiddleware, ToolFilterMiddleware")
         except ImportError as e:
             logger.debug(f"Middleware not available: {e}")
         except Exception as e:
@@ -337,6 +342,10 @@ try:
             list_tools as _list_tools,
             get_tool_help as _get_tool_help,
         )
+        from .tools.dynamic_tools import (
+            focus_mode as _focus_mode,
+            get_tool_manager,
+        )
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -392,6 +401,10 @@ try:
         from tools.hint_catalog import (
             list_tools as _list_tools,
             get_tool_help as _get_tool_help,
+        )
+        from tools.dynamic_tools import (
+            focus_mode as _focus_mode,
+            get_tool_manager,
         )
 
         TOOLS_AVAILABLE = True
@@ -861,6 +874,64 @@ if mcp:
             """
             return _list_tools(category, persona, include_examples)
 
+        @mcp.tool()
+        async def focus_mode(
+            mode: Optional[str] = None,
+            enable_group: Optional[str] = None,
+            disable_group: Optional[str] = None,
+            status: bool = False,
+            ctx: Any = None,
+        ) -> str:
+            """
+            [HINT: Tool curation. Dynamic tool visibility based on workflow mode.]
+
+            🎯 Output: Mode status, visible tools, context reduction metrics
+            🔧 Side Effects: Updates tool visibility, sends list_changed notification
+            ⏱️ Typical Runtime: <100ms
+
+            Philosophy: "An API built for humans will poison your AI agent."
+            Instead of 40+ tools polluting context, focus on what's relevant NOW.
+
+            Modes:
+            - daily_checkin: Health + overview (9 tools, 82% reduction)
+            - security_review: Security-focused (12 tools, 77% reduction)
+            - task_management: Task tools only (10 tools, 81% reduction)
+            - sprint_planning: Tasks + automation + PRD (15 tools, 71% reduction)
+            - code_review: Testing + linting (10 tools, 81% reduction)
+            - development: Balanced set (25 tools, 52% reduction) [default]
+            - debugging: Memory + testing (17 tools, 67% reduction)
+            - all: Full tool access (52 tools)
+
+            Groups (enable/disable individually):
+            - health, tasks, security, automation, config, testing, advisors, memory, workflow, prd
+
+            Example Prompts:
+            "Switch to security review mode"
+            "Focus on task management"
+            "Enable the advisors tools"
+            "Show current tool focus status"
+
+            Args:
+                mode: Workflow mode to switch to (see modes above)
+                enable_group: Specific group to enable
+                disable_group: Specific group to disable
+                status: If True, return current status without changes
+
+            Returns:
+                JSON with mode info, visible tools, and context reduction metrics
+            """
+            result = _focus_mode(mode, enable_group, disable_group, status)
+
+            # Send notification if mode changed
+            if ctx and (mode or enable_group or disable_group):
+                try:
+                    from .context_helpers import notify_tools_changed
+                    await notify_tools_changed(ctx)
+                except Exception as e:
+                    logger.debug(f"Could not notify tools changed: {e}")
+
+            return result
+
         # NOTE: get_tool_help removed - use resource automation://tools for tool info
         # NOTE: project_overview removed - use generate_project_overview
 
@@ -1204,10 +1275,11 @@ if mcp:
             📊 Output: Test results or coverage analysis
             🔧 Side Effects: May generate coverage reports
             """
-            return _testing(
+            result = _testing(
                 action, test_path, test_framework, verbose, coverage,
                 coverage_file, min_coverage, format, output_path
             )
+            return json.dumps(result, separators=(",", ":"))
 
         @mcp.tool()
         def lint(

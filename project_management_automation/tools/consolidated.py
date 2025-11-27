@@ -126,9 +126,13 @@ def security(
     """
     import asyncio
     try:
-        loop = asyncio.get_running_loop()
-        return asyncio.ensure_future(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
+        # Check if we're in an async context
+        asyncio.get_running_loop()
+        # In async context - caller must await this or use security_async directly
+        # For sync callers, fall through to RuntimeError path
+        raise RuntimeError("Use security_async() in async context")
     except RuntimeError:
+        # No running loop - run synchronously
         return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
 
 
@@ -586,43 +590,17 @@ def testing(
         ctx: FastMCP Context for progress reporting (optional)
     
     Returns:
-        Test or coverage results as JSON string
+        Test or coverage results as dict
     """
     import asyncio
     try:
-        loop = asyncio.get_running_loop()
-        return asyncio.ensure_future(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
+        # Check if we're in an async context
+        asyncio.get_running_loop()
+        # In async context - caller must await this or use testing_async directly
+        raise RuntimeError("Use testing_async() in async context")
     except RuntimeError:
+        # No running loop - run synchronously
         return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
-
-
-def _testing_sync(
-    action: str = "run",
-    test_path: Optional[str] = None,
-    test_framework: str = "auto",
-    verbose: bool = True,
-    coverage: bool = False,
-    coverage_file: Optional[str] = None,
-    min_coverage: int = 80,
-    format: str = "html",
-    output_path: Optional[str] = None,
-) -> dict[str, Any]:
-    """Original sync implementation for non-async callers."""
-    if action == "run":
-        from .run_tests import run_tests
-        # Call the sync wrapper without ctx
-        import asyncio
-        result = asyncio.run(run_tests.__wrapped__(test_path, test_framework, verbose, coverage, output_path, None)) if hasattr(run_tests, '__wrapped__') else run_tests(test_path, test_framework, verbose, coverage, output_path)
-        return json.loads(result) if isinstance(result, str) else result
-    elif action == "coverage":
-        from .test_coverage import analyze_test_coverage
-        result = analyze_test_coverage(coverage_file, min_coverage, output_path, format)
-        return json.loads(result) if isinstance(result, str) else result
-    else:
-        return {
-            "status": "error",
-            "error": f"Unknown testing action: {action}. Use 'run' or 'coverage'.",
-        }
 
 
 def lint(
