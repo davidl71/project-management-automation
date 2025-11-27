@@ -27,11 +27,11 @@ logger = logging.getLogger("exarp.resources.templates")
 def _find_project_root() -> Path:
     """Find project root by looking for markers."""
     import os
-    
+
     env_root = os.getenv("PROJECT_ROOT") or os.getenv("WORKSPACE_PATH")
     if env_root:
         return Path(env_root).resolve()
-    
+
     current = Path.cwd()
     for _ in range(5):
         if (current / ".git").exists() or (current / ".todo2").exists():
@@ -39,18 +39,18 @@ def _find_project_root() -> Path:
         if current.parent == current:
             break
         current = current.parent
-    
+
     return Path.cwd().resolve()
 
 
-def _load_todo2_state() -> Dict[str, Any]:
+def _load_todo2_state() -> dict[str, Any]:
     """Load Todo2 state file."""
     project_root = _find_project_root()
     todo2_file = project_root / ".todo2" / "state.todo2.json"
-    
+
     if not todo2_file.exists():
         return {"todos": []}
-    
+
     try:
         return json.loads(todo2_file.read_text())
     except Exception as e:
@@ -62,20 +62,20 @@ def _load_todo2_state() -> Dict[str, Any]:
 # TASK RESOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def get_task_by_id(task_id: str) -> Dict[str, Any]:
+def get_task_by_id(task_id: str) -> dict[str, Any]:
     """
     Get a single task by ID.
-    
+
     Resource URI: tasks://{task_id}
-    
+
     Args:
         task_id: Task identifier (e.g., "T-SECURITY-1")
-    
+
     Returns:
         Task data or error
     """
     state = _load_todo2_state()
-    
+
     for task in state.get("todos", []):
         if task.get("id") == task_id:
             return {
@@ -83,7 +83,7 @@ def get_task_by_id(task_id: str) -> Dict[str, Any]:
                 "found": True,
                 "timestamp": datetime.now().isoformat(),
             }
-    
+
     return {
         "task": None,
         "found": False,
@@ -93,26 +93,26 @@ def get_task_by_id(task_id: str) -> Dict[str, Any]:
     }
 
 
-def get_tasks_by_status(status: str) -> Dict[str, Any]:
+def get_tasks_by_status(status: str) -> dict[str, Any]:
     """
     Get tasks filtered by status.
-    
+
     Resource URI: tasks://status/{status}
-    
+
     Args:
         status: Task status (Todo, In Progress, Review, Done, etc.)
-    
+
     Returns:
         Filtered task list
     """
     state = _load_todo2_state()
-    
+
     status_lower = status.lower()
     tasks = [
         t for t in state.get("todos", [])
         if t.get("status", "").lower() == status_lower
     ]
-    
+
     return {
         "tasks": tasks,
         "count": len(tasks),
@@ -121,26 +121,26 @@ def get_tasks_by_status(status: str) -> Dict[str, Any]:
     }
 
 
-def get_tasks_by_tag(tag: str) -> Dict[str, Any]:
+def get_tasks_by_tag(tag: str) -> dict[str, Any]:
     """
     Get tasks filtered by tag.
-    
+
     Resource URI: tasks://tag/{tag}
-    
+
     Args:
         tag: Tag to filter by
-    
+
     Returns:
         Filtered task list
     """
     state = _load_todo2_state()
-    
+
     tag_lower = tag.lower()
     tasks = [
         t for t in state.get("todos", [])
         if tag_lower in [tg.lower() for tg in t.get("tags", [])]
     ]
-    
+
     return {
         "tasks": tasks,
         "count": len(tasks),
@@ -149,26 +149,26 @@ def get_tasks_by_tag(tag: str) -> Dict[str, Any]:
     }
 
 
-def get_tasks_by_priority(priority: str) -> Dict[str, Any]:
+def get_tasks_by_priority(priority: str) -> dict[str, Any]:
     """
     Get tasks filtered by priority.
-    
+
     Resource URI: tasks://priority/{priority}
-    
+
     Args:
         priority: Priority level (P0, P1, P2, P3, high, medium, low)
-    
+
     Returns:
         Filtered task list
     """
     state = _load_todo2_state()
-    
+
     priority_lower = priority.lower()
     tasks = [
         t for t in state.get("todos", [])
         if t.get("priority", "").lower() == priority_lower
     ]
-    
+
     return {
         "tasks": tasks,
         "count": len(tasks),
@@ -181,23 +181,23 @@ def get_tasks_by_priority(priority: str) -> Dict[str, Any]:
 # ADVISOR RESOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def get_advisor_consultations(days: int = 7) -> Dict[str, Any]:
+def get_advisor_consultations(days: int = 7) -> dict[str, Any]:
     """
     Get recent advisor consultations.
-    
+
     Resource URI: advisor://consultations/{days}
-    
+
     Args:
         days: Number of days to look back
-    
+
     Returns:
         Recent consultations
     """
     from datetime import timedelta
-    
+
     project_root = _find_project_root()
     log_dir = project_root / ".exarp" / "advisor_logs"
-    
+
     if not log_dir.exists():
         return {
             "consultations": [],
@@ -205,10 +205,10 @@ def get_advisor_consultations(days: int = 7) -> Dict[str, Any]:
             "days": days,
             "timestamp": datetime.now().isoformat(),
         }
-    
+
     cutoff = datetime.now() - timedelta(days=days)
     consultations = []
-    
+
     try:
         for log_file in sorted(log_dir.glob("*.jsonl"), reverse=True):
             # Check file date from name
@@ -218,7 +218,7 @@ def get_advisor_consultations(days: int = 7) -> Dict[str, Any]:
                     continue
             except ValueError:
                 continue
-            
+
             # Read consultations
             for line in log_file.read_text().strip().split("\n"):
                 if line:
@@ -228,7 +228,7 @@ def get_advisor_consultations(days: int = 7) -> Dict[str, Any]:
                         continue
     except Exception as e:
         logger.error(f"Error reading advisor logs: {e}")
-    
+
     return {
         "consultations": consultations,
         "count": len(consultations),
@@ -237,25 +237,25 @@ def get_advisor_consultations(days: int = 7) -> Dict[str, Any]:
     }
 
 
-def get_advisor_info(advisor_id: str) -> Dict[str, Any]:
+def get_advisor_info(advisor_id: str) -> dict[str, Any]:
     """
     Get information about a specific advisor.
-    
+
     Resource URI: advisor://{advisor_id}
-    
+
     Args:
         advisor_id: Advisor identifier (bofh, stoic, zen, mystic, sage, etc.)
-    
+
     Returns:
         Advisor information
     """
     try:
-        from ..tools.wisdom.advisors import METRIC_ADVISORS, TOOL_ADVISORS, STAGE_ADVISORS
+        from ..tools.wisdom.advisors import METRIC_ADVISORS, STAGE_ADVISORS, TOOL_ADVISORS
         from ..tools.wisdom.sources import WISDOM_SOURCES
-        
+
         # Find advisor info
         advisor_info = WISDOM_SOURCES.get(advisor_id)
-        
+
         if not advisor_info:
             return {
                 "advisor": None,
@@ -263,14 +263,14 @@ def get_advisor_info(advisor_id: str) -> Dict[str, Any]:
                 "advisor_id": advisor_id,
                 "error": f"Advisor not found: {advisor_id}",
             }
-        
+
         # Find what this advisor is assigned to
         assigned_to = {
             "metrics": [k for k, v in METRIC_ADVISORS.items() if v == advisor_id],
             "tools": [k for k, v in TOOL_ADVISORS.items() if v == advisor_id],
             "stages": [k for k, v in STAGE_ADVISORS.items() if v == advisor_id],
         }
-        
+
         return {
             "advisor": {
                 "id": advisor_id,
@@ -282,7 +282,7 @@ def get_advisor_info(advisor_id: str) -> Dict[str, Any]:
             "found": True,
             "timestamp": datetime.now().isoformat(),
         }
-        
+
     except ImportError as e:
         return {
             "advisor": None,
@@ -295,28 +295,28 @@ def get_advisor_info(advisor_id: str) -> Dict[str, Any]:
 # MEMORY RESOURCES
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def get_memory_by_id(memory_id: str) -> Dict[str, Any]:
+def get_memory_by_id(memory_id: str) -> dict[str, Any]:
     """
     Get a specific memory by ID.
-    
+
     Resource URI: memory://{memory_id}
-    
+
     Args:
         memory_id: Memory identifier
-    
+
     Returns:
         Memory data or error
     """
     project_root = _find_project_root()
     memory_dir = project_root / ".exarp" / "memories"
-    
+
     if not memory_dir.exists():
         return {
             "memory": None,
             "found": False,
             "error": "Memory storage not initialized",
         }
-    
+
     # Search for memory file
     for memory_file in memory_dir.glob("*.json"):
         try:
@@ -329,7 +329,7 @@ def get_memory_by_id(memory_id: str) -> Dict[str, Any]:
                 }
         except Exception:
             continue
-    
+
     return {
         "memory": None,
         "found": False,
@@ -339,31 +339,31 @@ def get_memory_by_id(memory_id: str) -> Dict[str, Any]:
     }
 
 
-def get_memories_by_category(category: str) -> Dict[str, Any]:
+def get_memories_by_category(category: str) -> dict[str, Any]:
     """
     Get memories filtered by category.
-    
+
     Resource URI: memory://category/{category}
-    
+
     Args:
         category: Memory category (debug, research, architecture, preference, insight)
-    
+
     Returns:
         Filtered memory list
     """
     project_root = _find_project_root()
     memory_dir = project_root / ".exarp" / "memories"
-    
+
     if not memory_dir.exists():
         return {
             "memories": [],
             "count": 0,
             "category": category,
         }
-    
+
     memories = []
     category_lower = category.lower()
-    
+
     for memory_file in memory_dir.glob("*.json"):
         try:
             data = json.loads(memory_file.read_text())
@@ -371,7 +371,7 @@ def get_memories_by_category(category: str) -> Dict[str, Any]:
                 memories.append(data)
         except Exception:
             continue
-    
+
     return {
         "memories": memories,
         "count": len(memories),
@@ -387,7 +387,7 @@ def get_memories_by_category(category: str) -> Dict[str, Any]:
 def register_resource_templates(mcp) -> None:
     """
     Register all resource templates with the MCP server.
-    
+
     Usage:
         from project_management_automation.resources.templates import register_resource_templates
         register_resource_templates(mcp)
@@ -398,46 +398,46 @@ def register_resource_templates(mcp) -> None:
         def task_resource(task_id: str) -> dict:
             """Get a task by ID."""
             return get_task_by_id(task_id)
-        
+
         @mcp.resource("tasks://status/{status}")
         def tasks_by_status_resource(status: str) -> dict:
             """Get tasks by status."""
             return get_tasks_by_status(status)
-        
+
         @mcp.resource("tasks://tag/{tag}")
         def tasks_by_tag_resource(tag: str) -> dict:
             """Get tasks by tag."""
             return get_tasks_by_tag(tag)
-        
+
         @mcp.resource("tasks://priority/{priority}")
         def tasks_by_priority_resource(priority: str) -> dict:
             """Get tasks by priority."""
             return get_tasks_by_priority(priority)
-        
+
         # Advisor resources
         @mcp.resource("advisor://{advisor_id}")
         def advisor_resource(advisor_id: str) -> dict:
             """Get advisor information."""
             return get_advisor_info(advisor_id)
-        
+
         @mcp.resource("advisor://consultations/{days}")
         def consultations_resource(days: str) -> dict:
             """Get recent consultations."""
             return get_advisor_consultations(int(days) if days.isdigit() else 7)
-        
+
         # Memory resources
         @mcp.resource("memory://{memory_id}")
         def memory_resource(memory_id: str) -> dict:
             """Get a memory by ID."""
             return get_memory_by_id(memory_id)
-        
+
         @mcp.resource("memory://category/{category}")
         def memories_by_category_resource(category: str) -> dict:
             """Get memories by category."""
             return get_memories_by_category(category)
-        
+
         logger.info("✅ Registered 8 resource templates")
-        
+
     except Exception as e:
         logger.warning(f"Could not register resource templates: {e}")
 

@@ -28,22 +28,22 @@ def configure_logging(
 ) -> logging.Logger:
     """
     Configure logging appropriately for MCP or CLI mode.
-    
+
     Args:
         name: Logger name
         level: Log level (default: INFO)
         log_file: Optional file path for logging (useful for debugging MCP)
         force_quiet: Force quiet mode even in CLI
-        
+
     Returns:
         Configured logger
     """
     logger = logging.getLogger(name)
     logger.setLevel(level)
-    
+
     # Clear existing handlers to avoid duplicates
     logger.handlers.clear()
-    
+
     # In MCP mode or force_quiet, only log to file (if specified)
     if is_mcp_mode() or force_quiet:
         if log_file:
@@ -62,7 +62,7 @@ def configure_logging(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         ))
         logger.addHandler(console_handler)
-        
+
         # Also log to file if specified
         if log_file:
             file_handler = logging.FileHandler(log_file)
@@ -70,21 +70,21 @@ def configure_logging(
                 "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
             ))
             logger.addHandler(file_handler)
-    
+
     return logger
 
 
 def suppress_noisy_loggers():
     """Suppress verbose logs from MCP framework and dependencies."""
     noisy_loggers = [
-        "mcp", "mcp.server", "mcp.server.lowlevel", 
+        "mcp", "mcp.server", "mcp.server.lowlevel",
         "mcp.server.lowlevel.server", "mcp.server.stdio",
         "fastmcp", "httpx", "httpcore", "asyncio"
     ]
-    
+
     for logger_name in noisy_loggers:
         logging.getLogger(logger_name).setLevel(logging.WARNING)
-    
+
     # Also suppress any dynamically created MCP loggers
     for logger_name in list(logging.Logger.manager.loggerDict.keys()):
         if any(x in logger_name for x in ['mcp', 'fastmcp', 'stdio']):
@@ -94,22 +94,22 @@ def suppress_noisy_loggers():
 def get_logger(name: str) -> logging.Logger:
     """
     Get a logger configured for MCP/CLI mode.
-    
+
     Use this instead of logging.getLogger() for consistent behavior.
     """
     logger = logging.getLogger(name)
-    
+
     # If no handlers, configure with defaults
     if not logger.handlers:
         configure_logging(name)
-    
+
     return logger
 
 
 # Export for convenience
 __all__ = [
     'is_mcp_mode',
-    'configure_logging', 
+    'configure_logging',
     'suppress_noisy_loggers',
     'get_logger'
 ]

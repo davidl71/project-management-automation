@@ -39,7 +39,7 @@ project_root = None
 class IntelligentAutomationBase(ABC):
     """Base class for intelligent automation scripts."""
 
-    def __init__(self, config: Dict, automation_name: str, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, automation_name: str, project_root: Optional[Path] = None):
         self.config = config
         self.automation_name = automation_name
         # Use provided project_root or try to detect it
@@ -73,7 +73,7 @@ class IntelligentAutomationBase(ABC):
             'followup_tasks': []
         }
 
-    def run(self) -> Dict:
+    def run(self) -> dict:
         """Main execution method - follows intelligent automation pattern."""
         logger.info(f"Starting intelligent automation: {self.automation_name}")
 
@@ -190,7 +190,7 @@ class IntelligentAutomationBase(ABC):
 
     def _create_todo2_task(self) -> None:
         """Create or reuse Todo2 task for tracking automation execution.
-        
+
         Prevents duplicate task creation by:
         1. Checking for existing task with same name
         2. Reusing in-progress tasks
@@ -202,31 +202,31 @@ class IntelligentAutomationBase(ABC):
             # Load Todo2 state
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if todo2_path.exists():
-                with open(todo2_path, 'r') as f:
+                with open(todo2_path) as f:
                     todo2_data = json.load(f)
 
                 task_name = f"Automation: {self.automation_name}"
-                
+
                 # Check for existing task with same name
                 existing_tasks = [
                     t for t in todo2_data.get('todos', [])
                     if t.get('name') == task_name
                 ]
-                
+
                 # Look for reusable task (in_progress or recent todo)
                 reusable_task = None
                 for t in existing_tasks:
                     if t.get('status') in ('in_progress', 'todo'):
                         reusable_task = t
                         break
-                
+
                 if reusable_task:
                     # Reuse existing task
                     reusable_task['status'] = 'in_progress'
                     reusable_task['lastModified'] = datetime.now().isoformat()
                     self.todo2_task = reusable_task
                     logger.info(f"Reusing Todo2 task: {reusable_task['id']}")
-                    
+
                     # Save updated state
                     with open(todo2_path, 'w') as f:
                         json.dump(todo2_data, f, indent=2)
@@ -236,7 +236,7 @@ class IntelligentAutomationBase(ABC):
                 import random
                 unique_suffix = f"{datetime.now().strftime('%f')[:4]}{random.randint(10, 99)}"
                 task_id = f"AUTO-{datetime.now().strftime('%Y%m%d%H%M%S')}-{unique_suffix}"
-                
+
                 task = {
                     'id': task_id,
                     'name': task_name,
@@ -306,7 +306,7 @@ class IntelligentAutomationBase(ABC):
         except Exception as e:
             logger.warning(f"NetworkX analysis failed: {e}")
 
-    def _store_todo2_results(self, analysis_results: Dict, insights: str) -> None:
+    def _store_todo2_results(self, analysis_results: dict, insights: str) -> None:
         """Store results in Todo2 task."""
         if not self.todo2_task:
             return
@@ -314,7 +314,7 @@ class IntelligentAutomationBase(ABC):
         try:
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if todo2_path.exists():
-                with open(todo2_path, 'r') as f:
+                with open(todo2_path) as f:
                     todo2_data = json.load(f)
 
                 # Find task
@@ -344,9 +344,9 @@ class IntelligentAutomationBase(ABC):
         except Exception as e:
             logger.warning(f"Failed to store Todo2 results: {e}")
 
-    def _create_followup_tasks(self, analysis_results: Dict) -> None:
+    def _create_followup_tasks(self, analysis_results: dict) -> None:
         """Create follow-up tasks based on findings.
-        
+
         Prevents duplicates by checking if task with same name already exists.
         """
         if not self.todo2_task:
@@ -360,31 +360,31 @@ class IntelligentAutomationBase(ABC):
         try:
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if todo2_path.exists():
-                with open(todo2_path, 'r') as f:
+                with open(todo2_path) as f:
                     todo2_data = json.load(f)
 
                 # Get existing task names for duplicate checking
                 existing_names = {
                     t.get('name') for t in todo2_data.get('todos', [])
                 }
-                
+
                 created_count = 0
                 skipped_count = 0
-                
+
                 for followup in followup_tasks:
                     task_name = followup['name']
-                    
+
                     # Skip if task with same name already exists
                     if task_name in existing_names:
                         logger.debug(f"Skipping duplicate follow-up task: {task_name}")
                         skipped_count += 1
                         continue
-                    
+
                     # Create unique ID with random suffix
                     import random
                     unique_suffix = f"{datetime.now().strftime('%f')[:4]}{random.randint(10, 99)}"
                     task_id = f"T-{datetime.now().strftime('%Y%m%d%H%M%S')}-{unique_suffix}"
-                    
+
                     task = {
                         'id': task_id,
                         'name': task_name,
@@ -424,7 +424,7 @@ class IntelligentAutomationBase(ABC):
         try:
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if todo2_path.exists():
-                with open(todo2_path, 'r') as f:
+                with open(todo2_path) as f:
                     todo2_data = json.load(f)
 
                 for task in todo2_data.get('todos', []):
@@ -448,7 +448,7 @@ class IntelligentAutomationBase(ABC):
         try:
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if todo2_path.exists():
-                with open(todo2_path, 'r') as f:
+                with open(todo2_path) as f:
                     todo2_data = json.load(f)
 
                 for task in todo2_data.get('todos', []):
@@ -489,33 +489,33 @@ class IntelligentAutomationBase(ABC):
         pass
 
     @abstractmethod
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute the actual analysis - implemented by subclasses."""
         pass
 
     @abstractmethod
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from analysis results."""
         pass
 
     @abstractmethod
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate final report."""
         pass
 
     # Helper methods with default implementations
 
-    def _extract_components_from_concept(self, concept: str) -> List[str]:
+    def _extract_components_from_concept(self, concept: str) -> list[str]:
         """Extract atomic components from concept (simplified Tractatus)."""
         # This is a simplified version - real implementation would use MCP server
         keywords = ['automation', 'analysis', 'validation', 'monitoring', 'tracking', 'synchronization']
         return [kw for kw in keywords if kw in concept.lower()]
 
-    def _identify_dependencies(self, concept: str) -> List[str]:
+    def _identify_dependencies(self, concept: str) -> list[str]:
         """Identify dependencies (simplified)."""
         return []
 
-    def _plan_workflow_steps(self, problem: str) -> List[str]:
+    def _plan_workflow_steps(self, problem: str) -> list[str]:
         """Plan workflow steps (simplified Sequential)."""
         return [
             "Load and analyze data",
@@ -532,7 +532,7 @@ class IntelligentAutomationBase(ABC):
         """Build NetworkX graph - override if needed."""
         return None
 
-    def _find_critical_path(self) -> List[str]:
+    def _find_critical_path(self) -> list[str]:
         """Find critical path in graph."""
         if not self.networkx_graph:
             return []
@@ -564,7 +564,7 @@ class IntelligentAutomationBase(ABC):
             logger.warning(f"Critical path analysis failed: {e}")
             return []
 
-    def _find_bottlenecks(self) -> List[str]:
+    def _find_bottlenecks(self) -> list[str]:
         """Find bottlenecks in graph (nodes with high out-degree)."""
         if not self.networkx_graph:
             return []
@@ -585,7 +585,7 @@ class IntelligentAutomationBase(ABC):
             logger.warning(f"Bottleneck analysis failed: {e}")
             return []
 
-    def _find_orphans(self) -> List[str]:
+    def _find_orphans(self) -> list[str]:
         """Find orphaned nodes in graph (no incoming edges)."""
         if not self.networkx_graph:
             return []
@@ -605,13 +605,13 @@ class IntelligentAutomationBase(ABC):
             logger.warning(f"Orphan analysis failed: {e}")
             return []
 
-    def _identify_followup_tasks(self, analysis_results: Dict) -> List[Dict]:
+    def _identify_followup_tasks(self, analysis_results: dict) -> list[dict]:
         """Identify follow-up tasks from analysis results."""
         return []
 
-    def _format_findings(self, analysis_results: Dict) -> str:
+    def _format_findings(self, analysis_results: dict) -> str:
         """Format findings for Todo2 comment.
-        
+
         Filters out large lists to prevent bloating the todo2 file.
         Max comment size: 10KB
         """
@@ -632,17 +632,17 @@ class IntelligentAutomationBase(ABC):
                 filtered[key] = "{...truncated...}"
             else:
                 filtered[key] = value
-        
+
         # Use compact JSON, limit total size
         result = json.dumps(filtered, separators=(',', ':'))
         if len(result) > 10000:
             return result[:10000] + "...truncated"
         return result
 
-    def _fallback_component_extraction(self, concept: str) -> List[str]:
+    def _fallback_component_extraction(self, concept: str) -> list[str]:
         """Fallback component extraction."""
         return self._extract_components_from_concept(concept)
 
-    def _fallback_workflow_steps(self) -> List[str]:
+    def _fallback_workflow_steps(self) -> list[str]:
         """Fallback workflow steps."""
         return self._plan_workflow_steps("")

@@ -8,8 +8,8 @@ codebase metrics, task breakdown, risks, roadmap, and next actions. Formats: tex
 import json
 import re
 import subprocess
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Optional
 
 from ..utils import find_project_root
@@ -21,22 +21,22 @@ def generate_project_overview(
 ) -> dict[str, Any]:
     """
     Generate comprehensive one-page project overview.
-    
+
     [HINT: Project overview. Returns one-page summary with project info, health scores,
     codebase metrics, task breakdown, risks, roadmap, and next actions.]
-    
+
     Args:
         output_format: Output format - "text", "html", "markdown", "json", or "slides"
         output_path: Optional path to save report
-        
+
     Returns:
         Dictionary with overview data and formatted output
     """
     project_root = find_project_root()
-    
+
     # Aggregate all data
     overview_data = _aggregate_project_data(project_root)
-    
+
     # Format output
     if output_format == "json":
         formatted_output = json.dumps(overview_data, indent=2, default=str)
@@ -48,27 +48,27 @@ def generate_project_overview(
         formatted_output = _format_marp_slides(overview_data)
     else:
         formatted_output = _format_text(overview_data)
-    
+
     result = {
         'overview_data': overview_data,
         'formatted_output': formatted_output,
         'output_format': output_format,
         'generated_at': datetime.now().isoformat(),
     }
-    
+
     # Save to file if requested
     if output_path:
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
         output_file.write_text(formatted_output)
         result['output_file'] = str(output_file)
-    
+
     return result
 
 
 def _aggregate_project_data(project_root: Path) -> dict[str, Any]:
     """Aggregate all project data from various sources."""
-    
+
     data = {
         'project': _get_project_info(project_root),
         'health': _get_health_metrics(project_root),
@@ -78,7 +78,7 @@ def _aggregate_project_data(project_root: Path) -> dict[str, Any]:
         'risks': _get_risks_and_blockers(project_root),
         'next_actions': _get_next_actions(project_root),
     }
-    
+
     return data
 
 
@@ -93,7 +93,7 @@ def _get_project_info(project_root: Path) -> dict:
         'started': None,
         'author': None,
     }
-    
+
     # Try pyproject.toml
     pyproject = project_root / 'pyproject.toml'
     if pyproject.exists():
@@ -104,7 +104,7 @@ def _get_project_info(project_root: Path) -> dict:
             info['version'] = match.group(1)
         if match := re.search(r'description\s*=\s*"([^"]+)"', content):
             info['description'] = match.group(1)
-    
+
     # Try git for dates and author
     try:
         result = subprocess.run(
@@ -113,16 +113,16 @@ def _get_project_info(project_root: Path) -> dict:
         )
         if result.returncode == 0 and result.stdout.strip():
             info['started'] = result.stdout.strip()[:10]
-        
+
         result = subprocess.run(
             ['git', 'config', 'user.name'],
             capture_output=True, text=True, cwd=project_root
         )
         if result.returncode == 0:
             info['author'] = result.stdout.strip()
-    except:
+    except (OSError, subprocess.SubprocessError):
         pass
-    
+
     return info
 
 
@@ -149,30 +149,30 @@ def _get_health_metrics(project_root: Path) -> dict:
 def _get_codebase_metrics(project_root: Path) -> dict:
     """Get codebase statistics."""
     py_files = list(project_root.rglob('*.py'))
-    py_files = [f for f in py_files if 'venv' not in str(f) and '.build-env' not in str(f) 
+    py_files = [f for f in py_files if 'venv' not in str(f) and '.build-env' not in str(f)
                 and '__pycache__' not in str(f)]
-    
+
     total_lines = 0
     for f in py_files:
         try:
             total_lines += len(f.read_text().splitlines())
-        except:
+        except (OSError, UnicodeDecodeError):
             pass
-    
+
     md_files = list(project_root.rglob('*.md'))
     md_files = [f for f in md_files if 'venv' not in str(f)]
-    
+
     tools_dir = project_root / 'project_management_automation' / 'tools'
     tools_count = len([f for f in tools_dir.glob('*.py') if not f.name.startswith('__')]) if tools_dir.exists() else 0
-    
+
     try:
         import sys
         sys.path.insert(0, str(project_root))
         from prompts import PROMPTS
         prompts_count = len(PROMPTS)
-    except:
+    except (ImportError, ModuleNotFoundError):
         prompts_count = 0
-    
+
     return {
         'python_files': len(py_files),
         'python_lines': total_lines,
@@ -187,35 +187,35 @@ def _get_task_metrics(project_root: Path) -> dict:
     todo2_file = project_root / '.todo2' / 'state.todo2.json'
     if not todo2_file.exists():
         return {'total': 0, 'by_status': {}, 'by_priority': {}, 'by_category': {}, 'remaining_hours': 0}
-    
+
     with open(todo2_file) as f:
         data = json.load(f)
-    
+
     todos = data.get('todos', [])
-    
+
     by_status = {}
     by_priority = {}
     by_category = {}
     remaining_hours = 0
-    
+
     for task in todos:
         status = task.get('status', 'pending')
         priority = task.get('priority', 'medium')
         tags = task.get('tags', [])
         hours = task.get('estimatedHours', 0)
-        
+
         by_status[status] = by_status.get(status, 0) + 1
         by_priority[priority] = by_priority.get(priority, 0) + 1
-        
+
         if status in ['pending', 'in_progress', 'Todo']:
             remaining_hours += hours
-        
+
         for tag in tags[:2]:
             by_category[tag] = by_category.get(tag, 0) + 1
-    
+
     # Sort categories by count
     by_category = dict(sorted(by_category.items(), key=lambda x: -x[1])[:6])
-    
+
     return {
         'total': len(todos),
         'by_status': by_status,
@@ -233,20 +233,20 @@ def _get_project_phases(project_root: Path) -> list[dict]:
         {'name': 'Phase 3: Security', 'progress': 30, 'status': 'in_progress'},
         {'name': 'Phase 4: Production', 'progress': 0, 'status': 'not_started'},
     ]
-    
+
     goals_file = project_root / 'PROJECT_GOALS.md'
     if goals_file.exists():
         goals_file.read_text()
         # Could parse phases from the file here
         pass
-    
+
     return phases
 
 
 def _get_risks_and_blockers(project_root: Path) -> list[dict]:
     """Get risks from security status and health metrics."""
     risks = []
-    
+
     # Check security status
     security_file = project_root / 'docs' / 'SECURITY_STATUS.md'
     if security_file.exists():
@@ -255,7 +255,7 @@ def _get_risks_and_blockers(project_root: Path) -> list[dict]:
             risks.append({'severity': 'critical', 'description': 'No path boundary enforcement'})
         if 'rate limiting' in content.lower():
             risks.append({'severity': 'critical', 'description': 'No rate limiting'})
-    
+
     # Default risks based on common issues
     if not risks:
         risks = [
@@ -265,7 +265,7 @@ def _get_risks_and_blockers(project_root: Path) -> list[dict]:
             {'severity': 'high', 'description': 'No access control'},
             {'severity': 'medium', 'description': 'Failing unit tests'},
         ]
-    
+
     return risks
 
 
@@ -274,14 +274,14 @@ def _get_next_actions(project_root: Path) -> list[dict]:
     todo2_file = project_root / '.todo2' / 'state.todo2.json'
     if not todo2_file.exists():
         return []
-    
+
     with open(todo2_file) as f:
         data = json.load(f)
-    
+
     todos = data.get('todos', [])
-    high_priority = [t for t in todos if t.get('priority') == 'high' 
+    high_priority = [t for t in todos if t.get('priority') == 'high'
                      and t.get('status') in ['pending', 'Todo', 'in_progress']]
-    
+
     actions = []
     for task in high_priority[:5]:
         actions.append({
@@ -289,47 +289,47 @@ def _get_next_actions(project_root: Path) -> list[dict]:
             'estimate': f"{task.get('estimatedHours', 0)}h",
             'impact': 'High priority task',
         })
-    
+
     return actions
 
 
 def _format_text(data: dict) -> str:
     """Format as ASCII text for terminal."""
     lines = []
-    
+
     # Header
     lines.append("┌" + "─" * 78 + "┐")
     lines.append(f"│  🏗️  {data['project']['name']:<67} │")
     lines.append(f"│  {'Project Overview':<72} │")
     lines.append(f"│  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M'):<61} │")
     lines.append("├" + "─" * 78 + "┤")
-    
+
     # Project Info + Health Score (side by side)
     health = data['health']
     score = health.get('overall_score', 0)
     status_icon = "🟢" if score >= 70 else "🟡" if score >= 50 else "🔴"
-    
+
     lines.append("│                                                                              │")
-    lines.append(f"│  PROJECT INFO                        │  HEALTH SCORE                        │")
-    lines.append(f"│  ─────────────                       │  ────────────                        │")
+    lines.append("│  PROJECT INFO                        │  HEALTH SCORE                        │")
+    lines.append("│  ─────────────                       │  ────────────                        │")
     lines.append(f"│  Version: {data['project']['version']:<26} │  Overall: {score:.0f}% {status_icon:<25} │")
     lines.append(f"│  Type: {data['project']['type']:<29} │  {'█' * int(score/5)}{'░' * (20-int(score/5)):<25} │")
     lines.append(f"│  Status: {data['project']['status']:<27} │  Production: {'YES ✅' if health.get('production_ready') else 'NO ❌':<23} │")
     lines.append("│                                                                              │")
-    
+
     # Codebase + Tasks (side by side)
     lines.append("├" + "─" * 78 + "┤")
     codebase = data['codebase']
     tasks = data['tasks']
     lines.append("│                                                                              │")
-    lines.append(f"│  CODEBASE                            │  TASKS                               │")
-    lines.append(f"│  ────────                            │  ─────                               │")
+    lines.append("│  CODEBASE                            │  TASKS                               │")
+    lines.append("│  ────────                            │  ─────                               │")
     lines.append(f"│  📁 {codebase['python_files']:>3} Python files              │  Total: {tasks['total']:<28} │")
     lines.append(f"│  📝 {codebase['python_lines']:>5} lines of code           │  Pending: {tasks['by_status'].get('pending', 0) + tasks['by_status'].get('Todo', 0):<26} │")
     lines.append(f"│  🔧 {codebase['mcp_tools']:>3} MCP tools                 │  Completed: {tasks['by_status'].get('completed', 0):<24} │")
     lines.append(f"│  📋 {codebase['mcp_prompts']:>3} prompts                   │  Remaining: {tasks['remaining_hours']:.0f}h ({tasks['remaining_hours']/8:.0f} days)          │")
     lines.append("│                                                                              │")
-    
+
     # Phases
     lines.append("├" + "─" * 78 + "┤")
     lines.append("│                                                                              │")
@@ -341,7 +341,7 @@ def _format_text(data: dict) -> str:
         status_icon = "✅" if phase['status'] == 'complete' else "🔄" if phase['status'] == 'in_progress' else "⏳"
         lines.append(f"│  {phase['name']:<25} [{bar}] {progress:>3}% {status_icon:<5} │")
     lines.append("│                                                                              │")
-    
+
     # Risks
     lines.append("├" + "─" * 78 + "┤")
     lines.append("│                                                                              │")
@@ -351,7 +351,7 @@ def _format_text(data: dict) -> str:
         icon = "🔴" if risk['severity'] == 'critical' else "🟡" if risk['severity'] == 'high' else "🟢"
         lines.append(f"│  {icon} {risk['description']:<72} │")
     lines.append("│                                                                              │")
-    
+
     # Next Actions
     lines.append("├" + "─" * 78 + "┤")
     lines.append("│                                                                              │")
@@ -360,9 +360,9 @@ def _format_text(data: dict) -> str:
     for i, action in enumerate(data['next_actions'][:4], 1):
         lines.append(f"│  {i}. {action['action']:<56} ({action['estimate']:<4}) │")
     lines.append("│                                                                              │")
-    
+
     lines.append("└" + "─" * 78 + "┘")
-    
+
     return "\n".join(lines)
 
 
@@ -371,7 +371,7 @@ def _format_html(data: dict) -> str:
     health = data['health']
     score = health.get('overall_score', 0)
     score_color = "#22c55e" if score >= 70 else "#eab308" if score >= 50 else "#ef4444"
-    
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -527,7 +527,7 @@ def _format_html(data: dict) -> str:
             <h1>🏗️ {data['project']['name']}</h1>
             <p class="subtitle">Project Overview • {datetime.now().strftime('%B %d, %Y')}</p>
         </div>
-        
+
         <div class="grid">
             <div class="card">
                 <h3>📊 Health Score</h3>
@@ -538,7 +538,7 @@ def _format_html(data: dict) -> str:
                     </div>
                 </div>
             </div>
-            
+
             <div class="card">
                 <h3>📁 Codebase</h3>
                 <div class="metric">
@@ -559,7 +559,7 @@ def _format_html(data: dict) -> str:
                 </div>
             </div>
         </div>
-        
+
         <div class="grid">
             <div class="card">
                 <h3>📋 Task Status</h3>
@@ -576,7 +576,7 @@ def _format_html(data: dict) -> str:
                     <span class="metric-value">{data['tasks']['remaining_hours']:.0f}h</span>
                 </div>
             </div>
-            
+
             <div class="card">
                 <h3>🚧 Project Phases</h3>
                 {''.join([f'''
@@ -592,7 +592,7 @@ def _format_html(data: dict) -> str:
                 ''' for phase in data['phases']])}
             </div>
         </div>
-        
+
         <div class="grid">
             <div class="card">
                 <h3>⚠️ Risks & Blockers</h3>
@@ -603,7 +603,7 @@ def _format_html(data: dict) -> str:
                 </div>
                 ''' for risk in data['risks'][:5]])}
             </div>
-            
+
             <div class="card">
                 <h3>🎯 Next Actions</h3>
                 {''.join([f'''
@@ -613,14 +613,14 @@ def _format_html(data: dict) -> str:
                 ''' for action in data['next_actions'][:4]])}
             </div>
         </div>
-        
+
         <div class="footer">
             Generated by Exarp MCP Server • v{data['project']['version']}
         </div>
     </div>
 </body>
 </html>"""
-    
+
     return html
 
 
@@ -628,7 +628,7 @@ def _format_markdown(data: dict) -> str:
     """Format as markdown."""
     health = data['health']
     score = health.get('overall_score', 0)
-    
+
     md = f"""# 🏗️ {data['project']['name']}
 
 *Project Overview • Generated: {datetime.now().strftime('%B %d, %Y')}*
@@ -645,7 +645,7 @@ def _format_markdown(data: dict) -> str:
     for name, value in sorted(health.get('scores', {}).items(), key=lambda x: -x[1]):
         status = "🟢" if value >= 70 else "🟡" if value >= 50 else "🔴"
         md += f"| {name.title()} | {value:.0f}% | {status} |\n"
-    
+
     md += f"""
 ---
 
@@ -678,7 +678,7 @@ def _format_markdown(data: dict) -> str:
     for phase in data['phases']:
         icon = "✅" if phase['status'] == 'complete' else "🔄" if phase['status'] == 'in_progress' else "⏳"
         md += f"- {icon} **{phase['name']}**: {phase['progress']}%\n"
-    
+
     md += """
 ---
 
@@ -688,7 +688,7 @@ def _format_markdown(data: dict) -> str:
     for risk in data['risks'][:5]:
         icon = "🔴" if risk['severity'] == 'critical' else "🟡" if risk['severity'] == 'high' else "🟢"
         md += f"- {icon} {risk['description']}\n"
-    
+
     md += """
 ---
 
@@ -697,13 +697,13 @@ def _format_markdown(data: dict) -> str:
 """
     for i, action in enumerate(data['next_actions'][:5], 1):
         md += f"{i}. **{action['action']}** ({action['estimate']})\n"
-    
+
     md += f"""
 ---
 
 *Generated by Exarp MCP Server v{data['project']['version']}*
 """
-    
+
     return md
 
 
@@ -711,7 +711,7 @@ def _format_marp_slides(data: dict) -> str:
     """Format as Marp markdown slides."""
     health = data['health']
     score = health.get('overall_score', 0)
-    
+
     marp = f"""---
 marp: true
 theme: default
@@ -759,7 +759,7 @@ style: |
     for name, value in sorted(health.get('scores', {}).items(), key=lambda x: -x[1])[:6]:
         status = "🟢" if value >= 70 else "🟡" if value >= 50 else "🔴"
         marp += f"| {name.title()} | {value:.0f}% | {status} |\n"
-    
+
     marp += f"""
 ---
 
@@ -793,8 +793,8 @@ style: |
     for risk in data['risks'][:5]:
         icon = "🔴" if risk['severity'] == 'critical' else "🟡" if risk['severity'] == 'high' else "🟢"
         marp += f"- {icon} {risk['description']}\n"
-    
-    marp += f"""
+
+    marp += """
 ---
 
 # 🎯 Next Actions
@@ -802,8 +802,8 @@ style: |
 """
     for i, action in enumerate(data['next_actions'][:4], 1):
         marp += f"{i}. **{action['action']}** ({action['estimate']})\n"
-    
-    marp += f"""
+
+    marp += """
 ---
 
 # 🚧 Roadmap
@@ -812,7 +812,7 @@ style: |
     for phase in data['phases']:
         icon = "✅" if phase['status'] == 'complete' else "🔄" if phase['status'] == 'in_progress' else "⏳"
         marp += f"- {icon} **{phase['name']}**: {phase['progress']}%\n"
-    
+
     marp += """
 ---
 
@@ -822,6 +822,6 @@ style: |
 
 *Generated by Exarp MCP Server*
 """
-    
+
     return marp
 

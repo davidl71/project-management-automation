@@ -9,7 +9,7 @@ import os
 import socket
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
 
 def _ssh_command(host: str, command: str, timeout: int = 10) -> subprocess.CompletedProcess:
@@ -41,7 +41,7 @@ def _ssh_command(host: str, command: str, timeout: int = 10) -> subprocess.Compl
     )
 
 
-def _get_local_ip_addresses() -> List[str]:
+def _get_local_ip_addresses() -> list[str]:
     """Get all local IP addresses (excluding localhost)."""
     local_ips = []
 
@@ -158,7 +158,7 @@ def _find_project_root(start_path: Path) -> Path:
 def check_working_copy_health(
     agent_name: Optional[str] = None,
     check_remote: bool = True
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Check working copy health across agents.
 
@@ -186,7 +186,7 @@ def check_working_copy_health(
         remote_agents_json = os.environ.get("EXARP_REMOTE_AGENTS", "{}")
         try:
             remote_agents = json.loads(remote_agents_json)
-            for name, config in remote_agents.items():
+            for _name, config in remote_agents.items():
                 config["type"] = "remote"
             agents.update(remote_agents)
         except json.JSONDecodeError:
@@ -219,7 +219,7 @@ def check_working_copy_health(
             # Expand ~ in path
             if agent_path.startswith("~"):
                 agent_path = os.path.expanduser(agent_path)
-            
+
             try:
                 result = subprocess.run(
                     ["git", "status", "--porcelain"],
@@ -403,7 +403,7 @@ def check_working_copy_health(
     }
 
 
-def _generate_recommendations(results: Dict[str, Any]) -> List[str]:
+def _generate_recommendations(results: dict[str, Any]) -> list[str]:
     """Generate recommendations based on working copy status."""
     recommendations = []
 

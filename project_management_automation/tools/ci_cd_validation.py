@@ -7,32 +7,23 @@ Validates GitHub Actions workflows and runner configurations.
 import json
 import logging
 import time
-import yaml
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
+import yaml
 
 logger = logging.getLogger(__name__)
 
 # Import error handler at module level to avoid scoping issues
 try:
-    from ..error_handler import (
-        format_success_response,
-        format_error_response,
-        log_automation_execution,
-        ErrorCode
-    )
+    from ..error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
 except ImportError:
     import sys
     from pathlib import Path
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     try:
-        from error_handler import (
-            format_success_response,
-            format_error_response,
-            log_automation_execution,
-            ErrorCode
-        )
+        from error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
     except ImportError:
         # Fallback: define minimal versions if import fails
         def format_success_response(data, message=None):
@@ -131,7 +122,7 @@ def validate_ci_cd_workflow(
 
         # Load and validate YAML syntax
         try:
-            with open(workflow_file, 'r') as f:
+            with open(workflow_file) as f:
                 workflow_content = yaml.safe_load(f)
             validation_results["workflow_valid"] = True
         except yaml.YAMLError as e:
@@ -244,7 +235,7 @@ def validate_ci_cd_workflow(
         return json.dumps(error_response, indent=2)
 
 
-def _validate_runner_configs(workflow: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_runner_configs(workflow: dict[str, Any]) -> dict[str, Any]:
     """Validate runner configurations in workflow."""
     results = {
         "runner_config_valid": True,
@@ -277,7 +268,7 @@ def _validate_runner_configs(workflow: Dict[str, Any]) -> Dict[str, Any]:
     return results
 
 
-def _validate_job_dependencies(workflow: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_job_dependencies(workflow: dict[str, Any]) -> dict[str, Any]:
     """Validate job dependencies."""
     results = {
         "job_dependencies_valid": True,
@@ -303,7 +294,7 @@ def _validate_job_dependencies(workflow: Dict[str, Any]) -> Dict[str, Any]:
     return results
 
 
-def _validate_matrix_builds(workflow: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_matrix_builds(workflow: dict[str, Any]) -> dict[str, Any]:
     """Validate matrix build configurations."""
     results = {
         "matrix_builds_valid": True,
@@ -327,7 +318,7 @@ def _validate_matrix_builds(workflow: Dict[str, Any]) -> Dict[str, Any]:
     return results
 
 
-def _validate_triggers(workflow: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_triggers(workflow: dict[str, Any]) -> dict[str, Any]:
     """Validate workflow triggers."""
     results = {
         "triggers_valid": True,
@@ -351,7 +342,7 @@ def _validate_triggers(workflow: Dict[str, Any]) -> Dict[str, Any]:
     return results
 
 
-def _validate_artifacts(workflow: Dict[str, Any]) -> Dict[str, Any]:
+def _validate_artifacts(workflow: dict[str, Any]) -> dict[str, Any]:
     """Validate artifact uploads/downloads."""
     results = {
         "artifacts_valid": True,
@@ -384,7 +375,7 @@ def _validate_artifacts(workflow: Dict[str, Any]) -> Dict[str, Any]:
     return results
 
 
-def _generate_validation_report(results: Dict[str, Any], report_path: Path) -> str:
+def _generate_validation_report(results: dict[str, Any], report_path: Path) -> str:
     """Generate validation report markdown."""
     report_lines = [
         "# CI/CD Workflow Validation Report",

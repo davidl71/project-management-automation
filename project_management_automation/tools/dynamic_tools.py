@@ -2,7 +2,7 @@
 Dynamic Tool Management for MCP Server.
 
 Implements context-aware tool loading based on the MCP listChanged notification.
-Instead of exposing 40+ tools at all times (which pollutes LLM context), 
+Instead of exposing 40+ tools at all times (which pollutes LLM context),
 this module enables intelligent tool curation:
 
 1. CORE tools (always visible): server_status, list_tools, focus_mode
@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
 
 if TYPE_CHECKING:
     try:
@@ -48,7 +48,7 @@ logger = logging.getLogger("exarp.dynamic_tools")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Keywords that suggest specific workflow modes
-MODE_KEYWORDS: Dict[str, List[str]] = {
+MODE_KEYWORDS: dict[str, list[str]] = {
     "daily_checkin": [
         "daily", "check", "status", "morning", "standup", "overview",
         "health", "how is", "project status", "quick check",
@@ -85,7 +85,7 @@ MODE_KEYWORDS: Dict[str, List[str]] = {
 }
 
 # Tool name patterns that suggest workflow modes
-TOOL_USAGE_MODE_HINTS: Dict[str, str] = {
+TOOL_USAGE_MODE_HINTS: dict[str, str] = {
     "scan_dependency_security": "security_review",
     "generate_security_report": "security_review",
     "fetch_dependabot_alerts": "security_review",
@@ -108,11 +108,11 @@ TOOL_USAGE_MODE_HINTS: Dict[str, str] = {
 
 class ToolGroup(str, Enum):
     """Tool groups for lazy loading."""
-    
+
     # Always visible
     CORE = "core"           # server_status, dev_reload
     DISCOVERY = "discovery" # list_tools, get_tool_help, focus_mode
-    
+
     # Contextually loaded
     HEALTH = "health"       # project_scorecard, project_overview, docs_health
     TASKS = "tasks"         # alignment, duplicates, clarification, hierarchy
@@ -128,41 +128,41 @@ class ToolGroup(str, Enum):
 
 class WorkflowMode(str, Enum):
     """Pre-defined workflow contexts with curated tool sets."""
-    
+
     # Minimal modes (5-8 tools each)
     DAILY_CHECKIN = "daily_checkin"       # Overview + health checks
     SECURITY_REVIEW = "security_review"   # Security-focused tools
     TASK_MANAGEMENT = "task_management"   # Task tools only
     SPRINT_PLANNING = "sprint_planning"   # Tasks + automation
     CODE_REVIEW = "code_review"           # Testing + linting
-    
+
     # Standard modes (10-15 tools)
     DEVELOPMENT = "development"           # Balanced set
     DEBUGGING = "debugging"               # Memory + testing
-    
+
     # Full access
     ALL = "all"                           # All tools (legacy behavior)
 
 
 # Tool group definitions
-TOOL_GROUP_MAPPING: Dict[str, ToolGroup] = {
+TOOL_GROUP_MAPPING: dict[str, ToolGroup] = {
     # Core (always)
     "server_status": ToolGroup.CORE,
     "dev_reload": ToolGroup.CORE,
-    
+
     # Discovery (always)
     "list_tools": ToolGroup.DISCOVERY,
     "get_tool_help": ToolGroup.DISCOVERY,
     "focus_mode": ToolGroup.DISCOVERY,  # The mode switcher itself
     "suggest_mode": ToolGroup.DISCOVERY,  # Adaptive mode suggestion
     "tool_usage_stats": ToolGroup.DISCOVERY,  # Usage analytics
-    
+
     # Health
     "check_documentation_health": ToolGroup.HEALTH,
     "generate_project_scorecard": ToolGroup.HEALTH,
     "generate_project_overview": ToolGroup.HEALTH,
     "check_working_copy_health": ToolGroup.HEALTH,
-    
+
     # Tasks
     "analyze_todo2_alignment": ToolGroup.TASKS,
     "detect_duplicate_tasks": ToolGroup.TASKS,
@@ -171,18 +171,18 @@ TOOL_GROUP_MAPPING: Dict[str, ToolGroup] = {
     "batch_approve_tasks": ToolGroup.TASKS,
     "analyze_task_hierarchy": ToolGroup.TASKS,
     "consolidate_tags": ToolGroup.TASKS,
-    
+
     # Security
     "scan_dependency_security": ToolGroup.SECURITY,
     "fetch_dependabot_alerts": ToolGroup.SECURITY,
     "generate_security_report": ToolGroup.SECURITY,
-    
+
     # Automation
     "run_automation": ToolGroup.AUTOMATION,
     "find_automation_opportunities": ToolGroup.AUTOMATION,
     "setup_git_hooks": ToolGroup.AUTOMATION,
     "setup_pattern_triggers": ToolGroup.AUTOMATION,
-    
+
     # Config
     "generate_cursor_rules": ToolGroup.CONFIG,
     "generate_cursorignore": ToolGroup.CONFIG,
@@ -190,14 +190,14 @@ TOOL_GROUP_MAPPING: Dict[str, ToolGroup] = {
     "add_external_tool_hints": ToolGroup.CONFIG,
     "review_pwa_config": ToolGroup.CONFIG,
     "validate_ci_cd_workflow": ToolGroup.CONFIG,
-    
+
     # Testing
     "run_tests": ToolGroup.TESTING,
     "analyze_test_coverage": ToolGroup.TESTING,
     "check_definition_of_done": ToolGroup.TESTING,
     "analyze_problems": ToolGroup.TESTING,
     "list_problem_categories": ToolGroup.TESTING,
-    
+
     # Advisors
     "consult_advisor": ToolGroup.ADVISORS,
     "get_advisor_briefing": ToolGroup.ADVISORS,
@@ -206,20 +206,20 @@ TOOL_GROUP_MAPPING: Dict[str, ToolGroup] = {
     "check_tts_backends": ToolGroup.ADVISORS,
     "synthesize_advisor_quote": ToolGroup.ADVISORS,
     "generate_podcast_audio": ToolGroup.ADVISORS,
-    
+
     # Memory
     "save_memory": ToolGroup.MEMORY,
     "recall_context": ToolGroup.MEMORY,
     "search_memories": ToolGroup.MEMORY,
     "get_session_summary": ToolGroup.MEMORY,
-    
+
     # Workflow
     "recommend_workflow_mode": ToolGroup.WORKFLOW,
     "recommend_model": ToolGroup.WORKFLOW,
     "list_available_models": ToolGroup.WORKFLOW,
     "log_prompt_iteration": ToolGroup.WORKFLOW,
     "analyze_prompt_iterations": ToolGroup.WORKFLOW,
-    
+
     # PRD
     "generate_prd": ToolGroup.PRD,
     "analyze_prd_alignment": ToolGroup.PRD,
@@ -227,7 +227,7 @@ TOOL_GROUP_MAPPING: Dict[str, ToolGroup] = {
 
 
 # Workflow mode → tool groups mapping
-WORKFLOW_TOOL_GROUPS: Dict[WorkflowMode, Set[ToolGroup]] = {
+WORKFLOW_TOOL_GROUPS: dict[WorkflowMode, set[ToolGroup]] = {
     # Minimal focused modes
     WorkflowMode.DAILY_CHECKIN: {
         ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.HEALTH
@@ -244,17 +244,17 @@ WORKFLOW_TOOL_GROUPS: Dict[WorkflowMode, Set[ToolGroup]] = {
     WorkflowMode.CODE_REVIEW: {
         ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.TESTING, ToolGroup.HEALTH
     },
-    
+
     # Balanced modes
     WorkflowMode.DEVELOPMENT: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.HEALTH, 
+        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.HEALTH,
         ToolGroup.TASKS, ToolGroup.TESTING, ToolGroup.MEMORY
     },
     WorkflowMode.DEBUGGING: {
         ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.MEMORY,
         ToolGroup.TESTING, ToolGroup.HEALTH
     },
-    
+
     # Full access
     WorkflowMode.ALL: set(ToolGroup),
 }
@@ -264,63 +264,63 @@ WORKFLOW_TOOL_GROUPS: Dict[WorkflowMode, Set[ToolGroup]] = {
 class ToolUsageTracker:
     """
     Tracks tool usage patterns for adaptive recommendations.
-    
+
     Persists usage data to enable learning across sessions.
     """
-    
+
     # Tool usage counts
-    tool_counts: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
-    
+    tool_counts: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+
     # Tool co-occurrence (which tools are used together)
-    tool_pairs: Dict[str, Dict[str, int]] = field(default_factory=lambda: defaultdict(lambda: defaultdict(int)))
-    
+    tool_pairs: dict[str, dict[str, int]] = field(default_factory=lambda: defaultdict(lambda: defaultdict(int)))
+
     # Recent tool sequence (for pattern detection)
-    recent_tools: List[str] = field(default_factory=list)
+    recent_tools: list[str] = field(default_factory=list)
     max_recent: int = 20
-    
+
     # Mode usage counts
-    mode_counts: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
-    
+    mode_counts: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+
     # Session start time
     session_start: str = field(default_factory=lambda: datetime.now().isoformat())
-    
+
     def record_tool_call(self, tool_name: str) -> None:
         """Record a tool being called."""
         self.tool_counts[tool_name] += 1
-        
+
         # Track co-occurrence with recent tools
         for recent in self.recent_tools[-5:]:  # Last 5 tools
             if recent != tool_name:
                 self.tool_pairs[tool_name][recent] += 1
                 self.tool_pairs[recent][tool_name] += 1
-        
+
         # Update recent list
         self.recent_tools.append(tool_name)
         if len(self.recent_tools) > self.max_recent:
             self.recent_tools.pop(0)
-    
+
     def record_mode_switch(self, mode: str) -> None:
         """Record a mode switch."""
         self.mode_counts[mode] += 1
-    
-    def get_related_tools(self, tool_name: str, limit: int = 5) -> List[Tuple[str, int]]:
+
+    def get_related_tools(self, tool_name: str, limit: int = 5) -> list[tuple[str, int]]:
         """Get tools commonly used with the given tool."""
         pairs = self.tool_pairs.get(tool_name, {})
         sorted_pairs = sorted(pairs.items(), key=lambda x: x[1], reverse=True)
         return sorted_pairs[:limit]
-    
-    def get_most_used_tools(self, limit: int = 10) -> List[Tuple[str, int]]:
+
+    def get_most_used_tools(self, limit: int = 10) -> list[tuple[str, int]]:
         """Get the most frequently used tools."""
         sorted_tools = sorted(self.tool_counts.items(), key=lambda x: x[1], reverse=True)
         return sorted_tools[:limit]
-    
+
     def get_preferred_mode(self) -> Optional[str]:
         """Get the most commonly used mode."""
         if not self.mode_counts:
             return None
         return max(self.mode_counts.items(), key=lambda x: x[1])[0]
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Serialize for persistence."""
         return {
             "tool_counts": dict(self.tool_counts),
@@ -329,9 +329,9 @@ class ToolUsageTracker:
             "mode_counts": dict(self.mode_counts),
             "session_start": self.session_start,
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ToolUsageTracker":
+    def from_dict(cls, data: dict[str, Any]) -> "ToolUsageTracker":
         """Deserialize from persisted data."""
         tracker = cls()
         tracker.tool_counts = defaultdict(int, data.get("tool_counts", {}))
@@ -349,62 +349,62 @@ class ToolUsageTracker:
 class DynamicToolManager:
     """
     Manages dynamic tool visibility based on context.
-    
+
     Usage:
         manager = DynamicToolManager()
-        
+
         # Switch to security review mode
         await manager.set_workflow_mode(ctx, WorkflowMode.SECURITY_REVIEW)
-        
+
         # Or enable specific groups
         await manager.enable_group(ctx, ToolGroup.MEMORY)
-        
+
         # Check if tool should be visible
         if manager.is_tool_visible("scan_dependency_security"):
             # Include in tools/list response
-        
+
         # Infer mode from conversation
         suggested = manager.infer_mode_from_text("I need to check for vulnerabilities")
         # Returns: ("security_review", 0.85, ["vulnerability"])
     """
-    
+
     # Current workflow mode
     current_mode: WorkflowMode = WorkflowMode.DEVELOPMENT
-    
+
     # Explicitly enabled groups (in addition to mode defaults)
-    extra_groups: Set[ToolGroup] = field(default_factory=set)
-    
+    extra_groups: set[ToolGroup] = field(default_factory=set)
+
     # Explicitly disabled groups (override mode defaults)
-    disabled_groups: Set[ToolGroup] = field(default_factory=set)
-    
+    disabled_groups: set[ToolGroup] = field(default_factory=set)
+
     # Tool usage tracking
     usage_tracker: ToolUsageTracker = field(default_factory=ToolUsageTracker)
-    
+
     # Persistence path (optional)
     persistence_path: Optional[Path] = None
-    
-    def get_active_groups(self) -> Set[ToolGroup]:
+
+    def get_active_groups(self) -> set[ToolGroup]:
         """Get currently active tool groups."""
         base_groups = WORKFLOW_TOOL_GROUPS.get(self.current_mode, set())
         active = (base_groups | self.extra_groups) - self.disabled_groups
-        
+
         # Core and Discovery are always active
         active.add(ToolGroup.CORE)
         active.add(ToolGroup.DISCOVERY)
-        
+
         return active
-    
-    def get_visible_tools(self) -> List[str]:
+
+    def get_visible_tools(self) -> list[str]:
         """Get list of currently visible tool names."""
         active_groups = self.get_active_groups()
         visible = []
-        
+
         for tool_name, group in TOOL_GROUP_MAPPING.items():
             if group in active_groups:
                 visible.append(tool_name)
-        
+
         return sorted(visible)
-    
+
     def is_tool_visible(self, tool_name: str) -> bool:
         """Check if a specific tool should be visible."""
         group = TOOL_GROUP_MAPPING.get(tool_name)
@@ -412,57 +412,57 @@ class DynamicToolManager:
             # Unknown tool - show it (fail open)
             logger.warning(f"Unknown tool '{tool_name}' - defaulting to visible")
             return True
-        
+
         return group in self.get_active_groups()
-    
+
     def record_tool_usage(self, tool_name: str) -> None:
         """Record tool usage for adaptive recommendations."""
         self.usage_tracker.record_tool_call(tool_name)
-        
+
         # Check if this tool suggests a mode switch
         suggested_mode = TOOL_USAGE_MODE_HINTS.get(tool_name)
         if suggested_mode and suggested_mode != self.current_mode.value:
             logger.debug(f"Tool {tool_name} suggests mode: {suggested_mode}")
-    
-    def get_recommended_groups(self) -> List[ToolGroup]:
+
+    def get_recommended_groups(self) -> list[ToolGroup]:
         """Get group recommendations based on usage patterns."""
-        group_scores: Dict[ToolGroup, int] = {}
-        
+        group_scores: dict[ToolGroup, int] = {}
+
         for tool_name, count in self.usage_tracker.tool_counts.items():
             group = TOOL_GROUP_MAPPING.get(tool_name)
             if group:
                 group_scores[group] = group_scores.get(group, 0) + count
-        
+
         # Return groups sorted by usage
         return sorted(group_scores.keys(), key=lambda g: group_scores[g], reverse=True)
-    
+
     # ═══════════════════════════════════════════════════════════════════════
     # ADAPTIVE MODE INFERENCE
     # ═══════════════════════════════════════════════════════════════════════
-    
+
     def infer_mode_from_text(
-        self, 
-        text: str, 
+        self,
+        text: str,
         threshold: float = 0.3
-    ) -> Tuple[Optional[str], float, List[str]]:
+    ) -> tuple[Optional[str], float, list[str]]:
         """
         Infer the best workflow mode from conversation text.
-        
+
         Uses keyword matching with scoring to suggest the most
         appropriate mode based on what the user is discussing.
-        
+
         Args:
             text: Conversation text to analyze
             threshold: Minimum confidence score (0-1) to return a suggestion
-        
+
         Returns:
             Tuple of (suggested_mode, confidence, matched_keywords)
             If no mode exceeds threshold, returns (None, 0, [])
         """
         text_lower = text.lower()
-        
-        mode_scores: Dict[str, Tuple[float, List[str]]] = {}
-        
+
+        mode_scores: dict[str, tuple[float, list[str]]] = {}
+
         for mode, keywords in MODE_KEYWORDS.items():
             matches = []
             for keyword in keywords:
@@ -470,45 +470,45 @@ class DynamicToolManager:
                 pattern = r'\b' + re.escape(keyword) + r'\b'
                 if re.search(pattern, text_lower):
                     matches.append(keyword)
-            
+
             if matches:
                 # Score based on number and specificity of matches
                 # More specific/longer keywords get higher weight
                 score = sum(len(kw.split()) for kw in matches) / 10.0
                 score = min(score, 1.0)  # Cap at 1.0
                 mode_scores[mode] = (score, matches)
-        
+
         if not mode_scores:
             return (None, 0.0, [])
-        
+
         # Get highest scoring mode
         best_mode = max(mode_scores.items(), key=lambda x: x[1][0])
         mode_name, (score, matches) = best_mode
-        
+
         if score >= threshold:
             return (mode_name, score, matches)
-        
+
         return (None, 0.0, [])
-    
+
     def get_mode_suggestion(
-        self, 
+        self,
         text: Optional[str] = None,
         include_rationale: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get a mode suggestion based on text and/or usage patterns.
-        
+
         Combines text inference with usage history for better recommendations.
-        
+
         Args:
             text: Optional conversation text to analyze
             include_rationale: Include explanation of the suggestion
-        
+
         Returns:
             Dict with suggestion, confidence, and rationale
         """
         suggestions = []
-        
+
         # Text-based inference
         if text:
             mode, confidence, keywords = self.infer_mode_from_text(text)
@@ -519,7 +519,7 @@ class DynamicToolManager:
                     "source": "text_analysis",
                     "keywords": keywords,
                 })
-        
+
         # Usage pattern inference
         recent_tools = self.usage_tracker.recent_tools[-5:]
         mode_hints = {}
@@ -527,7 +527,7 @@ class DynamicToolManager:
             hint = TOOL_USAGE_MODE_HINTS.get(tool)
             if hint:
                 mode_hints[hint] = mode_hints.get(hint, 0) + 1
-        
+
         if mode_hints:
             top_hint = max(mode_hints.items(), key=lambda x: x[1])
             suggestions.append({
@@ -536,7 +536,7 @@ class DynamicToolManager:
                 "source": "usage_pattern",
                 "tools": [t for t in recent_tools if TOOL_USAGE_MODE_HINTS.get(t) == top_hint[0]],
             })
-        
+
         # Historical preference
         preferred = self.usage_tracker.get_preferred_mode()
         if preferred:
@@ -545,7 +545,7 @@ class DynamicToolManager:
                 "confidence": 0.3,  # Low confidence for historical
                 "source": "historical_preference",
             })
-        
+
         if not suggestions:
             return {
                 "suggested_mode": None,
@@ -553,17 +553,17 @@ class DynamicToolManager:
                 "rationale": "No clear mode suggestion based on available context",
                 "current_mode": self.current_mode.value,
             }
-        
+
         # Pick best suggestion
         best = max(suggestions, key=lambda x: x["confidence"])
-        
+
         result = {
             "suggested_mode": best["mode"],
             "confidence": round(best["confidence"], 2),
             "current_mode": self.current_mode.value,
             "would_change": best["mode"] != self.current_mode.value,
         }
-        
+
         if include_rationale:
             if best["source"] == "text_analysis":
                 result["rationale"] = f"Keywords detected: {', '.join(best['keywords'])}"
@@ -571,20 +571,20 @@ class DynamicToolManager:
                 result["rationale"] = f"Recent tools suggest this mode: {', '.join(best.get('tools', []))}"
             else:
                 result["rationale"] = "Based on your historical usage patterns"
-        
+
         return result
-    
+
     # ═══════════════════════════════════════════════════════════════════════
     # PERSISTENCE
     # ═══════════════════════════════════════════════════════════════════════
-    
+
     def save_usage_data(self, path: Optional[Path] = None) -> bool:
         """Save usage tracking data to disk."""
         save_path = path or self.persistence_path
         if not save_path:
             # Default to .exarp directory
             save_path = Path(".exarp/tool_usage.json")
-        
+
         try:
             save_path.parent.mkdir(parents=True, exist_ok=True)
             data = {
@@ -599,20 +599,20 @@ class DynamicToolManager:
         except Exception as e:
             logger.warning(f"Failed to save usage data: {e}")
             return False
-    
+
     def load_usage_data(self, path: Optional[Path] = None) -> bool:
         """Load usage tracking data from disk."""
         load_path = path or self.persistence_path
         if not load_path:
             load_path = Path(".exarp/tool_usage.json")
-        
+
         try:
             if not load_path.exists():
                 return False
-            
+
             with open(load_path) as f:
                 data = json.load(f)
-            
+
             if data.get("version") == 1:
                 self.usage_tracker = ToolUsageTracker.from_dict(data.get("tracker", {}))
                 # Optionally restore mode
@@ -621,40 +621,40 @@ class DynamicToolManager:
                 return True
         except Exception as e:
             logger.warning(f"Failed to load usage data: {e}")
-        
+
         return False
-    
+
     async def set_workflow_mode(
         self,
         ctx: Optional["Context"],
         mode: WorkflowMode,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Switch to a workflow mode and notify client.
-        
+
         Args:
             ctx: FastMCP context for notification
             mode: Target workflow mode
-        
+
         Returns:
             Status dict with mode info and tool counts
         """
         old_mode = self.current_mode
         old_tools = set(self.get_visible_tools())
-        
+
         self.current_mode = mode
         self.extra_groups.clear()
         self.disabled_groups.clear()
-        
+
         new_tools = set(self.get_visible_tools())
-        
+
         # Notify client of tool list change
         if ctx:
             await self._notify_tools_changed(ctx)
-        
+
         added = new_tools - old_tools
         removed = old_tools - new_tools
-        
+
         return {
             "success": True,
             "mode": mode.value,
@@ -664,32 +664,32 @@ class DynamicToolManager:
             "tools_added": sorted(added),
             "tools_removed": sorted(removed),
         }
-    
+
     async def enable_group(
         self,
         ctx: Optional["Context"],
         group: ToolGroup,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Enable a tool group."""
         if group in self.disabled_groups:
             self.disabled_groups.remove(group)
         self.extra_groups.add(group)
-        
+
         if ctx:
             await self._notify_tools_changed(ctx)
-        
+
         return {
             "success": True,
             "group": group.value,
             "action": "enabled",
             "visible_tools": self.get_visible_tools(),
         }
-    
+
     async def disable_group(
         self,
         ctx: Optional["Context"],
         group: ToolGroup,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Disable a tool group."""
         # Never disable core/discovery
         if group in (ToolGroup.CORE, ToolGroup.DISCOVERY):
@@ -697,21 +697,21 @@ class DynamicToolManager:
                 "success": False,
                 "error": f"Cannot disable {group.value} group - always required",
             }
-        
+
         if group in self.extra_groups:
             self.extra_groups.remove(group)
         self.disabled_groups.add(group)
-        
+
         if ctx:
             await self._notify_tools_changed(ctx)
-        
+
         return {
             "success": True,
             "group": group.value,
             "action": "disabled",
             "visible_tools": self.get_visible_tools(),
         }
-    
+
     async def _notify_tools_changed(self, ctx: "Context") -> None:
         """Send tools/list_changed notification to client."""
         try:
@@ -720,13 +720,13 @@ class DynamicToolManager:
             logger.info(f"Notified client of tool list change (mode={self.current_mode.value})")
         except Exception as e:
             logger.warning(f"Failed to notify tools changed: {e}")
-    
-    def get_status(self) -> Dict[str, Any]:
+
+    def get_status(self) -> dict[str, Any]:
         """Get current status for introspection."""
         active_groups = self.get_active_groups()
         visible_tools = self.get_visible_tools()
         all_tools = list(TOOL_GROUP_MAPPING.keys())
-        
+
         return {
             "mode": self.current_mode.value,
             "active_groups": sorted([g.value for g in active_groups]),
@@ -772,14 +772,14 @@ def focus_mode(
 ) -> str:
     """
     [HINT: Tool curation. Dynamic tool visibility based on workflow mode.]
-    
+
     🎯 Output: Mode status, visible tools, context reduction metrics
     🔧 Side Effects: Updates tool visibility, sends list_changed notification
     ⏱️ Typical Runtime: <100ms
-    
+
     Philosophy: "An API built for humans will poison your AI agent."
     Instead of 40+ tools polluting context, focus on what's relevant NOW.
-    
+
     Modes:
     - daily_checkin: Health + overview (5-8 tools)
     - security_review: Security-focused (8-10 tools)
@@ -789,35 +789,35 @@ def focus_mode(
     - development: Balanced set (15-18 tools) [default]
     - debugging: Memory + testing (12-15 tools)
     - all: Full tool access (40+ tools)
-    
+
     Example Prompts:
     "Switch to security review mode"
     "Focus on task management"
     "Enable the advisors tools"
     "Show current tool focus status"
-    
+
     Args:
         mode: Workflow mode to switch to (see modes above)
         enable_group: Specific group to enable (health, tasks, security, etc.)
         disable_group: Specific group to disable
         status: If True, return current status without changes
-    
+
     Returns:
         JSON with mode info, visible tools, and context reduction metrics
     """
     import json
-    
+
     manager = get_tool_manager()
-    
+
     # Status only
     if status or (mode is None and enable_group is None and disable_group is None):
         return json.dumps(manager.get_status(), indent=2)
-    
+
     # This is a sync function - for async notification, wrap in tool registration
     # The actual notification happens via the async tool wrapper
-    
+
     result = {}
-    
+
     if mode:
         try:
             workflow_mode = WorkflowMode(mode.lower())
@@ -826,7 +826,7 @@ def focus_mode(
             manager.current_mode = workflow_mode
             manager.extra_groups.clear()
             manager.disabled_groups.clear()
-            
+
             result = {
                 "success": True,
                 "action": "mode_changed",
@@ -840,7 +840,7 @@ def focus_mode(
                 "error": f"Unknown mode: {mode}",
                 "available_modes": [m.value for m in WorkflowMode],
             }
-    
+
     elif enable_group:
         try:
             group = ToolGroup(enable_group.lower())
@@ -859,7 +859,7 @@ def focus_mode(
                 "error": f"Unknown group: {enable_group}",
                 "available_groups": [g.value for g in ToolGroup],
             }
-    
+
     elif disable_group:
         try:
             group = ToolGroup(disable_group.lower())
@@ -884,11 +884,11 @@ def focus_mode(
                 "error": f"Unknown group: {disable_group}",
                 "available_groups": [g.value for g in ToolGroup],
             }
-    
+
     # Record mode switch for tracking
     if mode and result.get("success"):
         manager.usage_tracker.record_mode_switch(mode.lower())
-    
+
     return json.dumps(result, indent=2)
 
 
@@ -898,36 +898,36 @@ def suggest_mode(
 ) -> str:
     """
     [HINT: Adaptive mode suggestion. Infers best mode from context/usage patterns.]
-    
+
     🎯 Output: Suggested mode, confidence score, rationale
     🔧 Side Effects: If auto_switch=True, changes mode and notifies client
     ⏱️ Typical Runtime: <50ms
-    
+
     Uses keyword analysis and usage patterns to suggest the best workflow mode.
     Call without arguments to get suggestion based on your usage history.
-    
+
     Example Prompts:
     "What mode should I use for security work?"
     "Suggest a mode based on my recent activity"
     "Auto-switch to the best mode for vulnerability scanning"
-    
+
     Args:
         text: Optional text to analyze for mode suggestion
         auto_switch: If True, automatically switch to suggested mode
-    
+
     Returns:
         JSON with suggested mode, confidence, and rationale
     """
     manager = get_tool_manager()
     suggestion = manager.get_mode_suggestion(text, include_rationale=True)
-    
+
     # Add usage stats
     suggestion["usage_stats"] = {
         "total_tool_calls": sum(manager.usage_tracker.tool_counts.values()),
         "most_used_tools": manager.usage_tracker.get_most_used_tools(5),
         "recent_tools": manager.usage_tracker.recent_tools[-5:],
     }
-    
+
     # Auto-switch if requested and confident
     if auto_switch and suggestion.get("suggested_mode") and suggestion.get("confidence", 0) >= 0.5:
         try:
@@ -937,7 +937,7 @@ def suggest_mode(
             manager.extra_groups.clear()
             manager.disabled_groups.clear()
             manager.usage_tracker.record_mode_switch(workflow_mode.value)
-            
+
             suggestion["auto_switched"] = True
             suggestion["previous_mode"] = old_mode.value
             suggestion.update(manager.get_status())
@@ -946,24 +946,24 @@ def suggest_mode(
             suggestion["error"] = "Could not auto-switch to suggested mode"
     else:
         suggestion["auto_switched"] = False
-    
+
     return json.dumps(suggestion, indent=2)
 
 
 def get_tool_usage_stats() -> str:
     """
     [HINT: Tool usage analytics. Shows usage patterns and co-occurrence data.]
-    
+
     🎯 Output: Usage statistics, tool relationships, mode history
     🔧 Side Effects: None
     ⏱️ Typical Runtime: <10ms
-    
+
     Returns:
         JSON with comprehensive usage analytics
     """
     manager = get_tool_manager()
     tracker = manager.usage_tracker
-    
+
     stats = {
         "session_start": tracker.session_start,
         "total_tool_calls": sum(tracker.tool_counts.values()),
@@ -978,7 +978,7 @@ def get_tool_usage_stats() -> str:
             for tool in list(tracker.tool_counts.keys())[:5]
         },
     }
-    
+
     return json.dumps(stats, indent=2)
 
 

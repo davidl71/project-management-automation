@@ -21,7 +21,6 @@ from typing import Dict, List, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
-
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -32,7 +31,7 @@ logger = logging.getLogger(__name__)
 class AutomationOpportunityFinder(IntelligentAutomationBase):
     """Finds automation opportunities using intelligent automation."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
@@ -49,7 +48,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
         """Sequential problem: How do we find automation opportunities?"""
         return "How do we systematically identify tasks that would benefit from automation?"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute analysis to find automation opportunities."""
         logger.info("Executing automation opportunity analysis...")
 
@@ -88,7 +87,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
             'low_priority': [o for o in scored_opportunities if o['score'] < 5]
         }
 
-    def _analyze_existing_automations(self) -> List[Dict]:
+    def _analyze_existing_automations(self) -> list[dict]:
         """Analyze what automations already exist."""
         opportunities = []
 
@@ -121,7 +120,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
 
         return opportunities
 
-    def _find_manual_tasks(self) -> List[Dict]:
+    def _find_manual_tasks(self) -> list[dict]:
         """Find manual repetitive tasks."""
         opportunities = []
 
@@ -155,7 +154,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
 
         return opportunities
 
-    def _find_manual_scripts(self) -> List[Dict]:
+    def _find_manual_scripts(self) -> list[dict]:
         """Find scripts that run manually."""
         opportunities = []
 
@@ -188,7 +187,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
 
         return opportunities
 
-    def _find_todo_automations(self) -> List[Dict]:
+    def _find_todo_automations(self) -> list[dict]:
         """Find TODO comments about automation."""
         opportunities = []
 
@@ -219,7 +218,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
 
         return opportunities
 
-    def _find_doc_automations(self) -> List[Dict]:
+    def _find_doc_automations(self) -> list[dict]:
         """Find automation opportunities mentioned in documentation."""
         opportunities = []
 
@@ -245,12 +244,12 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
                         'frequency': 'weekly',
                         'effort': 'medium',
                         'value': value,
-                        'evidence': f"Documented in AUTOMATION_OPPORTUNITIES.md"
+                        'evidence': "Documented in AUTOMATION_OPPORTUNITIES.md"
                     })
 
         return opportunities
 
-    def _score_opportunities(self, opportunities: List[Dict]) -> List[Dict]:
+    def _score_opportunities(self, opportunities: list[dict]) -> list[dict]:
         """Score and prioritize opportunities."""
         scored = []
 
@@ -291,7 +290,7 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
 
         return scored
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from analysis."""
         insights = []
 
@@ -306,15 +305,15 @@ class AutomationOpportunityFinder(IntelligentAutomationBase):
         insights.append(f"- {low} low-priority (score < 5)")
 
         if high > 0:
-            insights.append(f"\n**Top High-Priority Opportunities:**")
+            insights.append("\n**Top High-Priority Opportunities:**")
             for i, opp in enumerate(analysis_results['high_priority'][:5], 1):
                 insights.append(f"{i}. {opp['name']} (score: {opp['score']})")
 
-        insights.append(f"\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.")
+        insights.append("\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.")
 
         return '\n'.join(insights)
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate comprehensive report."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -406,7 +405,7 @@ This analysis used intelligent automation to:
 """
         return report
 
-    def _build_opportunity_table(self, opportunities: List[Dict]) -> str:
+    def _build_opportunity_table(self, opportunities: list[dict]) -> str:
         """Build markdown table for opportunities."""
         if not opportunities:
             return ""
@@ -422,7 +421,7 @@ This analysis used intelligent automation to:
 
         return table
 
-    def _identify_followup_tasks(self, analysis_results: Dict) -> List[Dict]:
+    def _identify_followup_tasks(self, analysis_results: dict) -> list[dict]:
         """Identify follow-up tasks."""
         followups = []
 
@@ -463,7 +462,7 @@ This analysis used intelligent automation to:
         except ImportError:
             return None
 
-    def _are_dependent(self, opp1: Dict, opp2: Dict) -> bool:
+    def _are_dependent(self, opp1: dict, opp2: dict) -> bool:
         """Check if two opportunities are dependent."""
         # Simple heuristic: if one is infrastructure and other uses it
         if 'infrastructure' in opp1.get('type', '') and 'script' in opp2.get('type', ''):
@@ -471,10 +470,11 @@ This analysis used intelligent automation to:
         return False
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration."""
+    from project_management_automation.utils import find_project_root
     if config_path is None:
-        config_path = project_root / 'scripts' / 'automation_opportunities_config.json'
+        config_path = find_project_root() / 'scripts' / 'automation_opportunities_config.json'
 
     default_config = {
         'output_path': 'docs/AUTOMATION_OPPORTUNITIES_FOUND.md'
@@ -482,7 +482,7 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
 
     if config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError:
@@ -505,10 +505,11 @@ def main():
         results = finder.run()
 
         # Write report
+        from project_management_automation.utils import find_project_root
         if args.output:
             output_path = args.output
         else:
-            output_path = project_root / config['output_path']
+            output_path = find_project_root() / config['output_path']
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, 'w') as f:

@@ -6,7 +6,7 @@ MCP Tool wrapper for batch approving TODO2 tasks using the batch update script.
 
 import subprocess
 import sys
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
 from ..utils import find_project_root
 
@@ -16,9 +16,9 @@ def batch_approve_tasks(
     new_status: str = "Todo",
     clarification_none: bool = True,
     filter_tag: Optional[str] = None,
-    task_ids: Optional[List[str]] = None,
+    task_ids: Optional[list[str]] = None,
     dry_run: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Batch approve TODO2 tasks using the batch update script.
 

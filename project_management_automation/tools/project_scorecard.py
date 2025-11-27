@@ -20,7 +20,7 @@ from ..utils import find_project_root
 scorecard_logger = logging.getLogger(__name__)
 
 
-def _save_scorecard_memory(result: Dict[str, Any]) -> Dict[str, Any]:
+def _save_scorecard_memory(result: dict[str, Any]) -> dict[str, Any]:
     """Save scorecard results as memory for trend tracking."""
     try:
         from .session_memory import save_session_insight
@@ -28,7 +28,7 @@ def _save_scorecard_memory(result: Dict[str, Any]) -> Dict[str, Any]:
         scores = result.get('scores', {})
         blockers = result.get('blockers', [])
         recs = result.get('recommendations', [])[:5]
-        
+
         # Format recommendations (avoid long line)
         recs_str = 'None'
         if recs:
@@ -92,15 +92,15 @@ def generate_project_scorecard(
 ) -> dict[str, Any]:
     """
     Generate comprehensive project health scorecard.
-    
+
     [HINT: Project scorecard. Returns overall score, component scores (security, testing,
     docs, alignment, clarity, parallelizable), task metrics, production readiness.]
-    
+
     Args:
         output_format: Output format - "text", "json", or "markdown"
         include_recommendations: Include improvement recommendations
         output_path: Optional path to save report
-        
+
     Returns:
         Dictionary with scorecard data and formatted output
     """
@@ -120,7 +120,7 @@ def generate_project_scorecard(
     for f in py_files:
         try:
             total_py_lines += len(f.read_text().splitlines())
-        except:
+        except (OSError, UnicodeDecodeError):
             pass
 
     # Count tools and prompts
@@ -132,7 +132,7 @@ def generate_project_scorecard(
         sys.path.insert(0, str(project_root))
         from prompts import PROMPTS
         prompts_count = len(PROMPTS)
-    except:
+    except (ImportError, ModuleNotFoundError):
         prompts_count = 0
 
     metrics['codebase'] = {
@@ -526,7 +526,7 @@ def generate_project_scorecard(
     justified_count = 0
 
     for category in ['core_features', 'infrastructure']:
-        for name, info in uniqueness_analysis.get(category, {}).items():
+        for _name, info in uniqueness_analysis.get(category, {}).items():
             total_decisions += 1
             if info.get('justified'):
                 justified_count += 1
@@ -812,7 +812,7 @@ def _format_text(data: dict) -> str:
                     from datetime import datetime
                     marker_file.write_text(f"First seen: {datetime.now().isoformat()}\n")
                     lines.append(_first_run_wisdom_prompt())
-                except:
+                except OSError:
                     pass
 
             wisdom = get_wisdom(data['overall_score'])
@@ -942,7 +942,7 @@ def _format_wisdom_markdown(wisdom: dict) -> str:
 **Project Status:** {wisdom.get('aeon_level', 'Unknown')}
 
 > *"{wisdom.get('quote', '')}"*
-> 
+>
 > — {wisdom.get('source', '')}
 
 💡 **{wisdom.get('encouragement', '')}**

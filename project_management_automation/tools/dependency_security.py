@@ -16,7 +16,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 if TYPE_CHECKING:
     from mcp.server.fastmcp import Context
@@ -50,7 +50,7 @@ async def _log_info(ctx: Optional["Context"], message: str) -> None:
         pass  # Logging is optional
 
 
-def _save_security_scan_memory(response_data: Dict[str, Any]) -> Dict[str, Any]:
+def _save_security_scan_memory(response_data: dict[str, Any]) -> dict[str, Any]:
     """Save security scan results as memory for remediation tracking."""
     try:
         from .session_memory import save_session_insight
@@ -112,7 +112,7 @@ except ImportError:
 
 
 async def scan_dependency_security_async(
-    languages: Optional[List[str]] = None,
+    languages: Optional[list[str]] = None,
     config_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
 ) -> str:
@@ -133,7 +133,7 @@ async def scan_dependency_security_async(
         # ═══ PROGRESS: Step 1/5 - Initialize ═══
         await _report_progress(ctx, 1, 5, "Initializing security scanner...")
         await _log_info(ctx, "🔒 Starting dependency security scan")
-        
+
         # Import from package
         from project_management_automation.scripts.automate_dependency_security import DependencySecurityAnalyzer
         from project_management_automation.utils import find_project_root
@@ -143,7 +143,7 @@ async def scan_dependency_security_async(
 
         # ═══ PROGRESS: Step 2/5 - Load config ═══
         await _report_progress(ctx, 2, 5, "Loading configuration...")
-        
+
         # Use default config if not provided
         if not config_path:
             config_path = str(project_root / 'scripts' / 'dependency_security_config.json')
@@ -171,10 +171,10 @@ async def scan_dependency_security_async(
 
         # ═══ PROGRESS: Step 3/5 - Run scanner ═══
         await _report_progress(ctx, 3, 5, "Running vulnerability scanner...")
-        
+
         # Create analyzer and run (this is the slow part)
         analyzer = DependencySecurityAnalyzer(config_path, project_root)
-        
+
         # Run in executor to avoid blocking
         loop = asyncio.get_event_loop()
         results = await loop.run_in_executor(None, analyzer.run)
@@ -201,7 +201,7 @@ async def scan_dependency_security_async(
 
         # ═══ PROGRESS: Step 5/5 - Finalize ═══
         await _report_progress(ctx, 5, 5, "Finalizing...")
-        
+
         total_vulns = response_data['total_vulnerabilities']
         if total_vulns == 0:
             await _log_info(ctx, "✅ No vulnerabilities found!")
@@ -228,7 +228,7 @@ async def scan_dependency_security_async(
 
 
 def scan_dependency_security(
-    languages: Optional[List[str]] = None,
+    languages: Optional[list[str]] = None,
     config_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
 ) -> str:
@@ -252,7 +252,7 @@ def scan_dependency_security(
         in_async = True
     except RuntimeError:
         pass
-    
+
     if in_async:
         raise RuntimeError("Use scan_dependency_security_async() in async context, or call from sync code")
     return asyncio.run(scan_dependency_security_async(languages, config_path, ctx))

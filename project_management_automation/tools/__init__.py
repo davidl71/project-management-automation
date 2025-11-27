@@ -13,24 +13,24 @@ from pathlib import Path
 try:
     # Try relative import first (when run as module)
     from ..error_handler import (
-        handle_automation_error,
+        AutomationError,
+        ErrorCode,
         format_error_response,
         format_success_response,
+        handle_automation_error,
         log_automation_execution,
-        AutomationError,
-        ErrorCode
     )
 except ImportError:
     # Fallback to absolute import (when run as script)
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     from error_handler import (
-        handle_automation_error,
+        AutomationError,
+        ErrorCode,
         format_error_response,
         format_success_response,
+        handle_automation_error,
         log_automation_execution,
-        AutomationError,
-        ErrorCode
     )
 
 __all__ = [

@@ -21,7 +21,6 @@ from typing import Dict, List, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
-
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -32,7 +31,7 @@ logger = logging.getLogger(__name__)
 class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
     """Intelligent Todo2 alignment analyzer using base class."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
 
         if project_root is None:
@@ -54,14 +53,14 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         self.agentic_tools_path = self.project_root / '.agentic-tools-mcp' / 'tasks' / 'tasks.json'
         self.todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         self.docs_path = self.project_root / 'docs'
-        
+
         # Load goals from PROJECT_GOALS.md (generic) or fall back to defaults
         self.goals_path = self.project_root / 'PROJECT_GOALS.md'
         self.strategy_phases, self.infrastructure_keywords = self._load_project_goals()
 
     def _load_project_goals(self) -> tuple:
         """Load project goals from PROJECT_GOALS.md file.
-        
+
         Returns:
             Tuple of (strategy_phases dict, infrastructure_keywords list)
         """
@@ -74,35 +73,35 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             'refactor', 'cleanup', 'optimization',
             'migration', 'upgrade', 'deprecation'
         ]
-        
+
         if not self.goals_path.exists():
             logger.warning(f"PROJECT_GOALS.md not found at {self.goals_path}, using defaults")
             return self._get_default_phases(), default_infrastructure
-        
+
         try:
-            with open(self.goals_path, 'r') as f:
+            with open(self.goals_path) as f:
                 content = f.read()
-            
+
             phases = {}
             infrastructure = default_infrastructure.copy()
-            
+
             # Parse phases: ### Phase N: Name
             phase_pattern = r'###\s+Phase\s+(\d+):\s+([^\n]+)'
             keyword_pattern = r'\*\*Keywords\*\*:\s*([^\n]+)'
-            
+
             # Find all phase sections
             phase_matches = list(re.finditer(phase_pattern, content))
-            
+
             for i, match in enumerate(phase_matches):
                 phase_num = match.group(1)
                 phase_name = match.group(2).strip()
                 phase_key = f'phase{phase_num}'
-                
+
                 # Find keywords after this phase header
                 start_pos = match.end()
                 end_pos = phase_matches[i + 1].start() if i + 1 < len(phase_matches) else len(content)
                 section_content = content[start_pos:end_pos]
-                
+
                 keyword_match = re.search(keyword_pattern, section_content)
                 if keyword_match:
                     keywords_str = keyword_match.group(1).strip()
@@ -112,7 +111,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
                         'keywords': keywords
                     }
                     logger.debug(f"Loaded {phase_key}: {phase_name} with {len(keywords)} keywords")
-            
+
             # Parse infrastructure keywords section
             infra_section = re.search(
                 r'##\s+Infrastructure Keywords[^\n]*\n(.*?)(?=\n##|\Z)',
@@ -129,19 +128,19 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
                         kw = kw.strip().lower()
                         if kw and kw not in infrastructure:
                             infrastructure.append(kw)
-            
+
             if phases:
                 logger.info(f"Loaded {len(phases)} phases from PROJECT_GOALS.md")
                 return phases, infrastructure
             else:
                 logger.warning("No phases found in PROJECT_GOALS.md, using defaults")
                 return self._get_default_phases(), infrastructure
-                
+
         except Exception as e:
             logger.error(f"Error loading PROJECT_GOALS.md: {e}")
             return self._get_default_phases(), default_infrastructure
-    
-    def _get_default_phases(self) -> Dict:
+
+    def _get_default_phases(self) -> dict:
         """Return default phases for generic projects."""
         return {
             'phase1': {
@@ -174,7 +173,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         """Sequential problem: How do we analyze task alignment?"""
         return "How do we systematically analyze Todo2 task alignment with project goals framework?"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute Todo2 alignment analysis."""
         logger.info("Executing Todo2 alignment analysis...")
 
@@ -206,8 +205,8 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         elif isinstance(priority, str):
             return priority.lower()
         return 'medium'
-    
-    def _normalize_task(self, task: Dict) -> Dict:
+
+    def _normalize_task(self, task: dict) -> dict:
         """Normalize agentic-tools task format to expected format."""
         return {
             'id': task.get('id', 'unknown'),
@@ -219,14 +218,14 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             'completed': task.get('completed', False),
         }
 
-    def _load_todo2_tasks(self) -> List[Dict]:
+    def _load_todo2_tasks(self) -> list[dict]:
         """Load tasks from agentic-tools MCP (preferred) or legacy Todo2 format.
-        
+
         Uses retry logic to handle race conditions when another MCP server
         is writing to the tasks file.
         """
         from .base.mcp_client import load_json_with_retry
-        
+
         # Try agentic-tools MCP format first (preferred) with retry
         data = load_json_with_retry(self.agentic_tools_path, default=None)
         if data is not None:
@@ -234,18 +233,18 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             tasks = [self._normalize_task(t) for t in raw_tasks]
             logger.info(f"Loaded {len(tasks)} tasks from agentic-tools MCP")
             return tasks
-        
+
         # Fall back to legacy Todo2 format with retry
         data = load_json_with_retry(self.todo2_path, default=None)
         if data is not None:
             tasks = data.get('todos', [])
             logger.info(f"Loaded {len(tasks)} tasks from legacy Todo2 format")
             return tasks
-        
+
         logger.info("No task files found - no tasks to analyze")
         return []
 
-    def _analyze_task_alignment(self, tasks: List[Dict]) -> Dict:
+    def _analyze_task_alignment(self, tasks: list[dict]) -> dict:
         """Analyze task alignment."""
         analysis = {
             'total_tasks': len(tasks),
@@ -358,7 +357,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
         return analysis
 
-    def _calculate_alignment_score(self, analysis: Dict) -> float:
+    def _calculate_alignment_score(self, analysis: dict) -> float:
         """Calculate alignment score."""
         if analysis['total_tasks'] == 0:
             return 0.0
@@ -377,7 +376,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
         return round(score, 1)
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights."""
         insights = []
 
@@ -400,7 +399,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
         return '\n'.join(insights)
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate report."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         alignment_score = analysis_results.get('alignment_score', 0)
@@ -425,7 +424,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
         # Generate phase summary
         phase_summary = self._generate_phase_summary(analysis_results)
-        
+
         return f"""# Todo2 Task Alignment Analysis
 
 *Generated: {timestamp}*
@@ -460,20 +459,20 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
 *This report was generated using intelligent automation with Tractatus Thinking, Sequential Thinking, and NetworkX analysis.*
 """
-    
-    def _generate_phase_summary(self, analysis_results: Dict) -> str:
+
+    def _generate_phase_summary(self, analysis_results: dict) -> str:
         """Generate phase-by-phase summary."""
         lines = []
         by_phase = analysis_results.get('by_phase', {})
-        
+
         for phase_key, phase_info in self.strategy_phases.items():
             phase_data = by_phase.get(phase_key, {})
             total = phase_data.get('total', 0)
             high_priority = phase_data.get('high_priority', 0)
-            
+
             status_icon = '✅' if total > 0 else '⬜'
             lines.append(f"| {status_icon} **{phase_info['name']}** | {total} tasks | {high_priority} high-priority |")
-        
+
         if lines:
             header = "| Phase | Tasks | High Priority |\n|-------|-------|---------------|\n"
             return header + '\n'.join(lines)
@@ -512,7 +511,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         except ImportError:
             return None
 
-    def _identify_followup_tasks(self, analysis_results: Dict) -> List[Dict]:
+    def _identify_followup_tasks(self, analysis_results: dict) -> list[dict]:
         """Identify follow-up tasks."""
         followups = []
 
@@ -539,7 +538,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         return followups
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration."""
     if config_path is None:
         from project_management_automation.utils import find_project_root
@@ -552,7 +551,7 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
 
     if config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError:

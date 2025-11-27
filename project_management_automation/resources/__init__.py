@@ -9,15 +9,15 @@ Resources:
 """
 
 from .templates import (
-    register_resource_templates,
-    get_task_by_id,
-    get_tasks_by_status,
-    get_tasks_by_tag,
-    get_tasks_by_priority,
     get_advisor_consultations,
     get_advisor_info,
-    get_memory_by_id,
     get_memories_by_category,
+    get_memory_by_id,
+    get_task_by_id,
+    get_tasks_by_priority,
+    get_tasks_by_status,
+    get_tasks_by_tag,
+    register_resource_templates,
 )
 
 __all__ = [

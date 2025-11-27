@@ -44,7 +44,7 @@ This module documents and enforces consistent naming across tools, prompts, and 
 from typing import Dict, List, Tuple
 
 # Tool name mapping: new_name -> old_name (for backward compatibility)
-TOOL_RENAMES: Dict[str, str] = {
+TOOL_RENAMES: dict[str, str] = {
     # New verb_object names -> old names (aliases)
     "generate_project_scorecard": "project_scorecard",
     "generate_project_overview": "project_overview",
@@ -55,10 +55,10 @@ TOOL_RENAMES: Dict[str, str] = {
 }
 
 # Reverse mapping for lookup
-TOOL_ALIASES: Dict[str, str] = {v: k for k, v in TOOL_RENAMES.items()}
+TOOL_ALIASES: dict[str, str] = {v: k for k, v in TOOL_RENAMES.items()}
 
 # Prompt name mapping: new_name -> old_name
-PROMPT_RENAMES: Dict[str, str] = {
+PROMPT_RENAMES: dict[str, str] = {
     "check_docs": "doc_check",
     "check_docs_quick": "doc_quick",
     "find_duplicates": "dups",
@@ -84,7 +84,7 @@ PROMPT_RENAMES: Dict[str, str] = {
 }
 
 # Reverse mapping for lookup
-PROMPT_ALIASES: Dict[str, str] = {v: k for k, v in PROMPT_RENAMES.items()}
+PROMPT_ALIASES: dict[str, str] = {v: k for k, v in PROMPT_RENAMES.items()}
 
 
 def get_canonical_tool_name(name: str) -> str:
@@ -107,7 +107,7 @@ def get_prompt_alias(name: str) -> str:
     return PROMPT_RENAMES.get(name, name)
 
 
-def validate_tool_name(name: str) -> Tuple[bool, str]:
+def validate_tool_name(name: str) -> tuple[bool, str]:
     """
     Validate a tool name follows verb_object convention.
 
@@ -160,7 +160,7 @@ def validate_tool_name(name: str) -> Tuple[bool, str]:
         return False, f"run_{name}"  # Default suggestion
 
 
-def list_all_conventions() -> Dict[str, List[str]]:
+def list_all_conventions() -> dict[str, list[str]]:
     """List all naming conventions for documentation."""
     return {
         "tool_renames": list(TOOL_RENAMES.items()),

@@ -26,12 +26,12 @@ logger = logging.getLogger(__name__)
 class SprintAutomation(IntelligentAutomationBase):
     """Sprint automation orchestrator."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
         super().__init__(config, "Sprint Automation", project_root)
-        
+
         self.max_iterations = config.get('max_iterations', 10)
         self.auto_approve = config.get('auto_approve', True)
         self.extract_subtasks = config.get('extract_subtasks', True)
@@ -40,7 +40,7 @@ class SprintAutomation(IntelligentAutomationBase):
         self.priority_filter = config.get('priority_filter')
         self.tag_filter = config.get('tag_filter')
         self.dry_run = config.get('dry_run', False)
-        
+
         # Sprint results
         self.sprint_results = {
             'subtasks_extracted': 0,
@@ -63,50 +63,50 @@ class SprintAutomation(IntelligentAutomationBase):
         """Sequential problem: How do we sprint through a project?"""
         return "How do we systematically process all background-capable tasks with minimal prompts?"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute sprint automation workflow."""
         logger.info("Starting sprint automation...")
-        
+
         iteration = 0
         while iteration < self.max_iterations:
             logger.info(f"Sprint iteration {iteration + 1}/{self.max_iterations}")
-            
+
             # Step 1: Extract subtasks
             if self.extract_subtasks:
                 self._extract_subtasks()
-            
+
             # Step 2: Auto-approve safe tasks
             if self.auto_approve:
                 self._auto_approve_tasks()
-            
+
             # Step 3: Run analysis tools
             if self.run_analysis_tools and iteration == 0:  # Only run once
                 self._run_analysis_tools()
-            
+
             # Step 4: Run testing tools
             if self.run_testing_tools and iteration == 0:  # Only run once
                 self._run_testing_tools()
-            
+
             # Step 5: Generate wishlists
             if iteration == 0:  # Only generate once
                 self._generate_ai_wishlist()
                 self._parse_human_wishlist()
                 self._identify_human_contributions()
-            
+
             # Step 6: Process background tasks
             processed = self._process_background_tasks()
             if processed == 0:
                 logger.info("No more background tasks to process")
                 break
-            
+
             iteration += 1
-        
+
         # Step 7: Identify blockers
         self._identify_blockers()
-        
+
         # Generate sprint report
         report = self._generate_sprint_report()
-        
+
         return {
             'status': 'success',
             'iterations': iteration,
@@ -117,26 +117,26 @@ class SprintAutomation(IntelligentAutomationBase):
     def _extract_subtasks(self):
         """Extract background-capable subtasks from parent tasks."""
         logger.info("Extracting subtasks...")
-        
+
         try:
             # Try to use agentic-tools MCP if available
             if hasattr(self, 'mcp_client') and self.mcp_client:
                 # Use MCP to list subtasks
                 # For now, fallback to file-based approach
                 pass
-            
+
             # Fallback: Load tasks from file
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if not todo2_path.exists():
                 logger.warning("Todo2 state file not found, skipping subtask extraction")
                 return
-            
-            with open(todo2_path, 'r') as f:
+
+            with open(todo2_path) as f:
                 data = json.load(f)
-            
+
             todos = data.get('todos', [])
             subtasks_extracted = 0
-            
+
             for task in todos:
                 # Check if task has subtasks in description
                 long_desc = task.get('long_description', '') or task.get('details', '')
@@ -147,16 +147,16 @@ class SprintAutomation(IntelligentAutomationBase):
                         if self._is_background_capable({'name': subtask, 'long_description': ''}):
                             subtasks_extracted += 1
                             logger.info(f"Extracted subtask: {subtask}")
-            
+
             self.sprint_results['subtasks_extracted'] = subtasks_extracted
-            
+
         except Exception as e:
             logger.error(f"Error extracting subtasks: {e}", exc_info=True)
 
-    def _parse_subtasks_from_description(self, description: str) -> List[str]:
+    def _parse_subtasks_from_description(self, description: str) -> list[str]:
         """Parse subtasks from task description."""
         subtasks = []
-        
+
         # Look for bullet points or numbered lists
         lines = description.split('\n')
         for line in lines:
@@ -168,38 +168,38 @@ class SprintAutomation(IntelligentAutomationBase):
                     subtask = match.group(1) or match.group(2)
                     if subtask and len(subtask) > 5:  # Filter out very short items
                         subtasks.append(subtask)
-        
+
         return subtasks
 
     def _auto_approve_tasks(self):
         """Auto-approve tasks that don't need clarification."""
         logger.info("Auto-approving safe tasks...")
-        
+
         try:
             # Use batch_approve_tasks tool
             from project_management_automation.tools.batch_task_approval import batch_approve_tasks
-            
+
             result = batch_approve_tasks(
                 status="Review",
                 new_status="Todo",
                 clarification_none=True,
                 dry_run=self.dry_run
             )
-            
+
             if result.get('success'):
                 approved_count = result.get('approved_count', 0)
                 self.sprint_results['tasks_auto_approved'] = approved_count
                 logger.info(f"Auto-approved {approved_count} tasks")
-            
+
         except Exception as e:
             logger.error(f"Error auto-approving tasks: {e}", exc_info=True)
 
     def _run_analysis_tools(self):
         """Run all analysis tools systematically."""
         logger.info("Running analysis tools...")
-        
+
         results = {}
-        
+
         # 1. Documentation health
         try:
             from project_management_automation.tools.docs_health import check_documentation_health
@@ -208,7 +208,7 @@ class SprintAutomation(IntelligentAutomationBase):
                 results['documentation_health'] = docs_result.get('data', {})
         except Exception as e:
             logger.warning(f"Documentation health check failed: {e}")
-        
+
         # 2. Task alignment
         try:
             from project_management_automation.tools.todo2_alignment import analyze_todo2_alignment
@@ -217,7 +217,7 @@ class SprintAutomation(IntelligentAutomationBase):
                 results['task_alignment'] = alignment_result.get('data', {})
         except Exception as e:
             logger.warning(f"Task alignment analysis failed: {e}")
-        
+
         # 3. Duplicate detection
         try:
             from project_management_automation.tools.duplicate_detection import detect_duplicate_tasks
@@ -226,7 +226,7 @@ class SprintAutomation(IntelligentAutomationBase):
                 results['duplicate_detection'] = dup_result.get('data', {})
         except Exception as e:
             logger.warning(f"Duplicate detection failed: {e}")
-        
+
         # 4. Automation opportunities
         try:
             from project_management_automation.tools.automation_opportunities import find_automation_opportunities
@@ -235,15 +235,15 @@ class SprintAutomation(IntelligentAutomationBase):
                 results['automation_opportunities'] = auto_result.get('data', {})
         except Exception as e:
             logger.warning(f"Automation opportunities failed: {e}")
-        
+
         self.sprint_results['analysis_results'] = results
 
     def _run_testing_tools(self):
         """Run testing tools."""
         logger.info("Running testing tools...")
-        
+
         results = {}
-        
+
         # 1. Run tests
         try:
             from project_management_automation.tools.run_tests import run_tests
@@ -252,7 +252,7 @@ class SprintAutomation(IntelligentAutomationBase):
                 results['test_execution'] = test_result.get('data', {})
         except Exception as e:
             logger.warning(f"Test execution failed: {e}")
-        
+
         # 2. Analyze coverage
         try:
             from project_management_automation.tools.test_coverage import analyze_test_coverage
@@ -261,15 +261,15 @@ class SprintAutomation(IntelligentAutomationBase):
                 results['test_coverage'] = coverage_result.get('data', {})
         except Exception as e:
             logger.warning(f"Coverage analysis failed: {e}")
-        
+
         self.sprint_results['testing_results'] = results
 
     def _generate_ai_wishlist(self):
         """Generate AI wishlist of tasks it wants to work on."""
         logger.info("Generating AI wishlist...")
-        
+
         wishlist = []
-        
+
         # Based on analysis results
         if 'automation_opportunities' in self.sprint_results.get('analysis_results', {}):
             opps = self.sprint_results['analysis_results']['automation_opportunities'].get('opportunities', [])
@@ -281,7 +281,7 @@ class SprintAutomation(IntelligentAutomationBase):
                     'value_score': opp.get('score', 0),
                     'priority': 'high' if opp.get('score', 0) >= 8 else 'medium'
                 })
-        
+
         # Based on test coverage gaps
         if 'test_coverage' in self.sprint_results.get('testing_results', {}):
             coverage_data = self.sprint_results['testing_results']['test_coverage']
@@ -294,7 +294,7 @@ class SprintAutomation(IntelligentAutomationBase):
                     'missing_lines': gap.get('missing', 0),
                     'priority': 'high' if gap.get('coverage', 0) < 50 else 'medium'
                 })
-        
+
         # Based on documentation health
         if 'documentation_health' in self.sprint_results.get('analysis_results', {}):
             docs_data = self.sprint_results['analysis_results']['documentation_health']
@@ -305,16 +305,16 @@ class SprintAutomation(IntelligentAutomationBase):
                     'broken_links': docs_data.get('link_validation', {}).get('broken_internal', 0),
                     'priority': 'high' if docs_data.get('health_score', 100) < 70 else 'medium'
                 })
-        
+
         self.sprint_results['ai_wishlist'] = wishlist
         logger.info(f"Generated {len(wishlist)} AI wishlist items")
 
     def _parse_human_wishlist(self):
         """Parse human wishlist from external sources."""
         logger.info("Parsing human wishlist...")
-        
+
         wishlist = []
-        
+
         # 1. Parse from WISHLIST.md or TODO.md files
         for filename in ['WISHLIST.md', 'TODO.md', 'WISH_LIST.md', 'docs/WISHLIST.md']:
             wishlist_path = self.project_root / filename
@@ -322,26 +322,26 @@ class SprintAutomation(IntelligentAutomationBase):
                 items = self._parse_wishlist_file(wishlist_path)
                 wishlist.extend(items)
                 logger.info(f"Found {len(items)} items in {filename}")
-        
+
         # 2. Parse from git commit messages (recent commits with "wish" or "want")
         git_wishlist = self._parse_git_wishlist()
         wishlist.extend(git_wishlist)
-        
+
         # 3. Parse from code comments (TODO/FIXME with wish indicators)
         comment_wishlist = self._parse_comment_wishlist()
         wishlist.extend(comment_wishlist)
-        
+
         self.sprint_results['human_wishlist'] = wishlist
         logger.info(f"Parsed {len(wishlist)} human wishlist items")
 
-    def _parse_wishlist_file(self, file_path: Path) -> List[Dict]:
+    def _parse_wishlist_file(self, file_path: Path) -> list[dict]:
         """Parse wishlist from markdown file."""
         items = []
-        
+
         try:
             content = file_path.read_text()
             lines = content.split('\n')
-            
+
             for line in lines:
                 line = line.strip()
                 # Match: - wish item, * wish item, etc.
@@ -355,7 +355,7 @@ class SprintAutomation(IntelligentAutomationBase):
                             priority = 'high'
                         elif 'low' in item_text.lower() or 'nice' in item_text.lower():
                             priority = 'low'
-                        
+
                         items.append({
                             'type': 'human_wishlist',
                             'source': file_path.name,
@@ -364,13 +364,13 @@ class SprintAutomation(IntelligentAutomationBase):
                         })
         except Exception as e:
             logger.warning(f"Error parsing wishlist file {file_path}: {e}")
-        
+
         return items
 
-    def _parse_git_wishlist(self) -> List[Dict]:
+    def _parse_git_wishlist(self) -> list[dict]:
         """Parse wishlist items from git commit messages."""
         items = []
-        
+
         try:
             # Get last 50 commit messages
             result = subprocess.run(
@@ -380,7 +380,7 @@ class SprintAutomation(IntelligentAutomationBase):
                 text=True,
                 timeout=10
             )
-            
+
             if result.returncode == 0:
                 commits = result.stdout.split('\n')
                 for commit in commits:
@@ -394,13 +394,13 @@ class SprintAutomation(IntelligentAutomationBase):
                         })
         except Exception as e:
             logger.warning(f"Error parsing git wishlist: {e}")
-        
+
         return items
 
-    def _parse_comment_wishlist(self) -> List[Dict]:
+    def _parse_comment_wishlist(self) -> list[dict]:
         """Parse wishlist items from code comments."""
         items = []
-        
+
         try:
             # Search for TODO/FIXME comments with wish indicators
             for ext in ['*.py', '*.js', '*.ts', '*.cpp', '*.h', '*.md']:
@@ -424,28 +424,28 @@ class SprintAutomation(IntelligentAutomationBase):
                             continue
         except Exception as e:
             logger.warning(f"Error parsing comment wishlist: {e}")
-        
+
         return items[:20]  # Limit to 20 items
 
     def _identify_human_contributions(self):
         """Identify tasks better handled by humans."""
         logger.info("Identifying human contribution opportunities...")
-        
+
         contributions = []
-        
+
         # Load tasks
         todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         if todo2_path.exists():
-            with open(todo2_path, 'r') as f:
+            with open(todo2_path) as f:
                 data = json.load(f)
-            
+
             todos = data.get('todos', [])
-            
+
             for task in todos:
                 name = task.get('name', '').lower()
                 long_desc = task.get('long_description', '').lower() or task.get('details', '').lower()
                 status = task.get('status', '')
-                
+
                 # Human contribution indicators
                 is_design = 'design' in name and any(x in name for x in ['framework', 'system', 'strategy', 'architecture', 'ui', 'ux'])
                 is_creative = any(x in name for x in ['creative', 'art', 'design', 'visual', 'branding'])
@@ -453,7 +453,7 @@ class SprintAutomation(IntelligentAutomationBase):
                 is_strategy = 'strategy' in name or 'strategy' in long_desc
                 is_decision = any(x in name for x in ['decide', 'choose', 'select', 'recommend']) and 'implement' not in name
                 needs_clarification = 'clarification required' in long_desc
-                
+
                 if (is_design or is_creative or is_user_preference or is_strategy or is_decision) and \
                    (status == 'Review' or needs_clarification):
                     contributions.append({
@@ -463,15 +463,15 @@ class SprintAutomation(IntelligentAutomationBase):
                         'priority': task.get('priority', 'medium'),
                         'status': status
                     })
-        
+
         self.sprint_results['human_contributions'] = contributions
         logger.info(f"Identified {len(contributions)} human contribution opportunities")
 
-    def _get_human_contribution_reason(self, task: Dict) -> str:
+    def _get_human_contribution_reason(self, task: dict) -> str:
         """Get reason why task needs human contribution."""
         name = task.get('name', '').lower()
         long_desc = task.get('long_description', '').lower() or task.get('details', '').lower()
-        
+
         if 'design' in name and 'framework' in name:
             return "Design decision required (framework selection)"
         elif 'design' in name and 'ui' in name:
@@ -488,32 +488,32 @@ class SprintAutomation(IntelligentAutomationBase):
     def _process_background_tasks(self) -> int:
         """Process background-capable tasks."""
         logger.info("Processing background tasks...")
-        
+
         # Load tasks
         todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         if not todo2_path.exists():
             return 0
-        
-        with open(todo2_path, 'r') as f:
+
+        with open(todo2_path) as f:
             data = json.load(f)
-        
+
         todos = data.get('todos', [])
-        
+
         # Filter background-capable tasks
         background_tasks = [t for t in todos if self._is_background_capable(t)]
-        
+
         # Apply filters
         if self.priority_filter:
             background_tasks = [t for t in background_tasks if t.get('priority') == self.priority_filter]
-        
+
         if self.tag_filter:
-            background_tasks = [t for t in background_tasks if 
+            background_tasks = [t for t in background_tasks if
                               any(tag in t.get('tags', []) for tag in self.tag_filter)]
-        
+
         # Sort by priority
         priority_order = {'high': 3, 'medium': 2, 'low': 1}
         background_tasks.sort(key=lambda t: priority_order.get(t.get('priority', 'medium'), 2), reverse=True)
-        
+
         # Process up to 10 tasks
         processed = 0
         actionable_statuses = ['Todo', 'todo', 'pending', 'Pending']
@@ -525,55 +525,55 @@ class SprintAutomation(IntelligentAutomationBase):
                 processed += 1
                 task_name = task.get('name') or task.get('content', 'Unknown')
                 logger.info(f"Processing task: {task_name}")
-        
+
         self.sprint_results['tasks_processed'] += processed
         return processed
 
-    def _is_background_capable(self, task: Dict) -> bool:
+    def _is_background_capable(self, task: dict) -> bool:
         """Check if task is background-capable."""
         # Support both 'name' and 'content' fields (different todo formats)
         name = (task.get('name', '') or task.get('content', '')).lower()
         long_desc = (task.get('long_description', '') or task.get('details', '')).lower()
         status = task.get('status', '')
-        
+
         # Skip if not in actionable status
         actionable_statuses = ['Todo', 'todo', 'pending', 'Pending']
         if status not in actionable_statuses:
             return False
-        
+
         # Interactive indicators (exclude)
         needs_clarification = 'clarification required' in long_desc
         needs_user_input = 'user input' in long_desc or 'user interaction' in long_desc
         is_design = 'design' in name and any(x in name for x in ['framework', 'system', 'strategy'])
         is_decision = any(x in name for x in ['decide', 'choose', 'select']) and 'implement' not in name
-        
+
         is_interactive = needs_clarification or needs_user_input or (is_design and 'implement' not in name) or is_decision
-        
+
         # Background indicators (include)
         is_research = 'research' in name
         is_implementation = any(x in name for x in ['implement', 'create', 'add', 'update', 'fix', 'refactor'])
         is_testing = 'test' in name or 'testing' in name
         is_documentation = 'document' in name or 'documentation' in name
         is_configuration = 'config' in name or 'configure' in name
-        
+
         is_background = (is_research or is_implementation or is_testing or is_documentation or is_configuration) and not is_interactive
-        
+
         return is_background
 
     def _identify_blockers(self):
         """Identify tasks that are blocked."""
         logger.info("Identifying blockers...")
-        
+
         blockers = []
-        
+
         # Load tasks
         todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
         if todo2_path.exists():
-            with open(todo2_path, 'r') as f:
+            with open(todo2_path) as f:
                 data = json.load(f)
-            
+
             todos = data.get('todos', [])
-            
+
             for task in todos:
                 if task.get('status') == 'Review':
                     task.get('long_description', '') or task.get('details', '')
@@ -583,15 +583,15 @@ class SprintAutomation(IntelligentAutomationBase):
                         'reason': self._get_blocker_reason(task),
                         'priority': task.get('priority', 'medium')
                     })
-        
+
         self.sprint_results['blockers_identified'] = blockers
         logger.info(f"Identified {len(blockers)} blockers")
 
-    def _get_blocker_reason(self, task: Dict) -> str:
+    def _get_blocker_reason(self, task: dict) -> str:
         """Get reason why task is blocked."""
         long_desc = task.get('long_description', '').lower() or task.get('details', '').lower()
         name = task.get('name', '').lower()
-        
+
         if 'clarification required' in long_desc:
             return "Clarification needed"
         elif 'design' in name:
@@ -619,46 +619,46 @@ class SprintAutomation(IntelligentAutomationBase):
             f"- **Blockers Identified:** {len(self.sprint_results['blockers_identified'])}",
             "",
         ]
-        
+
         # Analysis Results
         if self.sprint_results.get('analysis_results'):
             report_lines.extend([
                 "## Analysis Results",
                 ""
             ])
-            
+
             if 'documentation_health' in self.sprint_results['analysis_results']:
                 docs = self.sprint_results['analysis_results']['documentation_health']
                 report_lines.append(f"- **Documentation Health:** {docs.get('health_score', 0)}/100")
-            
+
             if 'task_alignment' in self.sprint_results['analysis_results']:
                 alignment = self.sprint_results['analysis_results']['task_alignment']
                 misaligned = alignment.get('misaligned_count', 0)
                 report_lines.append(f"- **Task Alignment:** {misaligned} misaligned tasks")
-            
+
             if 'duplicate_detection' in self.sprint_results['analysis_results']:
                 dupes = self.sprint_results['analysis_results']['duplicate_detection']
                 dup_count = dupes.get('total_duplicates_found', 0)
                 report_lines.append(f"- **Duplicates Found:** {dup_count} (auto-fixed)")
-            
+
             report_lines.append("")
-        
+
         # Testing Results
         if self.sprint_results.get('testing_results'):
             report_lines.extend([
                 "## Testing Results",
                 ""
             ])
-            
+
             if 'test_coverage' in self.sprint_results['testing_results']:
                 coverage = self.sprint_results['testing_results']['test_coverage']
                 total_coverage = coverage.get('total_coverage', 0)
                 report_lines.append(f"- **Test Coverage:** {total_coverage:.1f}%")
                 if not coverage.get('meets_threshold', True):
-                    report_lines.append(f"  - ⚠️ Below 80% threshold")
-            
+                    report_lines.append("  - ⚠️ Below 80% threshold")
+
             report_lines.append("")
-        
+
         # AI Wishlist
         if self.sprint_results.get('ai_wishlist'):
             report_lines.extend([
@@ -667,12 +667,12 @@ class SprintAutomation(IntelligentAutomationBase):
                 "Tasks the AI wants to work on:",
                 ""
             ])
-            
+
             for item in self.sprint_results['ai_wishlist'][:10]:
                 report_lines.append(f"- **{item.get('type', 'unknown')}**: {item.get('name', item.get('text', 'Unknown'))} (Priority: {item.get('priority', 'medium')})")
-            
+
             report_lines.append("")
-        
+
         # Human Wishlist
         if self.sprint_results.get('human_wishlist'):
             report_lines.extend([
@@ -681,12 +681,12 @@ class SprintAutomation(IntelligentAutomationBase):
                 "Items from external sources:",
                 ""
             ])
-            
+
             for item in self.sprint_results['human_wishlist'][:10]:
                 report_lines.append(f"- **{item.get('source', 'unknown')}**: {item.get('text', 'Unknown')[:100]}...")
-            
+
             report_lines.append("")
-        
+
         # Human Contributions
         if self.sprint_results.get('human_contributions'):
             report_lines.extend([
@@ -695,13 +695,13 @@ class SprintAutomation(IntelligentAutomationBase):
                 "Tasks better handled by humans:",
                 ""
             ])
-            
+
             for contrib in self.sprint_results['human_contributions'][:10]:
                 report_lines.append(f"- **{contrib.get('task_id', 'Unknown')}**: {contrib.get('name', 'Unknown')}")
                 report_lines.append(f"  - Reason: {contrib.get('reason', 'Unknown')}")
-            
+
             report_lines.append("")
-        
+
         # Blockers
         if self.sprint_results.get('blockers_identified'):
             report_lines.extend([
@@ -710,13 +710,13 @@ class SprintAutomation(IntelligentAutomationBase):
                 "Tasks requiring human input:",
                 ""
             ])
-            
+
             for blocker in self.sprint_results['blockers_identified'][:10]:
                 report_lines.append(f"- **{blocker.get('task_id', 'Unknown')}**: {blocker.get('name', 'Unknown')}")
                 report_lines.append(f"  - Reason: {blocker.get('reason', 'Unknown')}")
-            
+
             report_lines.append("")
-        
+
         # Next Actions
         report_lines.extend([
             "## Next Actions",
@@ -726,54 +726,54 @@ class SprintAutomation(IntelligentAutomationBase):
             f"- Process {len(self.sprint_results.get('ai_wishlist', []))} AI wishlist items",
             ""
         ])
-        
+
         return '\n'.join(report_lines)
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from sprint results."""
         insights = []
-        
+
         # Insights from results
         results = analysis_results.get('results', {})
-        
+
         if results.get('subtasks_extracted', 0) > 0:
             insights.append(f"Extracted {results['subtasks_extracted']} background-capable subtasks from parent tasks")
-        
+
         if results.get('tasks_auto_approved', 0) > 0:
             insights.append(f"Auto-approved {results['tasks_auto_approved']} tasks that don't need clarification")
-        
+
         if results.get('tasks_processed', 0) > 0:
             insights.append(f"Processed {results['tasks_processed']} background tasks")
-        
+
         blockers = results.get('blockers_identified', [])
         if blockers:
             insights.append(f"Identified {len(blockers)} blockers requiring human input")
-        
+
         human_contribs = results.get('human_contributions', [])
         if human_contribs:
             insights.append(f"Found {len(human_contribs)} tasks better handled by humans")
-        
+
         ai_wishlist = results.get('ai_wishlist', [])
         if ai_wishlist:
             insights.append(f"Generated {len(ai_wishlist)} AI wishlist items")
-        
+
         human_wishlist = results.get('human_wishlist', [])
         if human_wishlist:
             insights.append(f"Parsed {len(human_wishlist)} human wishlist items from external sources")
-        
+
         return '\n'.join(insights) if insights else "Sprint automation completed successfully"
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate sprint report."""
         # Use the existing _generate_sprint_report method
         return self._generate_sprint_report()
 
-    def _format_findings(self, analysis_results: Dict) -> str:
+    def _format_findings(self, analysis_results: dict) -> str:
         """Format sprint results."""
         return json.dumps(analysis_results, indent=2)
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration."""
     default_config = {
         'max_iterations': 10,
@@ -785,15 +785,15 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
         'tag_filter': None,
         'dry_run': False
     }
-    
+
     if config_path and config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError:
             pass
-    
+
     return default_config
 
 
@@ -815,7 +815,7 @@ def main():
     parser.add_argument('--output', type=str)
     parser.add_argument('--config', type=Path)
     args = parser.parse_args()
-    
+
     config = load_config(args.config)
     config.update({
         'max_iterations': args.max_iterations,
@@ -827,26 +827,26 @@ def main():
         'tag_filter': args.tag,
         'dry_run': args.dry_run
     })
-    
+
     automation = SprintAutomation(config)
-    
+
     try:
         results = automation.run()
-        
+
         # Write report
         if args.output:
             output_path = Path(args.output)
         else:
             output_path = automation.project_root / 'docs' / 'SPRINT_AUTOMATION_REPORT.md'
-        
+
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, 'w') as f:
             f.write(results.get('report', ''))
-        
-        print(f"✅ Sprint automation complete")
+
+        print("✅ Sprint automation complete")
         print(f"📄 Report written to: {output_path}")
         print(json.dumps(results.get('results', {}), indent=2))
-        
+
         sys.exit(0)
     except Exception as e:
         logger.error(f"Error running sprint automation: {e}", exc_info=True)

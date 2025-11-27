@@ -25,7 +25,7 @@ except ImportError:
 
 
 def setup_pattern_triggers(
-    patterns: Optional[Dict[str, Dict]] = None,
+    patterns: Optional[dict[str, dict]] = None,
     config_path: Optional[str] = None,
     install: bool = True,
     dry_run: bool = False
@@ -52,7 +52,7 @@ def setup_pattern_triggers(
     if config_path:
         config_file = Path(config_path)
         if config_file.exists():
-            with open(config_file, 'r') as f:
+            with open(config_file) as f:
                 file_patterns = json.load(f)
                 patterns.update(file_patterns)
 
@@ -105,7 +105,7 @@ def setup_pattern_triggers(
     return json.dumps(results, indent=2)
 
 
-def _get_default_patterns() -> Dict[str, Dict]:
+def _get_default_patterns() -> dict[str, dict]:
     """Get default pattern configurations."""
     return {
         "file_patterns": {
@@ -181,10 +181,10 @@ def _get_default_patterns() -> Dict[str, Dict]:
     }
 
 
-def _extract_tools(pattern_config: Dict) -> List[str]:
+def _extract_tools(pattern_config: dict) -> list[str]:
     """Extract tool names from pattern configuration."""
     tools = []
-    for pattern, config in pattern_config.items():
+    for _pattern, config in pattern_config.items():
         if isinstance(config, dict):
             if "tools" in config:
                 tools.extend(config["tools"])
@@ -197,8 +197,8 @@ def _extract_tools(pattern_config: Dict) -> List[str]:
 
 def _setup_git_hooks_integration(
     project_root: Path,
-    patterns: Dict[str, Dict],
-    results: Dict
+    patterns: dict[str, dict],
+    results: dict
 ) -> None:
     """Setup git hooks integration for pattern triggers."""
     if "git_events" not in patterns:
@@ -222,8 +222,8 @@ def _setup_git_hooks_integration(
 
 def _setup_file_watcher_integration(
     project_root: Path,
-    patterns: Dict[str, Dict],
-    results: Dict
+    patterns: dict[str, dict],
+    results: dict
 ) -> None:
     """Setup file watcher integration for pattern triggers."""
     if "file_patterns" not in patterns:
@@ -253,8 +253,8 @@ def _setup_file_watcher_integration(
 
 def _setup_task_status_integration(
     project_root: Path,
-    patterns: Dict[str, Dict],
-    results: Dict
+    patterns: dict[str, dict],
+    results: dict
 ) -> None:
     """Setup task status change integration."""
     if "task_status_changes" not in patterns:
@@ -268,9 +268,9 @@ def _setup_task_status_integration(
     }
 
 
-def _generate_file_watcher_script(file_patterns: Dict) -> str:
+def _generate_file_watcher_script(file_patterns: dict) -> str:
     """Generate file watcher script content."""
-    return f"""#!/usr/bin/env python3
+    return """#!/usr/bin/env python3
 \"\"\"
 Exarp File Watcher
 
@@ -289,11 +289,11 @@ CONFIG_FILE = Path(__file__).parent.parent / ".cursor" / "automa_patterns.json"
 def load_patterns() -> Dict:
     \"\"\"Load pattern configuration.\"\"\"
     if not CONFIG_FILE.exists():
-        return {{}}
+        return {}
 
     with open(CONFIG_FILE, 'r') as f:
         config = json.load(f)
-        return config.get("file_patterns", {{}})
+        return config.get("file_patterns", {})
 
 def check_file_changes() -> List[Dict]:
     \"\"\"Check for file changes and return matching patterns.\"\"\"
@@ -305,7 +305,7 @@ def trigger_tool(tool_name: str) -> bool:
     \"\"\"Trigger an exarp tool.\"\"\"
     # This is a placeholder - implement actual tool triggering
     # For now, just prints what would be triggered
-    print(f"Would trigger: {{tool_name}}")
+    print(f"Would trigger: {tool_name}")
     return True
 
 if __name__ == "__main__":

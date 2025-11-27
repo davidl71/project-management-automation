@@ -11,15 +11,15 @@ Memory Integration:
 """
 
 import json
-import subprocess
-import os
-import sys
-import socket
-from pathlib import Path
-from typing import Dict, List, Optional, Any
-from datetime import datetime
-import time
 import logging
+import os
+import socket
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 nightly_logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ except ImportError:
         pass
 
 
-def _get_local_ip_addresses() -> List[str]:
+def _get_local_ip_addresses() -> list[str]:
     """Get all local IP addresses (excluding localhost)."""
     local_ips = []
 
@@ -157,10 +157,10 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         self.batch_script = self.project_root / "scripts" / "batch_update_todos.py"
         self.agent_hostnames = self._load_agent_hostnames()
 
-    def _load_agent_hostnames(self) -> Dict[str, str]:
+    def _load_agent_hostnames(self) -> dict[str, str]:
         """Load agent hostname configuration from environment or config file."""
         import os
-        
+
         # Load from environment variable (JSON format)
         # Format: EXARP_AGENT_HOSTNAMES='{"ubuntu": {"hostname": "user@host", "project_path": "~/project", "type": "ubuntu"}}'
         env_hostnames = os.environ.get("EXARP_AGENT_HOSTNAMES", "{}")
@@ -181,7 +181,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
                 pass
 
         # Auto-detect local agents and mark them appropriately
-        for agent_name, agent_config in default_hostnames.items():
+        for _agent_name, agent_config in default_hostnames.items():
             hostname = agent_config.get("hostname", "")
             if hostname and _is_local_host(hostname):
                 # This is the local machine, mark as local
@@ -191,24 +191,24 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return default_hostnames
 
-    def _load_todo2_state(self) -> Dict[str, Any]:
+    def _load_todo2_state(self) -> dict[str, Any]:
         """Load TODO2 state file."""
         if not self.todo2_state_file.exists():
             return {"todos": []}
 
         try:
-            with open(self.todo2_state_file, 'r') as f:
+            with open(self.todo2_state_file) as f:
                 return json.load(f)
         except Exception as e:
             return {"todos": [], "error": str(e)}
 
-    def _save_todo2_state(self, state: Dict[str, Any]) -> bool:
+    def _save_todo2_state(self, state: dict[str, Any]) -> bool:
         """Save TODO2 state file."""
         try:
             # Create backup
             if self.todo2_state_file.exists():
                 backup_file = self.todo2_state_file.with_suffix('.json.bak')
-                with open(self.todo2_state_file, 'r') as f:
+                with open(self.todo2_state_file) as f:
                     backup_file.write_text(f.read())
 
             with open(self.todo2_state_file, 'w') as f:
@@ -217,7 +217,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         except Exception:
             return False
 
-    def _is_background_capable(self, task: Dict[str, Any]) -> bool:
+    def _is_background_capable(self, task: dict[str, Any]) -> bool:
         """Determine if task can run in background."""
         task_id = task.get('id', '')
         name = task.get('name', '').lower()
@@ -254,7 +254,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return is_background
 
-    def _move_to_review(self, task: Dict[str, Any], reason: str) -> Dict[str, Any]:
+    def _move_to_review(self, task: dict[str, Any], reason: str) -> dict[str, Any]:
         """Move task to Review status."""
         task['status'] = 'Review'
 
@@ -286,7 +286,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return task
 
-    def _recall_task_memories(self, task_id: str) -> Dict[str, Any]:
+    def _recall_task_memories(self, task_id: str) -> dict[str, Any]:
         """Recall memories related to a task before execution."""
         try:
             from .session_memory import recall_task_context
@@ -294,16 +294,16 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         except ImportError:
             nightly_logger.debug(f"Session memory not available for task {task_id}")
             return {"success": False, "error": "Memory system not available"}
-    
-    def _save_task_execution_memory(self, task: Dict[str, Any], result: Dict[str, Any]) -> Dict[str, Any]:
+
+    def _save_task_execution_memory(self, task: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
         """Save task execution result as memory."""
         try:
             from .session_memory import save_session_insight
-            
+
             task_id = task.get('id', 'unknown')
             task_title = task.get('title', 'Untitled task')
             status = result.get('status', 'unknown')
-            
+
             content = f"""Nightly automation executed task.
 
 ## Task
@@ -316,7 +316,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 ## Notes
 {result.get('note', 'No additional notes')}
 """
-            
+
             return save_session_insight(
                 title=f"Nightly: {task_title[:50]}",
                 content=content,
@@ -328,7 +328,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
             nightly_logger.debug("Session memory not available for saving execution result")
             return {"success": False, "error": "Memory system not available"}
 
-    def _execute_task_on_host(self, task: Dict[str, Any], host_info: Dict[str, str]) -> Dict[str, Any]:
+    def _execute_task_on_host(self, task: dict[str, Any], host_info: dict[str, str]) -> dict[str, Any]:
         """Execute a task on a specific host via SSH."""
         task_id = task.get('id', '')
         hostname = host_info.get('hostname', '')
@@ -366,7 +366,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return result
 
-    def _update_task_status(self, task: Dict[str, Any], new_status: str, result_comment: Optional[str] = None) -> Dict[str, Any]:
+    def _update_task_status(self, task: dict[str, Any], new_status: str, result_comment: Optional[str] = None) -> dict[str, Any]:
         """Update task status in TODO2 state."""
         old_status = task.get('status', 'Todo')
         task['status'] = new_status
@@ -398,7 +398,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return task
 
-    def _check_working_copy_health(self) -> Dict[str, Any]:
+    def _check_working_copy_health(self) -> dict[str, Any]:
         """Check working copy health before task execution."""
         try:
             from tools.working_copy_health import check_working_copy_health
@@ -415,9 +415,9 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         max_tasks_per_host: int = 5,
         max_parallel_tasks: int = 10,
         priority_filter: Optional[str] = None,
-        tag_filter: Optional[List[str]] = None,
+        tag_filter: Optional[list[str]] = None,
         dry_run: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Run nightly automation across parallel hosts.
 
@@ -581,7 +581,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
                 'tasks_assigned': len(assigned_tasks),
                 'tasks_moved_to_review': len(moved_to_review),
                 'tasks_batch_approved': batch_approved_count,
-                'hosts_used': len(set(a['host'] for a in task_assignments.values())),
+                'hosts_used': len({a['host'] for a in task_assignments.values()}),
                 'working_copy_warnings': working_copy_status.get('summary', {}).get('warning_agents', 0)
             },
             'assigned_tasks': [
@@ -602,12 +602,12 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
             self._save_nightly_summary(results)
 
         return results
-    
-    def _save_nightly_summary(self, results: Dict[str, Any]) -> Dict[str, Any]:
+
+    def _save_nightly_summary(self, results: dict[str, Any]) -> dict[str, Any]:
         """Save nightly automation summary as memory."""
         try:
             from .session_memory import save_session_insight
-            
+
             summary = results.get('summary', {})
             content = f"""Nightly automation run completed.
 
@@ -624,7 +624,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 ## Remaining Background Tasks
 {results.get('background_tasks_remaining', 0)} tasks remaining for future runs.
 """
-            
+
             return save_session_insight(
                 title=f"Nightly: {summary.get('tasks_assigned', 0)} assigned, {summary.get('tasks_batch_approved', 0)} approved",
                 content=content,
@@ -640,9 +640,9 @@ def run_nightly_task_automation(
     max_tasks_per_host: int = 5,
     max_parallel_tasks: int = 10,
     priority_filter: Optional[str] = None,
-    tag_filter: Optional[List[str]] = None,
+    tag_filter: Optional[list[str]] = None,
     dry_run: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     MCP Tool: Run nightly task automation across parallel hosts.
 

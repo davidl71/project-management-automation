@@ -14,7 +14,7 @@ Usage:
         log_info,
         log_warning,
     )
-    
+
     @mcp.tool()
     async def my_tool(data: str, ctx: Context) -> str:
         await log_info(ctx, "Starting processing...")
@@ -25,7 +25,7 @@ Usage:
 """
 
 import logging
-from typing import Any, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, List, Optional
 
 if TYPE_CHECKING:
     try:
@@ -48,7 +48,7 @@ async def report_progress(
 ) -> None:
     """
     Report progress to the client.
-    
+
     Args:
         ctx: FastMCP Context object
         progress: Current progress value
@@ -65,25 +65,25 @@ async def report_progress(
 class ProgressTracker:
     """
     Helper class for tracking progress across multiple steps.
-    
+
     Usage:
         tracker = ProgressTracker(ctx, total_steps=5)
         await tracker.step("Loading data")
         await tracker.step("Processing")
         await tracker.step("Saving results")
     """
-    
+
     def __init__(self, ctx: "Context", total_steps: int):
         self.ctx = ctx
         self.total_steps = total_steps
         self.current_step = 0
-    
+
     async def step(self, message: Optional[str] = None) -> None:
         """Advance to next step and report progress."""
         self.current_step += 1
         progress = int((self.current_step / self.total_steps) * 100)
         await report_progress(self.ctx, progress, 100, message)
-    
+
     async def set_progress(self, percent: int, message: Optional[str] = None) -> None:
         """Set progress to specific percentage."""
         await report_progress(self.ctx, percent, 100, message)
@@ -159,11 +159,11 @@ def set_state(ctx: "Context", key: str, value: Any) -> None:
 async def read_resource(ctx: "Context", uri: str) -> Optional[str]:
     """
     Read a resource by URI.
-    
+
     Args:
         ctx: FastMCP Context object
         uri: Resource URI (e.g., "tasks://T-123")
-    
+
     Returns:
         Resource content or None if not found
     """
@@ -177,7 +177,7 @@ async def read_resource(ctx: "Context", uri: str) -> Optional[str]:
     return None
 
 
-async def list_resources(ctx: "Context") -> List[str]:
+async def list_resources(ctx: "Context") -> list[str]:
     """List available resource URIs."""
     try:
         if hasattr(ctx, "list_resources"):
@@ -199,15 +199,15 @@ async def sample_llm(
 ) -> Optional[str]:
     """
     Request the client's LLM to process a prompt.
-    
+
     This allows tools to leverage the connected LLM for
     analysis, summarization, or decision-making.
-    
+
     Args:
         ctx: FastMCP Context object
         prompt: Prompt to send to the LLM
         max_tokens: Maximum response tokens
-    
+
     Returns:
         LLM response text or None if not available
     """
@@ -253,8 +253,8 @@ def get_session_id(ctx: "Context") -> Optional[str]:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from dataclasses import dataclass
-from typing import TypeVar
 from enum import Enum
+from typing import TypeVar
 
 T = TypeVar("T")
 
@@ -280,18 +280,18 @@ async def elicit(
 ) -> ElicitResult:
     """
     Request user input through the client.
-    
+
     Elicitation allows tools to interactively gather information
     from users during execution.
-    
+
     Args:
         ctx: FastMCP Context object
         message: Message to display to user
         response_type: Expected response type (str, int, bool, or dataclass)
-    
+
     Returns:
         ElicitResult with action and data
-    
+
     Example:
         result = await elicit(ctx, "Enter your name:", str)
         if result.action == ElicitAction.ACCEPT:
@@ -306,7 +306,7 @@ async def elicit(
             )
     except Exception as e:
         logger.debug(f"Elicitation not available: {e}")
-    
+
     # Fallback: return decline (elicitation not supported)
     return ElicitResult(action=ElicitAction.DECLINE)
 
@@ -317,11 +317,11 @@ async def elicit_confirmation(
 ) -> bool:
     """
     Request yes/no confirmation from user.
-    
+
     Args:
         ctx: FastMCP Context object
         message: Confirmation message
-    
+
     Returns:
         True if accepted, False otherwise
     """
@@ -332,24 +332,24 @@ async def elicit_confirmation(
 async def elicit_choice(
     ctx: "Context",
     message: str,
-    choices: List[str],
+    choices: list[str],
 ) -> Optional[str]:
     """
     Request user to select from choices.
-    
+
     Args:
         ctx: FastMCP Context object
         message: Selection message
         choices: List of options
-    
+
     Returns:
         Selected choice or None if cancelled
     """
-    
+
     # Build choice type dynamically
     choice_str = f"Select one of: {', '.join(choices)}"
     result = await elicit(ctx, f"{message}\n{choice_str}", str)
-    
+
     if result.action == ElicitAction.ACCEPT and result.data in choices:
         return result.data
     return None
@@ -359,13 +359,13 @@ async def elicit_choice(
 # ROOTS (Filesystem Access)
 # ═══════════════════════════════════════════════════════════════════════════════
 
-async def list_roots(ctx: "Context") -> List[str]:
+async def list_roots(ctx: "Context") -> list[str]:
     """
     List filesystem roots available to the server.
-    
+
     Roots define which directories the client has given
     the server access to.
-    
+
     Returns:
         List of root paths
     """

@@ -9,7 +9,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,7 +23,7 @@ except ImportError:
 
 
 def setup_git_hooks(
-    hooks: Optional[List[str]] = None,
+    hooks: Optional[list[str]] = None,
     install: bool = True,
     dry_run: bool = False
 ) -> str:
@@ -104,7 +104,7 @@ def setup_git_hooks(
 
     if mcp_config_path.exists():
         try:
-            with open(mcp_config_path, 'r') as f:
+            with open(mcp_config_path) as f:
                 mcp_config = json.load(f)
                 if "mcpServers" in mcp_config and "exarp" in mcp_config["mcpServers"]:
                     exarp_config = mcp_config["mcpServers"]["exarp"]
@@ -172,7 +172,7 @@ def setup_git_hooks(
 
 def _generate_hook_script(
     hook_name: str,
-    config: Dict[str, Any],
+    config: dict[str, Any],
     exarp_path: Path,
     project_root: Path
 ) -> str:

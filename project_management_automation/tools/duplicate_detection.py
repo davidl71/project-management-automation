@@ -11,16 +11,16 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
 
-def _save_duplicate_detection_memory(response_data: Dict[str, Any], auto_fix: bool) -> Dict[str, Any]:
+def _save_duplicate_detection_memory(response_data: dict[str, Any], auto_fix: bool) -> dict[str, Any]:
     """Save duplicate detection results as memory for future reference."""
     try:
         from .session_memory import save_session_insight
-        
+
         content = f"""Duplicate task detection completed.
 
 ## Results
@@ -39,7 +39,7 @@ def _save_duplicate_detection_memory(response_data: Dict[str, Any], auto_fix: bo
 ## Report
 {response_data.get('report_path', 'N/A')}
 """
-        
+
         return save_session_insight(
             title=f"Duplicates: {response_data.get('total_duplicates_found', 0)} found",
             content=content,
@@ -52,24 +52,14 @@ def _save_duplicate_detection_memory(response_data: Dict[str, Any], auto_fix: bo
 
 # Import error handler at module level to avoid scoping issues
 try:
-    from ..error_handler import (
-        format_success_response,
-        format_error_response,
-        log_automation_execution,
-        ErrorCode
-    )
+    from ..error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
 except ImportError:
     import sys
     from pathlib import Path
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     try:
-        from error_handler import (
-            format_success_response,
-            format_error_response,
-            log_automation_execution,
-            ErrorCode
-        )
+        from error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
     except ImportError:
         # Fallback: define minimal versions if import fails
         def format_success_response(data, message=None):
@@ -122,7 +112,7 @@ def detect_duplicate_tasks(
         # Extract duplicates from detector instance (they're stored there, not in results)
         # The base class doesn't include duplicates in the returned structure
         duplicates = detector.duplicates
-        
+
         # Get total_tasks from analysis results by re-running analysis
         # (or we can access it from the detector's _execute_analysis result)
         # For now, load it directly from Todo2 state file
@@ -130,7 +120,7 @@ def detect_duplicate_tasks(
         total_tasks = 0
         if todo2_path.exists():
             try:
-                with open(todo2_path, 'r') as f:
+                with open(todo2_path) as f:
                     data = json.load(f)
                     total_tasks = len(data.get('todos', []))
             except Exception:

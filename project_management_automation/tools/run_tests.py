@@ -16,7 +16,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 if TYPE_CHECKING:
     from mcp.server.fastmcp import Context
@@ -50,7 +50,7 @@ async def _log_info(ctx: Optional["Context"], message: str) -> None:
         pass  # Logging is optional
 
 
-def _save_test_run_memory(response_data: Dict[str, Any]) -> Dict[str, Any]:
+def _save_test_run_memory(response_data: dict[str, Any]) -> dict[str, Any]:
     """Save test run results as memory for debugging patterns."""
     try:
         from .session_memory import save_session_insight
@@ -141,7 +141,7 @@ async def run_tests_async(
         # ═══ PROGRESS: Step 1/4 - Initialize ═══
         await _report_progress(ctx, 1, 4, "Initializing test runner...")
         await _log_info(ctx, "🧪 Starting test execution")
-        
+
         from project_management_automation.scripts.automate_run_tests import TestRunner
         from project_management_automation.utils import find_project_root
 
@@ -158,12 +158,12 @@ async def run_tests_async(
         # ═══ PROGRESS: Step 2/4 - Detect framework ═══
         await _report_progress(ctx, 2, 4, f"Configuring {test_framework} framework...")
         await _log_info(ctx, f"📁 Test path: {config['test_path']}")
-        
+
         runner = TestRunner(config, project_root)
 
         # ═══ PROGRESS: Step 3/4 - Run tests ═══
         await _report_progress(ctx, 3, 4, "Running tests...")
-        
+
         # Run in executor to avoid blocking
         loop = asyncio.get_event_loop()
         results = await loop.run_in_executor(None, runner.run)
@@ -188,7 +188,7 @@ async def run_tests_async(
         passed = response_data['tests_passed']
         failed = response_data['tests_failed']
         skipped = response_data['tests_skipped']
-        
+
         if failed == 0:
             await _log_info(ctx, f"✅ All {passed} tests passed!")
         else:
@@ -245,7 +245,7 @@ def run_tests(
         in_async = True
     except RuntimeError:
         pass
-    
+
     if in_async:
         raise RuntimeError("Use run_tests_async() in async context, or call from sync code")
     return asyncio.run(run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx))

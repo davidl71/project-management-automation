@@ -23,16 +23,16 @@ logger = logging.getLogger(__name__)
 def get_advisors_resource() -> str:
     """
     Resource: automation://advisors
-    
+
     Returns list of trusted advisors with their assignments.
     """
     try:
         from ..tools.wisdom.advisors import (
             METRIC_ADVISORS,
-            TOOL_ADVISORS,
             STAGE_ADVISORS,
+            TOOL_ADVISORS,
         )
-        
+
         advisors = {
             "description": "Trusted Advisors for EXARP Project Management",
             "by_metric": {
@@ -64,9 +64,9 @@ def get_advisors_resource() -> str:
                 [v["advisor"] for v in STAGE_ADVISORS.values()]
             )),
         }
-        
+
         return json.dumps(advisors, indent=2)
-        
+
     except ImportError as e:
         logger.error(f"Failed to load advisors: {e}")
         return json.dumps({"error": "Advisors not available"})
@@ -75,12 +75,12 @@ def get_advisors_resource() -> str:
 def get_models_resource() -> str:
     """
     Resource: automation://models
-    
+
     Returns available AI models with recommendations.
     """
     try:
         from ..tools.model_recommender import MODEL_RECOMMENDATIONS
-        
+
         models = {
             "description": "Available AI Models for Task Execution",
             "models": {
@@ -96,9 +96,9 @@ def get_models_resource() -> str:
             "total_models": len(MODEL_RECOMMENDATIONS),
             "recommended_default": "claude-sonnet",
         }
-        
+
         return json.dumps(models, indent=2)
-        
+
     except ImportError as e:
         logger.error(f"Failed to load models: {e}")
         return json.dumps({"error": "Models not available"})
@@ -107,12 +107,12 @@ def get_models_resource() -> str:
 def get_problem_categories_resource() -> str:
     """
     Resource: automation://problem-categories
-    
+
     Returns problem categories with resolution hints.
     """
     try:
         from ..tools.problems_advisor import PROBLEM_HINTS
-        
+
         categories = {}
         for hint in PROBLEM_HINTS:
             cat = hint.category
@@ -126,16 +126,16 @@ def get_problem_categories_resource() -> str:
                 "severity_weight": hint.severity_weight,
                 "tools": hint.tools,
             })
-        
+
         result = {
             "description": "Problem Categories with Resolution Hints",
             "categories": categories,
             "total_categories": len(categories),
             "total_hints": len(PROBLEM_HINTS),
         }
-        
+
         return json.dumps(result, indent=2)
-        
+
     except ImportError as e:
         logger.error(f"Failed to load problem categories: {e}")
         return json.dumps({"error": "Problem categories not available"})
@@ -144,12 +144,12 @@ def get_problem_categories_resource() -> str:
 def get_tools_resource() -> str:
     """
     Resource: automation://tools
-    
+
     Returns available MCP tools with metadata.
     """
     try:
         from ..tools.hint_catalog import TOOL_HINTS
-        
+
         tools = {
             "description": "Available EXARP MCP Tools",
             "tools": [
@@ -163,11 +163,11 @@ def get_tools_resource() -> str:
                 for hint in TOOL_HINTS
             ],
             "total_tools": len(TOOL_HINTS),
-            "categories": list(set(h["category"] for h in TOOL_HINTS)),
+            "categories": list({h["category"] for h in TOOL_HINTS}),
         }
-        
+
         return json.dumps(tools, indent=2)
-        
+
     except ImportError as e:
         logger.error(f"Failed to load tools: {e}")
         return json.dumps({"error": "Tools catalog not available"})
@@ -176,13 +176,13 @@ def get_tools_resource() -> str:
 def get_linters_resource() -> str:
     """
     Resource: automation://linters
-    
+
     Returns available linter status.
     """
     import subprocess
-    
+
     linters = {}
-    
+
     for linter in ['ruff', 'flake8', 'pylint', 'mypy', 'black']:
         try:
             result = subprocess.run(
@@ -200,7 +200,7 @@ def get_linters_resource() -> str:
             linters[linter] = {'available': False}
         except Exception as e:
             linters[linter] = {'available': False, 'error': str(e)}
-    
+
     result = {
         "description": "Available Linters",
         "linters": linters,
@@ -209,33 +209,33 @@ def get_linters_resource() -> str:
             None
         ),
     }
-    
+
     return json.dumps(result, indent=2)
 
 
 def get_tts_backends_resource() -> str:
     """
     Resource: automation://tts-backends
-    
+
     Returns available TTS backends.
     """
     try:
         from ..tools.wisdom.voice import check_tts_availability
-        
+
         backends = check_tts_availability()
-        
+
         result = {
             "description": "Available Text-to-Speech Backends",
             "backends": backends,
             "recommended": next(
-                (b for b in ['elevenlabs', 'edge-tts', 'pyttsx3'] 
+                (b for b in ['elevenlabs', 'edge-tts', 'pyttsx3']
                  if backends.get(b, {}).get('available')),
                 None
             ),
         }
-        
+
         return json.dumps(result, indent=2)
-        
+
     except ImportError as e:
         logger.error(f"Failed to load TTS backends: {e}")
         return json.dumps({"error": "TTS backends not available"})
@@ -244,15 +244,15 @@ def get_tts_backends_resource() -> str:
 def get_server_status_resource() -> str:
     """
     Resource: automation://status
-    
+
     Returns server status and version.
     """
     import time
-    
+
     try:
         from ..utils import find_project_root
         project_root = find_project_root()
-        
+
         # Get version from pyproject.toml if available
         version = "unknown"
         pyproject = project_root / "pyproject.toml"
@@ -262,7 +262,7 @@ def get_server_status_resource() -> str:
             match = re.search(r'version\s*=\s*["\']([^"\']+)["\']', content)
             if match:
                 version = match.group(1)
-        
+
         result = {
             "description": "EXARP Server Status",
             "status": "running",
@@ -275,9 +275,9 @@ def get_server_status_resource() -> str:
                 "tool_consolidation": "in_progress",
             },
         }
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         logger.error(f"Failed to get server status: {e}")
         return json.dumps({

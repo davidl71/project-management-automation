@@ -7,14 +7,14 @@ Provides resource access to cached Todo2 task lists, filtered by agent, status, 
 import json
 import logging
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from ..utils import find_project_root
 
 logger = logging.getLogger(__name__)
 
 
-def _load_todo2_state() -> Dict[str, Any]:
+def _load_todo2_state() -> dict[str, Any]:
     """Load Todo2 state file."""
     project_root = find_project_root()
     todo2_file = project_root / '.todo2' / 'state.todo2.json'
@@ -23,16 +23,16 @@ def _load_todo2_state() -> Dict[str, Any]:
         return {"todos": []}
 
     try:
-        with open(todo2_file, 'r') as f:
+        with open(todo2_file) as f:
             return json.load(f)
     except Exception as e:
         logger.error(f"Error loading Todo2 state: {e}")
         return {"todos": [], "error": str(e)}
 
 
-def _get_agent_names() -> List[str]:
+def _get_agent_names() -> list[str]:
     """Get list of agent names from cursor-agent.json files."""
-    project_root = _find_project_root()
+    project_root = find_project_root()
     agents_dir = project_root / 'agents'
 
     agent_names = []
@@ -42,7 +42,7 @@ def _get_agent_names() -> List[str]:
                 cursor_agent_file = agent_dir / 'cursor-agent.json'
                 if cursor_agent_file.exists():
                     try:
-                        with open(cursor_agent_file, 'r') as f:
+                        with open(cursor_agent_file) as f:
                             config = json.load(f)
                             agent_name = config.get('name', agent_dir.name)
                             agent_names.append(agent_name)
@@ -52,7 +52,7 @@ def _get_agent_names() -> List[str]:
     return sorted(agent_names)
 
 
-def _filter_tasks_by_agent(tasks: List[Dict[str, Any]], agent_name: str) -> List[Dict[str, Any]]:
+def _filter_tasks_by_agent(tasks: list[dict[str, Any]], agent_name: str) -> list[dict[str, Any]]:
     """Filter tasks by agent name (checks name, description, tags)."""
     agent_lower = agent_name.lower()
     filtered = []
@@ -152,7 +152,7 @@ def get_agents_resource() -> str:
         JSON string with agent list and metadata
     """
     try:
-        project_root = _find_project_root()
+        project_root = find_project_root()
         agents_dir = project_root / 'agents'
 
         agents = []
@@ -162,7 +162,7 @@ def get_agents_resource() -> str:
                     cursor_agent_file = agent_dir / 'cursor-agent.json'
                     if cursor_agent_file.exists():
                         try:
-                            with open(cursor_agent_file, 'r') as f:
+                            with open(cursor_agent_file) as f:
                                 config = json.load(f)
                                 agent_info = {
                                     "name": config.get('name', agent_dir.name),

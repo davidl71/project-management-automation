@@ -54,7 +54,7 @@ def is_dev_mode() -> bool:
     return os.environ.get("EXARP_DEV_MODE", "").lower() in ("1", "true", "yes")
 
 
-def get_package_modules(package_name: str = "project_management_automation") -> List[str]:
+def get_package_modules(package_name: str = "project_management_automation") -> list[str]:
     """
     Get all loaded modules from a package.
 
@@ -67,7 +67,7 @@ def get_package_modules(package_name: str = "project_management_automation") -> 
     return [name for name in sys.modules.keys() if name.startswith(package_name)]
 
 
-def reload_module(module_name: str) -> Dict[str, Any]:
+def reload_module(module_name: str) -> dict[str, Any]:
     """
     Reload a single module.
 
@@ -90,7 +90,7 @@ def reload_module(module_name: str) -> Dict[str, Any]:
         return {"module": module_name, "status": "error", "error": str(e)}
 
 
-def reload_all_modules(package_name: str = "project_management_automation") -> Dict[str, Any]:
+def reload_all_modules(package_name: str = "project_management_automation") -> dict[str, Any]:
     """
     Reload all modules from a package in dependency order.
 
@@ -158,7 +158,7 @@ def reload_all_modules(package_name: str = "project_management_automation") -> D
     }
 
 
-def reload_specific_modules(module_names: List[str]) -> Dict[str, Any]:
+def reload_specific_modules(module_names: list[str]) -> dict[str, Any]:
     """
     Reload specific modules by name.
 
@@ -190,7 +190,7 @@ def reload_specific_modules(module_names: List[str]) -> Dict[str, Any]:
     }
 
 
-def get_module_info() -> Dict[str, Any]:
+def get_module_info() -> dict[str, Any]:
     """
     Get information about loaded package modules.
 

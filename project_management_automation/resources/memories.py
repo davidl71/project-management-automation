@@ -41,7 +41,7 @@ def _get_memories_dir() -> Path:
     return memories_dir
 
 
-def _load_all_memories() -> List[Dict[str, Any]]:
+def _load_all_memories() -> list[dict[str, Any]]:
     """Load all memories from storage."""
     memories_dir = _get_memories_dir()
     memories = []
@@ -59,7 +59,7 @@ def _load_all_memories() -> List[Dict[str, Any]]:
     return memories
 
 
-def _save_memory(memory: Dict[str, Any]) -> Path:
+def _save_memory(memory: dict[str, Any]) -> Path:
     """Save a memory to storage."""
     memories_dir = _get_memories_dir()
     memory_file = memories_dir / f"{memory['id']}.json"
@@ -71,12 +71,12 @@ def _save_memory(memory: Dict[str, Any]) -> Path:
 
 
 def _filter_memories(
-    memories: List[Dict[str, Any]],
+    memories: list[dict[str, Any]],
     category: Optional[str] = None,
     task_id: Optional[str] = None,
     days: Optional[int] = None,
     session_date: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Filter memories by various criteria."""
     filtered = memories
 
@@ -100,9 +100,9 @@ def create_memory(
     title: str,
     content: str,
     category: str,
-    linked_tasks: Optional[List[str]] = None,
-    metadata: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+    linked_tasks: Optional[list[str]] = None,
+    metadata: Optional[dict[str, Any]] = None,
+) -> dict[str, Any]:
     """
     Create a new memory.
 
@@ -137,7 +137,7 @@ def create_memory(
     return memory
 
 
-def get_memory_by_id(memory_id: str) -> Optional[Dict[str, Any]]:
+def get_memory_by_id(memory_id: str) -> Optional[dict[str, Any]]:
     """Get a specific memory by ID."""
     memories_dir = _get_memories_dir()
     memory_file = memories_dir / f"{memory_id}.json"
@@ -153,7 +153,7 @@ def get_memory_by_id(memory_id: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def search_memories(query: str, limit: int = 10) -> List[Dict[str, Any]]:
+def search_memories(query: str, limit: int = 10) -> list[dict[str, Any]]:
     """
     Search memories by text content.
 
@@ -368,7 +368,7 @@ def get_session_memories_resource(date: Optional[str] = None) -> str:
         )
 
 
-def _generate_session_summary(memories: List[Dict[str, Any]]) -> str:
+def _generate_session_summary(memories: list[dict[str, Any]]) -> str:
     """Generate a brief summary of session memories."""
     if not memories:
         return "No memories recorded for this session."
@@ -450,7 +450,7 @@ def get_wisdom_resource() -> str:
         return json.dumps({"error": str(e), "timestamp": datetime.now().isoformat()}, indent=2)
 
 
-def _merge_wisdom(memories: List[Dict[str, Any]], consultations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _merge_wisdom(memories: list[dict[str, Any]], consultations: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Merge memories and consultations into timeline."""
     timeline = []
 

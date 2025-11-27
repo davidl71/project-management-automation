@@ -14,24 +14,14 @@ logger = logging.getLogger(__name__)
 
 # Import error handler at module level to avoid scoping issues
 try:
-    from ..error_handler import (
-        format_success_response,
-        format_error_response,
-        log_automation_execution,
-        ErrorCode
-    )
+    from ..error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
 except ImportError:
     import sys
     from pathlib import Path
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     try:
-        from error_handler import (
-            format_success_response,
-            format_error_response,
-            log_automation_execution,
-            ErrorCode
-        )
+        from error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
     except ImportError:
         # Fallback: define minimal versions if import fails
         def format_success_response(data, message=None):
@@ -45,7 +35,7 @@ except ImportError:
 
 
 def run_daily_automation(
-    tasks: Optional[List[str]] = None,
+    tasks: Optional[list[str]] = None,
     include_slow: bool = False,
     dry_run: bool = False,
     output_path: Optional[str] = None

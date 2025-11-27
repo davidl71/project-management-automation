@@ -90,7 +90,7 @@ class PRDAlignmentAnalyzer:
         results["prd_user_stories"] = len(prd_user_stories)
 
         # Analyze each task
-        persona_counts = {pid: 0 for pid in PERSONAS.keys()}
+        persona_counts = dict.fromkeys(PERSONAS.keys(), 0)
         aligned_tasks = []
         unaligned_tasks = []
 

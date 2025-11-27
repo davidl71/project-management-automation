@@ -241,39 +241,39 @@ if MCP_AVAILABLE:
 
     # Re-apply logger suppression after initialization (in case FastMCP added new loggers)
     suppress_noisy_loggers()
-    
+
     # ═══════════════════════════════════════════════════════════════════════
     # MIDDLEWARE REGISTRATION (FastMCP 2 feature)
     # ═══════════════════════════════════════════════════════════════════════
     if not USE_STDIO and FastMCP and mcp:
         try:
-            from .middleware import SecurityMiddleware, LoggingMiddleware, ToolFilterMiddleware
-            
+            from .middleware import LoggingMiddleware, SecurityMiddleware, ToolFilterMiddleware
+
             # Add security middleware (rate limiting + path validation + access control)
             mcp.add_middleware(SecurityMiddleware(
                 allowed_roots=[project_root, Path("/tmp"), Path("/var/tmp")],
                 calls_per_minute=120,  # 2 calls/sec sustained
                 burst_size=20,         # Allow bursts
             ))
-            
+
             # Add logging middleware (request timing)
             mcp.add_middleware(LoggingMiddleware(
                 log_arguments=False,   # Don't log args (may contain sensitive data)
                 log_results=False,     # Don't log results (too verbose)
                 slow_threshold_ms=5000,  # Warn on slow tools
             ))
-            
+
             # Add tool filter middleware (dynamic tool loading)
             # Reduces context pollution by showing only relevant tools per workflow mode
             # See: https://www.jlowin.dev/blog/stop-converting-rest-apis-to-mcp
             mcp.add_middleware(ToolFilterMiddleware(enabled=True))
-            
+
             logger.debug("✅ Middleware registered: SecurityMiddleware, LoggingMiddleware, ToolFilterMiddleware")
         except ImportError as e:
             logger.debug(f"Middleware not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register middleware: {e}")
-    
+
     # ═══════════════════════════════════════════════════════════════════════
     # RESOURCE TEMPLATES (FastMCP 2 feature)
     # ═══════════════════════════════════════════════════════════════════════
@@ -293,20 +293,64 @@ try:
         from .tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
         from .tools.batch_task_approval import batch_approve_tasks as _batch_approve_tasks
         from .tools.ci_cd_validation import validate_ci_cd_workflow as _validate_ci_cd_workflow
+        from .tools.context_summarizer import (
+            batch_summarize as _batch_summarize,
+        )
+        from .tools.context_summarizer import (
+            estimate_context_budget as _estimate_context_budget,
+        )
+        from .tools.context_summarizer import (
+            summarize_context as _summarize_context,
+        )
+        from .tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
+        from .tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
         from .tools.daily_automation import run_daily_automation as _run_daily_automation
+        from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from .tools.dependency_security import scan_dependency_security as _scan_dependency_security
         from .tools.docs_health import check_documentation_health as _check_documentation_health
         from .tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
+        from .tools.dynamic_tools import (
+            focus_mode as _focus_mode,
+        )
+        from .tools.dynamic_tools import (
+            get_tool_manager,
+        )
+        from .tools.dynamic_tools import (
+            get_tool_usage_stats as _get_tool_usage_stats,
+        )
+        from .tools.dynamic_tools import (
+            suggest_mode as _suggest_mode,
+        )
         from .tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
         from .tools.git_hooks import setup_git_hooks as _setup_git_hooks
+        from .tools.hint_catalog import (
+            get_tool_help as _get_tool_help,
+        )
+        from .tools.hint_catalog import (
+            list_tools as _list_tools,
+        )
+        from .tools.linter import get_linter_status as _get_linter_status
+        from .tools.linter import run_linter as _run_linter
+        from .tools.model_recommender import (
+            list_available_models as _list_available_models,
+        )
+        from .tools.model_recommender import (
+            recommend_model as _recommend_model,
+        )
         from .tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
         from .tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
+        from .tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
+        from .tools.prd_generator import generate_prd as _generate_prd
         from .tools.problems_advisor import analyze_problems_tool as _analyze_problems
         from .tools.problems_advisor import list_problem_categories as _list_problem_categories
-        from .tools.linter import run_linter as _run_linter
-        from .tools.linter import get_linter_status as _get_linter_status
         from .tools.project_overview import generate_project_overview as _generate_project_overview
         from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
+        from .tools.prompt_iteration_tracker import (
+            analyze_prompt_iterations as _analyze_prompt_iterations,
+        )
+        from .tools.prompt_iteration_tracker import (
+            log_prompt_iteration as _log_prompt_iteration,
+        )
         from .tools.pwa_review import review_pwa_config as _review_pwa_config
         from .tools.run_tests import run_tests as _run_tests
         from .tools.simplify_rules import simplify_rules as _simplify_rules
@@ -323,36 +367,8 @@ try:
         from .tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
         from .tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
-        from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
-        from .tools.prd_generator import generate_prd as _generate_prd
-        from .tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
         from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
-        from .tools.context_summarizer import (
-            summarize_context as _summarize_context,
-            batch_summarize as _batch_summarize,
-            estimate_context_budget as _estimate_context_budget,
-        )
-        from .tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
-        from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
-        from .tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
-        from .tools.prompt_iteration_tracker import (
-            log_prompt_iteration as _log_prompt_iteration,
-            analyze_prompt_iterations as _analyze_prompt_iterations,
-        )
-        from .tools.model_recommender import (
-            recommend_model as _recommend_model,
-            list_available_models as _list_available_models,
-        )
-        from .tools.hint_catalog import (
-            list_tools as _list_tools,
-            get_tool_help as _get_tool_help,
-        )
-        from .tools.dynamic_tools import (
-            focus_mode as _focus_mode,
-            suggest_mode as _suggest_mode,
-            get_tool_usage_stats as _get_tool_usage_stats,
-            get_tool_manager,
-        )
+        from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -360,20 +376,64 @@ try:
         from tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
         from tools.batch_task_approval import batch_approve_tasks as _batch_approve_tasks
         from tools.ci_cd_validation import validate_ci_cd_workflow as _validate_ci_cd_workflow
+        from tools.context_summarizer import (
+            batch_summarize as _batch_summarize,
+        )
+        from tools.context_summarizer import (
+            estimate_context_budget as _estimate_context_budget,
+        )
+        from tools.context_summarizer import (
+            summarize_context as _summarize_context,
+        )
+        from tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
+        from tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
         from tools.daily_automation import run_daily_automation as _run_daily_automation
+        from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from tools.dependency_security import scan_dependency_security as _scan_dependency_security
         from tools.docs_health import check_documentation_health as _check_documentation_health
         from tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
+        from tools.dynamic_tools import (
+            focus_mode as _focus_mode,
+        )
+        from tools.dynamic_tools import (
+            get_tool_manager,
+        )
+        from tools.dynamic_tools import (
+            get_tool_usage_stats as _get_tool_usage_stats,
+        )
+        from tools.dynamic_tools import (
+            suggest_mode as _suggest_mode,
+        )
         from tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
         from tools.git_hooks import setup_git_hooks as _setup_git_hooks
+        from tools.hint_catalog import (
+            get_tool_help as _get_tool_help,
+        )
+        from tools.hint_catalog import (
+            list_tools as _list_tools,
+        )
+        from tools.linter import get_linter_status as _get_linter_status
+        from tools.linter import run_linter as _run_linter
+        from tools.model_recommender import (
+            list_available_models as _list_available_models,
+        )
+        from tools.model_recommender import (
+            recommend_model as _recommend_model,
+        )
         from tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
         from tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
+        from tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
+        from tools.prd_generator import generate_prd as _generate_prd
         from tools.problems_advisor import analyze_problems_tool as _analyze_problems
         from tools.problems_advisor import list_problem_categories as _list_problem_categories
-        from tools.linter import run_linter as _run_linter
-        from tools.linter import get_linter_status as _get_linter_status
         from tools.project_overview import generate_project_overview as _generate_project_overview
         from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
+        from tools.prompt_iteration_tracker import (
+            analyze_prompt_iterations as _analyze_prompt_iterations,
+        )
+        from tools.prompt_iteration_tracker import (
+            log_prompt_iteration as _log_prompt_iteration,
+        )
         from tools.pwa_review import review_pwa_config as _review_pwa_config
         from tools.run_tests import run_tests as _run_tests
         from tools.simplify_rules import simplify_rules as _simplify_rules
@@ -390,36 +450,8 @@ try:
         from tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
         from tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
-        from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
-        from tools.prd_generator import generate_prd as _generate_prd
-        from tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
         from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
-        from tools.context_summarizer import (
-            summarize_context as _summarize_context,
-            batch_summarize as _batch_summarize,
-            estimate_context_budget as _estimate_context_budget,
-        )
-        from tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
-        from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
-        from tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
-        from tools.prompt_iteration_tracker import (
-            log_prompt_iteration as _log_prompt_iteration,
-            analyze_prompt_iterations as _analyze_prompt_iterations,
-        )
-        from tools.model_recommender import (
-            recommend_model as _recommend_model,
-            list_available_models as _list_available_models,
-        )
-        from tools.hint_catalog import (
-            list_tools as _list_tools,
-            get_tool_help as _get_tool_help,
-        )
-        from tools.dynamic_tools import (
-            focus_mode as _focus_mode,
-            suggest_mode as _suggest_mode,
-            get_tool_usage_stats as _get_tool_usage_stats,
-            get_tool_manager,
-        )
+        from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -436,7 +468,7 @@ def register_tools():
         # NOTE: server_status removed - use health(type="server")
 
         @mcp.tool()
-        def dev_reload(modules: Optional[List[str]] = None) -> str:
+        def dev_reload(modules: Optional[list[str]] = None) -> str:
             """
             [HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.]
 
@@ -475,7 +507,7 @@ def register_tools():
     elif stdio_server_instance:
         # Stdio Server registration (handler-based)
         @stdio_server_instance.list_tools()
-        async def list_tools() -> List[Tool]:
+        async def list_tools() -> list[Tool]:
             """List all available tools."""
             tools = [
                 Tool(
@@ -643,7 +675,7 @@ def register_tools():
             return tools
 
         @stdio_server_instance.call_tool()
-        async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
+        async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             """Handle tool calls."""
             if name == "server_status":
                 result = json.dumps(
@@ -658,37 +690,37 @@ def register_tools():
             elif TOOLS_AVAILABLE:
                 # Route to appropriate tool function
                 if name == "check_documentation_health":
-                    result = check_documentation_health(
+                    result = _check_documentation_health(
                         arguments.get("output_path"), arguments.get("create_tasks", True)
                     )
                 elif name == "analyze_todo2_alignment":
-                    result = analyze_todo2_alignment(
+                    result = _analyze_todo2_alignment(
                         arguments.get("create_followup_tasks", True), arguments.get("output_path")
                     )
                 elif name == "detect_duplicate_tasks":
-                    result = detect_duplicate_tasks(
+                    result = _detect_duplicate_tasks(
                         arguments.get("similarity_threshold", 0.85),
                         arguments.get("auto_fix", False),
                         arguments.get("output_path"),
                     )
                 elif name == "scan_dependency_security":
-                    result = scan_dependency_security(arguments.get("languages"), arguments.get("config_path"))
+                    result = _scan_dependency_security(arguments.get("languages"), arguments.get("config_path"))
                 elif name == "find_automation_opportunities":
-                    result = find_automation_opportunities(
+                    result = _find_automation_opportunities(
                         arguments.get("min_value_score", 0.7), arguments.get("output_path")
                     )
                 elif name == "sync_todo_tasks":
-                    result = sync_todo_tasks(arguments.get("dry_run", False), arguments.get("output_path"))
+                    result = _sync_todo_tasks(arguments.get("dry_run", False), arguments.get("output_path"))
                 elif name == "review_pwa_config":
-                    result = review_pwa_config(arguments.get("output_path"), arguments.get("config_path"))
+                    result = _review_pwa_config(arguments.get("output_path"), arguments.get("config_path"))
                 elif name == "add_external_tool_hints":
-                    result = add_external_tool_hints(
+                    result = _add_external_tool_hints(
                         arguments.get("dry_run", False),
                         arguments.get("output_path"),
                         arguments.get("min_file_size", 50),
                     )
                 elif name == "run_daily_automation":
-                    result = run_daily_automation(
+                    result = _run_daily_automation(
                         arguments.get("tasks"),
                         arguments.get("include_slow", False),
                         arguments.get("dry_run", False),
@@ -739,7 +771,7 @@ if mcp:
         def run_automation(
             action: str = "daily",
             # Daily action params
-            tasks: Optional[List[str]] = None,
+            tasks: Optional[list[str]] = None,
             include_slow: bool = False,
             # Nightly action params
             max_tasks_per_host: int = 5,
@@ -754,12 +786,12 @@ if mcp:
             min_value_score: float = 0.7,
             # Shared params
             priority_filter: Optional[str] = None,
-            tag_filter: Optional[List[str]] = None,
+            tag_filter: Optional[list[str]] = None,
             dry_run: bool = False,
             output_path: Optional[str] = None,
         ) -> str:
             """[HINT: Automation runner. action: discover|daily|nightly|sprint. Unified automation control.]
-            
+
             Actions:
             - discover: Find automation opportunities in codebase
             - daily: Run daily checks (docs_health, alignment, duplicates, security)
@@ -1135,18 +1167,44 @@ if mcp:
     try:
         from .tools.consolidated import (
             advisor_audio as _advisor_audio,
+        )
+        from .tools.consolidated import (
             analyze_alignment as _analyze_alignment,
+        )
+        from .tools.consolidated import (
             generate_config as _generate_config,
+        )
+        from .tools.consolidated import (
             health as _health,
+        )
+        from .tools.consolidated import (
             lint as _lint,
+        )
+        from .tools.consolidated import (
             memory as _memory,
+        )
+        from .tools.consolidated import (
             prompt_tracking as _prompt_tracking,
+        )
+        from .tools.consolidated import (
             report as _report,
+        )
+        from .tools.consolidated import (
             security as _security,
+        )
+        from .tools.consolidated import (
             setup_hooks as _setup_hooks,
+        )
+        from .tools.consolidated import (
             task_analysis as _task_analysis,
+        )
+        from .tools.consolidated import (
             task_discovery as _task_discovery,
+        )
+        from .tools.consolidated import (
             task_workflow as _task_workflow,
+        )
+        from .tools.consolidated import (
             testing as _testing,
         )
         CONSOLIDATED_AVAILABLE = True
@@ -1177,7 +1235,7 @@ if mcp:
         def security(
             action: str = "report",
             repo: str = "davidl71/project-management-automation",
-            languages: Optional[List[str]] = None,
+            languages: Optional[list[str]] = None,
             config_path: Optional[str] = None,
             state: str = "open",
             include_dismissed: bool = False,
@@ -1229,7 +1287,7 @@ if mcp:
         @mcp.tool()
         def setup_hooks(
             action: str = "git",
-            hooks: Optional[List[str]] = None,
+            hooks: Optional[list[str]] = None,
             patterns: Optional[str] = None,
             config_path: Optional[str] = None,
             install: bool = True,
@@ -1573,110 +1631,110 @@ if mcp:
         # Try relative imports first (when run as module)
         try:
             from .prompts import (
-                # Documentation
-                DOCUMENTATION_HEALTH_CHECK,
-                DOCUMENTATION_QUICK_CHECK,
-                # Tasks
-                TASK_ALIGNMENT_ANALYSIS,
-                DUPLICATE_TASK_CLEANUP,
-                TASK_SYNC,
-                TASK_DISCOVERY,
-                # Security
-                SECURITY_SCAN_ALL,
-                SECURITY_SCAN_PYTHON,
-                SECURITY_SCAN_RUST,
+                ADVISOR_AUDIO,
+                ADVISOR_BRIEFING,
+                # Wisdom
+                ADVISOR_CONSULT,
                 # Automation
                 AUTOMATION_DISCOVERY,
                 AUTOMATION_HIGH_VALUE,
                 AUTOMATION_SETUP,
-                # Config
-                PWA_REVIEW,
                 CONFIG_GENERATION,
-                # Workflows
-                PRE_SPRINT_CLEANUP,
-                POST_IMPLEMENTATION_REVIEW,
-                WEEKLY_MAINTENANCE,
-                DAILY_CHECKIN,
-                SPRINT_START,
-                SPRINT_END,
-                TASK_REVIEW,
-                PROJECT_HEALTH,
-                # Mode Suggestion
-                MODE_SUGGESTION,
                 # Context Management
                 CONTEXT_MANAGEMENT,
+                DAILY_CHECKIN,
+                # Documentation
+                DOCUMENTATION_HEALTH_CHECK,
+                DOCUMENTATION_QUICK_CHECK,
+                DUPLICATE_TASK_CLEANUP,
+                # Memory
+                MEMORY_SYSTEM,
+                # Mode Suggestion
+                MODE_SUGGESTION,
+                PERSONA_ARCHITECT,
+                PERSONA_CODE_REVIEWER,
+                # Personas
+                PERSONA_DEVELOPER,
+                PERSONA_EXECUTIVE,
+                PERSONA_PROJECT_MANAGER,
+                PERSONA_QA_ENGINEER,
+                PERSONA_SECURITY_ENGINEER,
+                PERSONA_TECH_WRITER,
+                POST_IMPLEMENTATION_REVIEW,
+                # Workflows
+                PRE_SPRINT_CLEANUP,
+                PROJECT_HEALTH,
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
-                # Wisdom
-                ADVISOR_CONSULT,
-                ADVISOR_BRIEFING,
-                ADVISOR_AUDIO,
-                # Memory
-                MEMORY_SYSTEM,
-                # Personas
-                PERSONA_DEVELOPER,
-                PERSONA_PROJECT_MANAGER,
-                PERSONA_CODE_REVIEWER,
-                PERSONA_EXECUTIVE,
-                PERSONA_SECURITY_ENGINEER,
-                PERSONA_ARCHITECT,
-                PERSONA_QA_ENGINEER,
-                PERSONA_TECH_WRITER,
+                # Config
+                PWA_REVIEW,
+                # Security
+                SECURITY_SCAN_ALL,
+                SECURITY_SCAN_PYTHON,
+                SECURITY_SCAN_RUST,
+                SPRINT_END,
+                SPRINT_START,
+                # Tasks
+                TASK_ALIGNMENT_ANALYSIS,
+                TASK_DISCOVERY,
+                TASK_REVIEW,
+                TASK_SYNC,
+                WEEKLY_MAINTENANCE,
             )
         except ImportError:
             # Fallback to absolute imports (when run as script)
             from prompts import (
-                # Documentation
-                DOCUMENTATION_HEALTH_CHECK,
-                DOCUMENTATION_QUICK_CHECK,
-                # Tasks
-                TASK_ALIGNMENT_ANALYSIS,
-                DUPLICATE_TASK_CLEANUP,
-                TASK_SYNC,
-                TASK_DISCOVERY,
-                # Security
-                SECURITY_SCAN_ALL,
-                SECURITY_SCAN_PYTHON,
-                SECURITY_SCAN_RUST,
+                ADVISOR_AUDIO,
+                ADVISOR_BRIEFING,
+                # Wisdom
+                ADVISOR_CONSULT,
                 # Automation
                 AUTOMATION_DISCOVERY,
                 AUTOMATION_HIGH_VALUE,
                 AUTOMATION_SETUP,
-                # Config
-                PWA_REVIEW,
                 CONFIG_GENERATION,
-                # Workflows
-                PRE_SPRINT_CLEANUP,
-                POST_IMPLEMENTATION_REVIEW,
-                WEEKLY_MAINTENANCE,
-                DAILY_CHECKIN,
-                SPRINT_START,
-                SPRINT_END,
-                TASK_REVIEW,
-                PROJECT_HEALTH,
-                # Mode Suggestion
-                MODE_SUGGESTION,
                 # Context Management
                 CONTEXT_MANAGEMENT,
+                DAILY_CHECKIN,
+                # Documentation
+                DOCUMENTATION_HEALTH_CHECK,
+                DOCUMENTATION_QUICK_CHECK,
+                DUPLICATE_TASK_CLEANUP,
+                # Memory
+                MEMORY_SYSTEM,
+                # Mode Suggestion
+                MODE_SUGGESTION,
+                PERSONA_ARCHITECT,
+                PERSONA_CODE_REVIEWER,
+                # Personas
+                PERSONA_DEVELOPER,
+                PERSONA_EXECUTIVE,
+                PERSONA_PROJECT_MANAGER,
+                PERSONA_QA_ENGINEER,
+                PERSONA_SECURITY_ENGINEER,
+                PERSONA_TECH_WRITER,
+                POST_IMPLEMENTATION_REVIEW,
+                # Workflows
+                PRE_SPRINT_CLEANUP,
+                PROJECT_HEALTH,
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
-                # Wisdom
-                ADVISOR_CONSULT,
-                ADVISOR_BRIEFING,
-                ADVISOR_AUDIO,
-                # Memory
-                MEMORY_SYSTEM,
-                # Personas
-                PERSONA_DEVELOPER,
-                PERSONA_PROJECT_MANAGER,
-                PERSONA_CODE_REVIEWER,
-                PERSONA_EXECUTIVE,
-                PERSONA_SECURITY_ENGINEER,
-                PERSONA_ARCHITECT,
-                PERSONA_QA_ENGINEER,
-                PERSONA_TECH_WRITER,
+                # Config
+                PWA_REVIEW,
+                # Security
+                SECURITY_SCAN_ALL,
+                SECURITY_SCAN_PYTHON,
+                SECURITY_SCAN_RUST,
+                SPRINT_END,
+                SPRINT_START,
+                # Tasks
+                TASK_ALIGNMENT_ANALYSIS,
+                TASK_DISCOVERY,
+                TASK_REVIEW,
+                TASK_SYNC,
+                WEEKLY_MAINTENANCE,
             )
 
         @mcp.prompt()
@@ -2132,14 +2190,14 @@ xo() {{
     local cache_dir=$(_exarp_project_cache)
     local cache_file="$cache_dir/overview.txt"
     mkdir -p "$cache_dir" 2>/dev/null
-    
+
     local result
     result=$(uvx --from exarp python3 -c "
 from project_management_automation.tools.project_overview import generate_project_overview
 r = generate_project_overview()
 print(r.get('formatted_output', ''))
 " 2>/dev/null)
-    
+
     if [[ -n "$result" ]]; then
         echo "$result"
         echo "$result" > "$cache_file"
@@ -2162,13 +2220,13 @@ xw() {{
     local today=$(date +%Y%m%d)
     local cache_file="$cache_dir/$today.txt"
     mkdir -p "$cache_dir" 2>/dev/null
-    
+
     local result
     result=$(uvx --from exarp python3 -c "
 from project_management_automation.tools.wisdom import get_wisdom, format_text
 print(format_text(get_wisdom(50)))
 " 2>/dev/null)
-    
+
     if [[ -n "$result" ]]; then
         echo "$result"
         echo "$result" > "$cache_file"
@@ -2321,11 +2379,11 @@ _exarp_update_score() {{
 exarp_prompt_info() {{
     [[ "${{EXARP_PROMPT:-0}}" == "0" ]] && return
     _exarp_detect "." || return
-    
+
     local tasks=$(_exarp_tasks ".")
     local pending=${{tasks%%/*}}
     local output=""
-    
+
     # Task count badge
     if (( pending > 0 )); then
         if (( pending > 10 )); then
@@ -2336,7 +2394,7 @@ exarp_prompt_info() {{
             output="%F{{blue}}◇$pending%f"
         fi
     fi
-    
+
     # Score badge (if cached)
     local score=$(_exarp_cached_score)
     if [[ -n "$score" ]]; then
@@ -2348,7 +2406,7 @@ exarp_prompt_info() {{
             output="$output %F{{red}}●$score%%%f"
         fi
     fi
-    
+
     echo "$output"
 }}
 
@@ -2362,15 +2420,15 @@ exarp_prompt_info() {{
 exarp_iterm_badge() {{
     [[ "$TERM_PROGRAM" != "iTerm.app" ]] && return
     _exarp_detect "." || return
-    
+
     local name=$(_exarp_name ".")
     local tasks=$(_exarp_tasks ".")
     local score=$(_exarp_cached_score)
-    
+
     local badge="$name"
     [[ -n "$tasks" ]] && badge="$badge ◇${{tasks%%/*}}"
     [[ -n "$score" ]] && badge="$badge ●$score%"
-    
+
     # iTerm2 badge escape sequence
     printf "\\033]1337;SetBadgeFormat=%s\\007" "$(echo -n "$badge" | base64)"
 }}
@@ -2379,7 +2437,7 @@ exarp_iterm_badge() {{
 exarp_iterm_title() {{
     [[ "$TERM_PROGRAM" != "iTerm.app" ]] && return
     _exarp_detect "." || return
-    
+
     local name=$(_exarp_name ".")
     # Set tab title
     printf "\\033]0;%s\\007" "$name"
@@ -2389,11 +2447,11 @@ exarp_iterm_title() {{
 exarp_iterm_vars() {{
     [[ "$TERM_PROGRAM" != "iTerm.app" ]] && return
     _exarp_detect "." || return
-    
+
     local name=$(_exarp_name ".")
     local tasks=$(_exarp_tasks ".")
     local score=$(_exarp_cached_score)
-    
+
     # Set user variables for iTerm2 status bar
     printf "\\033]1337;SetUserVar=exarp_project=%s\\007" "$(echo -n "$name" | base64)"
     printf "\\033]1337;SetUserVar=exarp_tasks=%s\\007" "$(echo -n "$tasks" | base64)"
@@ -2413,11 +2471,11 @@ if [[ "$TERM_PROGRAM" == "iTerm.app" ]] && [[ "${{EXARP_ITERM:-1}}" != "0" ]]; t
     if ! type _exarp_original_cd &>/dev/null; then
         _exarp_original_cd() {{ builtin cd "$@"; }}
     fi
-    
+
     cd() {{
         _exarp_original_cd "$@" && exarp_iterm_update
     }}
-    
+
     # Initial update
     exarp_iterm_update
 fi
@@ -2429,7 +2487,7 @@ fi
 # Enhanced MOTD with multiple modes
 exarp_motd() {{
     local mode="${{EXARP_MOTD:-lite}}"
-    
+
     case "$mode" in
         lite)
             # Quick summary
@@ -2504,7 +2562,7 @@ exarp_trigger_output() {{
     local pending=${{tasks%%/*}}
     local total=${{tasks##*/}}
     local score=$(_exarp_cached_score)
-    
+
     # Format: [EXARP] project:name tasks:N/M score:XX
     echo "[EXARP] project:$(_exarp_name .) tasks:$pending/$total score:${{score:-??}}"
 }}
@@ -2514,7 +2572,7 @@ xs() {{
     local cache_dir=$(_exarp_project_cache)
     local cache_file="$cache_dir/scorecard.txt"
     mkdir -p "$cache_dir" 2>/dev/null
-    
+
     # Try uvx first
     local result
     result=$(uvx --from exarp python3 -c "
@@ -2528,7 +2586,7 @@ if match:
     with open('$cache_dir/score.txt', 'w') as f:
         f.write(match.group(1).split('.')[0])
 " 2>/dev/null)
-    
+
     if [[ -n "$result" ]]; then
         echo "$result"
         echo "$result" > "$cache_file"
@@ -2655,7 +2713,7 @@ QUICK COMMANDS (after shell setup):
     xt      Task list (instant)
     xpl     Projects scan (instant)
     xs      Full scorecard
-    xo      Full overview  
+    xo      Full overview
     xw      Daily wisdom
 
 MCP MODE (for Cursor/AI):
@@ -2763,7 +2821,7 @@ elif stdio_server_instance:
             from resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
 
         @stdio_server_instance.list_resources()
-        async def list_resources() -> List[str]:
+        async def list_resources() -> list[str]:
             """List all available resources."""
             return [
                 "automation://status",

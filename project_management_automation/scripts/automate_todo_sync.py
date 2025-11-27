@@ -23,7 +23,6 @@ from typing import Dict, List, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
-
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -34,7 +33,7 @@ logger = logging.getLogger(__name__)
 class TodoSyncAutomation(IntelligentAutomationBase):
     """Intelligent TODO synchronization using base class."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
@@ -75,7 +74,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         """Sequential problem: How do we synchronize TODO systems?"""
         return "How do we systematically synchronize shared TODO table with Todo2 tasks bidirectionally?"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute TODO synchronization."""
         logger.info("Executing TODO synchronization...")
 
@@ -117,7 +116,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
             'dry_run': self.dry_run
         }
 
-    def _load_shared_todos(self) -> List[Dict]:
+    def _load_shared_todos(self) -> list[dict]:
         """Load shared TODO table from markdown."""
         if not self.shared_todo_path.exists():
             logger.warning(f"Shared TODO file not found: {self.shared_todo_path}")
@@ -149,14 +148,14 @@ class TodoSyncAutomation(IntelligentAutomationBase):
             logger.error(f"Error loading shared TODOs: {e}")
             return []
 
-    def _load_todo2_tasks(self) -> List[Dict]:
+    def _load_todo2_tasks(self) -> list[dict]:
         """Load Todo2 tasks from JSON."""
         if not self.todo2_path.exists():
             logger.warning(f"Todo2 file not found: {self.todo2_path}")
             return []
 
         try:
-            with open(self.todo2_path, 'r') as f:
+            with open(self.todo2_path) as f:
                 data = json.load(f)
                 tasks = data.get('todos', [])
 
@@ -172,7 +171,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
             logger.warning(f"Could not load Todo2 tasks: {e}")
             return []
 
-    def _find_matches(self, shared_todos: List[Dict], todo2_tasks: List[Dict]) -> List[Dict]:
+    def _find_matches(self, shared_todos: list[dict], todo2_tasks: list[dict]) -> list[dict]:
         """Find matching tasks between systems."""
         matches = []
 
@@ -211,7 +210,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
 
         return len(intersection) / len(union) if union else 0.0
 
-    def _detect_conflicts(self, matches: List[Dict]) -> List[Dict]:
+    def _detect_conflicts(self, matches: list[dict]) -> list[dict]:
         """Detect status conflicts between matched tasks."""
         conflicts = []
 
@@ -235,18 +234,18 @@ class TodoSyncAutomation(IntelligentAutomationBase):
 
         return conflicts
 
-    def _find_new_shared_todos(self, shared_todos: List[Dict], matches: List[Dict]) -> List[Dict]:
+    def _find_new_shared_todos(self, shared_todos: list[dict], matches: list[dict]) -> list[dict]:
         """Find shared TODOs without Todo2 matches."""
         matched_shared_ids = {m['shared']['id'] for m in matches}
         return [t for t in shared_todos if t['id'] not in matched_shared_ids]
 
-    def _find_new_todo2_tasks(self, todo2_tasks: List[Dict], matches: List[Dict]) -> List[Dict]:
+    def _find_new_todo2_tasks(self, todo2_tasks: list[dict], matches: list[dict]) -> list[dict]:
         """Find Todo2 tasks without shared TODO matches."""
         matched_todo2_ids = {m['todo2']['id'] for m in matches}
         return [t for t in todo2_tasks if t['id'] not in matched_todo2_ids]
 
-    def _perform_sync(self, matches: List[Dict], conflicts: List[Dict],
-                     new_shared: List[Dict], new_todo2: List[Dict]) -> List[Dict]:
+    def _perform_sync(self, matches: list[dict], conflicts: list[dict],
+                     new_shared: list[dict], new_todo2: list[dict]) -> list[dict]:
         """Perform actual synchronization."""
         updates = []
 
@@ -297,8 +296,8 @@ class TodoSyncAutomation(IntelligentAutomationBase):
 
         return updates
 
-    def _simulate_sync(self, matches: List[Dict], conflicts: List[Dict],
-                      new_shared: List[Dict], new_todo2: List[Dict]) -> List[Dict]:
+    def _simulate_sync(self, matches: list[dict], conflicts: list[dict],
+                      new_shared: list[dict], new_todo2: list[dict]) -> list[dict]:
         """Simulate synchronization (dry run)."""
         updates = []
 
@@ -346,7 +345,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
     def _update_todo2_status(self, todo2_id: str, new_status: str) -> bool:
         """Update status in Todo2 JSON file."""
         try:
-            with open(self.todo2_path, 'r') as f:
+            with open(self.todo2_path) as f:
                 data = json.load(f)
 
             for task in data.get('todos', []):
@@ -364,10 +363,10 @@ class TodoSyncAutomation(IntelligentAutomationBase):
 
         return False
 
-    def _create_todo2_from_shared(self, shared: Dict) -> Dict:
+    def _create_todo2_from_shared(self, shared: dict) -> dict:
         """Create Todo2 task from shared TODO."""
         try:
-            with open(self.todo2_path, 'r') as f:
+            with open(self.todo2_path) as f:
                 data = json.load(f)
 
             # Generate new Todo2 ID
@@ -397,7 +396,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
             logger.error(f"Error creating Todo2 task from shared TODO: {e}")
             return {}
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from sync results."""
         insights = []
 
@@ -407,7 +406,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         new_todo2 = len(analysis_results.get('new_todo2_tasks', []))
         updates = len(analysis_results.get('updates', []))
 
-        insights.append(f"**Synchronization Summary:**")
+        insights.append("**Synchronization Summary:**")
         insights.append(f"- {matches} tasks matched between systems")
         insights.append(f"- {conflicts} status conflicts detected")
         insights.append(f"- {new_shared} new shared TODOs (will create Todo2 tasks)")
@@ -422,7 +421,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
 
         return '\n'.join(insights)
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate sync report."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         dry_run = analysis_results.get('dry_run', False)
@@ -440,7 +439,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
                 match = conflict['match']
                 conflict_details += f"- **TODO {match['shared']['id']}**: {match['shared']['description'][:50]}...\n"
                 conflict_details += f"  - Shared: {conflict['shared_status']} → Todo2: {conflict['todo2_status']}\n"
-                conflict_details += f"  - Resolution: Updated shared TODO to match Todo2\n\n"
+                conflict_details += "  - Resolution: Updated shared TODO to match Todo2\n\n"
 
         new_tasks_details = ""
         if new_shared:
@@ -503,7 +502,7 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         """NetworkX not needed for sync (simple matching)."""
         return False
 
-    def _identify_followup_tasks(self, analysis_results: Dict) -> List[Dict]:
+    def _identify_followup_tasks(self, analysis_results: dict) -> list[dict]:
         """Identify follow-up tasks."""
         followups = []
 
@@ -528,10 +527,11 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         return followups
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration."""
+    from project_management_automation.utils import find_project_root
     if config_path is None:
-        config_path = project_root / 'scripts' / 'todo_sync_config.json'
+        config_path = find_project_root() / 'scripts' / 'todo_sync_config.json'
 
     default_config = {
         'dry_run': False,
@@ -540,7 +540,7 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
 
     if config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError:
@@ -567,10 +567,11 @@ def main():
         results = analyzer.run()
 
         # Write report
+        from project_management_automation.utils import find_project_root
         if args.output:
             output_path = args.output
         else:
-            output_path = project_root / config['output_path']
+            output_path = find_project_root() / config['output_path']
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, 'w') as f:

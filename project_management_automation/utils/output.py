@@ -9,8 +9,9 @@ human output without consuming AI tokens.
 Design Decision: See docs/DESIGN_DECISIONS.md "Output Separation Pattern"
 """
 
-from typing import Any, Optional, Iterator, AsyncIterator, Union
 import json
+from collections.abc import AsyncIterator, Iterator
+from typing import Any, Optional, Union
 
 
 async def split_output(
@@ -21,19 +22,19 @@ async def split_output(
 ) -> dict:
     """
     Separate human-readable output from AI-processable data.
-    
+
     Human output is sent via ctx.info() (visible in client UI but not
     consuming AI context tokens). AI output is returned as structured data.
-    
+
     Args:
         ctx: FastMCP Context object (must have .info() method)
         human: Formatted text for human consumption (→ ctx.info())
         ai: Structured data for AI (→ return value)
         stream_human: If True, stream human output line by line
-    
+
     Returns:
         The 'ai' parameter as a dict (wraps non-dict values)
-    
+
     Example:
         @mcp.tool()
         async def my_tool(ctx: Context) -> str:
@@ -49,7 +50,7 @@ async def split_output(
                 await ctx.info(line)
         else:
             await ctx.info(human)
-    
+
     # Ensure return is always a dict
     if isinstance(ai, dict):
         return ai
@@ -67,19 +68,19 @@ async def progress_wrapper(
 ) -> AsyncIterator:
     """
     Wrap an iterable with progress reporting via ctx.report_progress().
-    
+
     Reports progress to the MCP client, visible to users in supported clients.
     Does not affect AI token consumption.
-    
+
     Args:
         ctx: FastMCP Context object (must have .report_progress() method)
         iterable: Items to iterate (list, iterator, or async iterator)
         total: Total count if known (required for iterators)
         desc: Description shown in progress indicator
-    
+
     Yields:
         Items from the iterable
-    
+
     Example:
         @mcp.tool()
         async def scan_files(ctx: Context) -> str:
@@ -100,9 +101,9 @@ async def progress_wrapper(
     else:
         items = iterable
         count = total
-    
+
     has_progress = hasattr(ctx, 'report_progress')
-    
+
     for i, item in enumerate(items):
         if has_progress and count > 0:
             progress = i / count
@@ -112,7 +113,7 @@ async def progress_wrapper(
                 message=f"{desc}: {i + 1}/{count}"
             )
         yield item
-    
+
     # Final progress report
     if has_progress and count > 0:
         await ctx.report_progress(
@@ -125,12 +126,12 @@ async def progress_wrapper(
 def compact_json(data: Any) -> str:
     """
     Convert data to compact JSON (no whitespace).
-    
+
     Saves ~20-30% tokens compared to indent=2.
-    
+
     Args:
         data: JSON-serializable data
-    
+
     Returns:
         Compact JSON string
     """
@@ -145,7 +146,7 @@ async def output_to_human_and_ai(ctx, human: str, ai: Any) -> dict:
 
 __all__ = [
     'split_output',
-    'progress_wrapper', 
+    'progress_wrapper',
     'compact_json',
     'output_to_human_and_ai'
 ]

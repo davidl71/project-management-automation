@@ -5,11 +5,10 @@ Analyzes, validates, and consolidates tags in Todo2 tasks.
 """
 
 import json
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
 from collections import defaultdict
 from datetime import datetime
-
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 # Standard consolidation rules
 DEFAULT_CONSOLIDATION_RULES = {
@@ -24,11 +23,11 @@ DEFAULT_CONSOLIDATION_RULES = {
     "feature": "enhancement",
     "bugs": "bug",
     "refactoring": "refactor",
-    
+
     # Case fixes
     "Apache-license": "apache-license",
     "MIT-license": "mit-license",
-    
+
     # Long tag shortening
     "automation-opportunity-finder": "automation-finder",
     "documentation-health-analysis": "docs-health",
@@ -59,24 +58,24 @@ def find_project_root() -> Path:
     return Path.cwd()
 
 
-def load_todo2_tasks(project_root: Path) -> Tuple[Dict[str, Any], Path]:
+def load_todo2_tasks(project_root: Path) -> tuple[dict[str, Any], Path]:
     """Load Todo2 tasks from state file."""
     todo2_file = project_root / '.todo2' / 'state.todo2.json'
     if not todo2_file.exists():
         raise FileNotFoundError(f"Todo2 state file not found: {todo2_file}")
-    
+
     with open(todo2_file) as f:
         data = json.load(f)
-    
+
     return data, todo2_file
 
 
-def analyze_tags(todos: List[Dict[str, Any]]) -> Dict[str, Any]:
+def analyze_tags(todos: list[dict[str, Any]]) -> dict[str, Any]:
     """Analyze current tag usage."""
     all_tags = []
     tag_counts = defaultdict(int)
     tag_to_tasks = defaultdict(list)
-    
+
     for task in todos:
         tags = task.get('tags', [])
         task_id = task.get('id', 'unknown')
@@ -84,9 +83,9 @@ def analyze_tags(todos: List[Dict[str, Any]]) -> Dict[str, Any]:
             all_tags.append(tag)
             tag_counts[tag] += 1
             tag_to_tasks[tag].append(task_id)
-    
+
     unique_tags = sorted(set(all_tags))
-    
+
     # Identify issues
     issues = {
         'not_lowercase': [],
@@ -94,7 +93,7 @@ def analyze_tags(todos: List[Dict[str, Any]]) -> Dict[str, Any]:
         'has_spaces': [],
         'rare_tags': [],  # Used 1-2 times
     }
-    
+
     for tag in unique_tags:
         if tag != tag.lower():
             issues['not_lowercase'].append(tag)
@@ -104,7 +103,7 @@ def analyze_tags(todos: List[Dict[str, Any]]) -> Dict[str, Any]:
             issues['has_spaces'].append(tag)
         if tag_counts[tag] <= 2:
             issues['rare_tags'].append((tag, tag_counts[tag]))
-    
+
     return {
         'total_tasks': len(todos),
         'total_tag_usages': len(all_tags),
@@ -116,17 +115,17 @@ def analyze_tags(todos: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 
 def plan_consolidations(
-    analysis: Dict[str, Any],
-    rules: Dict[str, str],
+    analysis: dict[str, Any],
+    rules: dict[str, str],
     remove_tags: set
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Plan tag consolidations without applying them."""
     tag_counts = analysis['tag_counts']
     tag_to_tasks = analysis['tag_to_tasks']
-    
+
     renames = []  # (old_tag, new_tag, affected_task_ids)
     removals = []  # (tag, affected_task_ids)
-    
+
     for old_tag, new_tag in rules.items():
         if old_tag in tag_counts:
             renames.append({
@@ -135,7 +134,7 @@ def plan_consolidations(
                 'count': tag_counts[old_tag],
                 'tasks': tag_to_tasks[old_tag],
             })
-    
+
     for tag in remove_tags:
         if tag in tag_counts:
             removals.append({
@@ -143,19 +142,19 @@ def plan_consolidations(
                 'count': tag_counts[tag],
                 'tasks': tag_to_tasks[tag],
             })
-    
+
     # Calculate stats
     tags_before = len(analysis['unique_tags'])
     tags_consolidated = len(renames)
     tags_removed = len(removals)
-    
+
     # Some renames might create new tags, some consolidate existing
-    new_tags_from_renames = set(r['new'] for r in renames)
+    new_tags_from_renames = {r['new'] for r in renames}
     existing_tags = set(analysis['unique_tags'])
     truly_new = new_tags_from_renames - existing_tags
-    
+
     tags_after = tags_before - tags_consolidated - tags_removed + len(truly_new)
-    
+
     return {
         'renames': renames,
         'removals': removals,
@@ -170,28 +169,28 @@ def plan_consolidations(
 
 
 def apply_consolidations(
-    data: Dict[str, Any],
-    plan: Dict[str, Any],
+    data: dict[str, Any],
+    plan: dict[str, Any],
     todo2_file: Path,
     dry_run: bool = True
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Apply tag consolidations to Todo2 tasks."""
     todos = data.get('todos', [])
-    
+
     # Build rename map
     rename_map = {r['old']: r['new'] for r in plan['renames']}
     remove_set = {r['tag'] for r in plan['removals']}
-    
+
     changes = []
-    
+
     for task in todos:
         old_tags = task.get('tags', [])
         if not old_tags:
             continue
-        
+
         new_tags = []
         task_changes = []
-        
+
         for tag in old_tags:
             if tag in remove_set:
                 task_changes.append(f"removed '{tag}'")
@@ -203,7 +202,7 @@ def apply_consolidations(
             else:
                 if tag not in new_tags:  # Avoid duplicates
                     new_tags.append(tag)
-        
+
         if task_changes:
             changes.append({
                 'task_id': task.get('id'),
@@ -212,15 +211,15 @@ def apply_consolidations(
                 'old_tags': old_tags,
                 'new_tags': new_tags,
             })
-            
+
             if not dry_run:
                 task['tags'] = new_tags
-    
+
     if not dry_run:
         # Save changes
         with open(todo2_file, 'w') as f:
             json.dump(data, f, indent=2)
-    
+
     return {
         'dry_run': dry_run,
         'tasks_modified': len(changes),
@@ -230,55 +229,55 @@ def apply_consolidations(
 
 
 def format_report(
-    analysis: Dict[str, Any],
-    plan: Dict[str, Any],
-    result: Dict[str, Any]
+    analysis: dict[str, Any],
+    plan: dict[str, Any],
+    result: dict[str, Any]
 ) -> str:
     """Format a human-readable report."""
     lines = []
-    
+
     # Header
     mode = "DRY RUN" if result['dry_run'] else "APPLIED"
     lines.append(f"{'=' * 70}")
     lines.append(f"📊 TAG CONSOLIDATION REPORT ({mode})")
     lines.append(f"{'=' * 70}")
     lines.append(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
+
     # Stats
     stats = result['stats']
-    lines.append(f"\n📈 STATISTICS")
-    lines.append(f"─" * 40)
+    lines.append("\n📈 STATISTICS")
+    lines.append("─" * 40)
     lines.append(f"  Tags before:      {stats['tags_before']}")
     lines.append(f"  Tags consolidated:{stats['tags_consolidated']}")
     lines.append(f"  Tags removed:     {stats['tags_removed']}")
     lines.append(f"  Tags after:       {stats['tags_after']}")
     lines.append(f"  Net reduction:    {stats['reduction']} ({stats['reduction']/stats['tags_before']*100:.1f}%)")
-    
+
     # Renames
     if plan['renames']:
         lines.append(f"\n🔄 TAG RENAMES ({len(plan['renames'])})")
-        lines.append(f"─" * 40)
+        lines.append("─" * 40)
         for r in sorted(plan['renames'], key=lambda x: -x['count']):
             lines.append(f"  '{r['old']}' → '{r['new']}' ({r['count']} tasks)")
-    
+
     # Removals
     if plan['removals']:
         lines.append(f"\n🗑️  TAG REMOVALS ({len(plan['removals'])})")
-        lines.append(f"─" * 40)
+        lines.append("─" * 40)
         for r in plan['removals']:
             lines.append(f"  '{r['tag']}' ({r['count']} tasks)")
-    
+
     # Task changes (first 20)
     if result['changes']:
         lines.append(f"\n📝 TASK CHANGES ({result['tasks_modified']} tasks)")
-        lines.append(f"─" * 40)
+        lines.append("─" * 40)
         for change in result['changes'][:20]:
             lines.append(f"  {change['task_id']}: {change['task_content'][:40]}...")
             for c in change['changes']:
                 lines.append(f"      • {c}")
         if len(result['changes']) > 20:
             lines.append(f"  ... and {len(result['changes']) - 20} more tasks")
-    
+
     # Issues remaining
     issues = analysis['issues']
     remaining_issues = []
@@ -292,13 +291,13 @@ def format_report(
         remaining = [t for t in issues['too_long'] if t not in fixed]
         if remaining:
             remaining_issues.append(f"Too long: {remaining}")
-    
+
     if remaining_issues:
-        lines.append(f"\n⚠️  REMAINING ISSUES")
-        lines.append(f"─" * 40)
+        lines.append("\n⚠️  REMAINING ISSUES")
+        lines.append("─" * 40)
         for issue in remaining_issues:
             lines.append(f"  • {issue}")
-    
+
     # Footer
     lines.append(f"\n{'=' * 70}")
     if result['dry_run']:
@@ -307,25 +306,25 @@ def format_report(
     else:
         lines.append("✅ Changes have been applied to .todo2/state.todo2.json")
     lines.append(f"{'=' * 70}")
-    
+
     return '\n'.join(lines)
 
 
 def consolidate_tags(
     dry_run: bool = True,
-    custom_rules: Optional[Dict[str, str]] = None,
-    remove_tags: Optional[List[str]] = None,
+    custom_rules: Optional[dict[str, str]] = None,
+    remove_tags: Optional[list[str]] = None,
     output_path: Optional[str] = None,
 ) -> str:
     """
     Main function to consolidate Todo2 tags.
-    
+
     Args:
         dry_run: If True, only report what would change without applying
         custom_rules: Additional consolidation rules (old_tag → new_tag)
         remove_tags: Tags to remove entirely
         output_path: Optional path to save report
-        
+
     Returns:
         Formatted report string
     """
@@ -333,32 +332,32 @@ def consolidate_tags(
     project_root = find_project_root()
     data, todo2_file = load_todo2_tasks(project_root)
     todos = data.get('todos', [])
-    
+
     # Merge rules
     rules = DEFAULT_CONSOLIDATION_RULES.copy()
     if custom_rules:
         rules.update(custom_rules)
-    
+
     tags_to_remove = TAGS_TO_REMOVE.copy()
     if remove_tags:
         tags_to_remove.update(remove_tags)
-    
+
     # Analyze
     analysis = analyze_tags(todos)
-    
+
     # Plan
     plan = plan_consolidations(analysis, rules, tags_to_remove)
-    
+
     # Apply (or simulate)
     result = apply_consolidations(data, plan, todo2_file, dry_run)
-    
+
     # Format report
     report = format_report(analysis, plan, result)
-    
+
     # Save report if requested
     if output_path:
         Path(output_path).write_text(report)
-    
+
     return report
 
 
@@ -371,38 +370,38 @@ def tag_consolidation_tool(
 ) -> str:
     """
     [HINT: Tag consolidation. Returns renames, removals, stats, task changes.]
-    
+
     Analyze and consolidate Todo2 task tags.
-    
+
     Applies standard consolidation rules:
     - Plural → singular (tools → tool, tests → testing)
     - Case normalization (Apache-license → apache-license)
     - Long tag shortening (documentation-health-analysis → docs-health)
-    
+
     Args:
         dry_run: If True, only report what would change (default: True)
         custom_rules: JSON string of additional rules {"old": "new", ...}
         remove_tags: JSON array of tags to remove ["tag1", "tag2"]
         output_path: Optional path to save report
-        
+
     Returns:
         Formatted consolidation report
     """
     parsed_rules = None
     parsed_remove = None
-    
+
     if custom_rules:
         try:
             parsed_rules = json.loads(custom_rules)
         except json.JSONDecodeError:
             return f"Error: Invalid JSON in custom_rules: {custom_rules}"
-    
+
     if remove_tags:
         try:
             parsed_remove = json.loads(remove_tags)
         except json.JSONDecodeError:
             return f"Error: Invalid JSON in remove_tags: {remove_tags}"
-    
+
     return consolidate_tags(
         dry_run=dry_run,
         custom_rules=parsed_rules,
@@ -413,7 +412,7 @@ def tag_consolidation_tool(
 
 if __name__ == "__main__":
     import sys
-    
+
     dry_run = "--apply" not in sys.argv
     report = consolidate_tags(dry_run=dry_run)
     print(report)

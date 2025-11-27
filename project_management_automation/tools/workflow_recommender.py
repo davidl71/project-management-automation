@@ -37,7 +37,7 @@ MODE_SUGGESTIONS = {
     },
     "ASK": {
         "emoji": "💬",
-        "action": "Switch to ASK mode", 
+        "action": "Switch to ASK mode",
         "instruction": "Click the mode selector (top of chat) → Select 'Ask'",
         "keyboard": "No keyboard shortcut available",
         "why": "ASK mode provides focused assistance with user control over changes",
@@ -275,21 +275,21 @@ def generate_mode_suggestion_message(
 ) -> str:
     """
     Generate a user-friendly mode suggestion message.
-    
+
     This message is designed to be displayed to the user by the AI agent,
     since MCP cannot programmatically change Cursor's mode.
-    
+
     Args:
         mode: Recommended mode (AGENT or ASK)
         confidence: Confidence level (0-100)
         task_summary: Brief task description for context
-        
+
     Returns:
         Formatted suggestion message
     """
     suggestion = MODE_SUGGESTIONS.get(mode, MODE_SUGGESTIONS["ASK"])
     emoji = suggestion["emoji"]
-    
+
     # Build confidence qualifier
     if confidence >= 80:
         qualifier = "strongly recommend"
@@ -297,18 +297,18 @@ def generate_mode_suggestion_message(
         qualifier = "recommend"
     else:
         qualifier = "suggest"
-    
+
     # Build the message
     lines = [
         f"{emoji} **Mode Suggestion: {mode}**",
         "",
     ]
-    
+
     if task_summary:
         lines.append(f"For this task ({task_summary[:50]}{'...' if len(task_summary) > 50 else ''}), I {qualifier} using **{mode}** mode.")
     else:
         lines.append(f"I {qualifier} using **{mode}** mode for this task.")
-    
+
     lines.extend([
         "",
         f"**Why?** {suggestion['why']}",
@@ -316,40 +316,40 @@ def generate_mode_suggestion_message(
         "**To switch:**",
         f"→ {suggestion['instruction']}",
     ])
-    
+
     return "\n".join(lines)
 
 
 def get_mode_suggestion_for_task(
     task_description: str,
     current_mode: Optional[str] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Quick helper to get mode suggestion for a task.
-    
+
     Can be called by other tools to check if mode change is recommended.
-    
+
     Args:
         task_description: What the user wants to do
         current_mode: Current mode if known (AGENT or ASK)
-        
+
     Returns:
         Dict with recommendation and whether switch is needed
     """
     content_lower = task_description.lower()
-    
+
     # Quick scoring
     agent_score = sum(2 for kw in AGENT_INDICATORS["keywords"] if kw in content_lower)
     agent_score += sum(3 for p in AGENT_INDICATORS["patterns"] if re.search(p, content_lower))
-    
+
     ask_score = sum(2 for kw in ASK_INDICATORS["keywords"] if kw in content_lower)
     ask_score += sum(3 for p in ASK_INDICATORS["patterns"] if re.search(p, content_lower))
-    
+
     recommended = "AGENT" if agent_score > ask_score else "ASK"
     confidence = abs(agent_score - ask_score) / (agent_score + ask_score + 1) * 100
-    
+
     needs_switch = current_mode and current_mode.upper() != recommended
-    
+
     return {
         "recommended_mode": recommended,
         "confidence": round(confidence, 1),
@@ -366,17 +366,17 @@ def format_mode_switch_prompt(
 ) -> str:
     """
     Format a clear prompt for the AI to communicate mode switch suggestion.
-    
+
     Args:
         from_mode: Current mode
         to_mode: Recommended mode
         reason: Why the switch is recommended
-        
+
     Returns:
         Formatted prompt string for AI to display
     """
     to_suggestion = MODE_SUGGESTIONS.get(to_mode, MODE_SUGGESTIONS["ASK"])
-    
+
     message = f"""
 ---
 {to_suggestion['emoji']} **Suggested Mode Change: {from_mode} → {to_mode}**
@@ -401,21 +401,21 @@ def format_mode_switch_prompt(
 def suggest_mode_if_needed(task_description: str) -> Optional[str]:
     """
     Check if mode suggestion should be appended to tool output.
-    
+
     Call this at the end of tool execution to potentially add a mode suggestion.
     Returns None if no suggestion needed, otherwise returns suggestion text.
-    
+
     Args:
         task_description: Description of what was just done
-        
+
     Returns:
         Suggestion text or None
     """
     result = get_mode_suggestion_for_task(task_description)
-    
+
     # Only suggest if confidence is high enough
     if result["confidence"] >= 70:
         return f"\n\n💡 **Tip:** {MODE_SUGGESTIONS[result['recommended_mode']]['action']} for better results with this type of task."
-    
+
     return None
 

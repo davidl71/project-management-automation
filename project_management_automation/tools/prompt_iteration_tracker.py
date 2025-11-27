@@ -131,12 +131,12 @@ class PromptIterationTracker:
         # Generate patterns
         if analysis["avg_iterations"] > 3:
             analysis["patterns"].append("High iteration count - consider more detailed initial prompts")
-        
+
         agent_count = analysis["by_mode"].get("AGENT", 0)
         ask_count = analysis["by_mode"].get("ASK", 0)
         if agent_count > ask_count * 2:
             analysis["patterns"].append("Heavy AGENT usage - consider ASK for simpler queries")
-        
+
         failed = analysis["by_outcome"].get("failed", 0)
         if failed > analysis["total_prompts"] * 0.2:
             analysis["patterns"].append("High failure rate - review prompt quality")

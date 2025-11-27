@@ -38,12 +38,12 @@ def analyze_alignment(
 ) -> dict[str, Any]:
     """
     Unified alignment analysis tool.
-    
+
     Args:
         action: "todo2" for task alignment, "prd" for PRD persona mapping
         create_followup_tasks: Create tasks for misaligned items (todo2 only)
         output_path: Optional file to save results
-    
+
     Returns:
         Alignment analysis results
     """
@@ -71,7 +71,7 @@ async def security_async(
 ) -> dict[str, Any]:
     """
     Unified security analysis tool (async with progress).
-    
+
     Args:
         action: "scan" for local pip-audit, "alerts" for Dependabot, "report" for combined
         repo: GitHub repo for alerts/report (owner/repo format)
@@ -80,7 +80,7 @@ async def security_async(
         state: Alert state filter (alerts action)
         include_dismissed: Include dismissed alerts (report action)
         ctx: FastMCP Context for progress reporting (optional)
-    
+
     Returns:
         Security scan/report results
     """
@@ -112,7 +112,7 @@ def security(
 ) -> dict[str, Any]:
     """
     Unified security analysis tool (sync wrapper).
-    
+
     Args:
         action: "scan" for local pip-audit, "alerts" for Dependabot, "report" for combined
         repo: GitHub repo for alerts/report (owner/repo format)
@@ -121,7 +121,7 @@ def security(
         state: Alert state filter (alerts action)
         include_dismissed: Include dismissed alerts (report action)
         ctx: FastMCP Context for progress reporting (optional)
-    
+
     Returns:
         Security scan/report results
     """
@@ -132,7 +132,7 @@ def security(
         in_async = True
     except RuntimeError:
         pass
-    
+
     if in_async:
         raise RuntimeError("Use security_async() in async context, or call from sync code")
     return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
@@ -155,7 +155,7 @@ def generate_config(
 ) -> dict[str, Any]:
     """
     Unified config generation tool.
-    
+
     Args:
         action: "rules" for .mdc files, "ignore" for .cursorignore, "simplify" for rule simplification
         rules: Specific rules to generate (rules action)
@@ -166,7 +166,7 @@ def generate_config(
         rule_files: Rule files to simplify (simplify action)
         output_dir: Output directory (simplify action)
         dry_run: Preview changes without writing
-    
+
     Returns:
         Config generation results
     """
@@ -205,7 +205,7 @@ def setup_hooks(
 ) -> dict[str, Any]:
     """
     Unified hooks setup tool.
-    
+
     Args:
         action: "git" for git hooks, "patterns" for pattern triggers
         hooks: Specific git hooks to install (git action)
@@ -213,7 +213,7 @@ def setup_hooks(
         config_path: Config file path (patterns action)
         install: Install hooks (vs uninstall)
         dry_run: Preview changes without writing
-    
+
     Returns:
         Hook setup results
     """
@@ -249,7 +249,7 @@ def prompt_tracking(
 ) -> dict[str, Any]:
     """
     Unified prompt tracking tool.
-    
+
     Args:
         action: "log" to record a prompt, "analyze" to view patterns
         prompt: Prompt text to log (log action, required)
@@ -258,7 +258,7 @@ def prompt_tracking(
         outcome: Result of prompt (log action)
         iteration: Iteration number (log action)
         days: Days of history to analyze (analyze action)
-    
+
     Returns:
         Log confirmation or analysis results
     """
@@ -295,7 +295,7 @@ def health(
 ) -> dict[str, Any]:
     """
     Unified health check tool.
-    
+
     Args:
         action: "server" for server status, "git" for working copy, "docs" for documentation, "dod" for definition of done, "cicd" for CI/CD validation
         agent_name: Agent name filter (git action)
@@ -307,15 +307,16 @@ def health(
         auto_check: Auto-run checks (dod action)
         workflow_path: Path to workflow file (cicd action)
         check_runners: Validate runner configs (cicd action)
-    
+
     Returns:
         Health check results
     """
     if action == "server":
-        from ..utils.dev_reload import is_dev_mode
-        from ..utils import find_project_root
         import time
-        
+
+        from ..utils import find_project_root
+        from ..utils.dev_reload import is_dev_mode
+
         project_root = find_project_root()
         version = "unknown"
         pyproject = project_root / "pyproject.toml"
@@ -325,7 +326,7 @@ def health(
             match = re.search(r'version\s*=\s*["\']([^"\']+)["\']', content)
             if match:
                 version = match.group(1)
-        
+
         return {
             "status": "operational",
             "version": version,
@@ -343,8 +344,9 @@ def health(
         from .definition_of_done import check_definition_of_done
         return check_definition_of_done(task_id, changed_files, auto_check, output_path)
     elif action == "cicd":
-        from .ci_cd_validation import validate_ci_cd_workflow
         import json
+
+        from .ci_cd_validation import validate_ci_cd_workflow
         result = validate_ci_cd_workflow(workflow_path, check_runners, output_path)
         return json.loads(result) if isinstance(result, str) else result
     else:
@@ -376,7 +378,7 @@ def report(
 ) -> dict[str, Any]:
     """
     Unified report generation tool.
-    
+
     Args:
         action: "overview" for project overview, "scorecard" for health metrics, "briefing" for advisor wisdom, "prd" for requirements doc
         output_format: Output format (text, json, markdown)
@@ -392,7 +394,7 @@ def report(
         include_architecture: Include architecture section (prd action)
         include_metrics: Include metrics section (prd action)
         include_tasks: Include tasks section (prd action)
-    
+
     Returns:
         Generated report
     """
@@ -435,7 +437,7 @@ def advisor_audio(
 ) -> dict[str, Any]:
     """
     Unified advisor audio tool.
-    
+
     Args:
         action: "quote" to synthesize single quote, "podcast" to generate full audio, "export" for JSON export
         text: Quote text to synthesize (quote action, required)
@@ -443,7 +445,7 @@ def advisor_audio(
         days: Days of history to include (podcast/export actions)
         output_path: Output file path
         backend: TTS backend (auto, elevenlabs, edge-tts, pyttsx3)
-    
+
     Returns:
         Audio generation results or export data
     """
@@ -458,8 +460,9 @@ def advisor_audio(
         consultations = get_consultation_log(days=days)
         return generate_podcast_audio(consultations, output_path, backend)
     elif action == "export":
-        from .wisdom.advisors import export_for_podcast
         from pathlib import Path
+
+        from .wisdom.advisors import export_for_podcast
         path = Path(output_path) if output_path else None
         return export_for_podcast(days=days, output_path=path)
     else:
@@ -486,7 +489,7 @@ def task_analysis(
 ) -> dict[str, Any]:
     """
     Unified task analysis tool.
-    
+
     Args:
         action: "duplicates" to find duplicates, "tags" for tag cleanup, "hierarchy" for structure analysis
         similarity_threshold: Threshold for duplicate detection (duplicates action)
@@ -497,7 +500,7 @@ def task_analysis(
         output_format: Output format - text or json (hierarchy action)
         include_recommendations: Include recommendations (hierarchy action)
         output_path: Save results to file
-    
+
     Returns:
         Analysis results
     """
@@ -534,7 +537,7 @@ async def testing_async(
 ) -> dict[str, Any]:
     """
     Unified testing tool (async with progress).
-    
+
     Args:
         action: "run" to execute tests, "coverage" to analyze coverage
         test_path: Path to test file/directory (run action)
@@ -546,7 +549,7 @@ async def testing_async(
         format: Report format - html, json, terminal (coverage action)
         output_path: Save results to file
         ctx: FastMCP Context for progress reporting (optional)
-    
+
     Returns:
         Test or coverage results as JSON string
     """
@@ -582,7 +585,7 @@ def testing(
 ) -> dict[str, Any]:
     """
     Unified testing tool (sync wrapper).
-    
+
     Args:
         action: "run" to execute tests, "coverage" to analyze coverage
         test_path: Path to test file/directory (run action)
@@ -594,7 +597,7 @@ def testing(
         format: Report format - html, json, terminal (coverage action)
         output_path: Save results to file
         ctx: FastMCP Context for progress reporting (optional)
-    
+
     Returns:
         Test or coverage results as dict
     """
@@ -605,7 +608,7 @@ def testing(
         in_async = True
     except RuntimeError:
         pass
-    
+
     if in_async:
         raise RuntimeError("Use testing_async() in async context, or call from sync code")
     return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
@@ -628,7 +631,7 @@ def lint(
 ) -> dict[str, Any]:
     """
     Unified linting tool.
-    
+
     Args:
         action: "run" to execute linter, "analyze" to analyze problems
         path: File or directory to lint (run action)
@@ -640,7 +643,7 @@ def lint(
         problems_json: JSON string of problems to analyze (analyze action)
         include_hints: Include resolution hints (analyze action)
         output_path: Save results to file
-    
+
     Returns:
         Linting or analysis results as JSON string
     """
@@ -680,7 +683,7 @@ def memory(
 ) -> dict:
     """
     Unified memory management tool.
-    
+
     Args:
         action: "save" to store insight, "recall" to get task context, "search" to find memories
         title: Memory title (save action, required)
@@ -691,7 +694,7 @@ def memory(
         include_related: Include related task memories (recall action)
         query: Search query text (search action)
         limit: Maximum results (search action)
-    
+
     Returns:
         Memory operation results
     """
@@ -746,9 +749,9 @@ def task_discovery(
 ) -> dict[str, Any]:
     """
     Unified task discovery tool.
-    
+
     Finds tasks from various sources in the codebase.
-    
+
     Args:
         action: "comments" for TODO/FIXME in code, "markdown" for task lists in docs,
                 "orphans" for orphaned Todo2 tasks, "all" for everything
@@ -757,21 +760,22 @@ def task_discovery(
         doc_path: Path to scan for markdown tasks (markdown action)
         output_path: Save results to file
         create_tasks: Auto-create Todo2 tasks from discoveries
-    
+
     Returns:
         Discovery results with found tasks
     """
     import re
     from pathlib import Path
+
     from ..utils import find_project_root
-    
+
     project_root = find_project_root()
     results = {
         "action": action,
         "discoveries": [],
         "summary": {},
     }
-    
+
     def scan_comments():
         """Scan code for TODO/FIXME comments."""
         discoveries = []
@@ -781,9 +785,9 @@ def task_discovery(
                 patterns = json.loads(file_patterns)
             except json.JSONDecodeError:
                 pass
-        
+
         todo_pattern = re.compile(r'#\s*(TODO|FIXME)[\s:]+(.+)', re.IGNORECASE) if include_fixme else re.compile(r'#\s*TODO[\s:]+(.+)', re.IGNORECASE)
-        
+
         for pattern in patterns:
             for file_path in project_root.glob(pattern):
                 if any(skip in str(file_path) for skip in ['.git', 'node_modules', '__pycache__', '.venv', 'build']):
@@ -803,16 +807,16 @@ def task_discovery(
                 except Exception:
                     continue
         return discoveries
-    
+
     def scan_markdown():
         """Scan markdown files for task lists."""
         discoveries = []
         search_path = Path(doc_path) if doc_path else project_root / "docs"
         if not search_path.exists():
             search_path = project_root
-        
+
         task_pattern = re.compile(r'^[\s]*[-*]\s*\[([ xX])\]\s*(.+)', re.MULTILINE)
-        
+
         for md_file in search_path.rglob("*.md"):
             if any(skip in str(md_file) for skip in ['.git', 'node_modules']):
                 continue
@@ -831,14 +835,14 @@ def task_discovery(
             except Exception:
                 continue
         return discoveries
-    
+
     def find_orphans():
         """Find orphaned Todo2 tasks."""
         from .task_hierarchy import analyze_task_hierarchy
         result = analyze_task_hierarchy(output_format="json", include_recommendations=False)
         orphans = result.get("networkx_analysis", {}).get("orphans", [])
         return [{"type": "ORPHAN", "task_id": o, "source": "todo2"} for o in orphans]
-    
+
     # Execute based on source
     if action in ["comments", "all"]:
         results["discoveries"].extend(scan_comments())
@@ -846,7 +850,7 @@ def task_discovery(
         results["discoveries"].extend(scan_markdown())
     if action in ["orphans", "all"]:
         results["discoveries"].extend(find_orphans())
-    
+
     # Summary
     results["summary"] = {
         "total": len(results["discoveries"]),
@@ -858,11 +862,11 @@ def task_discovery(
         typ = d.get("type", "unknown")
         results["summary"]["by_source"][src] = results["summary"]["by_source"].get(src, 0) + 1
         results["summary"]["by_type"][typ] = results["summary"]["by_type"].get(typ, 0) + 1
-    
+
     # Save if requested
     if output_path:
         Path(output_path).write_text(json.dumps(results, indent=2))
-    
+
     return results
 
 
@@ -888,7 +892,7 @@ def task_workflow(
 ) -> dict[str, Any]:
     """
     Unified task workflow management tool.
-    
+
     Args:
         action: "sync" for TODO↔Todo2 sync, "approve" for bulk approval, "clarify" for clarifications
         dry_run: Preview changes without applying (sync, approve)
@@ -904,7 +908,7 @@ def task_workflow(
         decisions_json: Batch decisions as JSON (clarify)
         move_to_todo: Move resolved tasks to Todo (clarify)
         output_path: Save results to file
-    
+
     Returns:
         Workflow operation results
     """
@@ -912,7 +916,7 @@ def task_workflow(
         from .todo_sync import sync_todo_tasks
         result = sync_todo_tasks(dry_run, output_path)
         return json.loads(result) if isinstance(result, str) else result
-    
+
     elif action == "approve":
         from .batch_task_approval import batch_approve_tasks
         ids = None
@@ -930,14 +934,14 @@ def task_workflow(
             dry_run=dry_run,
         )
         return json.loads(result) if isinstance(result, str) else result
-    
+
     elif action == "clarify":
         from .task_clarification_resolution import (
             list_tasks_awaiting_clarification,
-            resolve_task_clarification,
             resolve_multiple_clarifications,
+            resolve_task_clarification,
         )
-        
+
         if sub_action == "list":
             result = list_tasks_awaiting_clarification()
         elif sub_action == "resolve":
@@ -956,9 +960,9 @@ def task_workflow(
             result = resolve_multiple_clarifications(decisions, move_to_todo, dry_run)
         else:
             return {"status": "error", "error": f"Unknown sub_action: {sub_action}. Use 'list', 'resolve', or 'batch'."}
-        
+
         return result if isinstance(result, dict) else json.loads(result)
-    
+
     else:
         return {
             "status": "error",

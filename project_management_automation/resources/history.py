@@ -42,7 +42,7 @@ def get_history_resource(limit: int = 50) -> str:
         for history_file in history_files:
             if history_file.exists():
                 try:
-                    with open(history_file, 'r') as f:
+                    with open(history_file) as f:
                         data = json.load(f)
                         runs = data.get('runs', [])
                         for run in runs[-limit:]:  # Get last N runs

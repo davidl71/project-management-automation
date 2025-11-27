@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def simplify_rules(
-    rule_files: Optional[List[str]] = None,
+    rule_files: Optional[list[str]] = None,
     dry_run: bool = True,
     output_dir: Optional[str] = None
 ) -> str:
@@ -71,13 +71,13 @@ def simplify_rules(
             continue
 
         try:
-            with open(rule_file, 'r', encoding='utf-8') as f:
+            with open(rule_file, encoding='utf-8') as f:
                 content = f.read()
 
             simplifications = []
 
             # Apply simplification patterns
-            for pattern_name, pattern_config in simplification_patterns.items():
+            for _pattern_name, pattern_config in simplification_patterns.items():
                 matches = _apply_pattern(content, pattern_config)
                 if matches:
                     content = _replace_pattern(content, pattern_config, matches)
@@ -114,7 +114,7 @@ def simplify_rules(
     return json.dumps(results, indent=2)
 
 
-def _get_simplification_patterns() -> Dict[str, Dict]:
+def _get_simplification_patterns() -> dict[str, dict]:
     """Get patterns for rule simplification."""
     return {
         "manual_linting": {
@@ -171,7 +171,7 @@ def _get_simplification_patterns() -> Dict[str, Dict]:
     }
 
 
-def _apply_pattern(content: str, pattern_config: Dict) -> List[Dict]:
+def _apply_pattern(content: str, pattern_config: dict) -> list[dict]:
     """Apply a simplification pattern and return matches."""
     pattern = pattern_config["pattern"]
     flags = pattern_config.get("flags", 0)
@@ -188,7 +188,7 @@ def _apply_pattern(content: str, pattern_config: Dict) -> List[Dict]:
     return matches
 
 
-def _replace_pattern(content: str, pattern_config: Dict, matches: List[Dict]) -> str:
+def _replace_pattern(content: str, pattern_config: dict, matches: list[dict]) -> str:
     """Replace pattern matches with simplified versions."""
     pattern = pattern_config["pattern"]
     replacement = pattern_config["replacement"]

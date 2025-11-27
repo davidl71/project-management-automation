@@ -17,13 +17,12 @@ import logging
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Dict, List, Optional
-from difflib import SequenceMatcher
 
 # Add project root to path
 # Project root will be passed to __init__
-
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -34,7 +33,7 @@ logger = logging.getLogger(__name__)
 class Todo2DuplicateDetector(IntelligentAutomationBase):
     """Intelligent Todo2 duplicate task detector using base class."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
@@ -61,7 +60,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         """Sequential problem: How do we detect duplicates?"""
         return "How do we systematically detect duplicate tasks in Todo2?"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute duplicate detection analysis."""
         logger.info("Executing Todo2 duplicate detection...")
 
@@ -125,10 +124,10 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         results['duplicates_found'] = total_duplicates
         return results
 
-    def _load_todo2_tasks(self) -> List[Dict]:
+    def _load_todo2_tasks(self) -> list[dict]:
         """Load tasks from Todo2 state file."""
         try:
-            with open(self.todo2_path, 'r') as f:
+            with open(self.todo2_path) as f:
                 data = json.load(f)
             return data.get('todos', [])
         except FileNotFoundError:
@@ -138,7 +137,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
             logger.error(f"Invalid JSON in Todo2 state file: {e}")
             return []
 
-    def _detect_duplicate_ids(self, tasks: List[Dict]):
+    def _detect_duplicate_ids(self, tasks: list[dict]):
         """Detect tasks with duplicate IDs (should never happen)."""
         id_counts = Counter([t['id'] for t in tasks])
         duplicates = {id: count for id, count in id_counts.items() if count > 1}
@@ -159,7 +158,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                 ]
             })
 
-    def _detect_exact_name_matches(self, tasks: List[Dict]):
+    def _detect_exact_name_matches(self, tasks: list[dict]):
         """Detect tasks with identical names."""
         name_to_tasks = defaultdict(list)
         for task in tasks:
@@ -167,7 +166,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
             if name:
                 name_to_tasks[name].append(task)
 
-        for name, task_list in name_to_tasks.items():
+        for _name, task_list in name_to_tasks.items():
             if len(task_list) > 1:
                 # Filter out tasks with different IDs (true duplicates)
                 task_ids = [t['id'] for t in task_list]
@@ -187,7 +186,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                         ]
                     })
 
-    def _detect_similar_name_matches(self, tasks: List[Dict]):
+    def _detect_similar_name_matches(self, tasks: list[dict]):
         """Detect tasks with similar names (fuzzy matching)."""
         for i, task1 in enumerate(tasks):
             name1 = task1.get('name', '').strip().lower()
@@ -217,7 +216,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                         ]
                     })
 
-    def _detect_similar_descriptions(self, tasks: List[Dict]):
+    def _detect_similar_descriptions(self, tasks: list[dict]):
         """Detect tasks with similar long descriptions."""
         for i, task1 in enumerate(tasks):
             desc1 = task1.get('long_description', '').strip()
@@ -247,7 +246,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                         ]
                     })
 
-    def _detect_self_dependencies(self, tasks: List[Dict]):
+    def _detect_self_dependencies(self, tasks: list[dict]):
         """Detect tasks that depend on themselves (invalid)."""
         for task in tasks:
             deps = task.get('dependencies', [])
@@ -259,7 +258,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                     'dependencies': deps
                 })
 
-    def _apply_auto_fix(self, tasks: List[Dict]) -> Dict:
+    def _apply_auto_fix(self, tasks: list[dict]) -> dict:
         """Apply auto-fix to consolidate duplicates."""
         tasks_removed = 0
         tasks_merged = 0
@@ -269,7 +268,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
 
         # Load current state
         try:
-            with open(self.todo2_path, 'r') as f:
+            with open(self.todo2_path) as f:
                 state = json.load(f)
         except Exception as e:
             logger.error(f"Failed to load Todo2 state: {e}")
@@ -382,7 +381,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
             logger.error(f"Failed to save Todo2 state: {e}")
             return {'applied': False, 'tasks_removed': 0, 'tasks_merged': 0, 'dependencies_updated': 0}
 
-    def _select_best_task(self, tasks: List[Dict], all_tasks: List[Dict]) -> Dict:
+    def _select_best_task(self, tasks: list[dict], all_tasks: list[dict]) -> dict:
         """Select the best task to keep from a list of duplicates."""
         # Get full task data
         full_tasks = []
@@ -417,14 +416,14 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                     dt = datetime.fromisoformat(last_modified.replace('Z', '+00:00'))
                     # Days since epoch (more recent = higher number)
                     score += (dt - datetime(1970, 1, 1)).days
-                except:
+                except (ValueError, TypeError):
                     pass
 
             return score
 
         return max(full_tasks, key=score_task)
 
-    def _merge_task_data(self, keep_id: str, remove_id: str, all_tasks: List[Dict]):
+    def _merge_task_data(self, keep_id: str, remove_id: str, all_tasks: list[dict]):
         """Merge data from removed task into kept task."""
         keep_task = next((t for t in all_tasks if t['id'] == keep_id), None)
         remove_task = next((t for t in all_tasks if t['id'] == remove_id), None)
@@ -461,7 +460,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         # Update last modified
         keep_task['lastModified'] = datetime.now().isoformat()
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from duplicate detection results."""
         insights = []
 
@@ -485,7 +484,7 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
 
         return "\n\n".join(insights)
 
-    def _generate_report(self, analysis_results: Dict, insights: Optional[str] = None) -> str:
+    def _generate_report(self, analysis_results: dict, insights: Optional[str] = None) -> str:
         """Generate markdown report."""
         report = f"""# Todo2 Duplicate Task Detection Report
 
@@ -571,11 +570,11 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         report += "5. Re-run this script to verify fixes\n\n"
 
         report += "---\n\n"
-        report += f"*Report generated by `scripts/automate_todo2_duplicate_detection.py`*\n"
+        report += "*Report generated by `scripts/automate_todo2_duplicate_detection.py`*\n"
 
         return report
 
-    def _create_followup_tasks(self, analysis_results: Dict):
+    def _create_followup_tasks(self, analysis_results: dict):
         """Create follow-up tasks if duplicates found."""
         if analysis_results.get('duplicates_found', 0) > 0:
             # Only create follow-up if not auto-fixing
@@ -607,7 +606,7 @@ def main():
     project_root = find_project_root()
     config_path = project_root / args.config
     if config_path.exists():
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             config = json.load(f)
     else:
         config = {}
@@ -634,7 +633,7 @@ def main():
             logger.info(f"Report written to: {detector.output_path}")
 
         duplicates_found = results.get('duplicates_found', 0)
-        print(f"\n✅ Duplicate detection complete!")
+        print("\n✅ Duplicate detection complete!")
         print(f"   Report: {detector.output_path}")
         print(f"   Duplicates found: {duplicates_found}")
     else:

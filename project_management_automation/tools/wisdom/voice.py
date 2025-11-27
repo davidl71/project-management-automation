@@ -125,7 +125,7 @@ def get_available_backend() -> Optional[TTSBackend]:
     return None
 
 
-def list_available_voices(backend: TTSBackend = "auto") -> Dict[str, Any]:
+def list_available_voices(backend: TTSBackend = "auto") -> dict[str, Any]:
     """List available voices for the specified backend."""
     if backend == "auto":
         backend = get_available_backend()
@@ -251,7 +251,7 @@ def synthesize_advisor_quote(
     advisor: str = "default",
     output_path: Optional[str] = None,
     backend: TTSBackend = "auto",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Synthesize an advisor quote to audio.
 
@@ -323,12 +323,12 @@ def synthesize_advisor_quote(
 
 
 def generate_podcast_audio(
-    consultations: List[Dict[str, Any]],
+    consultations: list[dict[str, Any]],
     output_path: Optional[str] = None,
     backend: TTSBackend = "auto",
     include_intro: bool = True,
     include_transitions: bool = True,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Generate a podcast-style audio file from advisor consultations.
 
@@ -465,7 +465,7 @@ def generate_podcast_audio(
         }
 
 
-def check_tts_backends() -> Dict[str, Any]:
+def check_tts_backends() -> dict[str, Any]:
     """Check which TTS backends are available and configured."""
     result = {
         "available_backends": [],

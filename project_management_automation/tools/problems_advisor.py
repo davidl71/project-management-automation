@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 
-def _save_problems_memory(analysis: Dict[str, Any]) -> Dict[str, Any]:
+def _save_problems_memory(analysis: dict[str, Any]) -> dict[str, Any]:
     """Save problem analysis as memory for pattern matching."""
     try:
         from .session_memory import save_session_insight
@@ -109,11 +109,11 @@ class ProblemHint:
     resolution: str
     auto_fixable: bool
     severity_weight: int  # 1-10, higher = more critical
-    tools: List[str]  # Tools that can help
+    tools: list[str]  # Tools that can help
 
 
 # Problem resolution hints database
-PROBLEM_HINTS: List[ProblemHint] = [
+PROBLEM_HINTS: list[ProblemHint] = [
     # Spelling
     ProblemHint(
         category="spelling",
@@ -255,7 +255,7 @@ def categorize_problem(message: str) -> ProblemHint:
     )
 
 
-def analyze_problems(problems: List[Dict[str, Any]], include_hints: bool = True) -> Dict[str, Any]:
+def analyze_problems(problems: list[dict[str, Any]], include_hints: bool = True) -> dict[str, Any]:
     """
     Analyze a list of problems and provide resolution hints.
 
@@ -314,7 +314,7 @@ def analyze_problems(problems: List[Dict[str, Any]], include_hints: bool = True)
     return results
 
 
-def get_quick_fixes(category: str) -> List[str]:
+def get_quick_fixes(category: str) -> list[str]:
     """Get quick fix commands for a category."""
     fixes = {
         "spelling": ["Add word to .cspell/project-words.txt", "npx cspell --words-only <file>"],
@@ -406,7 +406,7 @@ def analyze_problems_tool(problems_json: str, include_hints: bool = True, output
         )
 
 
-def generate_problems_report(analysis: Dict[str, Any]) -> str:
+def generate_problems_report(analysis: dict[str, Any]) -> str:
     """Generate a markdown report from analysis results."""
     lines = [
         "# Problems Analysis Report",

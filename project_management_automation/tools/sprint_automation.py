@@ -12,12 +12,12 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
 
-def _recall_sprint_context() -> Dict[str, Any]:
+def _recall_sprint_context() -> dict[str, Any]:
     """Recall memories useful for sprint planning."""
     try:
         from .session_memory import get_memories_for_sprint
@@ -27,14 +27,14 @@ def _recall_sprint_context() -> Dict[str, Any]:
         return {"success": False, "error": "Memory system not available"}
 
 
-def _save_sprint_result(results: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+def _save_sprint_result(results: dict[str, Any], dry_run: bool) -> dict[str, Any]:
     """Save sprint results as memory for future reference."""
     if dry_run:
         return {"success": True, "skipped": "dry_run"}
-    
+
     try:
         from .session_memory import save_session_insight
-        
+
         # Create summary content
         content = f"""Sprint automation completed.
 
@@ -51,7 +51,7 @@ def _save_sprint_result(results: Dict[str, Any], dry_run: bool) -> Dict[str, Any
 ## Human Contributions Needed ({results.get('human_contributions_count', 0)})
 {chr(10).join('- ' + h for h in results.get('human_contributions', [])[:5]) or 'None identified'}
 """
-        
+
         return save_session_insight(
             title=f"Sprint: {results.get('tasks_processed', 0)} tasks, {results.get('tasks_completed', 0)} completed",
             content=content,
@@ -64,23 +64,13 @@ def _save_sprint_result(results: Dict[str, Any], dry_run: bool) -> Dict[str, Any
 
 # Import error handler
 try:
-    from ..error_handler import (
-        format_success_response,
-        format_error_response,
-        log_automation_execution,
-        ErrorCode
-    )
+    from ..error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
 except ImportError:
     import sys
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     try:
-        from error_handler import (
-            format_success_response,
-            format_error_response,
-            log_automation_execution,
-            ErrorCode
-        )
+        from error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
     except ImportError:
         def format_success_response(data, message=None):
             return {"success": True, "data": data, "timestamp": time.time()}
@@ -99,7 +89,7 @@ def sprint_automation(
     run_analysis_tools: bool = True,
     run_testing_tools: bool = True,
     priority_filter: Optional[str] = None,
-    tag_filter: Optional[List[str]] = None,
+    tag_filter: Optional[list[str]] = None,
     dry_run: bool = False,
     output_path: Optional[str] = None
 ) -> str:
@@ -141,7 +131,7 @@ def sprint_automation(
     try:
         from project_management_automation.scripts.automate_sprint import SprintAutomation
         from project_management_automation.utils import find_project_root
-        
+
         project_root = find_project_root()
 
         config = {
@@ -186,7 +176,7 @@ def sprint_automation(
         memory_result = _save_sprint_result(response_data, dry_run)
         if memory_result.get('success'):
             response_data['memory_saved'] = memory_result.get('memory_id')
-        
+
         # Include sprint context summary in response
         if sprint_context.get('success'):
             response_data['context_used'] = {

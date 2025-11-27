@@ -28,19 +28,19 @@ Configuration:
 Credits: Many texts sourced from https://sacred-texts.com/ (public domain)
 """
 
-import os
 import json
+import os
 import random
-from pathlib import Path
 from datetime import datetime
-from typing import Optional, Dict, Any, List
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # WISDOM DATABASES BY SOURCE
 # ═══════════════════════════════════════════════════════════════════════════════
 
 WISDOM_SOURCES = {
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # BOFH - Bastard Operator From Hell (Simon Travaglia)
     # Perfect for: debugging sessions, outages, dealing with "users"
@@ -74,7 +74,7 @@ WISDOM_SOURCES = {
             {"quote": "The server room is my happy place. No users allowed.", "source": "BOFH Zen", "encouragement": "Protect your focus time."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # TAO TE CHING - Lao Tzu
     # Perfect for: finding balance, letting go, embracing simplicity
@@ -108,7 +108,7 @@ WISDOM_SOURCES = {
             {"quote": "Retire when the work is done; this is the way of heaven.", "source": "Chapter 9", "encouragement": "Know when to ship."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # ART OF WAR - Sun Tzu
     # Perfect for: strategy, planning, competitive situations
@@ -142,7 +142,7 @@ WISDOM_SOURCES = {
             {"quote": "The whole secret lies in confusing the enemy.", "source": "Chapter 6", "encouragement": "Complexity is the enemy of security."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # STOICS - Marcus Aurelius & Epictetus
     # Perfect for: dealing with adversity, maintaining focus, resilience
@@ -176,7 +176,7 @@ WISDOM_SOURCES = {
             {"quote": "Accept the things to which fate binds you, and love the people with whom fate brings you together.", "source": "Marcus Aurelius, Meditations", "encouragement": "Embrace your team."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # BIBLE - Proverbs & Ecclesiastes (KJV - Public Domain)
     # Perfect for: wisdom about work, humility, perseverance
@@ -210,7 +210,7 @@ WISDOM_SOURCES = {
             {"quote": "The end of a matter is better than its beginning, and patience is better than pride.", "source": "Ecclesiastes 7:8", "encouragement": "You've earned this."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # TAO OF PROGRAMMING - Geoffrey James (1987)
     # Perfect for: coding philosophy, programmer wisdom
@@ -244,7 +244,7 @@ WISDOM_SOURCES = {
             {"quote": "A master programmer passed a novice programmer one day. The master noted the novice's preoccupation with a hand-held game. 'Excuse me,' he said, 'may I examine it?' The novice handed it to him. 'I see that the game requires you to push buttons to make helicopters and tanks shoot each other,' said the master. 'That is correct,' said the novice. 'But it has no purpose.' The master threw the game to the ground and crushed it under his heel. 'Neither does your code,' said the master. The novice was enlightened.", "source": "Book 6", "encouragement": "Purpose over pixels."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # MURPHY'S LAW - Various
     # Perfect for: testing, releases, estimates, risk management
@@ -278,7 +278,7 @@ WISDOM_SOURCES = {
             {"quote": "Blessed is he who expects nothing, for he shall not be disappointed.", "source": "Murphy's Blessing", "encouragement": "Exceed low expectations."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # SHAKESPEARE - The Bard
     # Perfect for: leadership, conflict, ambition, human nature
@@ -312,7 +312,7 @@ WISDOM_SOURCES = {
             {"quote": "The web of our life is of a mingled yarn, good and ill together.", "source": "All's Well That Ends Well, Act 4", "encouragement": "Embrace complexity."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # CONFUCIUS - The Analects
     # Perfect for: ethics, mastery, team dynamics, teaching
@@ -346,7 +346,7 @@ WISDOM_SOURCES = {
             {"quote": "When you see a worthy person, endeavor to emulate them.", "source": "Analects", "encouragement": "Learn from the best."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # THE KYBALION - Hermetic Philosophy (Three Initiates, 1908)
     # Source: https://sacred-texts.com/eso/kyb/index.htm (Public Domain)
@@ -381,7 +381,7 @@ WISDOM_SOURCES = {
             {"quote": "When the ears of the student are ready to hear, then cometh the lips to fill them with Wisdom.", "source": "The Kybalion", "encouragement": "The learner appears when ready."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # THE ART OF WORLDLY WISDOM - Baltasar Gracián (1647)
     # Source: https://sacred-texts.com/eso/aww/index.htm (Public Domain)
@@ -416,7 +416,7 @@ WISDOM_SOURCES = {
             {"quote": "Leave off hungry. One ought to remove even from the nectar of pleasure the cup from the lips.", "source": "Maxim 60", "encouragement": "Ship before perfect."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # ENOCHIAN - Mystical Calls of John Dee (1580s)
     # Source: https://sacred-texts.com/eso/enoch/index.htm (Public Domain)
@@ -451,7 +451,7 @@ WISDOM_SOURCES = {
             {"quote": "The work is finished.", "source": "Calls", "encouragement": "Ship it."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # REBBE - Chassidic/Rabbinical Wisdom
     # Source: Sefaria.org API + curated Chassidic teachings
@@ -489,7 +489,7 @@ WISDOM_SOURCES = {
             {"quote": "תִּקּוּן עוֹלָם (Repair the world)", "source": "Jewish Teaching", "encouragement": "Your code can heal."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # TZADDIK - The Righteous One
     # Source: Sefaria.org API + Mussar teachings
@@ -527,7 +527,7 @@ WISDOM_SOURCES = {
             {"quote": "אוֹר זָרֻעַ לַצַּדִּיק (Light is sown for the righteous.)", "source": "Psalms 97:11", "encouragement": "Light awaits."},
         ],
     },
-    
+
     # ─────────────────────────────────────────────────────────────────────────────
     # CHACHAM - The Sage
     # Source: Sefaria.org API + Talmudic wisdom
@@ -578,54 +578,54 @@ def get_config_path() -> Path:
     return project_root / '.exarp_wisdom_config'
 
 
-def load_config() -> Dict[str, Any]:
+def load_config() -> dict[str, Any]:
     """Load wisdom configuration."""
     config = {
         "source": os.environ.get("EXARP_WISDOM_SOURCE", "pistis_sophia"),
         "disabled": os.environ.get("EXARP_DISABLE_WISDOM", "").lower() in ("1", "true", "yes"),
         "show_disable_hint": True,
     }
-    
+
     config_path = get_config_path()
     if config_path.exists():
         try:
             with open(config_path) as f:
                 file_config = json.load(f)
                 config.update(file_config)
-        except:
+        except (OSError, json.JSONDecodeError):
             pass
-    
+
     # Check for disable file
     project_root = Path(__file__).resolve().parents[2]
     if (project_root / '.exarp_no_wisdom').exists():
         config["disabled"] = True
-    
+
     return config
 
 
-def save_config(config: Dict[str, Any]) -> None:
+def save_config(config: dict[str, Any]) -> None:
     """Save wisdom configuration."""
     config_path = get_config_path()
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
 
 
-def list_available_sources() -> List[Dict[str, str]]:
+def list_available_sources() -> list[dict[str, str]]:
     """List all available wisdom sources."""
     sources = [
         # Random - picks from any source
         {"id": "random", "name": "Random (any source)", "icon": "🎲"},
-        
+
         # Gnostic
         {"id": "pistis_sophia", "name": "Pistis Sophia (Gnostic)", "icon": "📜"},
-        
+
         # Sefaria API sources (live from Sefaria.org) - HEBREW SUPPORTED
         {"id": "pirkei_avot", "name": "Pirkei Avot via Sefaria.org (Hebrew)", "icon": "🕎", "language": "hebrew"},
         {"id": "proverbs", "name": "Mishlei/Proverbs via Sefaria.org (Hebrew)", "icon": "📜", "language": "hebrew"},
         {"id": "ecclesiastes", "name": "Kohelet/Ecclesiastes via Sefaria.org (Hebrew)", "icon": "🌅", "language": "hebrew"},
         {"id": "psalms", "name": "Tehillim/Psalms via Sefaria.org (Hebrew)", "icon": "🎵", "language": "hebrew"},
     ]
-    
+
     # Local sources (no API needed)
     for source_id, source_data in WISDOM_SOURCES.items():
         entry = {
@@ -637,11 +637,11 @@ def list_available_sources() -> List[Dict[str, str]]:
         if source_data.get("language") == "hebrew":
             entry["language"] = "hebrew"
         sources.append(entry)
-    
+
     return sources
 
 
-def list_hebrew_sources() -> List[Dict[str, str]]:
+def list_hebrew_sources() -> list[dict[str, str]]:
     """List only Hebrew wisdom sources."""
     all_sources = list_available_sources()
     return [s for s in all_sources if s.get("language") == "hebrew"]
@@ -664,64 +664,64 @@ def get_aeon_level(health_score: float) -> str:
 def get_random_source(seed_date: bool = True) -> str:
     """
     Get a random wisdom source.
-    
+
     Args:
         seed_date: If True, same source shown all day
-        
+
     Returns:
         Source ID string
     """
     # All available sources (local + Sefaria)
     all_sources = list(WISDOM_SOURCES.keys()) + ["pistis_sophia", "pirkei_avot", "proverbs", "ecclesiastes", "psalms"]
-    
+
     if seed_date:
         today = datetime.now().strftime("%Y%m%d")
         random.seed(int(today) + hash("random_source"))
-    
+
     return random.choice(all_sources)
 
 
 def get_wisdom(
-    health_score: float, 
-    source: str = None, 
+    health_score: float,
+    source: str = None,
     seed_date: bool = True,
     include_hebrew: bool = None,
     hebrew_only: bool = None,
-) -> Optional[Dict[str, Any]]:
+) -> Optional[dict[str, Any]]:
     """
     Get wisdom quote based on project health.
-    
+
     Args:
         health_score: Project health score (0-100)
         source: Wisdom source (default: from config), use "random" for random source
         seed_date: If True, same quote shown all day
         include_hebrew: If True, include Hebrew text (bilingual). Default from env.
         hebrew_only: If True, return only Hebrew text. Default from env.
-    
+
     Returns:
         Dictionary with quote data, or None if disabled.
-    
+
     Environment Variables:
         EXARP_WISDOM_HEBREW=1 - Enable bilingual Hebrew/English
         EXARP_WISDOM_HEBREW_ONLY=1 - Enable Hebrew-only mode
     """
     config = load_config()
-    
+
     if config["disabled"]:
         return None
-    
+
     source = source or config["source"]
-    
+
     # Check Hebrew settings from environment if not explicitly set
     if include_hebrew is None:
         include_hebrew = os.environ.get("EXARP_WISDOM_HEBREW", "").lower() in ("1", "true", "yes")
     if hebrew_only is None:
         hebrew_only = os.environ.get("EXARP_WISDOM_HEBREW_ONLY", "").lower() in ("1", "true", "yes")
-    
+
     # Handle random source selection
     if source == "random":
         source = get_random_source(seed_date)
-    
+
     # Handle Pistis Sophia from separate module
     if source == "pistis_sophia":
         try:
@@ -742,36 +742,36 @@ def get_wisdom(
             return None
         except ImportError:
             source = "tao"  # Fallback
-    
+
     # Handle Sefaria sources (all support Hebrew)
     if source in ("pirkei_avot", "proverbs", "ecclesiastes", "psalms"):
         try:
             from .sefaria import get_sefaria_wisdom
             return get_sefaria_wisdom(
-                health_score, 
-                source, 
+                health_score,
+                source,
                 seed_date,
                 include_hebrew=include_hebrew,
                 hebrew_only=hebrew_only,
             )
         except ImportError:
             source = "bible"  # Fallback to local bible quotes
-    
+
     if source not in WISDOM_SOURCES:
         source = "stoic"  # Default fallback
-    
+
     source_data = WISDOM_SOURCES[source]
     aeon_level = get_aeon_level(health_score)
     quotes = source_data[aeon_level]
-    
+
     # Use date as seed for consistent daily quote
     if seed_date:
         today = datetime.now().strftime("%Y%m%d")
         random.seed(int(today) + int(health_score) + hash(source))
-    
+
     quote = random.choice(quotes)
     random.seed()  # Reset
-    
+
     result = {
         "quote": quote["quote"],
         "source": quote["source"],
@@ -782,23 +782,23 @@ def get_wisdom(
         "health_score": health_score,
         "show_disable_hint": config.get("show_disable_hint", True),
     }
-    
+
     # Mark Hebrew sources
     if source_data.get("language") == "hebrew":
         result["language"] = "hebrew"
         result["bilingual"] = True  # Local Hebrew sources are bilingual by default
-    
+
     return result
 
 
-def format_wisdom_text(wisdom: Dict[str, Any]) -> str:
+def format_wisdom_text(wisdom: dict[str, Any]) -> str:
     """Format wisdom as ASCII art for terminal display."""
     if wisdom is None:
         return ""
-    
+
     icon = wisdom.get("wisdom_icon", "📜")
     source_name = wisdom.get("wisdom_source", "Unknown")
-    
+
     return f"""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║  {icon} DAILY WISDOM - {source_name:<48} ║
@@ -826,7 +826,7 @@ def format_wisdom_text(wisdom: Dict[str, Any]) -> str:
 
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) > 1 and sys.argv[1] == "--list":
         print("\n📚 Available Wisdom Sources:\n")
         for src in list_available_sources():
@@ -838,7 +838,7 @@ if __name__ == "__main__":
         print("\nUsage: EXARP_WISDOM_SOURCE=<source> python -m ...")
         print("Hebrew: EXARP_WISDOM_HEBREW=1 (bilingual) or EXARP_WISDOM_HEBREW_ONLY=1")
         sys.exit(0)
-    
+
     if len(sys.argv) > 1 and sys.argv[1] == "--hebrew":
         print("\n🕎 Hebrew Wisdom Sources (עברית):\n")
         for src in list_hebrew_sources():
@@ -848,14 +848,14 @@ if __name__ == "__main__":
         print("  EXARP_WISDOM_HEBREW=1                          # Bilingual mode")
         print("  EXARP_WISDOM_HEBREW_ONLY=1                     # Hebrew only")
         sys.exit(0)
-    
+
     health = float(sys.argv[1]) if len(sys.argv) > 1 else 75.0
     source = sys.argv[2] if len(sys.argv) > 2 else None
-    
+
     # Check for Hebrew flags
     include_hebrew = "--hebrew" in sys.argv or "--bilingual" in sys.argv
     hebrew_only = "--hebrew-only" in sys.argv
-    
+
     wisdom = get_wisdom(health, source, include_hebrew=include_hebrew, hebrew_only=hebrew_only)
     if wisdom:
         print(format_wisdom_text(wisdom))

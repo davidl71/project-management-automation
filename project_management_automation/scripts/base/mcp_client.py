@@ -10,7 +10,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -26,18 +26,18 @@ class MCPClient:
         self.project_root = project_root
         self.mcp_config_path = project_root / '.cursor' / 'mcp.json'
         # Lazy loading - don't load config until needed
-        self._mcp_config: Optional[Dict] = None
+        self._mcp_config: Optional[dict] = None
         self._config_loaded = False
 
     @property
-    def mcp_config(self) -> Dict:
+    def mcp_config(self) -> dict:
         """Lazy load MCP config on first access."""
         if not self._config_loaded:
             self._mcp_config = self._load_mcp_config_with_retry()
             self._config_loaded = True
         return self._mcp_config or {}
 
-    def _load_mcp_config_with_retry(self) -> Dict:
+    def _load_mcp_config_with_retry(self) -> dict:
         """Load MCP server configuration with retry logic."""
         for attempt in range(MAX_RETRIES):
             if not self.mcp_config_path.exists():
@@ -49,7 +49,7 @@ class MCPClient:
                 return {}
 
             try:
-                with open(self.mcp_config_path, 'r') as f:
+                with open(self.mcp_config_path) as f:
                     config = json.load(f)
                     return config.get('mcpServers', {})
             except json.JSONDecodeError as e:
@@ -65,7 +65,7 @@ class MCPClient:
                 return {}
         return {}
 
-    def call_tractatus_thinking(self, operation: str, **kwargs) -> Optional[Dict]:
+    def call_tractatus_thinking(self, operation: str, **kwargs) -> Optional[dict]:
         """Call Tractatus Thinking MCP server."""
         if 'tractatus_thinking' not in self.mcp_config:
             logger.warning("Tractatus Thinking MCP server not configured")
@@ -91,7 +91,7 @@ class MCPClient:
             logger.warning(f"Tractatus Thinking call failed: {e}")
             return None
 
-    def call_sequential_thinking(self, operation: str, **kwargs) -> Optional[Dict]:
+    def call_sequential_thinking(self, operation: str, **kwargs) -> Optional[dict]:
         """Call Sequential Thinking MCP server."""
         if 'sequential_thinking' not in self.mcp_config:
             logger.warning("Sequential Thinking MCP server not configured")
@@ -114,7 +114,7 @@ class MCPClient:
             logger.warning(f"Sequential Thinking call failed: {e}")
             return None
 
-    def _extract_components_simple(self, concept: str) -> List[str]:
+    def _extract_components_simple(self, concept: str) -> list[str]:
         """Simple component extraction (fallback)."""
         # Look for × or * patterns indicating components
         components = []
@@ -131,7 +131,7 @@ class MCPClient:
 
         return components if components else ['general']
 
-    def _plan_steps_simple(self, problem: str) -> List[str]:
+    def _plan_steps_simple(self, problem: str) -> list[str]:
         """Simple step planning (fallback)."""
         steps = [
             "Load and analyze data",
@@ -178,16 +178,16 @@ def load_json_with_retry(
 ) -> Any:
     """
     Load JSON file with retry logic for race conditions.
-    
+
     Handles cases where file is being written by another process
     (e.g., another MCP server updating its state file).
-    
+
     Args:
         file_path: Path to JSON file
         max_retries: Maximum number of retry attempts
         retry_delay: Base delay between retries (exponential backoff)
         default: Default value if file cannot be loaded
-    
+
     Returns:
         Parsed JSON data or default value
     """
@@ -201,7 +201,7 @@ def load_json_with_retry(
             return default
 
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path) as f:
                 return json.load(f)
         except json.JSONDecodeError as e:
             # File might be partially written - retry
@@ -222,5 +222,5 @@ def load_json_with_retry(
         except Exception as e:
             logger.warning(f"Unexpected error loading {file_path}: {e}")
             return default
-    
+
     return default

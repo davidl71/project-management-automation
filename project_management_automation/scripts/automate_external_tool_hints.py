@@ -17,7 +17,6 @@ from typing import Dict, List, Optional, Set, Tuple
 
 # Add project root to path
 # Project root will be passed to __init__
-
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -50,7 +49,7 @@ INLINE_HINT_TEMPLATE = """For more information, see [{lib} Documentation](link) 
 class ExternalToolHintsAutomation(IntelligentAutomationBase):
     """Intelligent automation for adding external tool hints to documentation."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
@@ -78,7 +77,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
         """Sequential problem: How do we add external tool hints?"""
         return "How do we systematically detect external libraries and add Context7 hints to documentation?"
 
-    def _identify_followup_tasks(self, analysis_results: Dict) -> List[Dict]:
+    def _identify_followup_tasks(self, analysis_results: dict) -> list[dict]:
         """Identify follow-up tasks based on analysis results."""
         followups = []
 
@@ -94,7 +93,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return followups
 
-    def _format_findings(self, analysis_results: Dict) -> str:
+    def _format_findings(self, analysis_results: dict) -> str:
         """Format findings for Todo2 result comment."""
         findings = []
 
@@ -108,7 +107,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return '\n'.join(findings) if findings else "No findings to report"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute external tool hints analysis and insertion."""
         logger.info("Executing external tool hints automation...")
 
@@ -153,7 +152,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return results
 
-    def _process_file(self, file_path: Path) -> Dict:
+    def _process_file(self, file_path: Path) -> dict:
         """Process a single markdown file."""
         try:
             content = file_path.read_text(encoding='utf-8')
@@ -213,7 +212,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return False
 
-    def _detect_libraries(self, content: str) -> Set[str]:
+    def _detect_libraries(self, content: str) -> set[str]:
         """Detect external libraries mentioned in content."""
         found_libraries = set()
 
@@ -228,7 +227,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return found_libraries
 
-    def _determine_hint_placement(self, content: str, libraries: Set[str]) -> Tuple[str, Optional[int]]:
+    def _determine_hint_placement(self, content: str, libraries: set[str]) -> tuple[str, Optional[int]]:
         """Determine where to place the hint and what type."""
         lines = content.split('\n')
 
@@ -258,7 +257,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return 'top', None
 
-    def _generate_hint(self, libraries: Set[str], hint_type: str) -> str:
+    def _generate_hint(self, libraries: set[str], hint_type: str) -> str:
         """Generate hint text based on libraries and type."""
         lib_list = ', '.join(sorted(libraries)[:3])  # Top 3 libraries
         example_lib = sorted(libraries)[0] if libraries else 'Library'
@@ -286,7 +285,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return '\n'.join(lines)
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from analysis."""
         insights = []
 
@@ -296,7 +295,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         if files_modified > 0:
             insights.append(f"✅ Added Context7 hints to {files_modified} documentation files")
-            insights.append(f"📚 Libraries detected: {len(set(lib for h in hints_added for lib in h.get('libraries', [])))} unique libraries")
+            insights.append(f"📚 Libraries detected: {len({lib for h in hints_added for lib in h.get('libraries', [])})} unique libraries")
 
         if files_scanned > 0:
             coverage = (files_modified / files_scanned * 100) if files_scanned > 0 else 0
@@ -307,7 +306,7 @@ class ExternalToolHintsAutomation(IntelligentAutomationBase):
 
         return '\n'.join(insights) if insights else "No insights generated"
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate report of automation execution."""
         hints_added = analysis_results.get('hints_added', [])
         hints_skipped = analysis_results.get('hints_skipped', [])

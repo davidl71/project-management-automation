@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
     """Intelligent documentation health analyzer using base class."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         # Detect project root if not provided
         if project_root is None:
             # Try to find project root by looking for .git, .todo2, or CMakeLists.txt
@@ -76,17 +76,17 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
         """Sequential problem: How do we check documentation health?"""
         return "How do we systematically check documentation health across all dimensions?"
 
-    def _load_history(self) -> Dict:
+    def _load_history(self) -> dict:
         """Load historical health data."""
         if self.history_path.exists():
             try:
-                with open(self.history_path, 'r') as f:
+                with open(self.history_path) as f:
                     return json.load(f)
             except json.JSONDecodeError:
                 pass
         return {'runs': []}
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute documentation health analysis."""
         logger.info("Executing documentation health analysis...")
 
@@ -136,7 +136,7 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
             except Exception as e:
                 logger.error(f"Error processing {md_file}: {e}")
 
-    def _validate_link(self, url: str, source_file: Path, position: int, all_internal_files: Set[Path]) -> None:
+    def _validate_link(self, url: str, source_file: Path, position: int, all_internal_files: set[Path]) -> None:
         """Validate a single link."""
         self.analysis_results['link_validation']['total_links'] += 1
 
@@ -258,7 +258,7 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
         with open(self.history_path, 'w') as f:
             json.dump(self.history, f, indent=2)
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from analysis."""
         insights = []
 
@@ -285,7 +285,7 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
 
         return '\n'.join(insights)
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate comprehensive report."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         health_score = analysis_results.get('health_score', 0)
@@ -414,7 +414,7 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
         except ImportError:
             return None
 
-    def _identify_followup_tasks(self, analysis_results: Dict) -> List[Dict]:
+    def _identify_followup_tasks(self, analysis_results: dict) -> list[dict]:
         """Identify follow-up tasks."""
         followups = []
 
@@ -440,7 +440,7 @@ class DocumentationHealthAnalyzerV2(IntelligentAutomationBase):
         return followups
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration."""
     if config_path is None:
         # Find project root
@@ -455,7 +455,7 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
 
     if config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError:

@@ -72,7 +72,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-haiku",
         "persona": "project_manager",
     },
-    
+
     # Task Management
     "analyze_todo2_alignment": {
         "hint": "Task alignment. Misaligned count, avg score, follow-up tasks.",
@@ -125,7 +125,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-haiku",
         "persona": "project_manager",
     },
-    
+
     # Code Quality
     "check_documentation_health": {
         "hint": "Docs health. Score 0-100, broken links, stale content.",
@@ -161,7 +161,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-haiku",
         "persona": "qa_engineer",
     },
-    
+
     # Security
     "scan_dependency_security": {
         "hint": "Security scan. Vulnerabilities by severity, remediation.",
@@ -180,7 +180,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-sonnet",
         "persona": "security_engineer",
     },
-    
+
     # PRD & Planning
     "generate_prd": {
         "hint": "PRD generation. Creates Product Requirements Document from codebase.",
@@ -199,7 +199,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-sonnet",
         "persona": "project_manager",
     },
-    
+
     # Workflow Optimization
     "recommend_workflow_mode": {
         "hint": "Workflow mode. AGENT vs ASK recommendation.",
@@ -235,7 +235,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-haiku",
         "persona": "developer",
     },
-    
+
     # Definition of Done
     "check_definition_of_done": {
         "hint": "Definition of Done. Validates task completion criteria.",
@@ -254,7 +254,7 @@ TOOL_CATALOG = {
         "recommended_model": "claude-haiku",
         "persona": "developer",
     },
-    
+
     # Configuration
     "generate_cursor_rules": {
         "hint": "Cursor rules. Generates .mdc rules from project analysis.",
@@ -347,8 +347,8 @@ def list_tools(
             tools.append(tool_entry)
 
         # Get unique categories
-        categories = sorted(set(t.get("category", "Other") for t in TOOL_CATALOG.values()))
-        personas = sorted(set(t.get("persona", "any") for t in TOOL_CATALOG.values()))
+        categories = sorted({t.get("category", "Other") for t in TOOL_CATALOG.values()})
+        personas = sorted({t.get("persona", "any") for t in TOOL_CATALOG.values()})
 
         result = {
             "tools": tools,

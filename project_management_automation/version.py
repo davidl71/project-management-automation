@@ -34,7 +34,7 @@ def get_epoch() -> int:
     return int(time.time())
 
 
-def get_git_info() -> Dict[str, Optional[str]]:
+def get_git_info() -> dict[str, Optional[str]]:
     """
     Get git information for versioning.
 
@@ -190,7 +190,7 @@ def get_version(version_type: Optional[str] = None) -> str:
     return BASE_VERSION
 
 
-def get_version_info() -> Dict[str, any]:
+def get_version_info() -> dict[str, any]:
     """
     Get comprehensive version information.
 
@@ -250,7 +250,7 @@ def update_base_version(new_version: str) -> bool:
     content = version_file.read_text()
 
     # Replace BASE_VERSION
-    new_content = re.sub(r'BASE_VERSION = "0.1.18"]+"', f'BASE_VERSION = "0.1.18"', content)
+    new_content = re.sub(r'BASE_VERSION = "0.1.18"]+"', 'BASE_VERSION = "0.1.18"', content)
 
     if new_content != content:
         version_file.write_text(new_content)
@@ -336,7 +336,7 @@ def generate_release_notes(since_tag: Optional[str] = None) -> str:
         # Build release notes
         notes_lines.append("## What's Changed\n")
 
-        for key, (title, commits) in categories.items():
+        for _key, (title, commits) in categories.items():
             if commits:
                 notes_lines.append(f"### {title}\n")
                 for msg, hash_, author in commits:
@@ -357,7 +357,7 @@ def create_release(
     version: Optional[str] = None,
     bump: Optional[str] = None,
     dry_run: bool = False,
-) -> Dict[str, any]:
+) -> dict[str, any]:
     """
     Create a release: bump version, generate notes, create tag.
 
@@ -414,7 +414,7 @@ def create_release(
                 capture_output=True,
                 timeout=10,
             )
-            result["actions"].append(f"Committed release changes")
+            result["actions"].append("Committed release changes")
 
             # Create annotated tag
             tag_result = subprocess.run(

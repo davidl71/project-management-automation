@@ -26,13 +26,13 @@ Hebrew Advisors (עברית):
 - tzaddik: The Tzaddik - Path of righteousness from Proverbs ✡️
 - chacham: The Chacham - Sage wisdom from Torah 📜
 
-Credits: 
+Credits:
 - Many texts from https://sacred-texts.com/ (public domain)
 - Hebrew texts from https://sefaria.org/ (open API)
 
 Usage:
     from project_management_automation.tools.wisdom import get_wisdom, list_sources
-    
+
     wisdom = get_wisdom(health_score=75.0, source="stoic")
     wisdom = get_wisdom(health_score=75.0, source="random")  # Different source each day!
     wisdom = get_wisdom(health_score=75.0, source="rebbe")   # Hebrew advisor
@@ -56,24 +56,28 @@ Design Note:
 
 # Public API - stable for extraction
 from .sources import (
-    get_wisdom,
+    WISDOM_SOURCES,
+    get_aeon_level,
     get_random_source,
-    format_wisdom_text as format_text,
-    list_available_sources as list_sources,
+    get_wisdom,
     list_hebrew_sources,  # NEW: Hebrew-specific source listing
     load_config,
     save_config,
-    get_aeon_level,
-    WISDOM_SOURCES,
+)
+from .sources import (
+    format_wisdom_text as format_text,
+)
+from .sources import (
+    list_available_sources as list_sources,
 )
 
 # Sefaria integration (optional, graceful degradation)
 try:
     from .sefaria import (
-        get_sefaria_wisdom,
+        SEFARIA_SELECTIONS,
         fetch_sefaria_text,
         format_sefaria_wisdom,
-        SEFARIA_SELECTIONS,
+        get_sefaria_wisdom,
     )
     SEFARIA_AVAILABLE = True
 except ImportError:
@@ -84,10 +88,16 @@ except ImportError:
 # Pistis Sophia (original source)
 try:
     from .pistis_sophia import (
-        get_daily_wisdom as get_pistis_sophia_wisdom,
-        format_wisdom_ascii as format_pistis_sophia_ascii,
-        format_wisdom_markdown as format_pistis_sophia_markdown,
         PISTIS_SOPHIA_QUOTES,
+    )
+    from .pistis_sophia import (
+        format_wisdom_ascii as format_pistis_sophia_ascii,
+    )
+    from .pistis_sophia import (
+        format_wisdom_markdown as format_pistis_sophia_markdown,
+    )
+    from .pistis_sophia import (
+        get_daily_wisdom as get_pistis_sophia_wisdom,
     )
     PISTIS_SOPHIA_AVAILABLE = True
 except ImportError:
@@ -97,18 +107,18 @@ except ImportError:
 # Trusted Advisor System
 from .advisors import (
     METRIC_ADVISORS,
-    TOOL_ADVISORS,
-    STAGE_ADVISORS,
     SCORE_CONSULTATION_FREQUENCY,
-    get_advisor_for_metric,
-    get_advisor_for_tool,
-    get_advisor_for_stage,
-    get_consultation_mode,
+    STAGE_ADVISORS,
+    TOOL_ADVISORS,
     consult_advisor,
-    format_consultation,
-    get_daily_briefing,
-    get_consultation_log,
     export_for_podcast,
+    format_consultation,
+    get_advisor_for_metric,
+    get_advisor_for_stage,
+    get_advisor_for_tool,
+    get_consultation_log,
+    get_consultation_mode,
+    get_daily_briefing,
 )
 
 # Voice/TTS System (optional - requires edge-tts or pyttsx3)
@@ -117,10 +127,10 @@ try:
         ADVISOR_VOICES,
         HEBREW_VOICES,
         check_tts_backends,
-        synthesize_advisor_quote,
         generate_podcast_audio,
-        list_available_voices,
         get_available_backend,
+        list_available_voices,
+        synthesize_advisor_quote,
     )
     VOICE_AVAILABLE = True
 except ImportError:
@@ -131,21 +141,21 @@ except ImportError:
 __all__ = [
     # Core API (stable)
     "get_wisdom",
-    "list_sources", 
+    "list_sources",
     "list_hebrew_sources",  # Hebrew-specific listing
     "format_text",
     "load_config",
     "save_config",
     "get_aeon_level",
-    
+
     # Data
     "WISDOM_SOURCES",
-    
+
     # Feature flags
     "SEFARIA_AVAILABLE",
     "PISTIS_SOPHIA_AVAILABLE",
     "VOICE_AVAILABLE",
-    
+
     # Trusted Advisor System
     "METRIC_ADVISORS",
     "TOOL_ADVISORS",
@@ -160,7 +170,7 @@ __all__ = [
     "get_daily_briefing",
     "get_consultation_log",
     "export_for_podcast",
-    
+
     # Voice/TTS System
     "ADVISOR_VOICES",
     "HEBREW_VOICES",

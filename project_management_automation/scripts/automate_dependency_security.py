@@ -20,7 +20,6 @@ from typing import Dict, List, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
-
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -32,7 +31,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
     """Intelligent dependency security scanning automation."""
 
     def __init__(self, config_path: str, project_root: Optional[Path] = None):
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             config = json.load(f)
         from project_management_automation.utils import find_project_root
         if project_root is None:
@@ -66,7 +65,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
         """Sequential problem: How do we scan dependencies for security?"""
         return "How do we systematically scan Python, Rust, and npm dependencies for known vulnerabilities?"
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute dependency security scanning."""
         logger.info("Starting dependency security scan...")
 
@@ -155,7 +154,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
         self.scan_results['npm'] = vulnerabilities
         logger.info(f"Found {len(vulnerabilities)} npm vulnerabilities")
 
-    def _run_osv_scanner(self, files: List[str]) -> List[Dict]:
+    def _run_osv_scanner(self, files: list[str]) -> list[dict]:
         """Run osv-scanner on specified files."""
         vulnerabilities = []
 
@@ -204,7 +203,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
 
         return vulnerabilities
 
-    def _run_pip_audit(self) -> List[Dict]:
+    def _run_pip_audit(self) -> list[dict]:
         """Run pip-audit on Python dependencies."""
         vulnerabilities = []
 
@@ -247,7 +246,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
 
         return vulnerabilities
 
-    def _run_cargo_audit(self) -> List[Dict]:
+    def _run_cargo_audit(self) -> list[dict]:
         """Run cargo-audit on Rust dependencies."""
         vulnerabilities = []
 
@@ -303,7 +302,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
 
         return vulnerabilities
 
-    def _run_npm_audit(self) -> List[Dict]:
+    def _run_npm_audit(self) -> list[dict]:
         """Run npm audit on npm dependencies."""
         vulnerabilities = []
 
@@ -366,7 +365,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
         except Exception:
             return False
 
-    def _extract_severity(self, vuln_data: Dict) -> str:
+    def _extract_severity(self, vuln_data: dict) -> str:
         """Extract severity from vulnerability data."""
         # Try various severity fields
         severity = (
@@ -426,7 +425,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
         history = []
         if self.history_file.exists():
             try:
-                with open(self.history_file, 'r') as f:
+                with open(self.history_file) as f:
                     history = json.load(f)
             except Exception as e:
                 logger.warning(f"Failed to load history: {e}")
@@ -452,7 +451,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
         except Exception as e:
             logger.error(f"Failed to save history: {e}")
 
-    def _generate_insights(self, results: Dict) -> str:
+    def _generate_insights(self, results: dict) -> str:
         """Generate insights from scan results."""
         summary = results.get('summary', {
             'total_vulnerabilities': 0,
@@ -494,11 +493,11 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
 
         return "\n".join(insights)
 
-    def _generate_report(self, results: Dict, insights: str) -> str:
+    def _generate_report(self, results: dict, insights: str) -> str:
         """Generate markdown report (required by base class)."""
         return self._generate_report_document(results, insights)
 
-    def _generate_report_document(self, results: Dict, insights: str) -> str:
+    def _generate_report_document(self, results: dict, insights: str) -> str:
         """Generate markdown report."""
         summary = results.get('summary', {
             'total_vulnerabilities': 0,
@@ -596,7 +595,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
 
         return report
 
-    def _create_follow_up_tasks(self, results: Dict) -> List[Dict]:
+    def _create_follow_up_tasks(self, results: dict) -> list[dict]:
         """Create Todo2 tasks for critical/high vulnerabilities."""
         if not self.create_tasks_config.get('enabled', False):
             return []

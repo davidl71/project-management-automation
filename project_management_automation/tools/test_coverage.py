@@ -14,23 +14,13 @@ logger = logging.getLogger(__name__)
 
 # Import error handler
 try:
-    from ..error_handler import (
-        format_success_response,
-        format_error_response,
-        log_automation_execution,
-        ErrorCode
-    )
+    from ..error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
 except ImportError:
     import sys
     server_dir = Path(__file__).parent.parent
     sys.path.insert(0, str(server_dir))
     try:
-        from error_handler import (
-            format_success_response,
-            format_error_response,
-            log_automation_execution,
-            ErrorCode
-        )
+        from error_handler import ErrorCode, format_error_response, format_success_response, log_automation_execution
     except ImportError:
         def format_success_response(data, message=None):
             return {"success": True, "data": data, "timestamp": time.time()}
@@ -65,7 +55,7 @@ def analyze_test_coverage(
     try:
         from project_management_automation.scripts.automate_test_coverage import TestCoverageAnalyzer
         from project_management_automation.utils import find_project_root
-        
+
         project_root = find_project_root()
 
         config = {

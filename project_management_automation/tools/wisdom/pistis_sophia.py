@@ -1,7 +1,7 @@
 """
 Pistis Sophia Daily Wisdom
 
-Provides inspirational quotes from the Gnostic text "Pistis Sophia" 
+Provides inspirational quotes from the Gnostic text "Pistis Sophia"
 based on current project status. Quotes are selected to match the
 project's journey from chaos to enlightenment.
 
@@ -11,9 +11,9 @@ To disable: Set EXARP_DISABLE_WISDOM=1 in environment or create
 
 import os
 import random
-from pathlib import Path
 from datetime import datetime
-from typing import Optional, Dict, Any
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 # Quotes organized by project "Aeon" (health level)
 PISTIS_SOPHIA_QUOTES = {
@@ -27,7 +27,7 @@ PISTIS_SOPHIA_QUOTES = {
         },
         {
             "quote": "I looked to the height to the Light in which I had trusted, and they gave me over to the chaos.",
-            "chapter": "Chapter 33", 
+            "chapter": "Chapter 33",
             "context": "When things aren't going as planned",
             "encouragement": "Trust the process. Sophia ascended through 13 repentances."
         },
@@ -38,7 +38,7 @@ PISTIS_SOPHIA_QUOTES = {
             "encouragement": "Every cleanup sprint is a step toward the Light."
         },
     ],
-    
+
     # Lower Aeons (31-50% health) - Beginning the ascent
     "lower_aeons": [
         {
@@ -60,7 +60,7 @@ PISTIS_SOPHIA_QUOTES = {
             "encouragement": "Your work is being recognized."
         },
     ],
-    
+
     # Middle Aeons (51-70% health) - Steady progress
     "middle_aeons": [
         {
@@ -82,7 +82,7 @@ PISTIS_SOPHIA_QUOTES = {
             "encouragement": "Clear skies ahead."
         },
     ],
-    
+
     # Upper Aeons (71-85% health) - Approaching enlightenment
     "upper_aeons": [
         {
@@ -104,7 +104,7 @@ PISTIS_SOPHIA_QUOTES = {
             "encouragement": "Freedom to build, not just maintain."
         },
     ],
-    
+
     # Treasury of Light (86-100% health) - Enlightenment achieved
     "treasury": [
         {
@@ -159,12 +159,12 @@ def is_wisdom_disabled() -> bool:
     # Check environment variable
     if os.environ.get('EXARP_DISABLE_WISDOM', '').lower() in ('1', 'true', 'yes'):
         return True
-    
+
     # Check for disable file in project root
     project_root = Path(__file__).resolve().parents[2]
     if (project_root / '.exarp_no_wisdom').exists():
         return True
-    
+
     return False
 
 
@@ -172,22 +172,22 @@ def check_first_run_and_prompt() -> Optional[str]:
     """
     Check if this is the first time showing wisdom and return a friendly prompt.
     Creates a marker file after first run.
-    
+
     Returns:
         First-run message if applicable, None otherwise.
     """
     project_root = Path(__file__).resolve().parents[2]
     marker_file = project_root / '.exarp_wisdom_seen'
-    
+
     if marker_file.exists():
         return None
-    
+
     # Create marker
     try:
         marker_file.write_text(f"First seen: {datetime.now().isoformat()}\n")
-    except:
+    except OSError:
         pass  # Don't fail if can't write
-    
+
     return """
 ┌──────────────────────────────────────────────────────────────────────┐
 │  ✨ NEW FEATURE: Pistis Sophia Daily Wisdom                          │
@@ -207,35 +207,35 @@ def check_first_run_and_prompt() -> Optional[str]:
 """
 
 
-def get_daily_wisdom(health_score: float, seed_date: bool = True) -> Optional[Dict[str, Any]]:
+def get_daily_wisdom(health_score: float, seed_date: bool = True) -> Optional[dict[str, Any]]:
     """
     Get a Pistis Sophia quote based on project health.
-    
+
     Args:
         health_score: Project health score (0-100)
         seed_date: If True, same quote shown all day. If False, random each time.
-    
+
     Returns:
         Dictionary with quote, chapter, context, encouragement, and aeon info.
         Returns None if wisdom is disabled.
     """
     if is_wisdom_disabled():
         return None
-    
+
     aeon_level = get_aeon_level(health_score)
     aeon_number = get_aeon_number(health_score)
     quotes = PISTIS_SOPHIA_QUOTES[aeon_level]
-    
+
     # Use date as seed for consistent daily quote
     if seed_date:
         today = datetime.now().strftime("%Y%m%d")
         random.seed(int(today) + int(health_score))
-    
+
     quote = random.choice(quotes)
-    
+
     # Reset random seed
     random.seed()
-    
+
     return {
         "quote": quote["quote"],
         "chapter": quote["chapter"],
@@ -248,15 +248,15 @@ def get_daily_wisdom(health_score: float, seed_date: bool = True) -> Optional[Di
     }
 
 
-def format_wisdom_ascii(wisdom: Dict[str, Any]) -> str:
+def format_wisdom_ascii(wisdom: dict[str, Any]) -> str:
     """Format wisdom as ASCII art for terminal display."""
     if wisdom is None:
         return ""
-    
+
     aeon_display = f"Aeon {wisdom['aeon_number']}" if wisdom['aeon_number'] > 0 else "Chaos"
     if wisdom['aeon_number'] == 14:
         aeon_display = "Treasury of Light"
-    
+
     return f"""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║  📜 PISTIS SOPHIA DAILY WISDOM                                       ║
@@ -277,15 +277,15 @@ def format_wisdom_ascii(wisdom: Dict[str, Any]) -> str:
 """
 
 
-def format_wisdom_markdown(wisdom: Dict[str, Any]) -> str:
+def format_wisdom_markdown(wisdom: dict[str, Any]) -> str:
     """Format wisdom as Markdown."""
     if wisdom is None:
         return ""
-    
+
     aeon_display = f"Aeon {wisdom['aeon_number']}" if wisdom['aeon_number'] > 0 else "Chaos"
     if wisdom['aeon_number'] == 14:
         aeon_display = "Treasury of Light ✨"
-    
+
     return f"""
 ---
 
@@ -294,7 +294,7 @@ def format_wisdom_markdown(wisdom: Dict[str, Any]) -> str:
 **Project Status:** {wisdom['aeon_level']} ({aeon_display})
 
 > *"{wisdom['quote']}"*
-> 
+>
 > — {wisdom['chapter']}
 
 💡 **{wisdom['encouragement']}**
@@ -317,10 +317,10 @@ To disable daily wisdom: `export EXARP_DISABLE_WISDOM=1` or create `.exarp_no_wi
 # CLI support
 if __name__ == "__main__":
     import sys
-    
+
     # Get health score from argument or use default
     health = float(sys.argv[1]) if len(sys.argv) > 1 else 75.0
-    
+
     wisdom = get_daily_wisdom(health)
     if wisdom:
         print(format_wisdom_ascii(wisdom))

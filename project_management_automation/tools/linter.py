@@ -60,7 +60,7 @@ def _save_linter_memory(response_data: dict[str, Any]) -> dict[str, Any]:
 ### By Severity
 {chr(10).join(f'- {sev}: {count}' for sev, count in by_severity.items()) or '- None'}
 
-### By Category  
+### By Category
 {chr(10).join(f'- {cat}: {count}' for cat, count in by_category.items()) or '- None'}
 
 ### Tool
@@ -81,7 +81,7 @@ def _save_linter_memory(response_data: dict[str, Any]) -> dict[str, Any]:
         return {"success": False, "error": "Memory system not available"}
 
 
-def _parse_ruff_output(output: str) -> List[Dict[str, Any]]:
+def _parse_ruff_output(output: str) -> list[dict[str, Any]]:
     """Parse ruff JSON output into problems format."""
     problems = []
 
@@ -198,9 +198,9 @@ def run_linter(
             problems = _parse_ruff_output(result.stdout)
 
         # Categorize issues
-        by_severity: Dict[str, int] = {}
-        by_category: Dict[str, int] = {}
-        by_file: Dict[str, int] = {}
+        by_severity: dict[str, int] = {}
+        by_category: dict[str, int] = {}
+        by_file: dict[str, int] = {}
 
         for p in problems:
             sev = p.get('severity', 'unknown')

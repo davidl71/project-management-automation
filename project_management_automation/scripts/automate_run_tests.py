@@ -24,18 +24,18 @@ logger = logging.getLogger(__name__)
 class TestRunner(IntelligentAutomationBase):
     """Test runner using intelligent automation base."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         from project_management_automation.utils import find_project_root
         if project_root is None:
             project_root = find_project_root()
         super().__init__(config, "Test Runner", project_root)
-        
+
         self.test_path = Path(config.get('test_path', 'tests/'))
         self.test_framework = config.get('test_framework', 'auto')
         self.verbose = config.get('verbose', True)
         self.coverage = config.get('coverage', False)
         self.output_path = Path(config.get('output_path', 'test-results/'))
-        
+
         # Ensure output directory exists
         self.output_path.mkdir(parents=True, exist_ok=True)
 
@@ -51,32 +51,32 @@ class TestRunner(IntelligentAutomationBase):
         """Auto-detect test framework."""
         if self.test_framework != 'auto':
             return self.test_framework
-        
+
         # Check for pytest
         if (self.project_root / 'pytest.ini').exists() or \
            (self.project_root / 'pyproject.toml').exists() and 'pytest' in (self.project_root / 'pyproject.toml').read_text():
             return 'pytest'
-        
+
         # Check for unittest
         if (self.test_path / '__init__.py').exists() or \
            any(f.startswith('test_') for f in self.test_path.glob('*.py')):
             return 'unittest'
-        
+
         # Check for ctest (CMake)
         if (self.project_root / 'CMakeLists.txt').exists() and \
            (self.project_root / 'build').exists():
             return 'ctest'
-        
+
         # Default to pytest
         return 'pytest'
 
-    def _execute_analysis(self) -> Dict:
+    def _execute_analysis(self) -> dict:
         """Execute test suite."""
         logger.info(f"Running tests with framework: {self.test_framework}")
-        
+
         framework = self._detect_framework()
         logger.info(f"Detected framework: {framework}")
-        
+
         results = {
             'framework': framework,
             'test_path': str(self.test_path),
@@ -89,7 +89,7 @@ class TestRunner(IntelligentAutomationBase):
             'coverage_file': None,
             'status': 'unknown'
         }
-        
+
         try:
             if framework == 'pytest':
                 results = self._run_pytest()
@@ -99,32 +99,32 @@ class TestRunner(IntelligentAutomationBase):
                 results = self._run_ctest()
             else:
                 raise ValueError(f"Unsupported framework: {framework}")
-            
+
             results['status'] = 'success' if results['tests_failed'] == 0 else 'failed'
-            
+
         except Exception as e:
             logger.error(f"Test execution failed: {e}", exc_info=True)
             results['status'] = 'error'
             results['error'] = str(e)
-        
+
         return results
 
-    def _run_pytest(self) -> Dict:
+    def _run_pytest(self) -> dict:
         """Run pytest tests."""
         cmd = ['python3', '-m', 'pytest', str(self.test_path)]
-        
+
         if self.verbose:
             cmd.append('-v')
-        
+
         if self.coverage:
             cmd.extend(['--cov=project_management_automation', '--cov=tools', '--cov=resources'])
             cmd.append('--cov-report=html:' + str(self.output_path / 'coverage'))
             cmd.append('--cov-report=xml:' + str(self.output_path / 'coverage.xml'))
-        
+
         # Generate JUnit XML
         junit_xml = self.output_path / 'junit.xml'
         cmd.extend(['--junit-xml', str(junit_xml)])
-        
+
         logger.info(f"Running: {' '.join(cmd)}")
         result = subprocess.run(
             cmd,
@@ -133,7 +133,7 @@ class TestRunner(IntelligentAutomationBase):
             text=True,
             timeout=300
         )
-        
+
         # Parse results
         results = {
             'framework': 'pytest',
@@ -146,7 +146,7 @@ class TestRunner(IntelligentAutomationBase):
             'returncode': result.returncode,
             'output_file': str(junit_xml)
         }
-        
+
         # Parse JUnit XML if available
         if junit_xml.exists():
             try:
@@ -161,7 +161,7 @@ class TestRunner(IntelligentAutomationBase):
                     results['duration'] = float(testsuite.get('time', 0))
             except Exception as e:
                 logger.warning(f"Failed to parse JUnit XML: {e}")
-        
+
         # Parse stdout for summary
         if 'passed' in result.stdout.lower():
             for line in result.stdout.split('\n'):
@@ -174,21 +174,21 @@ class TestRunner(IntelligentAutomationBase):
                         results['tests_failed'] = int(nums[1]) if len(nums) > 1 else 0
                         results['tests_run'] = results['tests_passed'] + results['tests_failed']
                     break
-        
+
         if self.coverage:
             coverage_xml = self.output_path / 'coverage.xml'
             if coverage_xml.exists():
                 results['coverage_file'] = str(coverage_xml)
-        
+
         return results
 
-    def _run_unittest(self) -> Dict:
+    def _run_unittest(self) -> dict:
         """Run unittest tests."""
         cmd = ['python3', '-m', 'unittest', 'discover', '-s', str(self.test_path), '-p', 'test_*.py']
-        
+
         if self.verbose:
             cmd.append('-v')
-        
+
         logger.info(f"Running: {' '.join(cmd)}")
         result = subprocess.run(
             cmd,
@@ -197,7 +197,7 @@ class TestRunner(IntelligentAutomationBase):
             text=True,
             timeout=300
         )
-        
+
         # Parse results
         results = {
             'framework': 'unittest',
@@ -209,7 +209,7 @@ class TestRunner(IntelligentAutomationBase):
             'error': result.stderr,
             'returncode': result.returncode
         }
-        
+
         # Parse unittest output
         if 'OK' in result.stdout:
             # Extract test count
@@ -228,24 +228,24 @@ class TestRunner(IntelligentAutomationBase):
             if match:
                 results['tests_failed'] = int(match.group(1))
                 results['tests_passed'] = results['tests_run'] - results['tests_failed']
-        
+
         return results
 
-    def _run_ctest(self) -> Dict:
+    def _run_ctest(self) -> dict:
         """Run ctest (CMake tests)."""
         build_dir = self.project_root / 'build'
         if not build_dir.exists():
             raise FileNotFoundError(f"Build directory not found: {build_dir}")
-        
+
         cmd = ['ctest', '--output-on-failure']
-        
+
         if self.verbose:
             cmd.append('-V')
-        
+
         # Generate XML
         self.output_path / 'ctest.xml'
         cmd.extend(['-T', 'Test', '--no-compress-output'])
-        
+
         logger.info(f"Running: {' '.join(cmd)}")
         result = subprocess.run(
             cmd,
@@ -254,7 +254,7 @@ class TestRunner(IntelligentAutomationBase):
             text=True,
             timeout=300
         )
-        
+
         # Parse results
         results = {
             'framework': 'ctest',
@@ -266,46 +266,46 @@ class TestRunner(IntelligentAutomationBase):
             'error': result.stderr,
             'returncode': result.returncode
         }
-        
+
         # Parse ctest output
         import re
         match = re.search(r'Tests run: (\d+)', result.stdout)
         if match:
             results['tests_run'] = int(match.group(1))
-        
+
         match = re.search(r'(\d+) passed', result.stdout)
         if match:
             results['tests_passed'] = int(match.group(1))
-        
+
         match = re.search(r'(\d+) failed', result.stdout)
         if match:
             results['tests_failed'] = int(match.group(1))
-        
+
         return results
 
-    def _generate_insights(self, analysis_results: Dict) -> str:
+    def _generate_insights(self, analysis_results: dict) -> str:
         """Generate insights from test results."""
         insights = []
-        
+
         results = analysis_results.get('results', {})
         framework = results.get('framework', 'unknown')
         tests_run = results.get('tests_run', 0)
         tests_passed = results.get('tests_passed', 0)
         tests_failed = results.get('tests_failed', 0)
         status = results.get('status', 'unknown')
-        
+
         insights.append(f"**Test Execution ({framework}):** {tests_run} tests run")
         insights.append(f"- Passed: {tests_passed}")
         insights.append(f"- Failed: {tests_failed}")
-        
+
         if status == 'success':
             insights.append("✅ All tests passed!")
         elif status == 'failed':
             insights.append(f"⚠️ {tests_failed} test(s) failed")
-        
+
         return '\n'.join(insights)
 
-    def _generate_report(self, analysis_results: Dict, insights: str) -> str:
+    def _generate_report(self, analysis_results: dict, insights: str) -> str:
         """Generate test execution report."""
         results = analysis_results.get('results', {})
         report_lines = [
@@ -328,21 +328,21 @@ class TestRunner(IntelligentAutomationBase):
             insights,
             ""
         ]
-        
+
         if results.get('output_file'):
             report_lines.append(f"**Output File:** {results['output_file']}")
-        
+
         if results.get('coverage_file'):
             report_lines.append(f"**Coverage File:** {results['coverage_file']}")
-        
+
         return '\n'.join(report_lines)
 
-    def _format_findings(self, analysis_results: Dict) -> str:
+    def _format_findings(self, analysis_results: dict) -> str:
         """Format test results."""
         return json.dumps(analysis_results, indent=2)
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration."""
     default_config = {
         'test_path': 'tests/',
@@ -351,15 +351,15 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
         'coverage': False,
         'output_path': 'test-results/'
     }
-    
+
     if config_path and config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError:
             pass
-    
+
     return default_config
 
 
@@ -373,7 +373,7 @@ def main():
     parser.add_argument('--output', type=str, help='Output path for results')
     parser.add_argument('--config', type=Path, help='Path to config file')
     args = parser.parse_args()
-    
+
     config = load_config(args.config)
     if args.test_path:
         config['test_path'] = args.test_path
@@ -385,9 +385,9 @@ def main():
         config['coverage'] = True
     if args.output:
         config['output_path'] = args.output
-    
+
     runner = TestRunner(config)
-    
+
     try:
         results = runner.run()
         print(json.dumps(results, indent=2))

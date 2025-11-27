@@ -14,7 +14,7 @@ import logging
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 from ..utils import find_project_root
 
@@ -26,11 +26,11 @@ def _save_clarification_memory(
     clarification: str,
     decision: str,
     success: bool
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Save clarification decision as memory for pattern learning."""
     try:
         from .session_memory import save_session_insight
-        
+
         content = f"""Clarification resolved for task {task_id}.
 
 ## Question
@@ -42,7 +42,7 @@ def _save_clarification_memory(
 ## Result
 {'Successfully resolved and moved to Todo' if success else 'Resolution failed'}
 """
-        
+
         return save_session_insight(
             title=f"Clarification: {task_id[:20]}",
             content=content,
@@ -61,7 +61,7 @@ def resolve_task_clarification(
     decision: str,
     move_to_todo: bool = True,
     dry_run: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Resolve a single task clarification.
 
@@ -145,10 +145,10 @@ def resolve_task_clarification(
 
 
 def resolve_multiple_clarifications(
-    decisions: Dict[str, Dict[str, str]],
+    decisions: dict[str, dict[str, str]],
     move_to_todo: bool = True,
     dry_run: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Resolve multiple task clarifications from a decisions dictionary.
 
@@ -234,7 +234,7 @@ def resolve_multiple_clarifications(
         }
 
 
-def list_tasks_awaiting_clarification() -> Dict[str, Any]:
+def list_tasks_awaiting_clarification() -> dict[str, Any]:
     """
     List all tasks in Review status that need clarification.
 
@@ -251,7 +251,7 @@ def list_tasks_awaiting_clarification() -> Dict[str, Any]:
         }
 
     try:
-        with open(state_file, 'r') as f:
+        with open(state_file) as f:
             data = json.load(f)
 
         todos = data.get('todos', [])

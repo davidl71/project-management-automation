@@ -35,17 +35,17 @@ logger = logging.getLogger(__name__)
 class PWAAnalyzer:
     """Analyzes PWA state and generates improvement recommendations."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         self.config = config
         self.project_root = project_root
         self.todo2_path = project_root / '.todo2' / 'state.todo2.json'
         self.pwa_path = project_root / 'web'
         self.docs_path = project_root / 'docs'
 
-    def load_todo2_tasks(self) -> List[Dict]:
+    def load_todo2_tasks(self) -> list[dict]:
         """Load Todo2 tasks from state file."""
         try:
-            with open(self.todo2_path, 'r') as f:
+            with open(self.todo2_path) as f:
                 data = json.load(f)
                 return data.get('todos', [])
         except FileNotFoundError:
@@ -55,7 +55,7 @@ class PWAAnalyzer:
             logger.error(f"Error parsing Todo2 JSON: {e}")
             return []
 
-    def analyze_pwa_structure(self) -> Dict:
+    def analyze_pwa_structure(self) -> dict:
         """Analyze PWA codebase structure."""
         analysis = {
             'components': [],
@@ -93,7 +93,7 @@ class PWAAnalyzer:
         if manifest_path.exists():
             analysis['pwa_features'].append('manifest')
         if vite_config_path.exists():
-            with open(vite_config_path, 'r') as f:
+            with open(vite_config_path) as f:
                 content = f.read()
                 if 'VitePWA' in content:
                     analysis['pwa_features'].append('service_worker')
@@ -114,7 +114,7 @@ class PWAAnalyzer:
 
         return analysis
 
-    def analyze_todo2_alignment(self, tasks: List[Dict]) -> Dict:
+    def analyze_todo2_alignment(self, tasks: list[dict]) -> dict:
         """Analyze Todo2 task alignment with PWA goals."""
         alignment = {
             'total_tasks': len(tasks),
@@ -161,7 +161,7 @@ class PWAAnalyzer:
 
         return alignment
 
-    def generate_ai_insights(self, pwa_analysis: Dict, todo2_alignment: Dict) -> str:
+    def generate_ai_insights(self, pwa_analysis: dict, todo2_alignment: dict) -> str:
         """Generate AI insights using configured API."""
         api_provider = self.config.get('ai_api', {}).get('provider', 'openai')
 
@@ -184,7 +184,7 @@ class PWAAnalyzer:
             logger.info("Falling back to basic insights")
             return self._generate_basic_insights(pwa_analysis, todo2_alignment)
 
-    def _build_ai_prompt(self, pwa_analysis: Dict, todo2_alignment: Dict) -> str:
+    def _build_ai_prompt(self, pwa_analysis: dict, todo2_alignment: dict) -> str:
         """Build prompt for AI API."""
         return f"""Analyze the PWA state and provide improvement recommendations.
 
@@ -259,7 +259,7 @@ Provide:
             logger.warning("Anthropic library not installed. Install with: pip install anthropic")
             return self._generate_basic_insights({}, {})
 
-    def _generate_basic_insights(self, pwa_analysis: Dict, todo2_alignment: Dict) -> str:
+    def _generate_basic_insights(self, pwa_analysis: dict, todo2_alignment: dict) -> str:
         """Generate basic insights without AI API."""
         insights = []
 
@@ -274,7 +274,7 @@ Provide:
 
         return '\n'.join(insights) if insights else "No significant insights identified."
 
-    def generate_analysis_document(self, pwa_analysis: Dict, todo2_alignment: Dict,
+    def generate_analysis_document(self, pwa_analysis: dict, todo2_alignment: dict,
                                    ai_insights: str) -> str:
         """Generate the analysis document markdown."""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -403,10 +403,11 @@ Provide:
         return True
 
 
-def load_config(config_path: Optional[Path] = None) -> Dict:
+def load_config(config_path: Optional[Path] = None) -> dict:
     """Load configuration from file or use defaults."""
+    from project_management_automation.utils import find_project_root
     if config_path is None:
-        config_path = project_root / 'scripts' / 'pwa_review_config.json'
+        config_path = find_project_root() / 'scripts' / 'pwa_review_config.json'
 
     default_config = {
         'ai_api': {
@@ -419,7 +420,7 @@ def load_config(config_path: Optional[Path] = None) -> Dict:
 
     if config_path.exists():
         try:
-            with open(config_path, 'r') as f:
+            with open(config_path) as f:
                 user_config = json.load(f)
                 default_config.update(user_config)
         except json.JSONDecodeError as e:

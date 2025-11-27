@@ -16,17 +16,17 @@ Usage:
         LoggingMiddleware,
         ToolFilterMiddleware,
     )
-    
+
     mcp.add_middleware(SecurityMiddleware())
     mcp.add_middleware(ToolFilterMiddleware())  # Context-aware tool curation
     # or individual:
     mcp.add_middleware(RateLimitMiddleware(calls_per_minute=60))
 """
 
-from .rate_limit import RateLimitMiddleware
-from .path_validation import PathValidationMiddleware
 from .access_control import AccessControlMiddleware
 from .logging_middleware import LoggingMiddleware
+from .path_validation import PathValidationMiddleware
+from .rate_limit import RateLimitMiddleware
 from .security import SecurityMiddleware
 from .tool_filter import ToolFilterMiddleware, filter_tools_by_visibility
 

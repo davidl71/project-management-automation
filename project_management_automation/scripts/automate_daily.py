@@ -12,7 +12,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
@@ -64,7 +64,7 @@ DAILY_TASKS = {
 class DailyAutomation:
     """Orchestrates daily maintenance tasks."""
 
-    def __init__(self, config: Dict, project_root: Optional[Path] = None):
+    def __init__(self, config: dict, project_root: Optional[Path] = None):
         self.config = config
         self.project_root = project_root
         self.tasks_to_run = config.get('tasks', ['docs_health', 'todo2_alignment', 'duplicate_detection'])
@@ -82,7 +82,7 @@ class DailyAutomation:
             'duration_seconds': 0
         }
 
-    def run(self) -> Dict:
+    def run(self) -> dict:
         """Run all selected daily tasks."""
         start_time = time.time()
         logger.info(f"Starting daily automation (dry_run={self.dry_run})")
@@ -142,7 +142,7 @@ class DailyAutomation:
             'report_path': str(self.output_path)
         }
 
-    def _filter_tasks(self) -> List[str]:
+    def _filter_tasks(self) -> list[str]:
         """Filter tasks based on configuration."""
         tasks = []
 
@@ -162,7 +162,7 @@ class DailyAutomation:
 
         return tasks
 
-    def _run_task(self, task_id: str, task_info: Dict) -> Dict[str, Any]:
+    def _run_task(self, task_id: str, task_info: dict) -> dict[str, Any]:
         """Run a single task."""
         start_time = time.time()
 
@@ -177,7 +177,7 @@ class DailyAutomation:
                 result = {'status': 'skipped', 'error': 'Script not found'}
 
             duration = float(time.time() - start_time)
-            result_with_duration: Dict[str, Any] = {**result, 'duration': duration}
+            result_with_duration: dict[str, Any] = {**result, 'duration': duration}
             return result_with_duration
 
         except Exception as e:
@@ -188,7 +188,7 @@ class DailyAutomation:
                 'duration': float(time.time() - start_time)
             }
 
-    def _run_script(self, script_path: Path, task_id: str) -> Dict[str, Any]:
+    def _run_script(self, script_path: Path, task_id: str) -> dict[str, Any]:
         """Run a Python script as a module."""
         import subprocess
 
@@ -199,7 +199,7 @@ class DailyAutomation:
             # Use the relative path from DAILY_TASKS, not the full filesystem path
             relative_script = DAILY_TASKS[task_id]['script']
             module_name = relative_script.replace('/', '.').replace('.py', '')
-            
+
             # Build command - run as module
             cmd = [sys.executable, '-m', module_name]
 
@@ -245,7 +245,7 @@ class DailyAutomation:
                 'error': str(e)
             }
 
-    def _generate_summary(self) -> Dict:
+    def _generate_summary(self) -> dict:
         """Generate summary statistics."""
         total = len(self.results['tasks_run'])
         succeeded = len(self.results['tasks_succeeded'])
@@ -305,7 +305,7 @@ class DailyAutomation:
 def main():
     """Main entry point."""
     from project_management_automation.utils import find_project_root
-    
+
     parser = argparse.ArgumentParser(description='Run daily maintenance tasks')
     parser.add_argument('--tasks', nargs='+',
                        choices=list(DAILY_TASKS.keys()),
@@ -320,7 +320,7 @@ def main():
                        help='Path for report output')
 
     args = parser.parse_args()
-    
+
     project_root = find_project_root()
 
     config = {

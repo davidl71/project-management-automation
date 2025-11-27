@@ -163,7 +163,7 @@ class PRDGenerator:
         include_tasks: bool = True,
         include_architecture: bool = True,
         include_metrics: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generate a comprehensive PRD.
 
@@ -230,7 +230,7 @@ class PRDGenerator:
         # Fallback to directory name
         return self.project_root.name
 
-    def _generate_overview(self, project_name: str) -> Dict[str, str]:
+    def _generate_overview(self, project_name: str) -> dict[str, str]:
         """Generate project overview section."""
         overview = {"name": project_name, "type": "Unknown", "vision": "", "target_users": []}
 
@@ -271,7 +271,7 @@ class PRDGenerator:
 
         return "Problem statement not defined. Please add a ## Vision or ## Problem section to PROJECT_GOALS.md"
 
-    def _extract_personas(self) -> List[Dict[str, Any]]:
+    def _extract_personas(self) -> list[dict[str, Any]]:
         """Extract target user personas from project configuration."""
         personas = []
 
@@ -298,7 +298,7 @@ class PRDGenerator:
 
         return personas
 
-    def _is_persona_relevant(self, persona_id: str, persona_data: Dict) -> str:
+    def _is_persona_relevant(self, persona_id: str, persona_data: dict) -> str:
         """Determine if a persona is relevant to this project and why."""
         relevance_reasons = []
 
@@ -337,7 +337,7 @@ class PRDGenerator:
 
         return ", ".join(relevance_reasons) if relevance_reasons else ""
 
-    def _extract_user_stories(self) -> List[Dict[str, Any]]:
+    def _extract_user_stories(self) -> list[dict[str, Any]]:
         """Extract user stories from Todo2 tasks."""
         user_stories = []
 
@@ -373,7 +373,7 @@ class PRDGenerator:
 
         return user_stories
 
-    def _infer_user_role(self, task: Dict) -> str:
+    def _infer_user_role(self, task: dict) -> str:
         """Infer user role/persona from task content using defined personas."""
         content = f"{task.get('name', '')} {task.get('long_description', '')}".lower()
 
@@ -393,7 +393,7 @@ class PRDGenerator:
         # Default to developer
         return "Developer (Daily Contributor)"
 
-    def _infer_benefit(self, task: Dict) -> str:
+    def _infer_benefit(self, task: dict) -> str:
         """Infer benefit from task content."""
         content = f"{task.get('name', '')} {task.get('long_description', '')}".lower()
 
@@ -410,7 +410,7 @@ class PRDGenerator:
         else:
             return "the project capabilities are enhanced"
 
-    def _extract_features(self) -> List[Dict[str, Any]]:
+    def _extract_features(self) -> list[dict[str, Any]]:
         """Extract key features from codebase and docs."""
         features = []
 
@@ -442,7 +442,7 @@ class PRDGenerator:
 
         return features[:30]  # Limit to top 30
 
-    def _analyze_architecture(self) -> Dict[str, Any]:
+    def _analyze_architecture(self) -> dict[str, Any]:
         """Analyze technical architecture from codebase."""
         arch = {"language": "Python", "framework": [], "dependencies": [], "structure": [], "patterns": []}
 
@@ -502,7 +502,7 @@ class PRDGenerator:
 
         return arch
 
-    def _extract_metrics(self) -> List[Dict[str, str]]:
+    def _extract_metrics(self) -> list[dict[str, str]]:
         """Extract success metrics from PROJECT_GOALS.md."""
         metrics = []
 
@@ -536,7 +536,7 @@ class PRDGenerator:
 
         return metrics
 
-    def _analyze_risks(self) -> List[Dict[str, str]]:
+    def _analyze_risks(self) -> list[dict[str, str]]:
         """Analyze risks and dependencies."""
         risks = []
 
@@ -583,7 +583,7 @@ class PRDGenerator:
 
         return risks
 
-    def _extract_timeline(self) -> Dict[str, Any]:
+    def _extract_timeline(self) -> dict[str, Any]:
         """Extract timeline from phases and tasks."""
         timeline = {"phases": [], "estimated_hours": 0, "task_counts": {"Todo": 0, "In Progress": 0, "Done": 0}}
 
@@ -612,7 +612,7 @@ class PRDGenerator:
 
         return timeline
 
-    def _format_prd_markdown(self, sections: Dict[str, Any]) -> str:
+    def _format_prd_markdown(self, sections: dict[str, Any]) -> str:
         """Format all sections into a markdown PRD."""
         lines = []
 
