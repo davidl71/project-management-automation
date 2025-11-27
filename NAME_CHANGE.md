@@ -4,7 +4,7 @@
 
 The MCP server name has been shortened from `project-management-automation` to `exarp` for brevity and ease of use.
 
-**New Name:** `exarp` (short for "automation")
+**New Name:** `exarp` (Extended Automation & Research Platform)
 
 ---
 
@@ -73,7 +73,7 @@ After updating the configuration:
 
 ### ✅ Already Updated
 - `server.py` - Server display name changed to "exarp"
-- `.cursor/rules/project-automation.mdc` - Configuration example updated
+- `.cursor/rules/project-development.mdc` - Configuration example updated
 
 ### ⚠️ Manual Update Required
 - `.cursor/mcp.json` - Change the server key from `project-management-automation` to `exarp`

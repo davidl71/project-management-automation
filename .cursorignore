@@ -4,6 +4,9 @@ venv/
 env/
 .venv/
 
+# Browser profiles (1.3GB)
+chrome_profile_notebooklm/
+
 # Git
 .git/
 

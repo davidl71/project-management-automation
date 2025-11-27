@@ -6,8 +6,8 @@ This document provides development guidelines and conventions for the Project Ma
 
 **Type**: Python MCP Server
 **Purpose**: Expose project management automation tools via Model Context Protocol
-**Package Name**: `project-management-automation-mcp`
-**MCP Server Identifier**: `automa`
+**Package Name**: `exarp` (Extended Automation & Research Platform)
+**MCP Server Identifier**: `exarp`
 
 ## Code Style
 
@@ -87,7 +87,7 @@ project-management-automation/
 ```python
 from fastmcp import FastMCP
 
-mcp = FastMCP("automa")
+mcp = FastMCP("exarp")
 
 @mcp.tool()
 async def my_new_tool(
@@ -155,7 +155,36 @@ except Exception as e:
 
 ## MCP Server Configuration
 
-When developing, you may want to configure complementary MCP servers:
+### Exarp Server
+
+```json
+{
+  "mcpServers": {
+    "exarp": {
+      "command": "uvx",
+      "args": ["exarp"]
+    }
+  }
+}
+```
+
+Or for development with hot-reload:
+
+```json
+{
+  "mcpServers": {
+    "exarp": {
+      "command": "python3",
+      "args": ["-m", "project_management_automation.server"],
+      "env": {
+        "EXARP_DEV_MODE": "1"
+      }
+    }
+  }
+}
+```
+
+### Complementary MCP Servers
 
 ```json
 {

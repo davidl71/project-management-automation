@@ -44,6 +44,7 @@ Welcome to the EXARP (Expert Automated Repository & Project-management) document
 - [SPRINT_AUTOMATION_PROPOSAL.md](SPRINT_AUTOMATION_PROPOSAL.md) - Sprint automation
 - [DAILY_AUTOMATION_REPORT.md](DAILY_AUTOMATION_REPORT.md) - Daily automation reports
 - [AUTO_FIX_USAGE.md](AUTO_FIX_USAGE.md) - Auto-fix functionality
+- [DYNAMIC_TOOL_LOADING.md](DYNAMIC_TOOL_LOADING.md) - Dynamic tool visibility and focus modes
 
 ---
 
