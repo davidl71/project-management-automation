@@ -64,6 +64,7 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+asyncio_mode = "auto"
 
 [project.scripts]
 project-management-automation = "project_management_automation.server:main"

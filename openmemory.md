@@ -109,5 +109,6 @@ subprojects/devradio/
 *To be populated as system is explored*
 
 ## Patterns
-*To be populated as patterns emerge*
+- Scripts ensure the repo root is pushed to `sys.path` by walking its parent directories for `.git`, `.todo2`, or `pyproject.toml` before importing `project_management_automation.*`, so running automation directly still resolves the package.
+- Todo2 tasks now carry a `project_id` extracted from the git remote (`owner/repo`) and `utils.todo2_utils` filters loaded tasks plus newly created automations so every tool only handles tasks that belong to this project.
 
