@@ -125,15 +125,17 @@ def security(
         Security scan/report results
     """
     import asyncio
+    # Toggle: check if we're in an async context
+    in_async = False
     try:
-        # Check if we're in an async context
         asyncio.get_running_loop()
+        in_async = True
     except RuntimeError:
-        # No running loop - safe to run synchronously
-        return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
-    else:
-        # In async context - caller must await security_async() directly
+        pass
+    
+    if in_async:
         raise RuntimeError("Use security_async() in async context, or call from sync code")
+    return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
 
 
 def generate_config(
@@ -593,15 +595,17 @@ def testing(
         Test or coverage results as dict
     """
     import asyncio
+    # Toggle: check if we're in an async context
+    in_async = False
     try:
-        # Check if we're in an async context
         asyncio.get_running_loop()
+        in_async = True
     except RuntimeError:
-        # No running loop - safe to run synchronously
-        return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
-    else:
-        # In async context - caller must await testing_async() directly
+        pass
+    
+    if in_async:
         raise RuntimeError("Use testing_async() in async context, or call from sync code")
+    return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
 
 
 def lint(

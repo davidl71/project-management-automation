@@ -238,13 +238,15 @@ def run_tests(
     Returns:
         JSON string with test execution results
     """
+    # Toggle: check if we're in an async context
+    in_async = False
     try:
-        # Check if we're in an async context
         asyncio.get_running_loop()
+        in_async = True
     except RuntimeError:
-        # No running loop - safe to run synchronously
-        return asyncio.run(run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx))
-    else:
-        # In async context - caller must use run_tests_async directly
+        pass
+    
+    if in_async:
         raise RuntimeError("Use run_tests_async() in async context, or call from sync code")
+    return asyncio.run(run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx))
 

@@ -246,12 +246,14 @@ def scan_dependency_security(
         JSON string with scan results
     """
     import asyncio
+    # Toggle: check if we're in an async context
+    in_async = False
     try:
-        # Check if we're in an async context
         asyncio.get_running_loop()
+        in_async = True
     except RuntimeError:
-        # No running loop - safe to run synchronously
-        return asyncio.run(scan_dependency_security_async(languages, config_path, ctx))
-    else:
-        # In async context - caller must use scan_dependency_security_async directly
+        pass
+    
+    if in_async:
         raise RuntimeError("Use scan_dependency_security_async() in async context, or call from sync code")
+    return asyncio.run(scan_dependency_security_async(languages, config_path, ctx))
