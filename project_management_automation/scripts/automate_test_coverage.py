@@ -111,7 +111,7 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
     def _generate_coverage(self):
         """Generate coverage by running tests with coverage."""
         try:
-            cmd = ['python3', '-m', 'pytest', '--cov=project_management_automation', '--cov=tools', '--cov=resources', '--cov-report=xml:' + str(self.output_path / 'coverage.xml')]
+            cmd = [sys.executable, '-m', 'pytest', '--cov=project_management_automation', '--cov=tools', '--cov=resources', '--cov-report=xml:' + str(self.output_path / 'coverage.xml')]
             result = subprocess.run(
                 cmd,
                 cwd=str(self.project_root),
@@ -196,7 +196,7 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
         """Parse .coverage file using coverage.py."""
         try:
             # Use coverage.py to generate report
-            cmd = ['python3', '-m', 'coverage', 'json', '-o', str(self.output_path / 'coverage.json')]
+            cmd = [sys.executable, '-m', 'coverage', 'json', '-o', str(self.output_path / 'coverage.json')]
             result = subprocess.run(
                 cmd,
                 cwd=str(self.project_root),

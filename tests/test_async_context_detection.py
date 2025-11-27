@@ -120,7 +120,8 @@ class TestAsyncContextDetectionEdgeCases:
         async def outer():
             async def inner():
                 return security(action="scan")
-            return await asyncio.create_task(asyncio.coroutine(lambda: inner())())
+            # Create task that calls inner() - replaced deprecated asyncio.coroutine
+            return await inner()
         
         # The inner call should still detect the running loop
         with pytest.raises(RuntimeError) as exc_info:
@@ -166,8 +167,8 @@ class TestAsyncVersionsWork:
         """Test that security_async() can be properly awaited."""
         from project_management_automation.tools.consolidated import security_async
         
-        # Mock the internal functions
-        with patch('project_management_automation.tools.consolidated._scan_dependency_security_async', new_callable=AsyncMock) as mock_scan:
+        # Mock the dependency_security module's async function
+        with patch('project_management_automation.tools.dependency_security.scan_dependency_security_async', new_callable=AsyncMock) as mock_scan:
             mock_scan.return_value = json.dumps({"status": "success", "results": {}})
             
             # Should not raise - we're properly awaiting
@@ -181,8 +182,8 @@ class TestAsyncVersionsWork:
         """Test that testing_async() can be properly awaited."""
         from project_management_automation.tools.consolidated import testing_async
         
-        # Mock the internal functions
-        with patch('project_management_automation.tools.consolidated._run_tests', new_callable=AsyncMock) as mock_run:
+        # Mock the run_tests module's async function
+        with patch('project_management_automation.tools.run_tests.run_tests_async', new_callable=AsyncMock) as mock_run:
             mock_run.return_value = {"status": "success", "passed": 10, "failed": 0}
             
             # Should not raise - we're properly awaiting
@@ -196,13 +197,15 @@ class TestAsyncVersionsWork:
         """Test that scan_dependency_security_async() can be properly awaited."""
         from project_management_automation.tools.dependency_security import scan_dependency_security_async
         
-        # Mock the internal scanner
-        with patch('project_management_automation.tools.dependency_security.DependencySecurityScanner') as mock_scanner_class:
-            mock_scanner = Mock()
-            mock_scanner.scan_all.return_value = {"vulnerabilities": []}
-            mock_scanner_class.return_value = mock_scanner
+        # Mock the analyzer class and find_project_root (patch the source module)
+        with patch('project_management_automation.utils.find_project_root') as mock_root:
+            mock_root.return_value = Path("/test")
             
-            with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
+            with patch('project_management_automation.scripts.automate_dependency_security.DependencySecurityAnalyzer') as mock_analyzer_class:
+                mock_analyzer = Mock()
+                mock_analyzer.run.return_value = {"results": {"summary": {"total_vulnerabilities": 0}}}
+                mock_analyzer_class.return_value = mock_analyzer
+                
                 # Should not raise - we're properly awaiting
                 result = await scan_dependency_security_async()
                 

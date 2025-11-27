@@ -17,6 +17,19 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
+# Ensure repo root is on sys.path even when running script directly
+script_dir = Path(__file__).resolve().parent
+repo_root = script_dir
+for candidate in script_dir.parents:
+    if (candidate / '.git').exists() or (candidate / '.todo2').exists() or (candidate / 'pyproject.toml').exists():
+        repo_root = candidate
+        break
+else:
+    repo_root = script_dir.parent.parent
+
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 

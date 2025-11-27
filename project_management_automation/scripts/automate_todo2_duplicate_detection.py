@@ -25,6 +25,10 @@ from typing import Dict, List, Optional
 # Project root will be passed to __init__
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
+from project_management_automation.utils.todo2_utils import (
+    filter_tasks_by_project,
+    get_repo_project_id,
+)
 
 # Configure logging (will be configured after project_root is set)
 logger = logging.getLogger(__name__)
@@ -129,7 +133,11 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         try:
             with open(self.todo2_path) as f:
                 data = json.load(f)
-            return data.get('todos', [])
+            tasks = data.get('todos', [])
+            project_id = get_repo_project_id(self.project_root)
+            filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
+            logger.info("Loaded %d tasks (%d matched project)", len(tasks), len(filtered))
+            return filtered
         except FileNotFoundError:
             logger.error(f"Todo2 state file not found: {self.todo2_path}")
             return []

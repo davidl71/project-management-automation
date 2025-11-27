@@ -111,7 +111,7 @@ class TestRunner(IntelligentAutomationBase):
 
     def _run_pytest(self) -> dict:
         """Run pytest tests."""
-        cmd = ['python3', '-m', 'pytest', str(self.test_path)]
+        cmd = [sys.executable, '-m', 'pytest', str(self.test_path)]
 
         if self.verbose:
             cmd.append('-v')

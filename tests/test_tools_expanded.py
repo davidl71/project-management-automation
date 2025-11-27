@@ -183,17 +183,19 @@ class TestBatchTaskApprovalTool:
     """Tests for batch_approve_tasks tool."""
 
     @patch('subprocess.run')
-    @patch('project_management_automation.tools.batch_task_approval.Path')
-    def test_batch_approve_tasks_success(self, mock_path_class, mock_subprocess):
+    @patch('project_management_automation.tools.batch_task_approval.find_project_root')
+    def test_batch_approve_tasks_success(self, mock_find_root, mock_subprocess):
         """Test successful batch task approval."""
         from project_management_automation.tools.batch_task_approval import batch_approve_tasks
 
-        # Mock Path to handle division operations
+        # Mock find_project_root to return a mock path that supports / operations
         mock_project_root = MagicMock()
+        mock_scripts_dir = MagicMock()
         mock_script_path = MagicMock()
         mock_script_path.exists.return_value = True
-        mock_project_root.__truediv__ = MagicMock(return_value=mock_script_path)
-        mock_path_class.return_value = mock_project_root
+        mock_scripts_dir.__truediv__ = MagicMock(return_value=mock_script_path)
+        mock_project_root.__truediv__ = MagicMock(return_value=mock_scripts_dir)
+        mock_find_root.return_value = mock_project_root
 
         # Mock subprocess result
         mock_result = Mock()

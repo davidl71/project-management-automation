@@ -80,7 +80,7 @@ class TestIndividualPrompts:
         
         assert isinstance(DOCUMENTATION_HEALTH_CHECK, str)
         assert len(DOCUMENTATION_HEALTH_CHECK) > 0
-        assert 'check_documentation_health' in DOCUMENTATION_HEALTH_CHECK.lower()
+        assert 'health(action="docs"' in DOCUMENTATION_HEALTH_CHECK.lower()
 
     def test_doc_quick_prompt(self):
         """Test quick documentation check prompt."""
@@ -95,7 +95,7 @@ class TestIndividualPrompts:
         
         assert isinstance(TASK_ALIGNMENT_ANALYSIS, str)
         assert len(TASK_ALIGNMENT_ANALYSIS) > 0
-        assert 'analyze_todo2_alignment' in TASK_ALIGNMENT_ANALYSIS.lower()
+        assert 'analyze_alignment' in TASK_ALIGNMENT_ANALYSIS.lower()
 
     def test_duplicate_cleanup_prompt(self):
         """Test duplicate task cleanup prompt."""
@@ -103,7 +103,7 @@ class TestIndividualPrompts:
         
         assert isinstance(DUPLICATE_TASK_CLEANUP, str)
         assert len(DUPLICATE_TASK_CLEANUP) > 0
-        assert 'detect_duplicate_tasks' in DUPLICATE_TASK_CLEANUP.lower()
+        assert 'task_analysis(action="duplicates"' in DUPLICATE_TASK_CLEANUP.lower()
 
     def test_task_sync_prompt(self):
         """Test task synchronization prompt."""
@@ -111,7 +111,7 @@ class TestIndividualPrompts:
         
         assert isinstance(TASK_SYNC, str)
         assert len(TASK_SYNC) > 0
-        assert 'sync_todo_tasks' in TASK_SYNC.lower()
+        assert 'task_workflow(action="sync"' in TASK_SYNC.lower()
 
     def test_security_scan_all_prompt(self):
         """Test security scan (all languages) prompt."""
@@ -119,7 +119,7 @@ class TestIndividualPrompts:
         
         assert isinstance(SECURITY_SCAN_ALL, str)
         assert len(SECURITY_SCAN_ALL) > 0
-        assert 'scan_dependency_security' in SECURITY_SCAN_ALL.lower()
+        assert 'security(action=' in SECURITY_SCAN_ALL.lower()
 
     def test_security_scan_python_prompt(self):
         """Test security scan (Python) prompt."""
@@ -141,7 +141,7 @@ class TestIndividualPrompts:
         
         assert isinstance(AUTOMATION_DISCOVERY, str)
         assert len(AUTOMATION_DISCOVERY) > 0
-        assert 'find_automation_opportunities' in AUTOMATION_DISCOVERY.lower()
+        assert 'run_automation(action="discover"' in AUTOMATION_DISCOVERY.lower()
 
     def test_automation_high_value_prompt(self):
         """Test high-value automation discovery prompt."""
@@ -164,9 +164,9 @@ class TestIndividualPrompts:
         
         assert isinstance(PRE_SPRINT_CLEANUP, str)
         assert len(PRE_SPRINT_CLEANUP) > 0
-        assert 'detect_duplicate_tasks' in PRE_SPRINT_CLEANUP.lower()
-        assert 'analyze_todo2_alignment' in PRE_SPRINT_CLEANUP.lower()
-        assert 'check_documentation_health' in PRE_SPRINT_CLEANUP.lower()
+        assert 'task_analysis(action="duplicates")' in PRE_SPRINT_CLEANUP.lower()
+        assert 'analyze_alignment(action="todo2")' in PRE_SPRINT_CLEANUP.lower()
+        assert 'health(action="docs")' in PRE_SPRINT_CLEANUP.lower()
 
     def test_post_implementation_review_prompt(self):
         """Test post-implementation review workflow prompt."""

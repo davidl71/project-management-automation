@@ -48,6 +48,12 @@ from .security import (
     validate_path,
     validate_range,
 )
+from .todo2_utils import (
+    annotate_task_project,
+    filter_tasks_by_project,
+    get_repo_project_id,
+    task_belongs_to_project,
+)
 
 
 def find_project_root(start_path: Optional[Path] = None) -> Path:
@@ -139,5 +145,9 @@ __all__ = [
     'get_access_controller',
     'set_access_controller',
     'require_access',
+    'annotate_task_project',
+    'filter_tasks_by_project',
+    'get_repo_project_id',
+    'task_belongs_to_project',
 ]
 

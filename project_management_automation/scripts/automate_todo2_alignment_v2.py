@@ -23,6 +23,10 @@ from typing import Dict, List, Optional
 # Project root will be passed to __init__
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
+from project_management_automation.utils.todo2_utils import (
+    filter_tasks_by_project,
+    get_repo_project_id,
+)
 
 # Configure logging (will be configured after project_root is set)
 logger = logging.getLogger(__name__)
@@ -226,20 +230,32 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         """
         from .base.mcp_client import load_json_with_retry
 
+        project_id = get_repo_project_id(self.project_root)
+
         # Try agentic-tools MCP format first (preferred) with retry
         data = load_json_with_retry(self.agentic_tools_path, default=None)
         if data is not None:
             raw_tasks = data.get('tasks', [])
             tasks = [self._normalize_task(t) for t in raw_tasks]
-            logger.info(f"Loaded {len(tasks)} tasks from agentic-tools MCP")
-            return tasks
+            filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
+            logger.info(
+                "Loaded %d tasks from agentic-tools MCP (%d matched project)",
+                len(tasks),
+                len(filtered),
+            )
+            return filtered
 
         # Fall back to legacy Todo2 format with retry
         data = load_json_with_retry(self.todo2_path, default=None)
         if data is not None:
             tasks = data.get('todos', [])
-            logger.info(f"Loaded {len(tasks)} tasks from legacy Todo2 format")
-            return tasks
+            filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
+            logger.info(
+                "Loaded %d tasks from legacy Todo2 format (%d matched project)",
+                len(tasks),
+                len(filtered),
+            )
+            return filtered
 
         logger.info("No task files found - no tasks to analyze")
         return []

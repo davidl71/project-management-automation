@@ -67,17 +67,19 @@ class TestResourceHandlers:
             ]
         }
         
-        with patch('project_management_automation.resources.tasks.Path') as mock_path:
-            mock_todo2_path = Mock()
-            mock_todo2_path.exists.return_value = True
-            mock_todo2_path.read_text.return_value = json.dumps(mock_tasks_data)
-            mock_path.return_value = mock_todo2_path
+        with patch('project_management_automation.resources.tasks.find_project_root') as mock_root:
+            mock_project_root = Mock()
+            mock_todo2_file = Mock()
+            mock_todo2_file.exists.return_value = True
+            mock_project_root.__truediv__ = Mock(return_value=Mock(__truediv__=Mock(return_value=mock_todo2_file)))
+            mock_root.return_value = mock_project_root
             
-            result = get_tasks_resource()
-            result_data = json.loads(result)
-            
-            assert 'tasks' in result_data
-            assert isinstance(result_data['tasks'], list)
+            with patch('builtins.open', mock_open(read_data=json.dumps(mock_tasks_data))):
+                result = get_tasks_resource()
+                result_data = json.loads(result)
+                
+                assert 'tasks' in result_data
+                assert isinstance(result_data['tasks'], list)
 
     def test_tasks_by_agent_resource_handler(self):
         """Test automation://tasks/agent/{agent_name} resource handler."""
@@ -90,17 +92,19 @@ class TestResourceHandlers:
             ]
         }
         
-        with patch('project_management_automation.resources.tasks.Path') as mock_path:
-            mock_todo2_path = Mock()
-            mock_todo2_path.exists.return_value = True
-            mock_todo2_path.read_text.return_value = json.dumps(mock_tasks_data)
-            mock_path.return_value = mock_todo2_path
+        with patch('project_management_automation.resources.tasks.find_project_root') as mock_root:
+            mock_project_root = Mock()
+            mock_todo2_file = Mock()
+            mock_todo2_file.exists.return_value = True
+            mock_project_root.__truediv__ = Mock(return_value=Mock(__truediv__=Mock(return_value=mock_todo2_file)))
+            mock_root.return_value = mock_project_root
             
-            result = get_agent_tasks_resource('test_agent')
-            result_data = json.loads(result)
-            
-            assert 'tasks' in result_data
-            assert isinstance(result_data['tasks'], list)
+            with patch('builtins.open', mock_open(read_data=json.dumps(mock_tasks_data))):
+                result = get_agent_tasks_resource('test_agent')
+                result_data = json.loads(result)
+                
+                assert 'tasks' in result_data
+                assert isinstance(result_data['tasks'], list)
 
     def test_tasks_by_status_resource_handler(self):
         """Test automation://tasks/status/{status} resource handler."""
@@ -113,17 +117,19 @@ class TestResourceHandlers:
             ]
         }
         
-        with patch('project_management_automation.resources.tasks.Path') as mock_path:
-            mock_todo2_path = Mock()
-            mock_todo2_path.exists.return_value = True
-            mock_todo2_path.read_text.return_value = json.dumps(mock_tasks_data)
-            mock_path.return_value = mock_todo2_path
+        with patch('project_management_automation.resources.tasks.find_project_root') as mock_root:
+            mock_project_root = Mock()
+            mock_todo2_file = Mock()
+            mock_todo2_file.exists.return_value = True
+            mock_project_root.__truediv__ = Mock(return_value=Mock(__truediv__=Mock(return_value=mock_todo2_file)))
+            mock_root.return_value = mock_project_root
             
-            result = get_tasks_resource(status='Todo')
-            result_data = json.loads(result)
-            
-            assert 'tasks' in result_data
-            assert isinstance(result_data['tasks'], list)
+            with patch('builtins.open', mock_open(read_data=json.dumps(mock_tasks_data))):
+                result = get_tasks_resource(status='Todo')
+                result_data = json.loads(result)
+                
+                assert 'tasks' in result_data
+                assert isinstance(result_data['tasks'], list)
 
     def test_cache_resource_handler(self):
         """Test automation://cache resource handler."""
