@@ -36,6 +36,9 @@ Welcome to the EXARP (Expert Automated Repository & Project-management) document
 
 ### AI Integration
 - [AI_SESSION_MEMORY.md](AI_SESSION_MEMORY.md) - AI session memory system
+- [CONTEXT_PRIMING_GUIDE.md](CONTEXT_PRIMING_GUIDE.md) - How to prime AI agents with project context
+- [MCP_SERVERS_DISCOVERY_REPORT.md](MCP_SERVERS_DISCOVERY_REPORT.md) - MCP server exploration journey
+- [MCP_SERVERS_USAGE_GUIDE.md](MCP_SERVERS_USAGE_GUIDE.md) - Prompting patterns for MCP servers
 - [EXARP_RAG_INTEGRATION.md](EXARP_RAG_INTEGRATION.md) - RAG integration guide
 - [EXARP_CHATBOT_INTEGRATION_STRATEGY.md](EXARP_CHATBOT_INTEGRATION_STRATEGY.md) - Chatbot integration
 - [EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md](EXARP_AI_AGENT_DISCOVERABILITY_ANALYSIS.md) - AI discoverability

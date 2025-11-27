@@ -482,6 +482,39 @@ def _merge_wisdom(memories: list[dict[str, Any]], consultations: list[dict[str, 
     return timeline[:30]  # Last 30 items
 
 
+def get_memories_health_resource() -> str:
+    """
+    Get memory system health metrics.
+    
+    Returns:
+        JSON string with health analysis and recommendations
+    """
+    try:
+        # Import maintenance functions
+        from ..tools.memory_maintenance import memory_health_check
+        
+        health = memory_health_check()
+        
+        result = {
+            "total_memories": health.get("total_memories", 0),
+            "health_score": health.get("health_score", 0),
+            "by_category": health.get("by_category", {}),
+            "age_distribution": health.get("age_distribution", {}),
+            "issues": health.get("issues", {}),
+            "recommendations": health.get("recommendations", []),
+            "timestamp": datetime.now().isoformat(),
+        }
+        
+        return json.dumps(result, indent=2)
+    
+    except Exception as e:
+        logger.error(f"Error getting memories health: {e}")
+        return json.dumps({
+            "error": str(e),
+            "timestamp": datetime.now().isoformat(),
+        }, indent=2)
+
+
 __all__ = [
     "MEMORY_CATEGORIES",
     "create_memory",
@@ -493,5 +526,6 @@ __all__ = [
     "get_recent_memories_resource",
     "get_session_memories_resource",
     "get_wisdom_resource",
+    "get_memories_health_resource",
 ]
 

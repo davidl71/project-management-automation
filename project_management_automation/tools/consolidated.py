@@ -19,6 +19,7 @@ Consolidated tools:
 - testing(action=run|coverage) ← run_tests, analyze_test_coverage
 - lint(action=run|analyze) ← run_linter, analyze_problems
 - memory(action=save|recall|search) ← save_memory, recall_context, search_memories
+- memory_maint(action=health|gc|prune|consolidate|dream) ← memory lifecycle management and advisor dreaming
 - task_discovery(action=comments|markdown|orphans|all) ← NEW: find tasks from various sources
 - task_workflow(action=sync|approve|clarify, sub_action for clarify) ← sync_todo_tasks, batch_approve_tasks, clarification
 """
@@ -967,5 +968,102 @@ def task_workflow(
         return {
             "status": "error",
             "error": f"Unknown task_workflow action: {action}. Use 'sync', 'approve', or 'clarify'.",
+        }
+
+
+def memory_maint(
+    action: str = "health",
+    # gc params
+    max_age_days: int = 90,
+    delete_orphaned: bool = True,
+    delete_duplicates: bool = True,
+    scorecard_max_age_days: int = 7,
+    # prune params
+    value_threshold: float = 0.3,
+    keep_minimum: int = 50,
+    # consolidate params
+    similarity_threshold: float = 0.85,
+    merge_strategy: str = "newest",
+    # dream params
+    scope: str = "week",
+    advisors: Optional[str] = None,
+    generate_insights: bool = True,
+    save_dream: bool = True,
+    # common
+    dry_run: bool = True,
+    interactive: bool = True,
+) -> dict[str, Any]:
+    """
+    Unified memory maintenance tool.
+
+    Args:
+        action: "health", "gc", "prune", "consolidate", or "dream"
+        max_age_days: Delete memories older than this (gc)
+        delete_orphaned: Delete orphaned memories (gc)
+        delete_duplicates: Delete duplicates (gc)
+        scorecard_max_age_days: Max age for scorecard memories (gc)
+        value_threshold: Minimum value score to keep (prune)
+        keep_minimum: Always keep at least N memories (prune)
+        similarity_threshold: Title similarity threshold (consolidate)
+        merge_strategy: newest, oldest, or longest (consolidate)
+        scope: day, week, month, or all (dream)
+        advisors: JSON list of advisor keys (dream)
+        generate_insights: Generate actionable insights (dream)
+        save_dream: Save dream as new memory (dream)
+        dry_run: Preview without executing (default True)
+        interactive: Use interactive MCP for approvals (reserved for future)
+
+    Returns:
+        Maintenance operation results
+    """
+    if action == "health":
+        from .memory_maintenance import memory_health_check
+        return memory_health_check()
+
+    elif action == "gc":
+        from .memory_maintenance import memory_garbage_collect
+        return memory_garbage_collect(
+            max_age_days=max_age_days,
+            delete_orphaned=delete_orphaned,
+            delete_duplicates=delete_duplicates,
+            scorecard_max_age_days=scorecard_max_age_days,
+            dry_run=dry_run,
+        )
+
+    elif action == "prune":
+        from .memory_maintenance import memory_prune
+        return memory_prune(
+            value_threshold=value_threshold,
+            keep_minimum=keep_minimum,
+            dry_run=dry_run,
+        )
+
+    elif action == "consolidate":
+        from .memory_maintenance import memory_consolidate
+        return memory_consolidate(
+            similarity_threshold=similarity_threshold,
+            merge_strategy=merge_strategy,
+            dry_run=dry_run,
+        )
+
+    elif action == "dream":
+        from .memory_dreaming import memory_dream
+        advisor_list = None
+        if advisors:
+            try:
+                advisor_list = json.loads(advisors)
+            except json.JSONDecodeError:
+                return {"status": "error", "error": "Invalid advisors JSON"}
+        return memory_dream(
+            scope=scope,
+            advisors=advisor_list,
+            generate_insights=generate_insights,
+            save_dream=save_dream,
+        )
+
+    else:
+        return {
+            "status": "error",
+            "error": f"Unknown memory_maint action: {action}. Use 'health', 'gc', 'prune', 'consolidate', or 'dream'.",
         }
 

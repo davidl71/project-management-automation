@@ -1298,6 +1298,9 @@ if mcp:
             task_workflow as _task_workflow,
         )
         from .tools.consolidated import (
+            memory_maint as _memory_maint,
+        )
+        from .tools.consolidated import (
             testing as _testing,
         )
         CONSOLIDATED_AVAILABLE = True
@@ -1694,6 +1697,45 @@ if mcp:
             )
             return json.dumps(result, separators=(",", ":"))
 
+        @mcp.tool()
+        def memory_maint(
+            action: str = "health",
+            max_age_days: int = 90,
+            delete_orphaned: bool = True,
+            delete_duplicates: bool = True,
+            scorecard_max_age_days: int = 7,
+            value_threshold: float = 0.3,
+            keep_minimum: int = 50,
+            similarity_threshold: float = 0.85,
+            merge_strategy: str = "newest",
+            scope: str = "week",
+            advisors: Optional[str] = None,
+            generate_insights: bool = True,
+            save_dream: bool = True,
+            dry_run: bool = True,
+            interactive: bool = True,
+        ) -> str:
+            """
+            [HINT: Memory maintenance. action=health|gc|prune|consolidate|dream. Lifecycle management.]
+
+            Unified memory maintenance:
+            - action="health": Memory system health metrics and recommendations
+            - action="gc": Garbage collect stale/orphaned memories
+            - action="prune": Remove low-value memories based on scoring
+            - action="consolidate": Merge similar/duplicate memories
+            - action="dream": Reflect on memories with wisdom advisors
+
+            📊 Output: Maintenance results with recommendations
+            🔧 Side Effects: Modifies memories (gc/prune/consolidate with dry_run=False)
+            """
+            result = _memory_maint(
+                action, max_age_days, delete_orphaned, delete_duplicates,
+                scorecard_max_age_days, value_threshold, keep_minimum,
+                similarity_threshold, merge_strategy, scope, advisors,
+                generate_insights, save_dream, dry_run, interactive
+            )
+            return json.dumps(result, separators=(",", ":"))
+
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS
     # ═══════════════════════════════════════════════════════════════════════════════
@@ -2056,6 +2098,7 @@ if mcp:
             from .resources.memories import (
                 get_memories_by_category_resource,
                 get_memories_by_task_resource,
+                get_memories_health_resource,
                 get_memories_resource,
                 get_recent_memories_resource,
                 get_session_memories_resource,
@@ -2084,6 +2127,7 @@ if mcp:
                 from resources.memories import (
                     get_memories_by_category_resource,
                     get_memories_by_task_resource,
+                    get_memories_health_resource,
                     get_memories_resource,
                     get_recent_memories_resource,
                     get_session_memories_resource,
@@ -2201,6 +2245,11 @@ if mcp:
             def get_combined_wisdom() -> str:
                 """Get combined view of memories and advisor consultations."""
                 return get_wisdom_resource()
+
+            @mcp.resource("automation://memories/health")
+            def get_memory_health() -> str:
+                """Get memory system health metrics and maintenance recommendations."""
+                return get_memories_health_resource()
 
             logger.info("Memory resources loaded successfully")
 
