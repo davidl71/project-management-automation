@@ -241,9 +241,10 @@ def run_tests(
     try:
         # Check if we're in an async context
         asyncio.get_running_loop()
-        # In async context - caller must use run_tests_async directly
-        raise RuntimeError("Use run_tests_async() in async context")
     except RuntimeError:
-        # No running loop - run synchronously
+        # No running loop - safe to run synchronously
         return asyncio.run(run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx))
+    else:
+        # In async context - caller must use run_tests_async directly
+        raise RuntimeError("Use run_tests_async() in async context, or call from sync code")
 
