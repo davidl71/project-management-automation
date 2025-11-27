@@ -190,8 +190,9 @@ def generate_project_scorecard(
             data = json.load(f)
         todos = data.get('todos', [])
 
-        pending = [t for t in todos if t.get('status') in ['pending', 'in_progress']]
-        completed = [t for t in todos if t.get('status') == 'completed']
+        # Normalize status matching (case-insensitive)
+        pending = [t for t in todos if t.get('status', '').lower() in ['pending', 'in_progress', 'todo', 'in-progress']]
+        completed = [t for t in todos if t.get('status', '').lower() in ['completed', 'done']]
 
         completion_rate = len(completed) / len(todos) * 100 if todos else 0
         scores['completion'] = completion_rate

@@ -1959,85 +1959,50 @@
       ]
     },
     {
-      "id": "T-CONTEXT-1",
-      "name": "Research: Best practices for MCP context priming",
-      "description": "Research best practices for context priming in MCP servers:\n- Review MCP specification for context management\n- Study FastMCP context helpers and patterns\n- Analyze token efficiency strategies\n- Document findings in docs/CONTEXT_PRIMING_RESEARCH.md\n\nThis informs future improvements to the context priming system.",
-      "status": "Done",
-      "priority": "P2",
+      "id": "AUTO-20251127033016-837430",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
       "tags": [
-        "research",
-        "context-priming",
-        "mcp"
+        "automation",
+        "documentation-health-analysis"
       ],
-      "created": "2025-11-27T18:20:58.227362",
-      "lastModified": "2025-11-27T18:20:58.227362",
+      "created": "2025-11-27T03:30:16.837480",
+      "lastModified": "2025-11-27T03:30:19.678118",
+      "dependencies": [],
       "comments": [
         {
-          "id": "c1",
-          "content": "Completed: Implemented context priming system based on research",
-          "created": "2025-11-27T18:20:58.227362"
+          "id": "AUTO-20251127033016-837430-C-1",
+          "todoId": "AUTO-20251127033016-837430",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 82.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":278,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":82.0}",
+          "created": "2025-11-27T03:30:19.652994",
+          "lastModified": "2025-11-27T03:30:19.653002"
         }
       ]
     },
     {
-      "id": "T-CONTEXT-2",
-      "name": "Implementation: Unified context primer resource",
-      "description": "Implement unified context primer system:\n- Created automation://context-primer resource\n- Created centralized hint registry (hint_registry.py)\n- Added auto-primer tool for session start\n- Added mode-aware prompt discovery\n\nFiles created:\n- resources/context_primer.py\n- resources/hint_registry.py\n- resources/prompt_discovery.py\n- tools/auto_primer.py",
-      "status": "Done",
-      "priority": "P1",
+      "id": "AUTO-20251127040012-667237",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
       "tags": [
-        "implementation",
-        "context-priming",
-        "mcp"
+        "automation",
+        "shared-todo-table-synchronization"
       ],
-      "created": "2025-11-27T18:20:58.227362",
-      "lastModified": "2025-11-27T18:20:58.227362",
+      "created": "2025-11-27T04:00:12.667312",
+      "lastModified": "2025-11-27T04:00:12.685545",
+      "dependencies": [],
       "comments": [
         {
-          "id": "c1",
-          "content": "Completed: All context priming components implemented",
-          "created": "2025-11-27T18:20:58.227362"
-        }
-      ]
-    },
-    {
-      "id": "T-CONTEXT-3",
-      "name": "Testing: Verify context priming effectiveness",
-      "description": "Test context priming system:\n- Created tests/test_context_priming.py\n- 41 tests covering all components\n- Tests for context primer, hint registry, auto-primer, prompt discovery\n- Integration tests for full workflow\n\nAll tests pass.",
-      "status": "Done",
-      "priority": "P1",
-      "tags": [
-        "testing",
-        "context-priming"
-      ],
-      "created": "2025-11-27T18:20:58.227362",
-      "lastModified": "2025-11-27T18:20:58.227362",
-      "comments": [
-        {
-          "id": "c1",
-          "content": "Completed: 41 tests pass",
-          "created": "2025-11-27T18:20:58.227362"
-        }
-      ]
-    },
-    {
-      "id": "T-CONTEXT-4",
-      "name": "Dynamic reload: Hot-reload hints without server restart",
-      "description": "Enable hot-reload of hints from JSON files:\n- hint_registry.py supports loading from .exarp/hints/*.json\n- Optional watchdog integration for file watching\n- reload_hints() function for manual reload\n- Registry status includes last_loaded timestamp\n\nFuture enhancement: Add file watcher for automatic reload.",
-      "status": "Done",
-      "priority": "P2",
-      "tags": [
-        "implementation",
-        "context-priming",
-        "hot-reload"
-      ],
-      "created": "2025-11-27T18:20:58.227362",
-      "lastModified": "2025-11-27T18:20:58.227362",
-      "comments": [
-        {
-          "id": "c1",
-          "content": "Completed: Dynamic loading implemented, file watcher optional",
-          "created": "2025-11-27T18:20:58.227362"
+          "id": "AUTO-20251127040012-667237-C-1",
+          "todoId": "AUTO-20251127040012-667237",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 79 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[79 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[79 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T04:00:12.675535",
+          "lastModified": "2025-11-27T04:00:12.675545"
         }
       ]
     }
