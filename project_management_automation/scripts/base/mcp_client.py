@@ -2,10 +2,11 @@
 """
 MCP Client Wrapper
 
-Provides Python interface to MCP servers (Tractatus Thinking, Sequential Thinking).
+Provides Python interface to MCP servers (Tractatus Thinking, Sequential Thinking, Agentic-Tools).
 Uses lazy connection pattern - only connects when actually needed.
 """
 
+import asyncio
 import json
 import logging
 import time
@@ -18,6 +19,15 @@ logger = logging.getLogger(__name__)
 MAX_RETRIES = 3
 RETRY_DELAY = 0.5  # Base delay in seconds (exponential backoff)
 
+# Try to import MCP client library
+try:
+    from mcp import ClientSession, StdioServerParameters
+    from mcp.client.stdio import stdio_client
+    MCP_CLIENT_AVAILABLE = True
+except ImportError:
+    MCP_CLIENT_AVAILABLE = False
+    logger.warning("MCP client library not available. Install with: pip install mcp>=1.0.0")
+
 
 class MCPClient:
     """Client for communicating with MCP servers using lazy connection."""
@@ -28,6 +38,9 @@ class MCPClient:
         # Lazy loading - don't load config until needed
         self._mcp_config: Optional[dict] = None
         self._config_loaded = False
+        # Agentic-tools session management
+        self.agentic_tools_session = None
+        self._agentic_tools_lock = asyncio.Lock() if MCP_CLIENT_AVAILABLE else None
 
     @property
     def mcp_config(self) -> dict:
@@ -157,6 +170,321 @@ class MCPClient:
             ]
 
         return steps
+
+    # Agentic-Tools MCP Support
+    async def _get_agentic_tools_session(self) -> Optional["ClientSession"]:
+        """Get or create agentic-tools MCP session."""
+        if not MCP_CLIENT_AVAILABLE:
+            logger.warning("MCP client library not available")
+            return None
+
+        if 'agentic-tools' not in self.mcp_config:
+            logger.warning("Agentic-tools MCP server not configured in .cursor/mcp.json")
+            return None
+
+        # Use lock to ensure thread-safe session creation
+        if self._agentic_tools_lock:
+            async with self._agentic_tools_lock:
+                if self.agentic_tools_session is None:
+                    try:
+                        # Get agentic-tools config
+                        agentic_config = self.mcp_config.get('agentic-tools', {})
+                        command = agentic_config.get('command', 'npx')
+                        args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+                        
+                        # Create stdio client connection
+                        server_params = StdioServerParameters(
+                            command=command,
+                            args=args
+                        )
+                        
+                        # Create session (will be managed by context manager in methods)
+                        # Note: We'll create a new session for each operation to avoid connection issues
+                        # In production, you might want to implement connection pooling
+                        logger.info("Creating agentic-tools MCP session")
+                        return None  # Will create session in each method call
+                    except Exception as e:
+                        logger.error(f"Failed to create agentic-tools session: {e}")
+                        return None
+                return self.agentic_tools_session
+        return None
+
+    async def list_todos(self, project_id: str, working_directory: str) -> List[Dict]:
+        """
+        List todos using agentic-tools MCP.
+        
+        Args:
+            project_id: The project ID to list todos for
+            working_directory: The working directory for the project
+            
+        Returns:
+            List of task dictionaries
+        """
+        if not MCP_CLIENT_AVAILABLE:
+            logger.warning("MCP client library not available")
+            return []
+
+        try:
+            # Get agentic-tools config
+            agentic_config = self.mcp_config.get('agentic-tools', {})
+            command = agentic_config.get('command', 'npx')
+            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+            
+            # Create stdio client connection
+            server_params = StdioServerParameters(
+                command=command,
+                args=args
+            )
+            
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Call list_todos tool
+                    result = await session.call_tool("list_todos", {
+                        "workingDirectory": working_directory,
+                        "projectId": project_id
+                    })
+                    
+                    # Parse JSON response
+                    if result.content and len(result.content) > 0:
+                        response_text = result.content[0].text
+                        # The response should be JSON, parse it
+                        try:
+                            response_data = json.loads(response_text)
+                            # Extract tasks from response (structure may vary)
+                            if isinstance(response_data, list):
+                                return response_data
+                            elif isinstance(response_data, dict):
+                                # Try common response formats
+                                return response_data.get('todos', response_data.get('tasks', []))
+                            return []
+                        except json.JSONDecodeError:
+                            logger.error(f"Failed to parse agentic-tools response: {response_text}")
+                            return []
+                    return []
+        except Exception as e:
+            logger.error(f"Failed to list todos via agentic-tools MCP: {e}", exc_info=True)
+            return []
+
+    async def create_task(
+        self,
+        project_id: str,
+        working_directory: str,
+        name: str,
+        details: str,
+        **kwargs
+    ) -> Optional[Dict]:
+        """
+        Create task using agentic-tools MCP.
+        
+        Args:
+            project_id: The project ID
+            working_directory: The working directory for the project
+            name: Task name
+            details: Task details/description
+            **kwargs: Additional task parameters (priority, tags, etc.)
+            
+        Returns:
+            Created task dictionary or None on failure
+        """
+        if not MCP_CLIENT_AVAILABLE:
+            logger.warning("MCP client library not available")
+            return None
+
+        try:
+            # Get agentic-tools config
+            agentic_config = self.mcp_config.get('agentic-tools', {})
+            command = agentic_config.get('command', 'npx')
+            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+            
+            # Create stdio client connection
+            server_params = StdioServerParameters(
+                command=command,
+                args=args
+            )
+            
+            # Prepare task data
+            task_data = {
+                "workingDirectory": working_directory,
+                "projectId": project_id,
+                "name": name,
+                "details": details,
+                **kwargs
+            }
+            
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Call create_task tool
+                    result = await session.call_tool("create_task", task_data)
+                    
+                    # Parse JSON response
+                    if result.content and len(result.content) > 0:
+                        response_text = result.content[0].text
+                        try:
+                            return json.loads(response_text)
+                        except json.JSONDecodeError:
+                            logger.error(f"Failed to parse create_task response: {response_text}")
+                            return None
+                    return None
+        except Exception as e:
+            logger.error(f"Failed to create task via agentic-tools MCP: {e}", exc_info=True)
+            return None
+
+    async def update_task(
+        self,
+        task_id: str,
+        working_directory: str,
+        **updates
+    ) -> Optional[Dict]:
+        """
+        Update task using agentic-tools MCP.
+        
+        Args:
+            task_id: The task ID to update
+            working_directory: The working directory for the project
+            **updates: Task fields to update (name, details, status, priority, etc.)
+            
+        Returns:
+            Updated task dictionary or None on failure
+        """
+        if not MCP_CLIENT_AVAILABLE:
+            logger.warning("MCP client library not available")
+            return None
+
+        try:
+            # Get agentic-tools config
+            agentic_config = self.mcp_config.get('agentic-tools', {})
+            command = agentic_config.get('command', 'npx')
+            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+            
+            # Create stdio client connection
+            server_params = StdioServerParameters(
+                command=command,
+                args=args
+            )
+            
+            # Prepare update data
+            update_data = {
+                "workingDirectory": working_directory,
+                "id": task_id,
+                **updates
+            }
+            
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Call update_task tool
+                    result = await session.call_tool("update_task", update_data)
+                    
+                    # Parse JSON response
+                    if result.content and len(result.content) > 0:
+                        response_text = result.content[0].text
+                        try:
+                            return json.loads(response_text)
+                        except json.JSONDecodeError:
+                            logger.error(f"Failed to parse update_task response: {response_text}")
+                            return None
+                    return None
+        except Exception as e:
+            logger.error(f"Failed to update task via agentic-tools MCP: {e}", exc_info=True)
+            return None
+
+    async def get_task(self, task_id: str, working_directory: str) -> Optional[Dict]:
+        """
+        Get task details using agentic-tools MCP.
+        
+        Args:
+            task_id: The task ID
+            working_directory: The working directory for the project
+            
+        Returns:
+            Task dictionary or None on failure
+        """
+        if not MCP_CLIENT_AVAILABLE:
+            logger.warning("MCP client library not available")
+            return None
+
+        try:
+            # Get agentic-tools config
+            agentic_config = self.mcp_config.get('agentic-tools', {})
+            command = agentic_config.get('command', 'npx')
+            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+            
+            # Create stdio client connection
+            server_params = StdioServerParameters(
+                command=command,
+                args=args
+            )
+            
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Call get_task tool
+                    result = await session.call_tool("get_task", {
+                        "workingDirectory": working_directory,
+                        "id": task_id
+                    })
+                    
+                    # Parse JSON response
+                    if result.content and len(result.content) > 0:
+                        response_text = result.content[0].text
+                        try:
+                            return json.loads(response_text)
+                        except json.JSONDecodeError:
+                            logger.error(f"Failed to parse get_task response: {response_text}")
+                            return None
+                    return None
+        except Exception as e:
+            logger.error(f"Failed to get task via agentic-tools MCP: {e}", exc_info=True)
+            return None
+
+    async def delete_task(self, task_id: str, working_directory: str) -> bool:
+        """
+        Delete task using agentic-tools MCP.
+        
+        Args:
+            task_id: The task ID to delete
+            working_directory: The working directory for the project
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        if not MCP_CLIENT_AVAILABLE:
+            logger.warning("MCP client library not available")
+            return False
+
+        try:
+            # Get agentic-tools config
+            agentic_config = self.mcp_config.get('agentic-tools', {})
+            command = agentic_config.get('command', 'npx')
+            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+            
+            # Create stdio client connection
+            server_params = StdioServerParameters(
+                command=command,
+                args=args
+            )
+            
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Call delete_task tool
+                    result = await session.call_tool("delete_task", {
+                        "workingDirectory": working_directory,
+                        "id": task_id
+                    })
+                    
+                    # Check if successful (response format may vary)
+                    return result.content is not None and len(result.content) > 0
+        except Exception as e:
+            logger.error(f"Failed to delete task via agentic-tools MCP: {e}", exc_info=True)
+            return False
 
 
 # Global MCP client instance

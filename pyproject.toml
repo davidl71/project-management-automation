@@ -7,7 +7,7 @@ name = "exarp"
 dynamic = ["version"]
 description = "MCP server for project management automation - health scores, task alignment, security scanning"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 authors = [
     { name = "David Lowes", email = "lindog1@users.noreply.github.com" }
@@ -37,6 +37,7 @@ classifiers = [
 dependencies = [
     "fastmcp>=2.0.0",
     "pydantic>=2.0.0",
+    "mcp>=1.0.0",
 ]
 
 [project.urls]
