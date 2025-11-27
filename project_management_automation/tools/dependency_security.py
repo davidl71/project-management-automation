@@ -245,7 +245,6 @@ def scan_dependency_security(
     Returns:
         JSON string with scan results
     """
-    import asyncio
     # Toggle: check if we're in an async context
     in_async = False
     try:

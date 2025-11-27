@@ -23,6 +23,7 @@ Consolidated tools:
 - task_workflow(action=sync|approve|clarify, sub_action for clarify) ← sync_todo_tasks, batch_approve_tasks, clarification
 """
 
+import asyncio
 import json
 import logging
 from typing import Any, Optional
@@ -124,7 +125,6 @@ def security(
     Returns:
         Security scan/report results
     """
-    import asyncio
     # Toggle: check if we're in an async context
     in_async = False
     try:
@@ -594,7 +594,6 @@ def testing(
     Returns:
         Test or coverage results as dict
     """
-    import asyncio
     # Toggle: check if we're in an async context
     in_async = False
     try:
