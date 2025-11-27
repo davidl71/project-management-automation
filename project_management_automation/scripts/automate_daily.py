@@ -57,6 +57,14 @@ DAILY_TASKS = {
         'mcp_tool': 'add_external_tool_hints',
         'quick': True,
         'description': 'Add Context7 hints to documentation'
+    },
+    'tool_count_health': {
+        'name': 'Tool Count Health Check',
+        'script': None,  # Uses direct function call
+        'mcp_tool': 'check_tool_count_health',
+        'quick': True,
+        'description': 'Monitor MCP tool count against design limit (≤30)',
+        'function': 'project_management_automation.tools.tool_count_health:check_tool_count_health'
     }
 }
 

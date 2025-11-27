@@ -1,0 +1,44 @@
+{
+  "handoffs": [
+    {
+      "id": "handoff-1764262429",
+      "timestamp": "2025-11-27T16:53:49.286841Z",
+      "host": "Davids-Mac-mini.local",
+      "summary": "Implemented task assignee and session handoff systems for cross-machine coordination",
+      "tasks_in_progress": [],
+      "tasks_completed_today": [],
+      "blockers": [
+        "Need to test on Ubuntu server"
+      ],
+      "next_steps": [
+        "Run tests on remote host",
+        "Update TOOLS_STATUS.md",
+        "Commit changes"
+      ],
+      "git_status": {
+        "branch": "main",
+        "uncommitted_files": 21,
+        "changed_files": [
+          "M  .todo2/state.todo2.json",
+          "M  CONTEXT_HINTS.md",
+          "M  PROJECT_GOALS.md",
+          "M  RESOURCES.md",
+          "A  docs/RECOMMENDED_MCP_COMPANIONS.md",
+          "A  docs/TASK_ASSIGNEE_GUIDE.md",
+          "M  project_management_automation/resources/__init__.py",
+          "A  project_management_automation/resources/assignees.py",
+          "A  project_management_automation/resources/capabilities.py",
+          "A  project_management_automation/resources/context_primer.py"
+        ],
+        "ahead_of_remote": false,
+        "behind_remote": false,
+        "needs_push": false,
+        "needs_pull": false
+      },
+      "tasks_unassigned": 0,
+      "warnings": [
+        "\u26a0\ufe0f 21 uncommitted file(s) - consider committing before ending session"
+      ]
+    }
+  ]
+}

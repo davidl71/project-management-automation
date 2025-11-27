@@ -1957,6 +1957,89 @@
           "lastModified": "2025-11-27T03:29:02.385708"
         }
       ]
+    },
+    {
+      "id": "T-CONTEXT-1",
+      "name": "Research: Best practices for MCP context priming",
+      "description": "Research best practices for context priming in MCP servers:\n- Review MCP specification for context management\n- Study FastMCP context helpers and patterns\n- Analyze token efficiency strategies\n- Document findings in docs/CONTEXT_PRIMING_RESEARCH.md\n\nThis informs future improvements to the context priming system.",
+      "status": "Done",
+      "priority": "P2",
+      "tags": [
+        "research",
+        "context-priming",
+        "mcp"
+      ],
+      "created": "2025-11-27T18:20:58.227362",
+      "lastModified": "2025-11-27T18:20:58.227362",
+      "comments": [
+        {
+          "id": "c1",
+          "content": "Completed: Implemented context priming system based on research",
+          "created": "2025-11-27T18:20:58.227362"
+        }
+      ]
+    },
+    {
+      "id": "T-CONTEXT-2",
+      "name": "Implementation: Unified context primer resource",
+      "description": "Implement unified context primer system:\n- Created automation://context-primer resource\n- Created centralized hint registry (hint_registry.py)\n- Added auto-primer tool for session start\n- Added mode-aware prompt discovery\n\nFiles created:\n- resources/context_primer.py\n- resources/hint_registry.py\n- resources/prompt_discovery.py\n- tools/auto_primer.py",
+      "status": "Done",
+      "priority": "P1",
+      "tags": [
+        "implementation",
+        "context-priming",
+        "mcp"
+      ],
+      "created": "2025-11-27T18:20:58.227362",
+      "lastModified": "2025-11-27T18:20:58.227362",
+      "comments": [
+        {
+          "id": "c1",
+          "content": "Completed: All context priming components implemented",
+          "created": "2025-11-27T18:20:58.227362"
+        }
+      ]
+    },
+    {
+      "id": "T-CONTEXT-3",
+      "name": "Testing: Verify context priming effectiveness",
+      "description": "Test context priming system:\n- Created tests/test_context_priming.py\n- 41 tests covering all components\n- Tests for context primer, hint registry, auto-primer, prompt discovery\n- Integration tests for full workflow\n\nAll tests pass.",
+      "status": "Done",
+      "priority": "P1",
+      "tags": [
+        "testing",
+        "context-priming"
+      ],
+      "created": "2025-11-27T18:20:58.227362",
+      "lastModified": "2025-11-27T18:20:58.227362",
+      "comments": [
+        {
+          "id": "c1",
+          "content": "Completed: 41 tests pass",
+          "created": "2025-11-27T18:20:58.227362"
+        }
+      ]
+    },
+    {
+      "id": "T-CONTEXT-4",
+      "name": "Dynamic reload: Hot-reload hints without server restart",
+      "description": "Enable hot-reload of hints from JSON files:\n- hint_registry.py supports loading from .exarp/hints/*.json\n- Optional watchdog integration for file watching\n- reload_hints() function for manual reload\n- Registry status includes last_loaded timestamp\n\nFuture enhancement: Add file watcher for automatic reload.",
+      "status": "Done",
+      "priority": "P2",
+      "tags": [
+        "implementation",
+        "context-priming",
+        "hot-reload"
+      ],
+      "created": "2025-11-27T18:20:58.227362",
+      "lastModified": "2025-11-27T18:20:58.227362",
+      "comments": [
+        {
+          "id": "c1",
+          "content": "Completed: Dynamic loading implemented, file watcher optional",
+          "created": "2025-11-27T18:20:58.227362"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",

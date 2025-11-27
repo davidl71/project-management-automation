@@ -286,6 +286,83 @@ if MCP_AVAILABLE:
             logger.debug(f"Resource templates not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register resource templates: {e}")
+        
+        # Context primer resources for AI priming
+        try:
+            from .resources.context_primer import register_context_primer_resources
+            register_context_primer_resources(mcp)
+            logger.debug("✅ Context primer resources registered")
+        except ImportError as e:
+            logger.debug(f"Context primer resources not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register context primer resources: {e}")
+        
+        # Hint registry resources for dynamic hint loading
+        try:
+            from .resources.hint_registry import register_hint_registry_resources
+            register_hint_registry_resources(mcp)
+            logger.debug("✅ Hint registry resources registered")
+        except ImportError as e:
+            logger.debug(f"Hint registry resources not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register hint registry resources: {e}")
+        
+        # Auto-primer tools for session start
+        try:
+            from .tools.auto_primer import register_auto_primer_tools
+            register_auto_primer_tools(mcp)
+            logger.debug("✅ Auto-primer tools registered")
+        except ImportError as e:
+            logger.debug(f"Auto-primer tools not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register auto-primer tools: {e}")
+        
+        # Prompt discovery resources and tools
+        try:
+            from .resources.prompt_discovery import (
+                register_prompt_discovery_resources,
+                register_prompt_discovery_tools,
+            )
+            register_prompt_discovery_resources(mcp)
+            register_prompt_discovery_tools(mcp)
+            logger.debug("✅ Prompt discovery resources and tools registered")
+        except ImportError as e:
+            logger.debug(f"Prompt discovery not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register prompt discovery: {e}")
+
+        # Assignee management resources and tools
+        try:
+            from .resources.assignees import register_assignee_resources
+            from .tools.task_assignee import register_assignee_tools
+            register_assignee_resources(mcp)
+            register_assignee_tools(mcp)
+            logger.debug("✅ Assignee management resources and tools registered")
+        except ImportError as e:
+            logger.debug(f"Assignee management not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register assignee management: {e}")
+
+        # Capabilities resource for agent priming
+        try:
+            from .resources.capabilities import register_capabilities_resources
+            register_capabilities_resources(mcp)
+            logger.debug("✅ Capabilities resources registered")
+        except ImportError as e:
+            logger.debug(f"Capabilities resources not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register capabilities resources: {e}")
+
+        # Session handoff tool for multi-dev coordination
+        try:
+            from .tools.session_handoff import register_handoff_tools
+            register_handoff_tools(mcp)
+            logger.debug("✅ Session handoff tool registered")
+        except ImportError as e:
+            logger.debug(f"Session handoff not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register session handoff: {e}")
+
 # Import automation tools (handle both relative and absolute imports)
 try:
     # Try relative imports first (when run as module)
@@ -369,6 +446,14 @@ try:
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
         from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
+        from .tools.task_assignee import (
+            assign_task as _assign_task,
+            unassign_task as _unassign_task,
+            list_tasks_by_assignee as _list_tasks_by_assignee,
+            get_workload_summary as _get_workload_summary,
+            bulk_assign_tasks as _bulk_assign_tasks,
+            auto_assign_background_tasks as _auto_assign_background_tasks,
+        )
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -452,6 +537,14 @@ try:
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
         from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
+        from tools.task_assignee import (
+            assign_task as _assign_task,
+            unassign_task as _unassign_task,
+            list_tasks_by_assignee as _list_tasks_by_assignee,
+            get_workload_summary as _get_workload_summary,
+            bulk_assign_tasks as _bulk_assign_tasks,
+            auto_assign_background_tasks as _auto_assign_background_tasks,
+        )
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")

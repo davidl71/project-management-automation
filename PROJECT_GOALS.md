@@ -88,11 +88,31 @@ A comprehensive MCP server providing project management automation tools for AI-
 
 ---
 
+## Design Constraints
+
+### Tool Count Limit: ≤30 Tools
+
+**Rationale**: Context pollution is the silent killer of agentic workflows. Too many tools:
+- Increase token usage in tool discovery
+- Slow AI decision-making
+- Create confusion about which tool to use
+- Reduce tool discoverability
+
+**Strategy to stay under 30**:
+1. **Consolidate**: Combine related tools with `action=` parameter
+2. **Resources over tools**: Use resources for read-only data retrieval
+3. **Dynamic loading**: Use focus modes to show only relevant tools
+4. **Ruthless pruning**: Remove rarely-used or redundant tools
+
+**Current Count**: ~30 tools (after consolidation of assignee tools: 6→1)
+
+---
+
 ## Success Metrics
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| Tool Count | 20+ | 22 |
+| Tool Count | ≤30 | ~30 ✅ |
 | Test Coverage | 80% | TBD |
 | Doc Health Score | 90+ | TBD |
 | MCP Compliance | Full | Partial |

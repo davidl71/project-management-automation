@@ -1,6 +1,61 @@
-# Context Summarization & Condensation Hints
+# Context Priming & Summarization System
 
 ## Overview
+
+Exarp provides a comprehensive context priming system to help AI assistants quickly understand the project and tools with minimal token usage.
+
+### Quick Start
+
+**At session start, use the auto-primer:**
+```
+auto_prime_session()
+→ Returns optimal context based on agent type and time of day
+```
+
+**Or access the context primer resource:**
+```
+automation://context-primer
+→ Returns all essential context in one request
+```
+
+---
+
+## Context Priming Resources
+
+| Resource | Description |
+|----------|-------------|
+| `automation://context-primer` | Unified context primer with hints, goals, tasks, prompts |
+| `automation://hints` | All tool hints organized by category |
+| `automation://hints/{mode}` | Hints filtered by workflow mode |
+| `automation://hints/status` | Hint registry status |
+| `automation://hints/category/{category}` | Hints by category |
+| `automation://prompts` | All prompts in compact format |
+| `automation://prompts/mode/{mode}` | Prompts for a workflow mode |
+| `automation://prompts/persona/{persona}` | Prompts for a persona |
+
+---
+
+## Auto-Priming
+
+The auto-primer detects context automatically:
+- **Agent type**: From `EXARP_AGENT` env var or `cursor-agent.json`
+- **Time of day**: Morning → daily_checkin, Working hours → development
+- **Previous mode**: Remembered from session
+
+```python
+# At session start
+auto_prime_session()
+
+# Force specific mode
+auto_prime_session(override_mode="security_review")
+
+# Get task-specific context
+get_task_context(task_id="T-123")
+```
+
+---
+
+## Tool Hint Format
 
 All MCP tools now include condensed hints at the start of their docstrings to help AI assistants quickly understand tool outputs and compress context efficiently.
 

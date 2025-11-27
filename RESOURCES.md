@@ -2,6 +2,54 @@
 
 This document describes the resources exposed by the exarp MCP server for accessing cached data and agent information.
 
+## Context Priming Resources (NEW)
+
+These resources help AI assistants quickly prime context at session start:
+
+### `automation://context-primer`
+Unified context primer returning all essential context in one request.
+
+**Returns:**
+- Current workflow mode
+- Tool hints (filtered by mode)
+- Project goals keywords
+- Recent task summary
+- Recommended prompts
+
+**Usage:**
+```
+"Prime my context for this session"
+"Get context primer"
+```
+
+### `automation://hints`
+Complete centralized hint registry.
+
+**Returns:**
+- All tool hints organized by category
+- Total tool count
+- Category list
+
+### `automation://hints/{mode}`
+Hints filtered by workflow mode.
+
+**Parameters:**
+- `mode`: Workflow mode (daily_checkin, security_review, task_management, etc.)
+
+### `automation://hints/status`
+Hint registry status and metadata.
+
+### `automation://prompts`
+All prompts in compact format.
+
+### `automation://prompts/mode/{mode}`
+Prompts for a specific workflow mode.
+
+### `automation://prompts/persona/{persona}`
+Prompts for a specific persona (developer, project_manager, security_engineer, etc.)
+
+---
+
 ## Available Resources
 
 ### 1. `automation://status`

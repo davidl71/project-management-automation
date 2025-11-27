@@ -520,6 +520,15 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
                 task = self._update_task_status(task, 'In Progress',
                     f"Assigned to {host_key} agent for automated execution")
 
+                # Set assignee field for cross-host visibility
+                task['assignee'] = {
+                    'type': 'host',
+                    'name': host_key,
+                    'hostname': host_info['hostname'],
+                    'assigned_at': datetime.utcnow().isoformat() + 'Z',
+                    'assigned_by': 'nightly_automation',
+                }
+
                 # Update in state
                 for i, t in enumerate(todos):
                     if t.get('id') == task['id']:

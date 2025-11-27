@@ -271,6 +271,39 @@ After setup, Exarp will automatically maintain project health."""
 # MODE SUGGESTION PROMPT
 # ═══════════════════════════════════════════════════════════════════════════════
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# SESSION HANDOFF PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+END_OF_DAY = """End your work session and create a handoff for other developers.
+
+This prompt will:
+1. Summarize tasks you worked on today
+2. Note any blockers or issues encountered
+3. Unassign your tasks so others can pick them up
+4. Create a handoff note visible to all machines
+5. Warn about uncommitted git changes
+
+Use: session_handoff(action="end", summary="What I worked on", blockers=["Any blockers"], next_steps=["Suggested next steps"])"""
+
+RESUME_SESSION = """Resume work by reviewing the latest handoff from another developer.
+
+This prompt will:
+1. Show what the previous developer was working on
+2. List any blockers they noted
+3. Show unassigned tasks available to pick up
+4. Recommend high-priority work to continue
+
+Use: session_handoff(action="resume")"""
+
+VIEW_HANDOFFS = """View recent handoff notes from all developers.
+
+Use: session_handoff(action="list", limit=10)"""
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# WORKFLOW PROMPTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
 MODE_SUGGESTION = """Suggest the optimal Cursor IDE mode (Agent vs Ask) for a task.
 
 **When to use this prompt:**
