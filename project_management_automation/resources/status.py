@@ -8,7 +8,6 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
 
 from ..version import __version__
 

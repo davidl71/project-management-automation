@@ -13,12 +13,10 @@ All automation scripts should inherit from this class.
 
 import json
 import logging
-import os
-import sys
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional
 
 # Import MCP-aware logging (quiet in MCP mode, verbose in CLI)
 from project_management_automation.utils.logging_config import configure_logging
@@ -572,7 +570,6 @@ class IntelligentAutomationBase(ABC):
             return []
 
         try:
-            import networkx as nx
 
             # Find nodes with high out-degree (many dependents)
             out_degrees = dict(self.networkx_graph.out_degree())

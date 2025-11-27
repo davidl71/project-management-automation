@@ -384,7 +384,7 @@ def generate_podcast_audio(
         for i, consultation in enumerate(consultations):
             advisor = consultation.get("advisor", "default")
             quote = consultation.get("quote", "")
-            context = consultation.get("context", "")
+            consultation.get("context", "")
             metric = consultation.get("metric", "")
 
             # Build segment text
@@ -474,12 +474,10 @@ def check_tts_backends() -> Dict[str, Any]:
     }
 
     # Check ElevenLabs
-    elevenlabs_available = False
     if os.getenv("ELEVENLABS_API_KEY"):
         try:
             import elevenlabs
 
-            elevenlabs_available = True
             result["available_backends"].append("elevenlabs")
             result["details"]["elevenlabs"] = {
                 "status": "configured",

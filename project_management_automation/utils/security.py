@@ -10,13 +10,11 @@ Provides:
 These controls ensure safe operation when AI assistants execute tools.
 """
 
-import os
 import re
 import time
-import hashlib
 from pathlib import Path
 from functools import wraps
-from typing import Any, Callable, Dict, List, Optional, Set, Union
+from typing import Callable, Dict, List, Optional, Set, Union
 from collections import defaultdict
 
 from .logging_config import get_logger

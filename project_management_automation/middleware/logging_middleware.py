@@ -6,7 +6,7 @@ Provides request/response logging with timing information.
 
 import logging
 import time
-from typing import Any, Callable, Optional
+from typing import Callable
 
 try:
     from fastmcp.server.middleware import Middleware, MiddlewareContext

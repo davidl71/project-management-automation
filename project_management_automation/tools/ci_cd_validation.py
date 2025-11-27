@@ -8,9 +8,8 @@ import json
 import logging
 import time
 import yaml
-import subprocess
 from pathlib import Path
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +65,6 @@ def validate_ci_cd_workflow(
 
     try:
         # Import here to avoid circular dependencies
-        import sys
         from project_management_automation.utils import find_project_root
         project_root = find_project_root(Path(__file__).parent.parent.parent)
 
@@ -116,7 +114,7 @@ def validate_ci_cd_workflow(
             validation_results["overall_status"] = "failed"
 
             # Generate report
-            report = _generate_validation_report(validation_results, report_path)
+            _generate_validation_report(validation_results, report_path)
 
             duration = time.time() - start_time
             log_automation_execution('validate_ci_cd_workflow', duration, False)
@@ -141,7 +139,7 @@ def validate_ci_cd_workflow(
             validation_results["overall_status"] = "failed"
 
             # Generate report
-            report = _generate_validation_report(validation_results, report_path)
+            _generate_validation_report(validation_results, report_path)
 
             duration = time.time() - start_time
             log_automation_execution('validate_ci_cd_workflow', duration, False)
@@ -160,7 +158,7 @@ def validate_ci_cd_workflow(
             validation_results["overall_status"] = "failed"
 
             # Generate report
-            report = _generate_validation_report(validation_results, report_path)
+            _generate_validation_report(validation_results, report_path)
 
             duration = time.time() - start_time
             log_automation_execution('validate_ci_cd_workflow', duration, False)
@@ -211,7 +209,7 @@ def validate_ci_cd_workflow(
         validation_results["overall_status"] = "valid" if all_valid else "issues_found"
 
         # Generate report
-        report = _generate_validation_report(validation_results, report_path)
+        _generate_validation_report(validation_results, report_path)
 
         # Format response
         response_data = {

@@ -8,8 +8,7 @@ Based on Cursor IDE Best Practice #5 (Detailed Prompts).
 import json
 import logging
 import time
-from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 

@@ -236,7 +236,7 @@ def _get_project_phases(project_root: Path) -> list[dict]:
     
     goals_file = project_root / 'PROJECT_GOALS.md'
     if goals_file.exists():
-        content = goals_file.read_text()
+        goals_file.read_text()
         # Could parse phases from the file here
         pass
     

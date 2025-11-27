@@ -6,7 +6,7 @@ Implements token bucket rate limiting per client and/or tool.
 
 import time
 from collections import defaultdict
-from typing import Any, Callable, Dict, Optional
+from typing import Callable, Dict, Optional
 
 try:
     from fastmcp.server.middleware import Middleware, MiddlewareContext

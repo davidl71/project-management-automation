@@ -20,7 +20,6 @@ import urllib.request
 import urllib.error
 from datetime import datetime
 from typing import Optional, Dict, Any, List
-from pathlib import Path
 
 # Sefaria API base URL
 SEFARIA_API = "https://www.sefaria.org/api"
@@ -200,10 +199,10 @@ def fetch_sefaria_text(ref: str, language: str = "en", include_hebrew: bool = Fa
                 if include_hebrew or language == "he":
                     result["hebrew"] = he_text
                 return result
-    except (urllib.error.URLError, json.JSONDecodeError, KeyError, TimeoutError) as e:
+    except (urllib.error.URLError, json.JSONDecodeError, KeyError, TimeoutError):
         # Silently fail - will use fallback
         pass
-    except Exception as e:
+    except Exception:
         pass
     
     return None

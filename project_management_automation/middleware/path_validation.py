@@ -6,7 +6,7 @@ Enforces path boundaries on all tool calls that include path arguments.
 
 import re
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Callable, List, Optional, Set
 
 try:
     from fastmcp.server.middleware import Middleware, MiddlewareContext

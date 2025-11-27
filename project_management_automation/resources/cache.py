@@ -7,8 +7,6 @@ Provides resource access to cache status and what data is cached.
 import json
 import logging
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, Any
 
 from ..utils import find_project_root
 

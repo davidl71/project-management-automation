@@ -7,10 +7,8 @@ Based on Cursor IDE Best Practice #4.
 
 import json
 import logging
-import re
 import time
-from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 

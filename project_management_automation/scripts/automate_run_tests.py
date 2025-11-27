@@ -13,7 +13,7 @@ import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
@@ -243,7 +243,7 @@ class TestRunner(IntelligentAutomationBase):
             cmd.append('-V')
         
         # Generate XML
-        xml_file = self.output_path / 'ctest.xml'
+        self.output_path / 'ctest.xml'
         cmd.extend(['-T', 'Test', '--no-compress-output'])
         
         logger.info(f"Running: {' '.join(cmd)}")

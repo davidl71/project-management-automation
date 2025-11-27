@@ -7,7 +7,6 @@ Provides resource access to list of available automation tools.
 import json
 import logging
 from datetime import datetime
-from typing import List, Dict, Any
 
 logger = logging.getLogger(__name__)
 

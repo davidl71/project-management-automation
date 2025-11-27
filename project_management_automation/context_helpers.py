@@ -98,7 +98,7 @@ async def log_info(ctx: "Context", message: str) -> None:
     try:
         if hasattr(ctx, "info"):
             await ctx.info(message)
-    except Exception as e:
+    except Exception:
         logger.info(message)  # Fallback to server-side logging
 
 
@@ -107,7 +107,7 @@ async def log_debug(ctx: "Context", message: str) -> None:
     try:
         if hasattr(ctx, "debug"):
             await ctx.debug(message)
-    except Exception as e:
+    except Exception:
         logger.debug(message)
 
 
@@ -116,7 +116,7 @@ async def log_warning(ctx: "Context", message: str) -> None:
     try:
         if hasattr(ctx, "warning"):
             await ctx.warning(message)
-    except Exception as e:
+    except Exception:
         logger.warning(message)
 
 
@@ -125,7 +125,7 @@ async def log_error(ctx: "Context", message: str) -> None:
     try:
         if hasattr(ctx, "error"):
             await ctx.error(message)
-    except Exception as e:
+    except Exception:
         logger.error(message)
 
 
@@ -253,7 +253,7 @@ def get_session_id(ctx: "Context") -> Optional[str]:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from dataclasses import dataclass
-from typing import TypeVar, Union
+from typing import TypeVar
 from enum import Enum
 
 T = TypeVar("T")
@@ -345,7 +345,6 @@ async def elicit_choice(
     Returns:
         Selected choice or None if cancelled
     """
-    from typing import Literal
     
     # Build choice type dynamically
     choice_str = f"Select one of: {', '.join(choices)}"

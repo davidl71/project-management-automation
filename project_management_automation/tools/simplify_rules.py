@@ -9,7 +9,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional
 
 from ..utils import find_project_root
 
@@ -74,7 +74,6 @@ def simplify_rules(
             with open(rule_file, 'r', encoding='utf-8') as f:
                 content = f.read()
 
-            original_content = content
             simplifications = []
 
             # Apply simplification patterns

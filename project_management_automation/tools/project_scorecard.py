@@ -108,7 +108,6 @@ def generate_project_scorecard(
 
     scores = {}
     metrics = {}
-    details = {}
 
     # ═══════════════════════════════════════════════════════════════
     # 1. CODEBASE METRICS
@@ -163,7 +162,7 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     # 3. DOCUMENTATION
     # ═══════════════════════════════════════════════════════════════
-    docs_dir = project_root / 'docs'
+    project_root / 'docs'
     md_files = list(project_root.rglob('*.md'))
     md_files = [f for f in md_files if 'venv' not in str(f)]
 
@@ -435,74 +434,11 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
 
     # Check for common patterns that could use existing libraries
-    wheel_reinventions = []
-    justified_customs = []
 
     # Analyze source files for potential reinventions
     tools_dir = project_root / 'project_management_automation' / 'tools'
 
     # Known patterns that might be reinventions
-    reinvention_patterns = {
-        'http_client': {
-            'patterns': ['requests.', 'urllib', 'http.client', 'aiohttp'],
-            'alternatives': ['httpx', 'requests'],
-            'check_file': True,
-        },
-        'json_parsing': {
-            'patterns': ['json.loads', 'json.dumps'],
-            'alternatives': ['orjson', 'ujson'],
-            'check_file': False,  # json is standard, not a reinvention
-        },
-        'cli_parsing': {
-            'patterns': ['argparse', 'sys.argv'],
-            'alternatives': ['click', 'typer'],
-            'check_file': True,
-        },
-        'task_management': {
-            'patterns': ['todo', 'task', 'subtask'],
-            'alternatives': ['GitHub Issues', 'Linear', 'Jira API'],
-            'justification': 'MCP-native, offline-first, zero dependencies',
-            'check_file': False,  # This IS our core feature
-        },
-        'file_watching': {
-            'patterns': ['watchdog', 'inotify', 'fswatch'],
-            'alternatives': ['watchdog', 'watchfiles'],
-            'check_file': True,
-        },
-        'git_operations': {
-            'patterns': ['subprocess.*git', 'git.Repo', 'pygit2'],
-            'alternatives': ['GitPython', 'pygit2'],
-            'justification': 'Minimal subprocess calls, no heavy deps',
-            'check_file': False,
-        },
-        'markdown_parsing': {
-            'patterns': ['markdown', 'mistune', 're.findall.*\\['],
-            'alternatives': ['markdown-it-py', 'mistune'],
-            'check_file': True,
-        },
-        'yaml_parsing': {
-            'patterns': ['yaml.load', 'yaml.safe_load'],
-            'alternatives': ['ruamel.yaml', 'PyYAML'],
-            'check_file': False,  # yaml is standard for configs
-        },
-        'test_framework': {
-            'patterns': ['unittest', 'pytest'],
-            'alternatives': ['pytest'],
-            'check_file': False,  # using standard tools
-        },
-        'duplicate_detection': {
-            'patterns': ['levenshtein', 'fuzzy', 'difflib'],
-            'alternatives': ['rapidfuzz', 'python-Levenshtein'],
-            'justification': 'Simple set-based matching sufficient for task names',
-            'check_file': False,
-        },
-        'cron_scheduling': {
-            'patterns': ['cron', 'schedule', 'apscheduler'],
-            'alternatives': ['APScheduler', 'schedule'],
-            'justification': 'Using system cron, no Python scheduler needed',
-            'check_file': False,
-        },
-    }
 
     # Check requirements.txt for dependencies we DO use
     req_file = project_root / 'requirements.txt'
@@ -576,7 +512,6 @@ def generate_project_scorecard(
 
     # Check if we're using heavy frameworks where simpler would work
     using_fastmcp = 'fastmcp' in dependencies or 'mcp' in dependencies
-    using_pydantic = 'pydantic' in dependencies
 
     # FastMCP is justified - it's the standard for MCP servers
     if using_fastmcp:

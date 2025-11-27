@@ -11,9 +11,8 @@ Analyzes Todo2 tasks to identify:
 """
 
 import json
-import re
 from pathlib import Path
-from collections import Counter, defaultdict
+from collections import Counter
 from typing import Any
 from datetime import datetime
 

@@ -4,10 +4,8 @@ Batch Task Approval Tool
 MCP Tool wrapper for batch approving TODO2 tasks using the batch update script.
 """
 
-import json
 import subprocess
 import sys
-from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 from ..utils import find_project_root

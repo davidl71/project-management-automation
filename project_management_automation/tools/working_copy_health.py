@@ -8,7 +8,6 @@ import json
 import os
 import socket
 import subprocess
-import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 

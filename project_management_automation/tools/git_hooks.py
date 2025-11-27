@@ -7,7 +7,6 @@ Supports pre-commit, pre-push, post-commit, and post-merge hooks.
 
 import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Any
@@ -116,7 +115,7 @@ def setup_git_hooks(
                             exarp_path = Path(command).parent
                         else:
                             exarp_path = Path(command).parent
-        except Exception as e:
+        except Exception:
             pass
 
     # Default to current package directory if not found
@@ -195,10 +194,9 @@ def _generate_hook_script(
 
         # Build Python call
         if tool_args:
-            args_str = ", ".join([f'"{arg}"' for arg in tool_args])
-            python_call = f"{python_func}({args_str})"
+            ", ".join([f'"{arg}"' for arg in tool_args])
         else:
-            python_call = f"{python_func}()"
+            pass
 
         tools_section.append(f"  # Run {tool_name}")
         tools_section.append(f"  python3 -c \"from tools.{python_func} import {python_func}; {python_func}()\" || EXIT_CODE=1")

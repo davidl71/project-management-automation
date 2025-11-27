@@ -173,7 +173,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         hostnames_file = self.project_root / "docs" / "AGENT_HOSTNAMES.md"
         if hostnames_file.exists():
             try:
-                content = hostnames_file.read_text()
+                hostnames_file.read_text()
                 # Parse markdown file (simple extraction)
                 # In production, use proper markdown parser
                 pass
@@ -214,7 +214,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
             with open(self.todo2_state_file, 'w') as f:
                 json.dump(state, f, indent=2)
             return True
-        except Exception as e:
+        except Exception:
             return False
 
     def _is_background_capable(self, task: Dict[str, Any]) -> bool:
@@ -332,8 +332,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         """Execute a task on a specific host via SSH."""
         task_id = task.get('id', '')
         hostname = host_info.get('hostname', '')
-        project_path = host_info.get('project_path', '')
-        host_type = host_info.get('type', 'ubuntu')
+        host_info.get('project_path', '')
+        host_info.get('type', 'ubuntu')
 
         # ═══ MEMORY INTEGRATION: Recall task context ═══
         task_context = self._recall_task_memories(task_id)
@@ -343,10 +343,10 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         # Construct SSH command
         if '@' in hostname:
             # User@host format
-            ssh_cmd = f"ssh {hostname}"
+            pass
         else:
             # Just hostname (assume current user)
-            ssh_cmd = f"ssh {hostname}"
+            pass
 
         # Navigate to project and execute task
         # For now, we'll just mark as in progress and return

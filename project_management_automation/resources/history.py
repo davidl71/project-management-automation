@@ -7,8 +7,6 @@ Provides resource access to automation tool execution history.
 import json
 import logging
 from datetime import datetime
-from pathlib import Path
-from typing import List, Dict, Any, Optional
 
 from ..utils import find_project_root
 

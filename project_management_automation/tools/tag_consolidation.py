@@ -5,7 +5,6 @@ Analyzes, validates, and consolidates tags in Todo2 tasks.
 """
 
 import json
-import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 from collections import defaultdict

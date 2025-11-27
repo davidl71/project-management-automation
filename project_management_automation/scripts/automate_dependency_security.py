@@ -16,7 +16,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 # Add project root to path
 # Project root will be passed to __init__
@@ -602,7 +602,7 @@ class DependencySecurityAnalyzer(IntelligentAutomationBase):
             return []
 
         tasks = []
-        summary = results['summary']
+        results['summary']
         min_severity = self.create_tasks_config.get('min_severity', 'high')
         max_tasks = self.create_tasks_config.get('max_tasks', 10)
 

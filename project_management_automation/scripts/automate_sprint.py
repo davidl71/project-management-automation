@@ -15,7 +15,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Any
+from typing import Dict, List, Optional
 
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
@@ -576,7 +576,7 @@ class SprintAutomation(IntelligentAutomationBase):
             
             for task in todos:
                 if task.get('status') == 'Review':
-                    long_desc = task.get('long_description', '') or task.get('details', '')
+                    task.get('long_description', '') or task.get('details', '')
                     blockers.append({
                         'task_id': task.get('id', ''),
                         'name': task.get('name', ''),
