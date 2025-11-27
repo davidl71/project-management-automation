@@ -299,10 +299,10 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
 # Workflow modes with their tool groups and relevant prompts
 WORKFLOW_MODE_CONTEXT: Dict[str, Dict[str, Any]] = {
     "daily_checkin": {
-        "description": "Quick health check for start of day",
-        "tool_groups": ["core", "discovery", "health"],
-        "prompts": ["daily_checkin", "project_scorecard", "advisor_consult"],
-        "keywords": ["daily", "morning", "status", "health", "overview"],
+        "description": "Quick health check for start of day - includes handoff review",
+        "tool_groups": ["core", "discovery", "health", "coordination"],
+        "prompts": ["daily_checkin", "project_scorecard", "advisor_consult", "resume_session"],
+        "keywords": ["daily", "morning", "status", "health", "overview", "handoff"],
     },
     "security_review": {
         "description": "Security audits and dependency scanning",
@@ -312,9 +312,9 @@ WORKFLOW_MODE_CONTEXT: Dict[str, Dict[str, Any]] = {
     },
     "task_management": {
         "description": "Sprint backlog grooming and task management",
-        "tool_groups": ["core", "discovery", "tasks"],
-        "prompts": ["task_alignment", "duplicate_cleanup", "task_sync", "task_discovery"],
-        "keywords": ["task", "backlog", "sprint", "duplicate", "alignment"],
+        "tool_groups": ["core", "discovery", "tasks", "coordination"],
+        "prompts": ["task_alignment", "duplicate_cleanup", "task_sync", "task_discovery", "end_of_day"],
+        "keywords": ["task", "backlog", "sprint", "duplicate", "alignment", "assign"],
     },
     "code_review": {
         "description": "PR reviews and code quality checks",
@@ -324,9 +324,9 @@ WORKFLOW_MODE_CONTEXT: Dict[str, Dict[str, Any]] = {
     },
     "sprint_planning": {
         "description": "Sprint planning and roadmap work",
-        "tool_groups": ["core", "discovery", "tasks", "automation", "prd"],
-        "prompts": ["sprint_start", "sprint_end", "pre_sprint_cleanup", "automation_setup"],
-        "keywords": ["sprint", "planning", "roadmap", "prd", "automation"],
+        "tool_groups": ["core", "discovery", "tasks", "automation", "prd", "coordination"],
+        "prompts": ["sprint_start", "sprint_end", "pre_sprint_cleanup", "automation_setup", "end_of_day"],
+        "keywords": ["sprint", "planning", "roadmap", "prd", "automation", "handoff"],
     },
     "debugging": {
         "description": "Bug fixing and investigation",
@@ -335,10 +335,10 @@ WORKFLOW_MODE_CONTEXT: Dict[str, Dict[str, Any]] = {
         "keywords": ["debug", "bug", "fix", "error", "investigate"],
     },
     "development": {
-        "description": "General development work (default)",
-        "tool_groups": ["core", "discovery", "health", "tasks", "testing", "memory"],
-        "prompts": ["persona_developer", "mode_suggestion", "context_management"],
-        "keywords": ["develop", "implement", "build", "feature", "code"],
+        "description": "General development work (default) - includes coordination tools",
+        "tool_groups": ["core", "discovery", "health", "tasks", "testing", "memory", "coordination"],
+        "prompts": ["persona_developer", "mode_suggestion", "context_management", "end_of_day", "resume_session"],
+        "keywords": ["develop", "implement", "build", "feature", "code", "handoff"],
     },
 }
 

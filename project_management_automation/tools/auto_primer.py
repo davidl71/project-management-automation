@@ -183,23 +183,27 @@ AGENT_MODE_MAPPING: Dict[str, str] = {
 AGENT_CONTEXT: Dict[str, Dict[str, Any]] = {
     "backend": {
         "focus_areas": ["API development", "database", "services", "Rust"],
-        "relevant_tools": ["run_tests", "scan_dependency_security", "analyze_test_coverage"],
-        "relevant_prompts": ["persona_developer", "security_scan_rust"],
+        "relevant_tools": ["run_tests", "scan_dependency_security", "analyze_test_coverage", "session_handoff", "task_assignee"],
+        "relevant_prompts": ["persona_developer", "security_scan_rust", "end_of_day"],
+        "startup_hint": "Check session_handoff(action='resume') for handoffs from other developers",
     },
     "web": {
         "focus_areas": ["Frontend", "React", "TypeScript", "PWA"],
-        "relevant_tools": ["review_pwa_config", "run_tests", "generate_cursorignore"],
-        "relevant_prompts": ["persona_developer", "pwa_review"],
+        "relevant_tools": ["review_pwa_config", "run_tests", "generate_cursorignore", "session_handoff", "task_assignee"],
+        "relevant_prompts": ["persona_developer", "pwa_review", "end_of_day"],
+        "startup_hint": "Check session_handoff(action='resume') for handoffs from other developers",
     },
     "security": {
         "focus_areas": ["Vulnerability scanning", "Dependency audit", "Security review"],
-        "relevant_tools": ["scan_dependency_security", "fetch_dependabot_alerts", "generate_security_report"],
-        "relevant_prompts": ["persona_security", "security_scan_all"],
+        "relevant_tools": ["scan_dependency_security", "fetch_dependabot_alerts", "generate_security_report", "session_handoff"],
+        "relevant_prompts": ["persona_security", "security_scan_all", "end_of_day"],
+        "startup_hint": "Check session_handoff(action='resume') for handoffs from other developers",
     },
     "general": {
         "focus_areas": ["General development", "Project management"],
-        "relevant_tools": ["project_scorecard", "check_documentation_health"],
-        "relevant_prompts": ["daily_checkin", "persona_developer"],
+        "relevant_tools": ["project_scorecard", "check_documentation_health", "session_handoff", "task_assignee"],
+        "relevant_prompts": ["daily_checkin", "persona_developer", "end_of_day", "resume_session"],
+        "startup_hint": "Check session_handoff(action='resume') for handoffs from other developers",
     },
 }
 

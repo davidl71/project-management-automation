@@ -39,6 +39,67 @@
       "warnings": [
         "\u26a0\ufe0f 21 uncommitted file(s) - consider committing before ending session"
       ]
+    },
+    {
+      "id": "handoff-1764262784",
+      "timestamp": "2025-11-27T16:59:44.104144Z",
+      "host": "Davids-Mac-mini.local",
+      "summary": "Testing memory integration",
+      "tasks_in_progress": [],
+      "tasks_completed_today": [],
+      "blockers": [
+        "Test blocker"
+      ],
+      "next_steps": [
+        "Verify memory saved"
+      ],
+      "git_status": {
+        "branch": "main",
+        "uncommitted_files": 4,
+        "changed_files": [
+          "M project_management_automation/resources/context_primer.py",
+          "M project_management_automation/scripts/automate_daily.py",
+          "M project_management_automation/tools/auto_primer.py",
+          "M project_management_automation/tools/session_handoff.py"
+        ],
+        "ahead_of_remote": false,
+        "behind_remote": false,
+        "needs_push": false,
+        "needs_pull": false
+      },
+      "tasks_unassigned": 0,
+      "warnings": [
+        "\u26a0\ufe0f 4 uncommitted file(s) - consider committing before ending session"
+      ]
+    },
+    {
+      "id": "handoff-1764263509",
+      "timestamp": "2025-11-27T17:11:49.395427Z",
+      "host": "Davids-Mac-mini.local",
+      "summary": "Session handoff - context primer enhancements and auto_primer tool improvements",
+      "tasks_in_progress": [],
+      "tasks_completed_today": [],
+      "blockers": [],
+      "next_steps": [],
+      "git_status": {
+        "branch": "main",
+        "uncommitted_files": 5,
+        "changed_files": [
+          "M .todo2/handoffs.json",
+          "M project_management_automation/resources/context_primer.py",
+          "M project_management_automation/scripts/automate_daily.py",
+          "M project_management_automation/tools/auto_primer.py",
+          "M project_management_automation/tools/session_handoff.py"
+        ],
+        "ahead_of_remote": false,
+        "behind_remote": false,
+        "needs_push": false,
+        "needs_pull": false
+      },
+      "tasks_unassigned": 0,
+      "warnings": [
+        "\u26a0\ufe0f 5 uncommitted file(s) - consider committing before ending session"
+      ]
     }
   ]
 }

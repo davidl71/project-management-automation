@@ -65,6 +65,14 @@ DAILY_TASKS = {
         'quick': True,
         'description': 'Monitor MCP tool count against design limit (≤30)',
         'function': 'project_management_automation.tools.tool_count_health:check_tool_count_health'
+    },
+    'handoff_check': {
+        'name': 'Handoff Check',
+        'script': None,  # Uses direct function call
+        'mcp_tool': 'session_handoff',
+        'quick': True,
+        'description': 'Check for handoff notes from other developers/machines',
+        'function': 'project_management_automation.tools.session_handoff:get_latest_handoff'
     }
 }
 
@@ -75,7 +83,7 @@ class DailyAutomation:
     def __init__(self, config: dict, project_root: Optional[Path] = None):
         self.config = config
         self.project_root = project_root
-        self.tasks_to_run = config.get('tasks', ['docs_health', 'todo2_alignment', 'duplicate_detection'])
+        self.tasks_to_run = config.get('tasks', ['handoff_check', 'docs_health', 'todo2_alignment', 'duplicate_detection', 'tool_count_health'])
         self.dry_run = config.get('dry_run', False)
         self.output_path = config.get('output_path', 'docs/DAILY_AUTOMATION_REPORT.md')
         self.include_slow = config.get('include_slow', False)

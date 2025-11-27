@@ -290,6 +290,32 @@ def end_session(
 
         # Apply changes (if not dry run)
         if not dry_run:
+            # Save handoff as memory for future reference
+            try:
+                from .session_memory import save_session_insight
+                memory_content = f"""Session handoff from {current_host}.
+
+## Summary
+{summary or 'Session ended'}
+
+## Tasks In Progress
+{chr(10).join('- ' + t['name'] for t in my_in_progress) or 'None'}
+
+## Blockers
+{chr(10).join('- ' + b for b in (blockers or [])) or 'None'}
+
+## Next Steps
+{chr(10).join('- ' + s for s in (next_steps or [])) or 'None'}
+"""
+                save_session_insight(
+                    title=f"Handoff: {summary[:50] if summary else 'Session ended'}",
+                    content=memory_content,
+                    category="insight",
+                    metadata={"type": "handoff", "host": current_host}
+                )
+            except Exception as e:
+                logger.debug(f"Could not save handoff as memory: {e}")
+
             # Unassign my tasks
             if unassign_my_tasks:
                 for task in my_tasks_to_unassign:
@@ -536,6 +562,19 @@ def resume_session() -> str:
                 recommendations.append(f"Consider {len(high_priority)} high-priority unassigned task(s)")
 
         context["recommendations"] = recommendations
+        
+        # Check for handoff-related memories
+        try:
+            from .session_memory import search_session_memories
+            memory_result = search_session_memories("handoff", limit=3)
+            if memory_result.get("success") and memory_result.get("total_results", 0) > 0:
+                context["related_memories"] = [
+                    {"title": m.get("title"), "created_at": m.get("created_at")}
+                    for m in memory_result.get("memories", [])[:3]
+                ]
+        except Exception as e:
+            logger.debug(f"Could not search handoff memories: {e}")
+        
         context["message"] = "Session resumed. Review handoff and pick up tasks to continue."
 
         return json.dumps(context, indent=2)
