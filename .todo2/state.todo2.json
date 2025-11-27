@@ -690,7 +690,7 @@
       "id": "T-20251126180006-01",
       "name": "Implement generate_prd tool for PRD generation from codebase",
       "long_description": "Create a new MCP tool that generates Product Requirements Documents by analyzing the existing codebase.\n\n**Objective:** Help users create/maintain PRD files as their \"North Star\" document.\n\n## Research Summary\n\n### Key PRD AI Tools Analyzed\n1. **ChatPRD** - AI copilot specifically for PMs, $5/month, MCP integration available\n2. **MakePRD** - Generate detailed PRDs from product descriptions\n3. **Miro AI PRD Generator** - Visual PRD creation with collaboration\n4. **Leiga** - AI-assisted drafts with customizable frameworks\n5. **QuillBot AI PRD Generator** - Structured output generation\n\n### Best Practices from Research\n\n**From ChatPRD (chatprd.ai):**\n- Start with simple prompts, iterate with AI feedback\n- PRD should include: objectives, key features, user stories, technical requirements, success metrics, risks/dependencies\n- Use AI to identify gaps and strengthen narratives\n- Keep PRD updated as project evolves\n\n**Recommended PRD Sections:**\n1. Project Purpose / Problem Statement\n2. User Stories / Personas\n3. Key Features / Requirements\n4. Technical Requirements / Constraints\n5. Success Metrics / KPIs\n6. Risks and Dependencies\n7. Timeline / Milestones\n\n**AI PRD Generation Prompts:**\n```\nInitial Draft:\n\"You are a product management expert. Help me create a comprehensive Product Requirement Document (PRD) for [project name]. Include: project purpose, user stories, key features, technical requirements, success metrics, and potential risks.\"\n\nImprovement:\n\"Review this PRD for [project name]. Highlight areas for improvement, identify gaps, suggest stronger success metrics, and ensure alignment with best practices.\"\n```\n\n## Implementation Features\n\n**Core Capabilities:**\n- Analyze codebase structure and architecture\n- Extract requirements from existing Todo2 tasks\n- Integrate with PROJECT_GOALS.md alignment\n- Generate structured markdown PRD\n- Iterative refinement with AI feedback\n\n**Output Structure:**\n```markdown\n# PRD: [Project Name]\n\n## 1. Overview\n- Problem Statement\n- Product Vision\n- Target Users\n\n## 2. User Stories\n- [Extracted from Todo2 tasks]\n\n## 3. Key Features\n- [Derived from codebase analysis]\n\n## 4. Technical Requirements\n- Architecture constraints\n- Tech stack requirements\n- Integration needs\n\n## 5. Success Metrics\n- [Aligned with PROJECT_GOALS.md]\n\n## 6. Risks & Dependencies\n- [From task blockers and analysis]\n\n## 7. Timeline\n- [From task priorities and estimates]\n```\n\n**Acceptance Criteria:**\n- Tool generates valid PRD markdown\n- Includes user stories from existing tasks\n- Includes technical requirements from code analysis\n- Can update existing PRD incrementally\n- Provides AI-driven improvement suggestions\n\n## Research Links\n\n- [ChatPRD - Using AI to Write PRDs](https://www.chatprd.ai/resources/using-ai-to-write-prd)\n- [Medium: We Used AI Tools to Write Our PRD](https://medium.com/@rahul.sikder3/we-used-ai-tools-to-write-our-prd-here-are-the-results-8c6043014a9b)\n- [Reddit: Best PRD AI Tools Discussion](https://www.reddit.com/r/ProductManagement/comments/1meh0ox/best_prd_al_tool_projects_chatprd_reforge_etc/)\n- [MakePRD](https://www.makeprd.ai/)\n- [Miro AI PRD Generator](https://miro.com/ai/product-development/ai-prd/)\n- [Leiga PRD Writing Tool](https://www.leiga.com/free-tools/prd-writing-tool)\n\n**Reference:** Best Practice #1 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Todo",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "best-practices",
@@ -705,13 +705,14 @@
           "content": "## PRD Generation Tool Research\n\n### Sources Analyzed:\n1. \ud83d\udd17 [ChatPRD - Using AI to Write PRDs](https://www.chatprd.ai/resources/using-ai-to-write-prd)\n   - Key insight: AI can 10x PM productivity for PRD writing\n   - Features: rapid drafting, document improvement, goal setting, coaching\n   - MCP integration available for Cursor\n\n2. \ud83d\udd17 [Medium: AI Tools for PRD Writing](https://medium.com/@rahul.sikder3/we-used-ai-tools-to-write-our-prd-here-are-the-results-8c6043014a9b)\n   - Real-world experience using ChatGPT and Jasper\n   - Significant time savings reported\n\n3. \ud83d\udd17 [Reddit: Best PRD AI Tools](https://www.reddit.com/r/ProductManagement/comments/1meh0ox/best_prd_al_tool_projects_chatprd_reforge_etc/)\n   - Community comparison of ChatPRD, Reforge, etc.\n   - User feedback on effectiveness\n\n### Additional Tools Discovered:\n- [MakePRD](https://www.makeprd.ai/) - Product idea \u2192 detailed PRD\n- [Miro AI PRD](https://miro.com/ai/product-development/ai-prd/) - Visual PRD creation\n- [Leiga](https://www.leiga.com/free-tools/prd-writing-tool) - Customizable frameworks\n- [QuillBot PRD Generator](https://quillbot.com/ai-writing-tools/ai-prd-generator)\n- [Wisary](https://wisary.ai/prd-creation) - AI-guided PRD creation\n- [Docuopia](https://www.docuopia.com/free-tools/ai-prd-generator) - Iterative updates\n\n### Key Implementation Insights:\n1. **Start simple, iterate**: Initial draft \u2192 AI feedback \u2192 refine\n2. **Standard sections**: Purpose, user stories, features, tech reqs, metrics, risks\n3. **Keep updated**: PRD should evolve with project\n4. **Human oversight essential**: AI assists, human validates",
           "created_at": "2025-11-26T18:02:45.353874Z"
         }
-      ]
+      ],
+      "completedAt": "2025-11-27T03:40:00Z"
     },
     {
       "id": "T-20251126180006-02",
       "name": "Implement recommend_workflow_mode tool for AGENT vs ASK guidance",
       "long_description": "Create a tool that recommends Cursor workflow mode (AGENT vs ASK) based on task description.\n\n**Objective:** Help users choose the right Cursor mode for each task.\n\n**Features:**\n- Analyze task description for implementation vs analysis intent\n- Map Exarp tools to recommended modes\n- Suggest relevant Exarp tools for the task\n- Integrate with tractatus \u2192 exarp \u2192 sequential workflow\n\n**Mode Mapping:**\n- ASK: project_scorecard, check_documentation_health, analyze_todo2_alignment\n- AGENT: sprint_automation, batch_approve_tasks, run_tests\n- CONDITIONAL: detect_duplicate_tasks (AGENT if auto_fix=True)\n\n**Reference:** Best Practice #3 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Todo",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "best-practices",
@@ -719,13 +720,14 @@
         "workflow"
       ],
       "created_at": "2025-11-26T18:00:06.524766Z",
-      "updated_at": "2025-11-26T18:00:06.524768Z"
+      "updated_at": "2025-11-26T18:00:06.524768Z",
+      "completedAt": "2025-11-27T03:40:00Z"
     },
     {
       "id": "T-20251126180006-03",
       "name": "Implement prompt iteration tracking tools",
       "long_description": "Create tools for tracking and improving prompt iterations.\n\n**Objective:** Embody the \"iterate, iterate, iterate\" philosophy from best practices.\n\n**New Tools:**\n1. record_prompt_iteration - Track original prompt, issue, refined prompt\n2. suggest_prompt_refinement - Coach better prompts based on issue type\n\n**Features:**\n- Store iteration history in session_memory\n- Build project-specific prompt patterns\n- Integrate with advisor system for coaching\n- Suggest refinements for common issues\n\n**Issue Types:**\n- ambiguous: Multiple interpretations possible\n- missing_context: Not enough file/code references\n- too_broad: Scope too large for single prompt\n- missing_constraints: No architecture/style constraints\n\n**Reference:** Best Practice #8 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Todo",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "best-practices",
@@ -733,7 +735,8 @@
         "prompts"
       ],
       "created_at": "2025-11-26T18:00:06.524771Z",
-      "updated_at": "2025-11-26T18:00:06.524773Z"
+      "updated_at": "2025-11-26T18:00:06.524773Z",
+      "completedAt": "2025-11-27T03:42:00Z"
     },
     {
       "id": "T-20251126180006-04",
@@ -754,7 +757,7 @@
       "id": "T-20251126180006-05",
       "name": "Enhance HINT system with rich tool descriptions",
       "long_description": "Expand the HINT system from minimal to comprehensive descriptions.\n\n**Objective:** Follow \"detailed prompts yield accurate results\" principle.\n\n**Current Format:**\n[HINT: Docs health. Score 0-100, broken links, tasks created.]\n\n**Enhanced Format:**\n[HINT: Docs health. Score 0-100, broken links, tasks created.]\n\n\ud83d\udcca Output: Health score, broken links list, recommended fixes\n\ud83d\udd27 Side Effects: Creates Todo2 tasks if create_tasks=True\n\ud83d\udcc1 Affected: docs/ directory analysis\n\u23f1\ufe0f Typical Runtime: 5-30 seconds\n\nExample Prompt: \"Check documentation health and create tasks\"\n\nRelated Tools: add_external_tool_hints, sync_todo_tasks\n\n**Scope:** Update all 22+ MCP tools with enhanced HINTs\n\n**Reference:** Best Practice #6 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Todo",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "best-practices",
@@ -762,7 +765,8 @@
         "hints"
       ],
       "created_at": "2025-11-26T18:00:06.524780Z",
-      "updated_at": "2025-11-26T18:00:06.524781Z"
+      "updated_at": "2025-11-26T18:00:06.524781Z",
+      "completedAt": "2025-11-27T03:42:00Z"
     },
     {
       "id": "T-20251126180006-06",
@@ -1927,6 +1931,30 @@
           "content": "**Automation Results:**\n\n**Documentation Health Score: 82.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":278,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":82.0}",
           "created": "2025-11-27T03:28:23.022737",
           "lastModified": "2025-11-27T03:28:23.022747"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127032859-872081",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-27T03:28:59.872112",
+      "lastModified": "2025-11-27T03:29:02.409782",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127032859-872081-C-1",
+          "todoId": "AUTO-20251127032859-872081",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 82.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":278,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":82.0}",
+          "created": "2025-11-27T03:29:02.385699",
+          "lastModified": "2025-11-27T03:29:02.385708"
         }
       ]
     }
