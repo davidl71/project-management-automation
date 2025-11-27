@@ -5,15 +5,49 @@ Wraps DependencySecurityAnalyzer to expose as MCP tool.
 
 Memory Integration:
 - Saves vulnerability findings for tracking remediation
+
+FastMCP Integration:
+- Progress reporting via ctx.report_progress()
+- Client logging via ctx.info()
 """
 
+import asyncio
 import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp.server.fastmcp import Context
 
 logger = logging.getLogger(__name__)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROGRESS REPORTING HELPERS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+async def _report_progress(ctx: Optional["Context"], progress: float, total: float, message: str) -> None:
+    """Report progress if context is available."""
+    if ctx is None:
+        return
+    try:
+        from ..context_helpers import report_progress
+        await report_progress(ctx, progress, total, message)
+    except Exception:
+        pass  # Progress reporting is optional
+
+
+async def _log_info(ctx: Optional["Context"], message: str) -> None:
+    """Log info to client if context is available."""
+    if ctx is None:
+        return
+    try:
+        from ..context_helpers import log_info
+        await log_info(ctx, message)
+    except Exception:
+        pass  # Logging is optional
 
 
 def _save_security_scan_memory(response_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -77,16 +111,18 @@ except ImportError:
             AUTOMATION_ERROR = "AUTOMATION_ERROR"
 
 
-def scan_dependency_security(
+async def scan_dependency_security_async(
     languages: Optional[List[str]] = None,
-    config_path: Optional[str] = None
+    config_path: Optional[str] = None,
+    ctx: Optional["Context"] = None,
 ) -> str:
     """
-    Scan project dependencies for security vulnerabilities.
+    Scan project dependencies for security vulnerabilities (async with progress).
 
     Args:
         languages: List of languages to scan (python, rust, npm). If None, scans all.
         config_path: Path to dependency security config file (default: scripts/dependency_security_config.json)
+        ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
         JSON string with scan results
@@ -94,6 +130,10 @@ def scan_dependency_security(
     start_time = time.time()
 
     try:
+        # ═══ PROGRESS: Step 1/5 - Initialize ═══
+        await _report_progress(ctx, 1, 5, "Initializing security scanner...")
+        await _log_info(ctx, "🔒 Starting dependency security scan")
+        
         # Import from package
         from project_management_automation.scripts.automate_dependency_security import DependencySecurityAnalyzer
         from project_management_automation.utils import find_project_root
@@ -101,12 +141,16 @@ def scan_dependency_security(
         # Find project root
         project_root = find_project_root()
 
+        # ═══ PROGRESS: Step 2/5 - Load config ═══
+        await _report_progress(ctx, 2, 5, "Loading configuration...")
+        
         # Use default config if not provided
         if not config_path:
             config_path = str(project_root / 'scripts' / 'dependency_security_config.json')
 
         # Load and modify config if languages specified
         if languages:
+            await _log_info(ctx, f"📋 Scanning languages: {', '.join(languages)}")
             import json as json_module
             with open(config_path) as f:
                 config_data = json_module.load(f)
@@ -122,10 +166,21 @@ def scan_dependency_security(
             with open(temp_config_path, 'w') as f:
                 json_module.dump(config_data, f, indent=2)
             config_path = str(temp_config_path)
+        else:
+            await _log_info(ctx, "📋 Scanning all languages: python, rust, npm")
 
-        # Create analyzer and run
+        # ═══ PROGRESS: Step 3/5 - Run scanner ═══
+        await _report_progress(ctx, 3, 5, "Running vulnerability scanner...")
+        
+        # Create analyzer and run (this is the slow part)
         analyzer = DependencySecurityAnalyzer(config_path, project_root)
-        results = analyzer.run()
+        
+        # Run in executor to avoid blocking
+        loop = asyncio.get_event_loop()
+        results = await loop.run_in_executor(None, analyzer.run)
+
+        # ═══ PROGRESS: Step 4/5 - Process results ═══
+        await _report_progress(ctx, 4, 5, "Processing scan results...")
 
         # Extract key metrics - scan_results are nested in results['results']
         scan_results = results.get('results', {})
@@ -144,6 +199,15 @@ def scan_dependency_security(
             'status': results.get('status', 'unknown')
         }
 
+        # ═══ PROGRESS: Step 5/5 - Finalize ═══
+        await _report_progress(ctx, 5, 5, "Finalizing...")
+        
+        total_vulns = response_data['total_vulnerabilities']
+        if total_vulns == 0:
+            await _log_info(ctx, "✅ No vulnerabilities found!")
+        else:
+            await _log_info(ctx, f"⚠️ Found {total_vulns} vulnerabilities")
+
         duration = time.time() - start_time
         log_automation_execution('scan_dependency_security', duration, True)
 
@@ -157,5 +221,35 @@ def scan_dependency_security(
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('scan_dependency_security', duration, False, e)
+        if ctx:
+            await _log_info(ctx, f"❌ Security scan failed: {e}")
         error_response = format_error_response(e, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
+
+
+def scan_dependency_security(
+    languages: Optional[List[str]] = None,
+    config_path: Optional[str] = None,
+    ctx: Optional["Context"] = None,
+) -> str:
+    """
+    Scan project dependencies for security vulnerabilities (sync wrapper).
+
+    For async version with progress reporting, use scan_dependency_security_async().
+
+    Args:
+        languages: List of languages to scan (python, rust, npm). If None, scans all.
+        config_path: Path to dependency security config file
+        ctx: FastMCP Context for progress reporting (optional)
+
+    Returns:
+        JSON string with scan results
+    """
+    # If we have a context or running in async context, use async version
+    try:
+        loop = asyncio.get_running_loop()
+        # We're in an async context - create task
+        return asyncio.ensure_future(scan_dependency_security_async(languages, config_path, ctx))
+    except RuntimeError:
+        # No running loop - run sync
+        return asyncio.run(scan_dependency_security_async(languages, config_path, ctx))

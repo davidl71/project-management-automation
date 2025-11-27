@@ -1397,6 +1397,150 @@
       "dependencies": [
         "MODE-001"
       ]
+    },
+    {
+      "id": "AUTO-20251127015017-769047",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-27T01:50:17.769104",
+      "lastModified": "2025-11-27T01:50:17.842043",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127015017-769047-C-1",
+          "todoId": "AUTO-20251127015017-769047",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":272,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":85.0}",
+          "created": "2025-11-27T01:50:17.832785",
+          "lastModified": "2025-11-27T01:50:17.832793"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127015719-113742",
+      "name": "Automation: Dependency Security Scan",
+      "content": "Automated Dependency Security Scan execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "dependency-security-scan"
+      ],
+      "created": "2025-11-27T01:57:19.113851",
+      "lastModified": "2025-11-27T01:57:19.242676",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127015719-113742-C-1",
+          "todoId": "AUTO-20251127015719-113742",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T01:57:19.237425",
+          "lastModified": "2025-11-27T01:57:19.237437"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127015719-639027",
+      "name": "Automation: External Tool Hints Automation",
+      "content": "Automated External Tool Hints Automation execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "external-tool-hints-automation"
+      ],
+      "created": "2025-11-27T01:57:19.639143",
+      "lastModified": "2025-11-27T01:57:20.336654",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127015719-639027-C-1",
+          "todoId": "AUTO-20251127015719-639027",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 13 documentation files\n\ud83d\udcda Libraries detected: 8 unique libraries\n\ud83d\udcca Coverage: 14.1% of files received hints\n\n**Key Findings:**\n- Added hints to 13 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: React, Python, FastAPI\n  - docs/PRD.md: TypeScript, Python, Pydantic\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: FastAPI, Python\n  - docs/DESIGN_DECISIONS.md: Pydantic, Python, FastAPI",
+          "created": "2025-11-27T01:57:20.310496",
+          "lastModified": "2025-11-27T01:57:20.310506"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127015956-796457",
+      "name": "Automation: Dependency Security Scan",
+      "content": "Automated Dependency Security Scan execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "dependency-security-scan"
+      ],
+      "created": "2025-11-27T01:59:56.796583",
+      "lastModified": "2025-11-27T01:59:56.883100",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127015956-796457-C-1",
+          "todoId": "AUTO-20251127015956-796457",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T01:59:56.876854",
+          "lastModified": "2025-11-27T01:59:56.876867"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127015956-911469",
+      "name": "Automation: External Tool Hints Automation",
+      "content": "Automated External Tool Hints Automation execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "external-tool-hints-automation"
+      ],
+      "created": "2025-11-27T01:59:56.911466",
+      "lastModified": "2025-11-27T01:59:57.165246",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127015956-911469-C-1",
+          "todoId": "AUTO-20251127015956-911469",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 13 documentation files\n\ud83d\udcda Libraries detected: 8 unique libraries\n\ud83d\udcca Coverage: 14.1% of files received hints\n\n**Key Findings:**\n- Added hints to 13 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: FastAPI, Python, React\n  - docs/PRD.md: Python, TypeScript, Pydantic\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: FastAPI, Python\n  - docs/DESIGN_DECISIONS.md: FastAPI, Python, Uvicorn",
+          "created": "2025-11-27T01:59:57.151802",
+          "lastModified": "2025-11-27T01:59:57.151813"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251127020005-427583",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-11-27T02:00:05.427583",
+      "lastModified": "2025-11-27T02:00:05.440370",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251127020005-427583-C-1",
+          "todoId": "AUTO-20251127020005-427583",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 60 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[60 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[60 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T02:00:05.432437",
+          "lastModified": "2025-11-27T02:00:05.432445"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",

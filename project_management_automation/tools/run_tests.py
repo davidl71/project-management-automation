@@ -5,15 +5,49 @@ Wraps TestRunner to expose as MCP tool.
 
 Memory Integration:
 - Saves test failures for debugging patterns
+
+FastMCP Integration:
+- Progress reporting via ctx.report_progress()
+- Client logging via ctx.info()
 """
 
+import asyncio
 import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp.server.fastmcp import Context
 
 logger = logging.getLogger(__name__)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROGRESS REPORTING HELPERS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+async def _report_progress(ctx: Optional["Context"], progress: float, total: float, message: str) -> None:
+    """Report progress if context is available."""
+    if ctx is None:
+        return
+    try:
+        from ..context_helpers import report_progress
+        await report_progress(ctx, progress, total, message)
+    except Exception:
+        pass  # Progress reporting is optional
+
+
+async def _log_info(ctx: Optional["Context"], message: str) -> None:
+    """Log info to client if context is available."""
+    if ctx is None:
+        return
+    try:
+        from ..context_helpers import log_info
+        await log_info(ctx, message)
+    except Exception:
+        pass  # Logging is optional
 
 
 def _save_test_run_memory(response_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -79,15 +113,16 @@ except ImportError:
             AUTOMATION_ERROR = "AUTOMATION_ERROR"
 
 
-def run_tests(
+async def run_tests_async(
     test_path: Optional[str] = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
-    output_path: Optional[str] = None
+    output_path: Optional[str] = None,
+    ctx: Optional["Context"] = None,
 ) -> str:
     """
-    Execute test suites with flexible options.
+    Execute test suites with flexible options (async with progress).
 
     Args:
         test_path: Path to test file/directory (default: tests/)
@@ -95,6 +130,7 @@ def run_tests(
         verbose: Show detailed output (default: true)
         coverage: Generate coverage report (default: false)
         output_path: Path for test results (default: test-results/)
+        ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
         JSON string with test execution results
@@ -102,6 +138,10 @@ def run_tests(
     start_time = time.time()
 
     try:
+        # ═══ PROGRESS: Step 1/4 - Initialize ═══
+        await _report_progress(ctx, 1, 4, "Initializing test runner...")
+        await _log_info(ctx, "🧪 Starting test execution")
+        
         from project_management_automation.scripts.automate_run_tests import TestRunner
         from project_management_automation.utils import find_project_root
 
@@ -115,8 +155,21 @@ def run_tests(
             'output_path': output_path or 'test-results/'
         }
 
+        # ═══ PROGRESS: Step 2/4 - Detect framework ═══
+        await _report_progress(ctx, 2, 4, f"Configuring {test_framework} framework...")
+        await _log_info(ctx, f"📁 Test path: {config['test_path']}")
+        
         runner = TestRunner(config, project_root)
-        results = runner.run()
+
+        # ═══ PROGRESS: Step 3/4 - Run tests ═══
+        await _report_progress(ctx, 3, 4, "Running tests...")
+        
+        # Run in executor to avoid blocking
+        loop = asyncio.get_event_loop()
+        results = await loop.run_in_executor(None, runner.run)
+
+        # ═══ PROGRESS: Step 4/4 - Process results ═══
+        await _report_progress(ctx, 4, 4, "Processing test results...")
 
         # Format response
         response_data = {
@@ -131,6 +184,16 @@ def run_tests(
             'status': results.get('results', {}).get('status', 'unknown')
         }
 
+        # Log summary
+        passed = response_data['tests_passed']
+        failed = response_data['tests_failed']
+        skipped = response_data['tests_skipped']
+        
+        if failed == 0:
+            await _log_info(ctx, f"✅ All {passed} tests passed!")
+        else:
+            await _log_info(ctx, f"⚠️ {failed} failed, {passed} passed, {skipped} skipped")
+
         duration = time.time() - start_time
         log_automation_execution('run_tests', duration, True)
 
@@ -144,7 +207,40 @@ def run_tests(
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('run_tests', duration, False, e)
+        if ctx:
+            await _log_info(ctx, f"❌ Test run failed: {e}")
 
         error_response = format_error_response(e, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
+
+
+def run_tests(
+    test_path: Optional[str] = None,
+    test_framework: str = "auto",
+    verbose: bool = True,
+    coverage: bool = False,
+    output_path: Optional[str] = None,
+    ctx: Optional["Context"] = None,
+) -> str:
+    """
+    Execute test suites with flexible options (sync wrapper).
+
+    For async version with progress reporting, use run_tests_async().
+
+    Args:
+        test_path: Path to test file/directory (default: tests/)
+        test_framework: pytest, unittest, ctest, or auto (default: auto)
+        verbose: Show detailed output (default: true)
+        coverage: Generate coverage report (default: false)
+        output_path: Path for test results (default: test-results/)
+        ctx: FastMCP Context for progress reporting (optional)
+
+    Returns:
+        JSON string with test execution results
+    """
+    try:
+        loop = asyncio.get_running_loop()
+        return asyncio.ensure_future(run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx))
+    except RuntimeError:
+        return asyncio.run(run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx))
 

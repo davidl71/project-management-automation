@@ -443,7 +443,8 @@ def register_tools():
 
             return json.dumps(result, separators=(",", ":"))
 
-        return server_status
+        # Continue with more tool registrations below...
+
     elif stdio_server_instance:
         # Stdio Server registration (handler-based)
         @stdio_server_instance.list_tools()

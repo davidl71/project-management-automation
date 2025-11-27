@@ -59,16 +59,17 @@ def analyze_alignment(
         }
 
 
-def security(
+async def security_async(
     action: str = "report",
     repo: str = "davidl71/project-management-automation",
     languages: Optional[list[str]] = None,
     config_path: Optional[str] = None,
     state: str = "open",
     include_dismissed: bool = False,
+    ctx: Optional[Any] = None,
 ) -> dict[str, Any]:
     """
-    Unified security analysis tool.
+    Unified security analysis tool (async with progress).
     
     Args:
         action: "scan" for local pip-audit, "alerts" for Dependabot, "report" for combined
@@ -77,13 +78,15 @@ def security(
         config_path: Config file path (scan action)
         state: Alert state filter (alerts action)
         include_dismissed: Include dismissed alerts (report action)
+        ctx: FastMCP Context for progress reporting (optional)
     
     Returns:
         Security scan/report results
     """
     if action == "scan":
-        from .dependency_security import scan_dependency_security
-        return scan_dependency_security(languages, config_path)
+        from .dependency_security import scan_dependency_security_async
+        result = await scan_dependency_security_async(languages, config_path, ctx)
+        return json.loads(result) if isinstance(result, str) else result
     elif action == "alerts":
         from .dependabot_integration import fetch_dependabot_alerts
         return fetch_dependabot_alerts(repo, state)
@@ -95,6 +98,38 @@ def security(
             "status": "error",
             "error": f"Unknown security action: {action}. Use 'scan', 'alerts', or 'report'.",
         }
+
+
+def security(
+    action: str = "report",
+    repo: str = "davidl71/project-management-automation",
+    languages: Optional[list[str]] = None,
+    config_path: Optional[str] = None,
+    state: str = "open",
+    include_dismissed: bool = False,
+    ctx: Optional[Any] = None,
+) -> dict[str, Any]:
+    """
+    Unified security analysis tool (sync wrapper).
+    
+    Args:
+        action: "scan" for local pip-audit, "alerts" for Dependabot, "report" for combined
+        repo: GitHub repo for alerts/report (owner/repo format)
+        languages: Languages to scan (scan action)
+        config_path: Config file path (scan action)
+        state: Alert state filter (alerts action)
+        include_dismissed: Include dismissed alerts (report action)
+        ctx: FastMCP Context for progress reporting (optional)
+    
+    Returns:
+        Security scan/report results
+    """
+    import asyncio
+    try:
+        loop = asyncio.get_running_loop()
+        return asyncio.ensure_future(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
+    except RuntimeError:
+        return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
 
 
 def generate_config(
@@ -472,6 +507,54 @@ def task_analysis(
         }
 
 
+async def testing_async(
+    action: str = "run",
+    # run params
+    test_path: Optional[str] = None,
+    test_framework: str = "auto",
+    verbose: bool = True,
+    coverage: bool = False,
+    # coverage params
+    coverage_file: Optional[str] = None,
+    min_coverage: int = 80,
+    format: str = "html",
+    # common
+    output_path: Optional[str] = None,
+    ctx: Optional[Any] = None,
+) -> dict[str, Any]:
+    """
+    Unified testing tool (async with progress).
+    
+    Args:
+        action: "run" to execute tests, "coverage" to analyze coverage
+        test_path: Path to test file/directory (run action)
+        test_framework: pytest, unittest, ctest, or auto (run action)
+        verbose: Show detailed output (run action)
+        coverage: Generate coverage during test run (run action)
+        coverage_file: Path to coverage file (coverage action)
+        min_coverage: Minimum coverage threshold (coverage action)
+        format: Report format - html, json, terminal (coverage action)
+        output_path: Save results to file
+        ctx: FastMCP Context for progress reporting (optional)
+    
+    Returns:
+        Test or coverage results as JSON string
+    """
+    if action == "run":
+        from .run_tests import run_tests_async
+        result = await run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx)
+        return json.loads(result) if isinstance(result, str) else result
+    elif action == "coverage":
+        from .test_coverage import analyze_test_coverage
+        result = analyze_test_coverage(coverage_file, min_coverage, output_path, format)
+        return json.loads(result) if isinstance(result, str) else result
+    else:
+        return {
+            "status": "error",
+            "error": f"Unknown testing action: {action}. Use 'run' or 'coverage'.",
+        }
+
+
 def testing(
     action: str = "run",
     # run params
@@ -485,9 +568,10 @@ def testing(
     format: str = "html",
     # common
     output_path: Optional[str] = None,
+    ctx: Optional[Any] = None,
 ) -> dict[str, Any]:
     """
-    Unified testing tool.
+    Unified testing tool (sync wrapper).
     
     Args:
         action: "run" to execute tests, "coverage" to analyze coverage
@@ -499,13 +583,36 @@ def testing(
         min_coverage: Minimum coverage threshold (coverage action)
         format: Report format - html, json, terminal (coverage action)
         output_path: Save results to file
+        ctx: FastMCP Context for progress reporting (optional)
     
     Returns:
         Test or coverage results as JSON string
     """
+    import asyncio
+    try:
+        loop = asyncio.get_running_loop()
+        return asyncio.ensure_future(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
+    except RuntimeError:
+        return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
+
+
+def _testing_sync(
+    action: str = "run",
+    test_path: Optional[str] = None,
+    test_framework: str = "auto",
+    verbose: bool = True,
+    coverage: bool = False,
+    coverage_file: Optional[str] = None,
+    min_coverage: int = 80,
+    format: str = "html",
+    output_path: Optional[str] = None,
+) -> dict[str, Any]:
+    """Original sync implementation for non-async callers."""
     if action == "run":
         from .run_tests import run_tests
-        result = run_tests(test_path, test_framework, verbose, coverage, output_path)
+        # Call the sync wrapper without ctx
+        import asyncio
+        result = asyncio.run(run_tests.__wrapped__(test_path, test_framework, verbose, coverage, output_path, None)) if hasattr(run_tests, '__wrapped__') else run_tests(test_path, test_framework, verbose, coverage, output_path)
         return json.loads(result) if isinstance(result, str) else result
     elif action == "coverage":
         from .test_coverage import analyze_test_coverage
