@@ -13,7 +13,7 @@ Consolidated tools:
 - setup_hooks(action=git|patterns) ← setup_git_hooks, setup_pattern_triggers
 - prompt_tracking(action=log|analyze) ← log_prompt_iteration, analyze_prompt_iterations
 - health(action=server|git|docs|dod|cicd) ← server_status, check_working_copy_health, check_documentation_health, check_definition_of_done, validate_ci_cd_workflow
-- report(action=overview|scorecard|briefing|prd) ← generate_project_overview, generate_project_scorecard, get_advisor_briefing, generate_prd
+- report(action=overview|scorecard|briefing|prd) ← generate_project_overview, generate_project_scorecard, get_daily_briefing, generate_prd
 - advisor_audio(action=quote|podcast|export) ← synthesize_advisor_quote, generate_podcast_audio, export_advisor_podcast
 - task_analysis(action=duplicates|tags|hierarchy) ← detect_duplicate_tasks, consolidate_tags, analyze_task_hierarchy
 - testing(action=run|coverage) ← run_tests, analyze_test_coverage
@@ -403,11 +403,15 @@ def report(
         from .project_scorecard import generate_project_scorecard
         return generate_project_scorecard(output_format, include_recommendations, output_path)
     elif action == "briefing":
-        from .wisdom.advisors import get_advisor_briefing
-        return get_advisor_briefing(
-            overall_score, security_score, testing_score,
-            documentation_score, completion_score, alignment_score
-        )
+        from .wisdom.advisors import get_daily_briefing
+        metric_scores = {
+            "security": security_score,
+            "testing": testing_score,
+            "documentation": documentation_score,
+            "completion": completion_score,
+            "alignment": alignment_score,
+        }
+        return get_daily_briefing(overall_score, metric_scores)
     elif action == "prd":
         from .prd_generator import generate_prd
         return generate_prd(project_name, include_architecture, include_metrics, include_tasks, output_path)
