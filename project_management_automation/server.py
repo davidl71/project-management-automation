@@ -327,6 +327,11 @@ try:
         from .tools.prd_generator import generate_prd as _generate_prd
         from .tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
         from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
+        from .tools.context_summarizer import (
+            summarize_context as _summarize_context,
+            batch_summarize as _batch_summarize,
+            estimate_context_budget as _estimate_context_budget,
+        )
         from .tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
         from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from .tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
@@ -344,6 +349,8 @@ try:
         )
         from .tools.dynamic_tools import (
             focus_mode as _focus_mode,
+            suggest_mode as _suggest_mode,
+            get_tool_usage_stats as _get_tool_usage_stats,
             get_tool_manager,
         )
 
@@ -387,6 +394,11 @@ try:
         from tools.prd_generator import generate_prd as _generate_prd
         from tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
         from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
+        from tools.context_summarizer import (
+            summarize_context as _summarize_context,
+            batch_summarize as _batch_summarize,
+            estimate_context_budget as _estimate_context_budget,
+        )
         from tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
         from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
@@ -404,6 +416,8 @@ try:
         )
         from tools.dynamic_tools import (
             focus_mode as _focus_mode,
+            suggest_mode as _suggest_mode,
+            get_tool_usage_stats as _get_tool_usage_stats,
             get_tool_manager,
         )
 
@@ -932,6 +946,134 @@ if mcp:
 
             return result
 
+        @mcp.tool()
+        async def suggest_mode(
+            text: Optional[str] = None,
+            auto_switch: bool = False,
+            ctx: Any = None,
+        ) -> str:
+            """
+            [HINT: Adaptive mode suggestion. Infers best mode from context/usage patterns.]
+
+            🎯 Output: Suggested mode, confidence score, rationale
+            🔧 Side Effects: If auto_switch=True, changes mode and notifies client
+            ⏱️ Typical Runtime: <50ms
+
+            Uses keyword analysis and usage patterns to suggest the best workflow mode.
+            Call without arguments to get suggestion based on your usage history.
+
+            Example Prompts:
+            "What mode should I use for security work?"
+            "Suggest a mode based on my recent activity"
+            "Auto-switch to the best mode for vulnerability scanning"
+
+            Args:
+                text: Optional text to analyze for mode suggestion
+                auto_switch: If True, automatically switch to suggested mode
+
+            Returns:
+                JSON with suggested mode, confidence, and rationale
+            """
+            result = _suggest_mode(text, auto_switch)
+
+            # Send notification if mode was auto-switched
+            if ctx and auto_switch:
+                try:
+                    import json
+                    parsed = json.loads(result)
+                    if parsed.get("auto_switched"):
+                        from .context_helpers import notify_tools_changed
+                        await notify_tools_changed(ctx)
+                except Exception as e:
+                    logger.debug(f"Could not notify tools changed: {e}")
+
+            return result
+
+        @mcp.tool()
+        def tool_usage_stats() -> str:
+            """
+            [HINT: Tool usage analytics. Shows usage patterns and co-occurrence data.]
+
+            🎯 Output: Usage statistics, tool relationships, mode history
+            🔧 Side Effects: None
+            ⏱️ Typical Runtime: <10ms
+
+            Shows which tools you use most, which tools are commonly used together,
+            and your workflow mode history. Useful for understanding your patterns.
+
+            Returns:
+                JSON with comprehensive usage analytics
+            """
+            return _get_tool_usage_stats()
+
+        # ═══════════════════════════════════════════════════════════════════
+        # CONTEXT SUMMARIZATION TOOLS
+        # ═══════════════════════════════════════════════════════════════════
+
+        @mcp.tool()
+        def summarize(
+            data: str,
+            level: str = "brief",
+            tool_type: Optional[str] = None,
+            max_tokens: Optional[int] = None,
+            include_raw: bool = False,
+        ) -> str:
+            """
+            [HINT: Context summarizer. Compresses verbose outputs to key metrics. Levels: brief|detailed|key_metrics|actionable.]
+
+            Strategically summarizes tool outputs for efficient context usage.
+            Reduces token consumption by 50-80% while preserving key information.
+
+            📊 Output: Compressed summary with key metrics and token estimates
+            🔧 Side Effects: None
+            ⏱️ Typical Runtime: <10ms
+
+            Args:
+                data: JSON string to summarize (tool output, API response, etc.)
+                level: Summarization level
+                    - "brief": One-line summary with key metrics (default)
+                    - "detailed": Multi-line with categories
+                    - "key_metrics": Just the numbers/scores
+                    - "actionable": Only recommendations and tasks
+                tool_type: Hint for smarter summarization (auto-detected if not provided)
+                    - "health", "security", "task", "testing", "scorecard", etc.
+                max_tokens: Maximum tokens for output (truncates if needed)
+                include_raw: Include original data in response
+
+            Examples:
+                summarize(health_result, level="brief")
+                → "Health: 85/100, 3 issues, 2 actions"
+
+                summarize(security_scan, level="key_metrics")
+                → {"critical": 0, "high": 2, "medium": 5}
+            """
+            return _summarize_context(data, level, tool_type, max_tokens, include_raw)
+
+        @mcp.tool()
+        def context_budget(
+            items: str,
+            budget_tokens: int = 4000,
+        ) -> str:
+            """
+            [HINT: Context budget. Estimates tokens and suggests what to keep/summarize to fit budget.]
+
+            Analyze token usage and get recommendations for context reduction.
+
+            📊 Output: Token analysis with reduction strategy
+            🔧 Side Effects: None
+            ⏱️ Typical Runtime: <10ms
+
+            Args:
+                items: JSON array of items to analyze
+                budget_tokens: Target token budget (default: 4000)
+
+            Returns:
+                JSON with total tokens, items by size, and reduction strategy
+            """
+            import json
+            parsed_items = json.loads(items) if isinstance(items, str) else items
+            return _estimate_context_budget(parsed_items, budget_tokens)
+
         # NOTE: get_tool_help removed - use resource automation://tools for tool info
         # NOTE: project_overview removed - use generate_project_overview
 
@@ -1459,6 +1601,10 @@ if mcp:
                 SPRINT_END,
                 TASK_REVIEW,
                 PROJECT_HEALTH,
+                # Mode Suggestion
+                MODE_SUGGESTION,
+                # Context Management
+                CONTEXT_MANAGEMENT,
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
@@ -1509,6 +1655,10 @@ if mcp:
                 SPRINT_END,
                 TASK_REVIEW,
                 PROJECT_HEALTH,
+                # Mode Suggestion
+                MODE_SUGGESTION,
+                # Context Management
+                CONTEXT_MANAGEMENT,
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
@@ -1674,6 +1824,16 @@ if mcp:
             return CONFIG_GENERATION
 
         @mcp.prompt()
+        def mode() -> str:
+            """Suggest optimal Cursor IDE mode (Agent vs Ask) for a task."""
+            return MODE_SUGGESTION
+
+        @mcp.prompt()
+        def context() -> str:
+            """Manage LLM context with summarization and budget tools."""
+            return CONTEXT_MANAGEMENT
+
+        @mcp.prompt()
         def remember() -> str:
             """Use AI session memory to persist insights."""
             return MEMORY_SYSTEM
@@ -1723,7 +1883,7 @@ if mcp:
             return PERSONA_TECH_WRITER
 
         PROMPTS_AVAILABLE = True
-        logger.info("Registered 36 prompts successfully")
+        logger.info("Registered 38 prompts successfully")
     except ImportError as e:
         PROMPTS_AVAILABLE = False
         logger.warning(f"Prompts not available: {e}")

@@ -128,12 +128,12 @@ def security(
     try:
         # Check if we're in an async context
         asyncio.get_running_loop()
-        # In async context - caller must await this or use security_async directly
-        # For sync callers, fall through to RuntimeError path
-        raise RuntimeError("Use security_async() in async context")
     except RuntimeError:
-        # No running loop - run synchronously
+        # No running loop - safe to run synchronously
         return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
+    else:
+        # In async context - caller must await security_async() directly
+        raise RuntimeError("Use security_async() in async context, or call from sync code")
 
 
 def generate_config(
@@ -596,11 +596,12 @@ def testing(
     try:
         # Check if we're in an async context
         asyncio.get_running_loop()
-        # In async context - caller must await this or use testing_async directly
-        raise RuntimeError("Use testing_async() in async context")
     except RuntimeError:
-        # No running loop - run synchronously
+        # No running loop - safe to run synchronously
         return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
+    else:
+        # In async context - caller must await testing_async() directly
+        raise RuntimeError("Use testing_async() in async context, or call from sync code")
 
 
 def lint(

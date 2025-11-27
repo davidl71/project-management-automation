@@ -3,6 +3,9 @@ Workflow Mode Recommender Tool
 
 Recommends AGENT vs ASK mode based on task complexity and type.
 Based on Cursor IDE Best Practice #3.
+
+Provides user-facing suggestions for mode changes since MCP cannot
+programmatically change Cursor's mode.
 """
 
 import json
@@ -10,9 +13,49 @@ import logging
 import re
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Dict, Optional, Tuple
 
 logger = logging.getLogger(__name__)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MODE SUGGESTION MESSAGES (User-facing)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+MODE_SUGGESTIONS = {
+    "AGENT": {
+        "emoji": "🤖",
+        "action": "Switch to AGENT mode",
+        "instruction": "Click the mode selector (top of chat) → Select 'Agent'",
+        "keyboard": "No keyboard shortcut available",
+        "why": "AGENT mode enables autonomous multi-file editing with automatic tool execution",
+        "benefits": [
+            "Autonomous file creation and modification",
+            "Multi-step task execution",
+            "Automatic tool calls without confirmation",
+            "Better for implementation tasks",
+        ],
+    },
+    "ASK": {
+        "emoji": "💬",
+        "action": "Switch to ASK mode", 
+        "instruction": "Click the mode selector (top of chat) → Select 'Ask'",
+        "keyboard": "No keyboard shortcut available",
+        "why": "ASK mode provides focused assistance with user control over changes",
+        "benefits": [
+            "User confirms each change",
+            "Better for learning and understanding",
+            "Safer for critical code review",
+            "Ideal for questions and explanations",
+        ],
+    },
+}
+
+# Current mode detection hints (patterns in responses that suggest current mode)
+CURRENT_MODE_HINTS = {
+    "AGENT": ["I'll make these changes", "Creating file", "Modifying", "I've updated"],
+    "ASK": ["Would you like me to", "Should I", "Do you want", "Here's what I suggest"],
+}
 
 # Import error handler
 try:
@@ -200,6 +243,15 @@ def recommend_workflow_mode(
                 "ASK": "Best for: Questions, code review, single-file edits, debugging help",
             }
 
+        # Add user-facing suggestion
+        suggestion = MODE_SUGGESTIONS[mode]
+        result["suggestion"] = {
+            "message": generate_mode_suggestion_message(mode, confidence, content[:100] if content else ""),
+            "action": suggestion["action"],
+            "instruction": suggestion["instruction"],
+            "benefits": suggestion["benefits"][:3],
+        }
+
         duration = time.time() - start_time
         log_automation_execution("recommend_workflow_mode", duration, True)
 
@@ -210,4 +262,161 @@ def recommend_workflow_mode(
         log_automation_execution("recommend_workflow_mode", duration, False, e)
         error_response = format_error_response(e, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MODE SUGGESTION HELPERS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def generate_mode_suggestion_message(
+    mode: str,
+    confidence: float,
+    task_summary: str = "",
+) -> str:
+    """
+    Generate a user-friendly mode suggestion message.
+    
+    This message is designed to be displayed to the user by the AI agent,
+    since MCP cannot programmatically change Cursor's mode.
+    
+    Args:
+        mode: Recommended mode (AGENT or ASK)
+        confidence: Confidence level (0-100)
+        task_summary: Brief task description for context
+        
+    Returns:
+        Formatted suggestion message
+    """
+    suggestion = MODE_SUGGESTIONS.get(mode, MODE_SUGGESTIONS["ASK"])
+    emoji = suggestion["emoji"]
+    
+    # Build confidence qualifier
+    if confidence >= 80:
+        qualifier = "strongly recommend"
+    elif confidence >= 60:
+        qualifier = "recommend"
+    else:
+        qualifier = "suggest"
+    
+    # Build the message
+    lines = [
+        f"{emoji} **Mode Suggestion: {mode}**",
+        "",
+    ]
+    
+    if task_summary:
+        lines.append(f"For this task ({task_summary[:50]}{'...' if len(task_summary) > 50 else ''}), I {qualifier} using **{mode}** mode.")
+    else:
+        lines.append(f"I {qualifier} using **{mode}** mode for this task.")
+    
+    lines.extend([
+        "",
+        f"**Why?** {suggestion['why']}",
+        "",
+        "**To switch:**",
+        f"→ {suggestion['instruction']}",
+    ])
+    
+    return "\n".join(lines)
+
+
+def get_mode_suggestion_for_task(
+    task_description: str,
+    current_mode: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Quick helper to get mode suggestion for a task.
+    
+    Can be called by other tools to check if mode change is recommended.
+    
+    Args:
+        task_description: What the user wants to do
+        current_mode: Current mode if known (AGENT or ASK)
+        
+    Returns:
+        Dict with recommendation and whether switch is needed
+    """
+    content_lower = task_description.lower()
+    
+    # Quick scoring
+    agent_score = sum(2 for kw in AGENT_INDICATORS["keywords"] if kw in content_lower)
+    agent_score += sum(3 for p in AGENT_INDICATORS["patterns"] if re.search(p, content_lower))
+    
+    ask_score = sum(2 for kw in ASK_INDICATORS["keywords"] if kw in content_lower)
+    ask_score += sum(3 for p in ASK_INDICATORS["patterns"] if re.search(p, content_lower))
+    
+    recommended = "AGENT" if agent_score > ask_score else "ASK"
+    confidence = abs(agent_score - ask_score) / (agent_score + ask_score + 1) * 100
+    
+    needs_switch = current_mode and current_mode.upper() != recommended
+    
+    return {
+        "recommended_mode": recommended,
+        "confidence": round(confidence, 1),
+        "needs_switch": needs_switch,
+        "current_mode": current_mode,
+        "suggestion_message": generate_mode_suggestion_message(recommended, confidence, task_description) if needs_switch else None,
+    }
+
+
+def format_mode_switch_prompt(
+    from_mode: str,
+    to_mode: str,
+    reason: str = "",
+) -> str:
+    """
+    Format a clear prompt for the AI to communicate mode switch suggestion.
+    
+    Args:
+        from_mode: Current mode
+        to_mode: Recommended mode
+        reason: Why the switch is recommended
+        
+    Returns:
+        Formatted prompt string for AI to display
+    """
+    to_suggestion = MODE_SUGGESTIONS.get(to_mode, MODE_SUGGESTIONS["ASK"])
+    
+    message = f"""
+---
+{to_suggestion['emoji']} **Suggested Mode Change: {from_mode} → {to_mode}**
+
+{reason if reason else f"This task would benefit from {to_mode} mode."}
+
+**How to switch:**
+{to_suggestion['instruction']}
+
+**Benefits of {to_mode} mode:**
+{"".join(f"• {b}" + chr(10) for b in to_suggestion['benefits'][:3])}
+---
+"""
+    return message.strip()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# INLINE SUGGESTION DECORATOR (for other tools)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def suggest_mode_if_needed(task_description: str) -> Optional[str]:
+    """
+    Check if mode suggestion should be appended to tool output.
+    
+    Call this at the end of tool execution to potentially add a mode suggestion.
+    Returns None if no suggestion needed, otherwise returns suggestion text.
+    
+    Args:
+        task_description: Description of what was just done
+        
+    Returns:
+        Suggestion text or None
+    """
+    result = get_mode_suggestion_for_task(task_description)
+    
+    # Only suggest if confidence is high enough
+    if result["confidence"] >= 70:
+        return f"\n\n💡 **Tip:** {MODE_SUGGESTIONS[result['recommended_mode']]['action']} for better results with this type of task."
+    
+    return None
 

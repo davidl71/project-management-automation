@@ -268,6 +268,115 @@ Run these tools to enable automated project management:
 After setup, Exarp will automatically maintain project health."""
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# MODE SUGGESTION PROMPT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+MODE_SUGGESTION = """Suggest the optimal Cursor IDE mode (Agent vs Ask) for a task.
+
+**When to use this prompt:**
+- Before starting a new task to choose the right mode
+- When you're unsure which mode is more efficient
+- To explain mode differences to users
+
+**Usage:**
+recommend_workflow_mode(task_description="your task here")
+
+**Mode Guidelines:**
+
+🤖 **AGENT Mode** - Best for:
+- Multi-file changes and refactoring
+- Feature implementation from scratch
+- Scaffolding and code generation
+- Automated workflows with many steps
+- Infrastructure and deployment tasks
+
+💬 **ASK Mode** - Best for:
+- Questions and explanations
+- Code review and understanding
+- Single-file edits and fixes
+- Debugging with user guidance
+- Learning and documentation
+
+**Example Analysis:**
+```
+Task: "Implement user authentication with OAuth2"
+→ Recommends AGENT (keywords: implement, OAuth2 integration)
+→ Confidence: 85%
+→ Reason: Multi-file implementation task
+
+Task: "Explain how the auth module works"
+→ Recommends ASK (keywords: explain, understand)
+→ Confidence: 90%
+→ Reason: Question/explanation request
+```
+
+**How to Switch Modes:**
+1. Look at the top of the chat window
+2. Click the mode selector dropdown
+3. Choose "Agent" or "Ask"
+
+**Note:** MCP cannot programmatically change your mode - this is advisory only."""
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CONTEXT MANAGEMENT PROMPT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
+
+**Tools Available:**
+
+1. **summarize()** - Compress verbose outputs
+   ```
+   summarize(data=json_output, level="brief")
+   → "Health: 85/100, 3 issues, 2 actions"
+   
+   Levels:
+   - brief: One-line key metrics
+   - detailed: Multi-line with categories
+   - key_metrics: Numbers only
+   - actionable: Recommendations/tasks only
+   ```
+
+2. **context_budget()** - Analyze token usage
+   ```
+   context_budget(items=json_array, budget_tokens=4000)
+   → Shows which items to summarize to fit budget
+   ```
+
+3. **focus_mode()** - Reduce visible tools
+   ```
+   focus_mode(mode="security_review")
+   → 74% fewer tools shown = less context
+   ```
+
+**Context Reduction Strategy:**
+
+| Method | Reduction | Best For |
+|--------|-----------|----------|
+| focus_mode() | 50-80% tools | Start of task |
+| summarize(level="brief") | 70-90% data | Tool results |
+| summarize(level="key_metrics") | 80-95% data | Numeric data |
+| context_budget() | Planning | Multiple results |
+
+**Example Workflow:**
+
+1. Start task → `focus_mode(mode="security_review")`
+2. Run tool → Get large JSON output
+3. Compress → `summarize(data=output, level="brief")`
+4. Continue → Reduced context, same key info
+
+**Token Estimation:**
+- ~4 chars per token (rough estimate)
+- Brief summary: 50-100 tokens
+- Full tool output: 500-2000 tokens
+
+**When to Summarize:**
+- After any tool returns >500 tokens
+- Before adding multiple results to context
+- When approaching context limits
+- Before asking follow-up questions"""
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # PROJECT REPORTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -809,6 +918,20 @@ PROMPTS = {
         "name": "Config File Generation",
         "description": CONFIG_GENERATION,
         "category": "config",
+        "arguments": []
+    },
+    # Mode Suggestion
+    "mode_suggestion": {
+        "name": "Mode Suggestion (Agent vs Ask)",
+        "description": MODE_SUGGESTION,
+        "category": "workflow",
+        "arguments": []
+    },
+    # Context Management
+    "context_management": {
+        "name": "Context Management & Summarization",
+        "description": CONTEXT_MANAGEMENT,
+        "category": "workflow",
         "arguments": []
     },
     # Persona-based workflows

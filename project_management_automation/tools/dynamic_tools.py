@@ -54,14 +54,14 @@ MODE_KEYWORDS: Dict[str, List[str]] = {
         "health", "how is", "project status", "quick check",
     ],
     "security_review": [
-        "security", "vulnerability", "vulnerabilities", "cve", "audit",
+        "security", "vulnerability", "vulnerabilities", "cve", "cves", "audit",
         "dependabot", "dependency", "dependencies", "scan", "secure",
-        "exploit", "risk", "compliance",
+        "exploit", "risk", "compliance", "scan for",
     ],
     "task_management": [
         "task", "tasks", "todo", "backlog", "ticket", "tickets",
         "duplicate", "alignment", "clarification", "assign", "priority",
-        "sprint backlog", "grooming",
+        "sprint backlog", "grooming", "groom", "manage tasks", "manage task",
     ],
     "sprint_planning": [
         "sprint", "planning", "plan", "roadmap", "milestone",
@@ -154,6 +154,8 @@ TOOL_GROUP_MAPPING: Dict[str, ToolGroup] = {
     "list_tools": ToolGroup.DISCOVERY,
     "get_tool_help": ToolGroup.DISCOVERY,
     "focus_mode": ToolGroup.DISCOVERY,  # The mode switcher itself
+    "suggest_mode": ToolGroup.DISCOVERY,  # Adaptive mode suggestion
+    "tool_usage_stats": ToolGroup.DISCOVERY,  # Usage analytics
     
     # Health
     "check_documentation_health": ToolGroup.HEALTH,

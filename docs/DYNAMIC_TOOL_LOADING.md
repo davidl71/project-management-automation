@@ -1,6 +1,6 @@
 # Dynamic Tool Loading Implementation
 
-**Status**: Implementation Phase
+**Status**: ✅ Implemented
 **MCP Spec**: [tools/list_changed](https://modelcontextprotocol.io/specification/2025-06-18/server/tools)
 **Philosophy**: [Stop Converting REST APIs to MCP](https://www.jlowin.dev/blog/stop-converting-rest-apis-to-mcp)
 
@@ -13,7 +13,7 @@ From Jeremiah Lowin (FastMCP creator):
 > "An API built for humans will poison your AI agent."
 > "Context pollution is the silent killer of contemporary agentic workflows."
 
-Exarp currently exposes **52 tools** at all times. This:
+Exarp exposes **54 tools**. Without curation, this:
 - Burns tokens on every LLM reasoning cycle (tool descriptions processed each time)
 - Increases latency (more tools = more parsing)
 - Causes "API librarian syndrome" (LLM debates which tool to use instead of solving problems)
@@ -29,12 +29,14 @@ Use the MCP `tools/list_changed` notification to dynamically show/hide tools bas
 
 | Workflow Mode | Tools Visible | Context Reduction |
 |---------------|---------------|-------------------|
-| Daily Checkin | 9 | **82.7%** |
-| Security Review | 12 | **76.9%** |
-| Task Management | 10 | **80.8%** |
-| Sprint Planning | 15 | **71.2%** |
-| Development | 25 | **51.9%** |
-| All (legacy) | 52 | 0% |
+| Daily Checkin | 11 | **79.6%** |
+| Security Review | 14 | **74.1%** |
+| Task Management | 14 | **74.1%** |
+| Code Review | 16 | **70.4%** |
+| Sprint Planning | 20 | **63.0%** |
+| Debugging | 20 | **63.0%** |
+| Development | 27 | **50.0%** |
+| All (legacy) | 54 | 0% |
 
 ---
 
@@ -134,85 +136,49 @@ Use the MCP `tools/list_changed` notification to dynamically show/hide tools bas
 
 ---
 
-## Integration Guide
+## Implementation Status ✅
 
-### Step 1: Import dynamic tools module
+All components are implemented and wired into `server.py`:
 
-```python
-# In server.py
-from .tools.dynamic_tools import (
-    get_tool_manager,
-    focus_mode as _focus_mode,
-)
-```
+### Files Created/Modified
 
-### Step 2: Register focus_mode tool
+| File | Description |
+|------|-------------|
+| `tools/dynamic_tools.py` | Core manager, mode inference, usage tracking |
+| `middleware/tool_filter.py` | MCP middleware for filtering tools/list |
+| `middleware/__init__.py` | Exports ToolFilterMiddleware |
+| `server.py` | Middleware + tool registration |
 
-```python
-@mcp.tool()
-async def focus_mode(
-    mode: Optional[str] = None,
-    enable_group: Optional[str] = None,
-    disable_group: Optional[str] = None,
-    status: bool = False,
-    ctx: Context = None,
-) -> str:
-    """Switch workflow mode for context-appropriate tools."""
-    result = _focus_mode(mode, enable_group, disable_group, status)
-    
-    # Send notification if mode changed
-    if ctx and (mode or enable_group or disable_group):
-        from .context_helpers import notify_tools_changed
-        await notify_tools_changed(ctx)
-    
-    return result
-```
-
-### Step 3: Filter tools in list_tools (stdio server)
+### Registered Tools
 
 ```python
-@stdio_server_instance.list_tools()
-async def list_tools() -> List[Tool]:
-    """List currently visible tools based on workflow mode."""
-    from .tools.dynamic_tools import get_tool_manager
-    
-    manager = get_tool_manager()
-    all_tools = _get_all_tool_definitions()  # Existing tool list
-    
-    # Filter by visibility
-    return [
-        tool for tool in all_tools
-        if manager.is_tool_visible(tool.name)
-    ]
+focus_mode(mode, enable_group, disable_group, status)
+# Switch workflow modes, enable/disable tool groups
+
+suggest_mode(text, auto_switch)  
+# Adaptive mode inference from text or usage patterns
+
+tool_usage_stats()
+# View tool usage analytics and patterns
 ```
 
-### Step 4: Filter tools in FastMCP (decorator approach)
+### Middleware Chain
 
-For FastMCP, tools are registered via decorators. Options:
-
-**Option A: Conditional registration** (at startup)
 ```python
-if manager.is_tool_visible("scan_dependency_security"):
-    @mcp.tool()
-    def scan_dependency_security(...): ...
+# In server.py (line ~270)
+mcp.add_middleware(SecurityMiddleware(...))
+mcp.add_middleware(LoggingMiddleware(...))
+mcp.add_middleware(ToolFilterMiddleware(enabled=True))  # NEW
 ```
 
-**Option B: Tool filter middleware** (dynamic)
-```python
-class ToolFilterMiddleware:
-    async def __call__(self, request, call_next):
-        if request.method == "tools/list":
-            response = await call_next(request)
-            response.tools = [
-                t for t in response.tools
-                if manager.is_tool_visible(t.name)
-            ]
-            return response
-        return await call_next(request)
-```
+### Key Features
 
-**Option C: Custom list_tools handler** (hybrid)
-Override the FastMCP default list_tools to filter.
+1. **Mode Switching**: `focus_mode(mode="security_review")`
+2. **Group Control**: `focus_mode(enable_group="advisors")`
+3. **Adaptive Inference**: `suggest_mode(text="I need to check for vulnerabilities")`
+4. **Auto-Switch**: `suggest_mode(auto_switch=True)` - switches if confidence > 0.5
+5. **Usage Learning**: Tracks tool co-occurrence for recommendations
+6. **MCP Compliant**: Uses `tools/list_changed` notification
 
 ---
 
@@ -222,8 +188,25 @@ Override the FastMCP default list_tools to filter.
 ```
 User: "I need to do a security audit"
 AI: [calls focus_mode(mode="security_review")]
-→ Only 12 security-relevant tools visible
-→ LLM has 76.9% less context to process
+→ Only 14 security-relevant tools visible
+→ LLM has 74.1% less context to process
+```
+
+### Adaptive mode suggestion
+```
+User: "I want to scan for CVEs"
+AI: [calls suggest_mode(text="scan for CVEs")]
+→ Returns: {"suggested_mode": "security_review", "confidence": 0.5}
+→ Rationale: "Keywords detected: scan, cves"
+```
+
+### Auto-switch based on usage
+```
+# After using security tools repeatedly...
+AI: [calls suggest_mode(auto_switch=True)]
+→ Detects pattern: recent tools suggest security_review
+→ Auto-switches to security_review mode
+→ Notifies client via tools/list_changed
 ```
 
 ### Enable specific group
@@ -238,7 +221,13 @@ AI: [calls focus_mode(enable_group="advisors")]
 ```
 User: "What tools do I have access to?"
 AI: [calls focus_mode(status=True)]
-→ Returns current mode, visible tools, reduction %
+→ Returns: mode, visible tools, reduction %, available modes
+```
+
+### View usage analytics
+```
+AI: [calls tool_usage_stats()]
+→ Returns: most used tools, tool relationships, mode history
 ```
 
 ---
@@ -255,10 +244,12 @@ AI: [calls focus_mode(status=True)]
 
 ## Future Enhancements
 
-1. **Auto-detection**: Infer workflow mode from conversation context
-2. **Adaptive loading**: Track tool usage, pre-load frequently used groups
+1. ~~**Auto-detection**: Infer workflow mode from conversation context~~ ✅ DONE
+2. ~~**Adaptive loading**: Track tool usage, pre-load frequently used groups~~ ✅ DONE
 3. **Per-tool lazy loading**: Only describe tool fully when called
 4. **Tool aliases**: Short names for common operations
+5. **Persistence**: Save/restore usage patterns across sessions
+6. **Client hints**: Pass client preferences for initial mode selection
 
 ---
 

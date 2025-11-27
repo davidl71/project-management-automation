@@ -249,8 +249,9 @@ def scan_dependency_security(
     try:
         # Check if we're in an async context
         asyncio.get_running_loop()
-        # In async context - caller must use scan_dependency_security_async directly
-        raise RuntimeError("Use scan_dependency_security_async() in async context")
     except RuntimeError:
-        # No running loop - run synchronously
+        # No running loop - safe to run synchronously
         return asyncio.run(scan_dependency_security_async(languages, config_path, ctx))
+    else:
+        # In async context - caller must use scan_dependency_security_async directly
+        raise RuntimeError("Use scan_dependency_security_async() in async context, or call from sync code")
