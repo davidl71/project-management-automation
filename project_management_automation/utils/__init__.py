@@ -51,8 +51,11 @@ from .security import (
 from .todo2_utils import (
     annotate_task_project,
     filter_tasks_by_project,
+    get_current_project_id,
     get_repo_project_id,
+    load_todo2_project_info,
     task_belongs_to_project,
+    validate_project_ownership,
 )
 
 
@@ -147,7 +150,10 @@ __all__ = [
     'require_access',
     'annotate_task_project',
     'filter_tasks_by_project',
+    'get_current_project_id',
     'get_repo_project_id',
+    'load_todo2_project_info',
     'task_belongs_to_project',
+    'validate_project_ownership',
 ]
 

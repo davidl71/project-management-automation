@@ -52,7 +52,10 @@ project-management-automation = "project_management_automation.server:main"
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
+    "pytest-cov>=4.0.0",
     "pytest-mock>=3.10.0",
+    "pytest-asyncio>=0.21.0",
+    "coverage>=7.0.0",
     "black>=23.0",
     "mypy>=1.0",
     "ruff>=0.1.0",

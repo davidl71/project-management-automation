@@ -151,7 +151,9 @@ def check_tool_count_health(
                     # Check if task already exists
                     existing = [t for t in todos if "tool count" in t.get("name", "").lower()]
                     if not existing:
-                        new_task = {
+                        from project_management_automation.utils import annotate_task_project, get_current_project_id
+                        project_id = get_current_project_id(project_root)
+                        new_task = annotate_task_project({
                             "id": f"TOOL-COUNT-{int(time.time())}",
                             "name": f"Consolidate tools: {count} exceeds limit of {MAX_TOOL_COUNT}",
                             "long_description": f"Tool count health check detected {count} tools, exceeding the design limit of {MAX_TOOL_COUNT}.\n\nConsolidation suggestions:\n" + "\n".join(f"- {s['suggestion']}" for s in result.get("consolidation_suggestions", [])),
@@ -160,7 +162,7 @@ def check_tool_count_health(
                             "tags": ["automation", "consolidation", "tool-count"],
                             "created": datetime.utcnow().isoformat() + "Z",
                             "lastModified": datetime.utcnow().isoformat() + "Z",
-                        }
+                        }, project_id)
                         todos.append(new_task)
                         state["todos"] = todos
                         todo2_file.write_text(json_mod.dumps(state, indent=2))

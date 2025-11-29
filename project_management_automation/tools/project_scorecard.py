@@ -166,7 +166,7 @@ def generate_project_scorecard(
     md_files = list(project_root.rglob('*.md'))
     md_files = [f for f in md_files if 'venv' not in str(f)]
 
-    doc_lines = sum(len(f.read_text().splitlines()) for f in md_files if f.exists())
+    doc_lines = sum(len(f.read_text().splitlines()) for f in md_files if f.exists() and f.is_file())
     doc_ratio = (doc_lines / total_py_lines * 100) if total_py_lines > 0 else 0
 
     key_docs = ['README.md', 'INSTALL.md', 'docs/SECURITY.md', 'docs/WORKFLOW.md']

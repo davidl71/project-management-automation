@@ -1,11 +1,39 @@
 {
   "mcpServers": {
     "exarp": {
-      "command": "/Volumes/SSD1_APFS/project-management-automation/exarp-switch.sh",
+      "command": "/path/to/project-management-automation/exarp-uvx-wrapper.sh",
+      "args": ["--mcp"],
       "env": {
-        "EXARP_USE_PYPI": "0",
-        "EXARP_DEV_MODE": "1"
-      }
+        "EXARP_DEV_MODE": "1",
+        "PROJECT_ROOT": "/path/to/project-management-automation"
+      },
+      "description": "Exarp for Project Management Automation - auto-detects uvx location"
     }
   }
 }
+
+// Alternative 1: Direct uvx (if in PATH):
+// {
+//   "exarp": {
+//     "command": "uvx",
+//     "args": ["exarp", "--mcp"]
+//   }
+// }
+//
+// Alternative 2: Full path to uvx (if wrapper doesn't work):
+// Ubuntu/Linux: "/home/username/.local/bin/uvx"
+// macOS (Apple Silicon): "/opt/homebrew/bin/uvx"
+// macOS (Intel): "/usr/local/bin/uvx"
+// Find uvx: which uvx
+//
+// Alternative 3: Local dev mode (requires venv):
+// {
+//   "exarp": {
+//     "command": "/path/to/project-management-automation/exarp-switch.sh",
+//     "env": {
+//       "EXARP_USE_PYPI": "0",
+//       "EXARP_DEV_MODE": "1",
+//       "PROJECT_ROOT": "/path/to/project-management-automation"
+//     }
+//   }
+// }

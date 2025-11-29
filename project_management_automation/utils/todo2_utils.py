@@ -5,12 +5,14 @@ Encapsulates helpers that:
 - infer the git-backed project ID (owner/repo) for Todo2 ownership metadata,
 - filter task lists to the current project ID, and
 - annotate tasks with ownership metadata.
+- validate project ownership on startup
 """
 
+import json
 import logging
 import subprocess
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Tuple
 
 # Remove circular import
 # from . import find_project_root
@@ -107,10 +109,121 @@ def annotate_task_project(task: dict, project_id: Optional[str]) -> dict:
     return task
 
 
+def load_todo2_project_info(project_root: Optional[Path] = None) -> Optional[dict]:
+    """
+    Load project information from Todo2 state file.
+    
+    Args:
+        project_root: Optional project root path
+        
+    Returns:
+        Project dict with id, name, path, repository, added_at, or None if not found
+    """
+    from . import find_project_root
+    root = find_project_root(project_root)
+    todo2_file = root / ".todo2" / "state.todo2.json"
+    
+    if not todo2_file.exists():
+        return None
+    
+    try:
+        with open(todo2_file) as f:
+            state = json.load(f)
+        return state.get("project")
+    except Exception as e:
+        logger.debug(f"Error loading Todo2 project info: {e}")
+        return None
+
+
+def validate_project_ownership(
+    project_root: Optional[Path] = None,
+    warn_only: bool = True
+) -> Tuple[bool, Optional[str]]:
+    """
+    Validate that the current PROJECT_ROOT matches Todo2's project.path.
+    
+    Args:
+        project_root: Optional project root path (defaults to find_project_root)
+        warn_only: If True, only warn on mismatch; if False, raise error
+        
+    Returns:
+        Tuple of (is_valid, error_message)
+        - is_valid: True if validation passes or project info not found
+        - error_message: None if valid, otherwise description of mismatch
+    """
+    from . import find_project_root
+    import os
+    
+    current_root = find_project_root(project_root)
+    current_root_str = str(current_root.resolve())
+    
+    # Get PROJECT_ROOT env var if set
+    env_root = os.getenv("PROJECT_ROOT") or os.getenv("WORKSPACE_PATH")
+    if env_root:
+        env_root_path = Path(env_root).resolve()
+        if env_root_path.exists():
+            current_root_str = str(env_root_path)
+    
+    # Load Todo2 project info
+    project_info = load_todo2_project_info(current_root)
+    if not project_info:
+        logger.debug("No Todo2 project info found - skipping validation")
+        return True, None
+    
+    todo2_path = project_info.get("path")
+    if not todo2_path:
+        logger.debug("Todo2 project info missing path field")
+        return True, None
+    
+    # Normalize paths for comparison
+    todo2_path_resolved = str(Path(todo2_path).resolve())
+    
+    if current_root_str != todo2_path_resolved:
+        error_msg = (
+            f"Project path mismatch detected!\n"
+            f"  Current PROJECT_ROOT: {current_root_str}\n"
+            f"  Todo2 project.path:   {todo2_path_resolved}\n"
+            f"  Todo2 project.id:     {project_info.get('id', 'unknown')}"
+        )
+        
+        if warn_only:
+            logger.warning(error_msg)
+            return True, error_msg
+        else:
+            logger.error(error_msg)
+            return False, error_msg
+    
+    logger.debug(f"Project ownership validated: {project_info.get('id')} at {current_root_str}")
+    return True, None
+
+
+def get_current_project_id(project_root: Optional[Path] = None) -> Optional[str]:
+    """
+    Get the current project ID from Todo2 state or git remote.
+    
+    Tries Todo2 project.id first, falls back to git remote.
+    
+    Args:
+        project_root: Optional project root path
+        
+    Returns:
+        Project ID (owner/repo format) or None if not found
+    """
+    project_info = load_todo2_project_info(project_root)
+    if project_info and project_info.get("id"):
+        return project_info.get("id")
+    
+    # Fallback to git remote
+    return get_repo_project_id(project_root)
+
+
 __all__ = [
     "get_repo_project_id",
     "task_belongs_to_project",
     "filter_tasks_by_project",
     "annotate_task_project",
+    "load_todo2_project_info",
+    "validate_project_ownership",
+    "get_current_project_id",
 ]
 

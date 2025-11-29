@@ -108,10 +108,31 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
             'meets_threshold': coverage_data.get('total_coverage', 0) >= self.min_coverage
         }
 
+    def _check_pytest_cov_installed(self) -> bool:
+        """Check if pytest-cov is installed."""
+        try:
+            import pytest_cov
+            return True
+        except ImportError:
+            return False
+
     def _generate_coverage(self):
         """Generate coverage by running tests with coverage."""
+        # Check if pytest-cov is installed
+        if not self._check_pytest_cov_installed():
+            error_msg = (
+                "pytest-cov is not installed. Install it with:\n"
+                "  pip install pytest-cov\n"
+                "Or install all dev dependencies:\n"
+                "  pip install -e '.[dev]'\n"
+                "Or from requirements.txt:\n"
+                "  pip install -r requirements.txt"
+            )
+            logger.error(error_msg)
+            raise ImportError(error_msg)
+        
         try:
-            cmd = [sys.executable, '-m', 'pytest', '--cov=project_management_automation', '--cov=tools', '--cov=resources', '--cov-report=xml:' + str(self.output_path / 'coverage.xml')]
+            cmd = [sys.executable, '-m', 'pytest', '--cov=project_management_automation', '--cov-report=xml:' + str(self.output_path / 'coverage.xml')]
             result = subprocess.run(
                 cmd,
                 cwd=str(self.project_root),
@@ -121,8 +142,19 @@ class TestCoverageAnalyzer(IntelligentAutomationBase):
             )
             if result.returncode != 0:
                 logger.warning(f"Coverage generation had issues: {result.stderr}")
+                # Check if it's because pytest-cov isn't recognized
+                if 'unrecognized arguments: --cov' in result.stderr:
+                    error_msg = (
+                        "pytest-cov plugin not loaded. Try:\n"
+                        "  1. pip install pytest-cov\n"
+                        "  2. Verify pytest-cov is installed: python -c 'import pytest_cov'\n"
+                        "  3. Check pytest plugins: pytest --collect-only"
+                    )
+                    logger.error(error_msg)
+                    raise RuntimeError(error_msg)
         except Exception as e:
             logger.warning(f"Failed to generate coverage: {e}")
+            raise
 
     def _parse_coverage_xml(self, coverage_file: Path) -> dict:
         """Parse coverage.xml (coverage.py format)."""

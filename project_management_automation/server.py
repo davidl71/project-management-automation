@@ -110,6 +110,19 @@ set_access_controller(_access_controller)
 
 logger.debug(f"Security initialized: path_boundaries={len(_path_validator.allowed_roots)} roots, access_control=write")
 
+# Validate project ownership (compare PROJECT_ROOT with Todo2 project.path)
+try:
+    from .utils.todo2_utils import validate_project_ownership, get_current_project_id
+    is_valid, error_msg = validate_project_ownership(project_root, warn_only=True)
+    if error_msg:
+        logger.warning(f"⚠️  {error_msg}")
+    else:
+        project_id = get_current_project_id(project_root)
+        if project_id:
+            logger.info(f"✅ Project ownership validated: {project_id}")
+except Exception as e:
+    logger.debug(f"Project ownership validation skipped: {e}")
+
 # Add server directory to path for absolute imports when run as script
 server_dir = Path(__file__).parent
 sys.path.insert(0, str(server_dir))
@@ -180,13 +193,17 @@ except ImportError:
             logger.info("MCP stdio server available - using stdio server")
         except ImportError:
             logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
-        MCP_AVAILABLE = False
-        Server = None
-        stdio_server = None
-        Tool = None
-        TextContent = None
+            MCP_AVAILABLE = False
+            Server = None
+            stdio_server = None
+            Tool = None
+            TextContent = None
 
 # Logging already configured above
+
+# Initialize availability flags
+TOOLS_AVAILABLE = False
+RESOURCES_AVAILABLE = False
 
 # Initialize MCP server
 mcp = None
@@ -2912,7 +2929,15 @@ def main():
         if not USE_STDIO and mcp:
             # FastMCP mode
             _print_banner()
-            mcp.run(show_banner=False)
+            try:
+                mcp.run(show_banner=False)
+            except KeyboardInterrupt:
+                logger.info("Server stopped by user")
+            except Exception as e:
+                logger.error(f"FastMCP server error: {e}", exc_info=True)
+                # Don't exit immediately - let the connection close gracefully
+                # FastMCP will handle the connection closure
+                raise
         elif USE_STDIO and stdio_server_instance:
             # Stdio server mode
             _print_banner()
@@ -2937,10 +2962,8 @@ def main():
     _print_usage()
 
 
-if __name__ == "__main__":
-    main()
-elif stdio_server_instance:
-    # Register resources for stdio server
+# Register resources for stdio server (runs on import when stdio_server_instance exists)
+if stdio_server_instance:
     try:
         # Try relative imports first (when run as module)
         try:
@@ -2999,27 +3022,5 @@ elif stdio_server_instance:
         RESOURCES_AVAILABLE = False
         logger.warning(f"Resource handlers not available: {e}")
 
-    # Main entry point for stdio server
-    if __name__ == "__main__":
-        logger.info("Starting stdio server...")
-        logger.info(f"Server name: {stdio_server_instance.name}")
-        logger.info(f"Tools available: {TOOLS_AVAILABLE}")
-        logger.info(
-            f"Resources available: {RESOURCES_AVAILABLE if 'RESOURCES_AVAILABLE' in globals() else 'Not registered'}"
-        )
-
-        # stdio_server provides stdin/stdout streams, Server.run() handles the protocol
-        async def run():
-            async with stdio_server() as (read_stream, write_stream):
-                init_options = stdio_server_instance.create_initialization_options()
-                logger.info(f"Initialization options: {init_options}")
-                logger.info("Server ready, waiting for client connections...")
-                await stdio_server_instance.run(read_stream, write_stream, init_options)
-
-        try:
-            asyncio.run(run())
-        except KeyboardInterrupt:
-            logger.info("Server stopped by user")
-        except Exception as e:
-            logger.error(f"Server error: {e}", exc_info=True)
-            sys.exit(1)
+if __name__ == "__main__":
+    main()
