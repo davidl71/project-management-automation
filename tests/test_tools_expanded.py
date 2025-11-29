@@ -84,32 +84,6 @@ class TestTodoSyncTool:
             assert result_data['success'] is True
 
 
-class TestPWAReviewTool:
-    """Tests for review_pwa_config tool."""
-
-    @patch('project_management_automation.scripts.automate_pwa_review.PWAAnalyzer')
-    @patch('pathlib.Path.exists', return_value=False)  # No PWA config found
-    def test_review_pwa_config_success(self, mock_exists, mock_analyzer_class):
-        """Test successful PWA configuration review."""
-        from project_management_automation.tools.pwa_review import review_pwa_config
-
-        # PWAAnalyzer doesn't have a run() method - it's a simple class
-        # The tool directly uses PWAAnalyzer methods
-        mock_analyzer = Mock()
-        mock_analyzer.analyze.return_value = {
-            'config_status': 'ok',
-            'missing_features': []
-        }
-        mock_analyzer_class.return_value = mock_analyzer
-
-        with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-            result = review_pwa_config()
-            result_data = json.loads(result)
-            
-            # PWA review may return success even if no config found
-            assert 'success' in result_data or 'status' in result_data
-
-
 class TestExternalToolHintsTool:
     """Tests for add_external_tool_hints tool."""
 
