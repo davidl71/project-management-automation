@@ -138,7 +138,7 @@ class TestCLIFlags(unittest.TestCase):
             [sys.executable, "-m", "project_management_automation.server", "--help"],
             capture_output=True,
             text=True,
-            cwd="/Volumes/SSD1_APFS/project-management-automation"
+            cwd=str(Path(__file__).parent.parent)
         )
         self.assertEqual(result.returncode, 0)
         self.assertIn("USAGE:", result.stdout)
@@ -149,7 +149,7 @@ class TestCLIFlags(unittest.TestCase):
             [sys.executable, "-m", "project_management_automation.server", "--version"],
             capture_output=True,
             text=True,
-            cwd="/Volumes/SSD1_APFS/project-management-automation"
+            cwd=str(Path(__file__).parent.parent)
         )
         self.assertEqual(result.returncode, 0)
         self.assertIn("exarp", result.stdout)
@@ -160,7 +160,7 @@ class TestCLIFlags(unittest.TestCase):
             [sys.executable, "-m", "project_management_automation.server", "--shell-setup"],
             capture_output=True,
             text=True,
-            cwd="/Volumes/SSD1_APFS/project-management-automation"
+            cwd=str(Path(__file__).parent.parent)
         )
         self.assertEqual(result.returncode, 0)
         self.assertIn("alias exarp=", result.stdout)
@@ -171,7 +171,7 @@ class TestCLIFlags(unittest.TestCase):
             [sys.executable, "-m", "project_management_automation.server", "--completions"],
             capture_output=True,
             text=True,
-            cwd="/Volumes/SSD1_APFS/project-management-automation"
+            cwd=str(Path(__file__).parent.parent)
         )
         self.assertEqual(result.returncode, 0)
         self.assertIn("compdef", result.stdout)
@@ -182,7 +182,7 @@ class TestCLIFlags(unittest.TestCase):
             [sys.executable, "-m", "project_management_automation.server", "--aliases"],
             capture_output=True,
             text=True,
-            cwd="/Volumes/SSD1_APFS/project-management-automation"
+            cwd=str(Path(__file__).parent.parent)
         )
         self.assertEqual(result.returncode, 0)
         self.assertIn("alias", result.stdout)
@@ -198,7 +198,7 @@ class TestInteractiveMode(unittest.TestCase):
             [sys.executable, "-m", "project_management_automation.server"],
             capture_output=True,
             text=True,
-            cwd="/Volumes/SSD1_APFS/project-management-automation",
+            cwd=str(Path(__file__).parent.parent),
             input=""  # Empty input simulates non-TTY
         )
         # Should show usage (exit 0) since stdin is not TTY

@@ -19,7 +19,7 @@ sys.path.insert(0, str(project_root))
 class TestCICDValidationTool:
     """Tests for CI/CD validation tool."""
 
-    @patch('project_management_automation.tools.ci_cd_validation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('project_management_automation.tools.ci_cd_validation.Path.exists')
     @patch('builtins.open', new_callable=mock_open)
     def test_validate_ci_cd_workflow_success(self, mock_file, mock_exists, mock_find_root):
@@ -49,7 +49,7 @@ class TestCICDValidationTool:
         assert result['data']['workflow_valid'] is True
         assert result['data']['overall_status'] in ['valid', 'issues_found']
 
-    @patch('project_management_automation.tools.ci_cd_validation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('project_management_automation.tools.ci_cd_validation.Path.exists')
     def test_validate_ci_cd_workflow_file_not_found(self, mock_exists, mock_find_root):
         """Test when workflow file doesn't exist."""
@@ -65,7 +65,7 @@ class TestCICDValidationTool:
         assert result['data']['workflow_valid'] is False
         assert result['data']['overall_status'] == 'failed'
 
-    @patch('project_management_automation.tools.ci_cd_validation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('project_management_automation.tools.ci_cd_validation.Path.exists')
     @patch('builtins.open', new_callable=mock_open)
     def test_validate_ci_cd_workflow_invalid_yaml(self, mock_file, mock_exists, mock_find_root):
@@ -83,7 +83,7 @@ class TestCICDValidationTool:
         assert result['data']['workflow_valid'] is False
         assert len(result['data']['issues']) > 0
 
-    @patch('project_management_automation.tools.ci_cd_validation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('project_management_automation.tools.ci_cd_validation.Path.exists')
     @patch('builtins.open', new_callable=mock_open)
     def test_validate_ci_cd_workflow_without_runners(self, mock_file, mock_exists, mock_find_root):
@@ -102,7 +102,7 @@ class TestCICDValidationTool:
         # Runner config should not be checked
         assert 'runner_config_valid' not in result['data'] or result['data'].get('runner_config_valid') is None
 
-    @patch('project_management_automation.tools.ci_cd_validation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('project_management_automation.tools.ci_cd_validation.Path.exists')
     @patch('builtins.open', new_callable=mock_open)
     def test_validate_ci_cd_workflow_custom_output_path(self, mock_file, mock_exists, mock_find_root):
@@ -120,7 +120,7 @@ class TestCICDValidationTool:
         assert result['success'] is True
         assert '/custom/report.md' in result['data']['report_path']
 
-    @patch('project_management_automation.tools.ci_cd_validation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     def test_validate_ci_cd_workflow_error(self, mock_find_root):
         """Test error handling."""
         from project_management_automation.tools.ci_cd_validation import validate_ci_cd_workflow

@@ -103,20 +103,6 @@ AUTOMATION_HIGH_VALUE = """Find only high-value automation opportunities (score 
 Use: run_automation(action="discover", min_value_score=0.8)"""
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PWA CONFIGURATION PROMPTS
-# ═══════════════════════════════════════════════════════════════════════════════
-
-PWA_REVIEW = """Review PWA configuration and generate improvement recommendations.
-
-This prompt will:
-1. Analyze PWA manifest and service worker configuration
-2. Check for best practices compliance
-3. Identify missing features or optimizations
-4. Provide actionable improvement recommendations
-
-Use: review_pwa_config()"""
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # WORKFLOW PROMPTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -843,13 +829,6 @@ PROMPTS = {
         "name": "High-Value Automation Discovery",
         "description": AUTOMATION_HIGH_VALUE,
         "category": "automation",
-        "arguments": []
-    },
-    # PWA
-    "pwa_review": {
-        "name": "PWA Configuration Review",
-        "description": PWA_REVIEW,
-        "category": "config",
         "arguments": []
     },
     # Workflows - Sprint

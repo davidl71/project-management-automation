@@ -188,9 +188,9 @@ AGENT_CONTEXT: Dict[str, Dict[str, Any]] = {
         "startup_hint": "Check session_handoff(action='resume') for handoffs from other developers",
     },
     "web": {
-        "focus_areas": ["Frontend", "React", "TypeScript", "PWA"],
-        "relevant_tools": ["review_pwa_config", "run_tests", "generate_cursorignore", "session_handoff", "task_assignee"],
-        "relevant_prompts": ["persona_developer", "pwa_review", "end_of_day"],
+        "focus_areas": ["Frontend", "React", "TypeScript"],
+        "relevant_tools": ["run_tests", "generate_cursorignore", "session_handoff", "task_assignee"],
+        "relevant_prompts": ["persona_developer", "end_of_day"],
         "startup_hint": "Check session_handoff(action='resume') for handoffs from other developers",
     },
     "security": {

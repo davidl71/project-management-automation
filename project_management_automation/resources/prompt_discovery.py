@@ -150,7 +150,6 @@ PROMPT_CATEGORIES: Dict[str, List[str]] = {
         "automation_setup",
     ],
     "config": [
-        "pwa_review",
         "config_generation",
     ],
     "workflow": [
@@ -212,7 +211,6 @@ PROMPT_DESCRIPTIONS: Dict[str, str] = {
     "automation_setup": "One-time automation setup workflow",
     
     # Config
-    "pwa_review": "Review PWA configuration and suggest improvements",
     "config_generation": "Generate IDE configuration files",
     
     # Workflows

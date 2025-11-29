@@ -18,8 +18,8 @@ sys.path.insert(0, str(project_root))
 class TestExternalToolHintsTool:
     """Tests for external tool hints tool."""
 
-    @patch('project_management_automation.tools.external_tool_hints.find_project_root')
-    @patch('project_management_automation.tools.external_tool_hints.ExternalToolHintsAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_success(self, mock_automation_class, mock_find_root):
         """Test successful external tool hints addition."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints
@@ -51,8 +51,8 @@ class TestExternalToolHintsTool:
         assert result['data']['hints_skipped_count'] == 1
         assert result['data']['dry_run'] is False
 
-    @patch('project_management_automation.tools.external_tool_hints.find_project_root')
-    @patch('project_management_automation.tools.external_tool_hints.ExternalToolHintsAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_dry_run(self, mock_automation_class, mock_find_root):
         """Test dry run mode."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints
@@ -78,8 +78,8 @@ class TestExternalToolHintsTool:
         assert result['data']['dry_run'] is True
         assert result['data']['files_modified'] == 0
 
-    @patch('project_management_automation.tools.external_tool_hints.find_project_root')
-    @patch('project_management_automation.tools.external_tool_hints.ExternalToolHintsAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_custom_output_path(self, mock_automation_class, mock_find_root):
         """Test with custom output path."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints
@@ -104,8 +104,8 @@ class TestExternalToolHintsTool:
         assert result['success'] is True
         assert '/custom/path/report.md' in result['data']['report_path']
 
-    @patch('project_management_automation.tools.external_tool_hints.find_project_root')
-    @patch('project_management_automation.tools.external_tool_hints.ExternalToolHintsAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_custom_min_file_size(self, mock_automation_class, mock_find_root):
         """Test with custom min_file_size."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints
@@ -132,8 +132,8 @@ class TestExternalToolHintsTool:
         call_args = mock_automation_class.call_args
         assert call_args[0][0]['min_file_size'] == 100
 
-    @patch('project_management_automation.tools.external_tool_hints.find_project_root')
-    @patch('project_management_automation.tools.external_tool_hints.ExternalToolHintsAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_error(self, mock_automation_class, mock_find_root):
         """Test error handling."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints
@@ -149,8 +149,8 @@ class TestExternalToolHintsTool:
         assert result['success'] is False
         assert 'error' in result
 
-    @patch('project_management_automation.tools.external_tool_hints.find_project_root')
-    @patch('project_management_automation.tools.external_tool_hints.ExternalToolHintsAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_external_tool_hints.ExternalToolHintsAutomation')
     def test_add_external_tool_hints_hints_limit(self, mock_automation_class, mock_find_root):
         """Test that hints_added is limited to 10."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints

@@ -428,7 +428,6 @@ try:
         from .tools.prompt_iteration_tracker import (
             log_prompt_iteration as _log_prompt_iteration,
         )
-        from .tools.pwa_review import review_pwa_config as _review_pwa_config
         from .tools.run_tests import run_tests as _run_tests
         from .tools.simplify_rules import simplify_rules as _simplify_rules
         from .tools.sprint_automation import sprint_automation as _sprint_automation
@@ -519,7 +518,6 @@ try:
         from tools.prompt_iteration_tracker import (
             log_prompt_iteration as _log_prompt_iteration,
         )
-        from tools.pwa_review import review_pwa_config as _review_pwa_config
         from tools.run_tests import run_tests as _run_tests
         from tools.simplify_rules import simplify_rules as _simplify_rules
         from tools.sprint_automation import sprint_automation as _sprint_automation
@@ -708,17 +706,6 @@ def register_tools():
                             },
                         ),
                         Tool(
-                            name="review_pwa_config",
-                            description="Review PWA configuration and generate improvement recommendations.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                    "config_path": {"type": "string", "description": "Config file path"},
-                                },
-                            },
-                        ),
-                        Tool(
                             name="add_external_tool_hints",
                             description="Automatically detect and add Context7/external tool hints to documentation.",
                             inputSchema={
@@ -804,8 +791,6 @@ def register_tools():
                     )
                 elif name == "sync_todo_tasks":
                     result = _sync_todo_tasks(arguments.get("dry_run", False), arguments.get("output_path"))
-                elif name == "review_pwa_config":
-                    result = _review_pwa_config(arguments.get("output_path"), arguments.get("config_path"))
                 elif name == "add_external_tool_hints":
                     result = _add_external_tool_hints(
                         arguments.get("dry_run", False),
@@ -843,11 +828,6 @@ if mcp:
         # NOTE: scan_dependency_security removed - use security(action="scan")
         # NOTE: find_automation_opportunities removed - use run_automation(mode="discover")
         # NOTE: sync_todo_tasks removed - use task_workflow(action="sync")
-
-        @mcp.tool()
-        def review_pwa_config(output_path: Optional[str] = None, config_path: Optional[str] = None) -> str:
-            """[HINT: PWA review. Config status, missing features, recommendations.]"""
-            return _review_pwa_config(output_path, config_path)
 
         @mcp.tool()
         def add_external_tool_hints(
@@ -1802,8 +1782,6 @@ if mcp:
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
-                # Config
-                PWA_REVIEW,
                 # Security
                 SECURITY_SCAN_ALL,
                 SECURITY_SCAN_PYTHON,
@@ -1856,8 +1834,6 @@ if mcp:
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
-                # Config
-                PWA_REVIEW,
                 # Security
                 SECURITY_SCAN_ALL,
                 SECURITY_SCAN_PYTHON,
@@ -1921,11 +1897,6 @@ if mcp:
         def auto_high() -> str:
             """Find only high-value automation opportunities."""
             return AUTOMATION_HIGH_VALUE
-
-        @mcp.prompt()
-        def pwa() -> str:
-            """Review PWA configuration and generate improvement recommendations."""
-            return PWA_REVIEW
 
         @mcp.prompt()
         def pre_sprint() -> str:

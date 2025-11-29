@@ -18,7 +18,7 @@ sys.path.insert(0, str(project_root))
 class TestLinterTool:
     """Tests for linter tool."""
 
-    @patch('project_management_automation.tools.linter.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('subprocess.run')
     def test_run_linter_ruff_success(self, mock_subprocess, mock_find_root):
         """Test successful ruff linter run."""
@@ -50,7 +50,7 @@ class TestLinterTool:
         assert result['data']['total_issues'] == 1
         assert len(result['data']['problems']) == 1
 
-    @patch('project_management_automation.tools.linter.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('subprocess.run')
     def test_run_linter_with_fix(self, mock_subprocess, mock_find_root):
         """Test linter run with auto-fix enabled."""
@@ -71,7 +71,7 @@ class TestLinterTool:
         # Verify --fix flag was passed
         assert '--fix' in ' '.join(mock_subprocess.call_args[0][0])
 
-    @patch('project_management_automation.tools.linter.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('subprocess.run')
     def test_run_linter_with_select_ignore(self, mock_subprocess, mock_find_root):
         """Test linter run with select and ignore options."""
@@ -98,7 +98,7 @@ class TestLinterTool:
         assert '--select' in call_args
         assert '--ignore' in call_args
 
-    @patch('project_management_automation.tools.linter.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     def test_run_linter_unknown_linter(self, mock_find_root):
         """Test linter run with unknown linter."""
         from project_management_automation.tools.linter import run_linter
@@ -111,7 +111,7 @@ class TestLinterTool:
         assert result['success'] is False
         assert 'Unknown linter' in result['error']['message']
 
-    @patch('project_management_automation.tools.linter.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('subprocess.run')
     def test_run_linter_not_found(self, mock_subprocess, mock_find_root):
         """Test linter run when linter not installed."""
@@ -126,7 +126,7 @@ class TestLinterTool:
         assert result['success'] is False
         assert 'not found' in result['error']['message'].lower()
 
-    @patch('project_management_automation.tools.linter.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     @patch('subprocess.run')
     def test_run_linter_timeout(self, mock_subprocess, mock_find_root):
         """Test linter run timeout handling."""

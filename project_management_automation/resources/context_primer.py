@@ -186,11 +186,6 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "config",
         "outputs": ["files_simplified", "reduction_percent"],
     },
-    "review_pwa_config": {
-        "hint": "PWA review. Config status, missing features, recommendations.",
-        "category": "config",
-        "outputs": ["pwa_features", "missing_features", "recommendations"],
-    },
     
     # PRD & Planning
     "generate_prd": {

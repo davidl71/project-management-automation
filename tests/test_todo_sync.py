@@ -18,8 +18,8 @@ sys.path.insert(0, str(project_root))
 class TestTodoSyncTool:
     """Tests for todo sync tool."""
 
-    @patch('project_management_automation.tools.todo_sync.find_project_root')
-    @patch('project_management_automation.tools.todo_sync.TodoSyncAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
     def test_sync_todo_tasks_success(self, mock_sync_class, mock_find_root):
         """Test successful todo sync."""
         from project_management_automation.tools.todo_sync import sync_todo_tasks
@@ -51,8 +51,8 @@ class TestTodoSyncTool:
         assert result['data']['new_todo2_tasks'] == 2
         assert result['data']['updates_performed'] == 1
 
-    @patch('project_management_automation.tools.todo_sync.find_project_root')
-    @patch('project_management_automation.tools.todo_sync.TodoSyncAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
     def test_sync_todo_tasks_dry_run(self, mock_sync_class, mock_find_root):
         """Test dry run mode."""
         from project_management_automation.tools.todo_sync import sync_todo_tasks
@@ -77,8 +77,8 @@ class TestTodoSyncTool:
         assert result['success'] is True
         assert result['data']['dry_run'] is True
 
-    @patch('project_management_automation.tools.todo_sync.find_project_root')
-    @patch('project_management_automation.tools.todo_sync.TodoSyncAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
     def test_sync_todo_tasks_custom_output_path(self, mock_sync_class, mock_find_root):
         """Test with custom output path."""
         from project_management_automation.tools.todo_sync import sync_todo_tasks
@@ -103,8 +103,8 @@ class TestTodoSyncTool:
         assert result['success'] is True
         assert '/custom/path/sync.md' in result['data']['report_path']
 
-    @patch('project_management_automation.tools.todo_sync.find_project_root')
-    @patch('project_management_automation.tools.todo_sync.TodoSyncAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
     def test_sync_todo_tasks_error(self, mock_sync_class, mock_find_root):
         """Test error handling."""
         from project_management_automation.tools.todo_sync import sync_todo_tasks
@@ -120,8 +120,8 @@ class TestTodoSyncTool:
         assert result['success'] is False
         assert 'error' in result
 
-    @patch('project_management_automation.tools.todo_sync.find_project_root')
-    @patch('project_management_automation.tools.todo_sync.TodoSyncAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
     def test_sync_todo_tasks_empty_results(self, mock_sync_class, mock_find_root):
         """Test with empty sync results."""
         from project_management_automation.tools.todo_sync import sync_todo_tasks
