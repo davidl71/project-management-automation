@@ -39,7 +39,6 @@ class TestPromptRegistration:
             "security_scan_rust",
             "automation_discovery",
             "automation_high_value",
-            "pwa_review",
             "pre_sprint_cleanup",
             "post_implementation_review",
             "weekly_maintenance"
@@ -150,13 +149,6 @@ class TestIndividualPrompts:
         assert isinstance(AUTOMATION_HIGH_VALUE, str)
         assert len(AUTOMATION_HIGH_VALUE) > 0
 
-    def test_pwa_review_prompt(self):
-        """Test PWA configuration review prompt."""
-        from prompts import PWA_REVIEW
-        
-        assert isinstance(PWA_REVIEW, str)
-        assert len(PWA_REVIEW) > 0
-        assert 'review_pwa_config' in PWA_REVIEW.lower()
 
     def test_pre_sprint_cleanup_prompt(self):
         """Test pre-sprint cleanup workflow prompt."""
