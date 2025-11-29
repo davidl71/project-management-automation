@@ -18,8 +18,8 @@ sys.path.insert(0, str(project_root))
 class TestDailyAutomationTool:
     """Tests for daily automation tool."""
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
-    @patch('project_management_automation.tools.daily_automation.DailyAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_success(self, mock_automation_class, mock_find_root):
         """Test successful daily automation run."""
         from project_management_automation.tools.daily_automation import run_daily_automation
@@ -50,8 +50,8 @@ class TestDailyAutomationTool:
         assert result['data']['tasks_succeeded'] == 1
         assert result['data']['success_rate'] == 100.0
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
-    @patch('project_management_automation.tools.daily_automation.DailyAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_with_custom_tasks(self, mock_automation_class, mock_find_root):
         """Test with custom task list."""
         from project_management_automation.tools.daily_automation import run_daily_automation
@@ -77,8 +77,8 @@ class TestDailyAutomationTool:
         call_args = mock_automation_class.call_args[0]
         assert 'docs_health' in call_args[0]['tasks']
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
-    @patch('project_management_automation.tools.daily_automation.DailyAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_dry_run(self, mock_automation_class, mock_find_root):
         """Test dry run mode."""
         from project_management_automation.tools.daily_automation import run_daily_automation
@@ -102,8 +102,8 @@ class TestDailyAutomationTool:
         assert result['success'] is True
         assert result['data']['dry_run'] is True
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
-    @patch('project_management_automation.tools.daily_automation.DailyAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_with_slow_tasks(self, mock_automation_class, mock_find_root):
         """Test including slow tasks."""
         from project_management_automation.tools.daily_automation import run_daily_automation
@@ -129,7 +129,7 @@ class TestDailyAutomationTool:
         call_args = mock_automation_class.call_args[0]
         assert call_args[0]['include_slow'] is True
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
+    @patch('project_management_automation.utils.find_project_root')
     def test_run_daily_automation_project_root_error(self, mock_find_root):
         """Test error handling when project root not found."""
         from project_management_automation.tools.daily_automation import run_daily_automation
@@ -142,8 +142,8 @@ class TestDailyAutomationTool:
         assert result['success'] is False
         assert 'error' in result
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
-    @patch('project_management_automation.tools.daily_automation.DailyAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_automation_error(self, mock_automation_class, mock_find_root):
         """Test error handling when automation fails."""
         from project_management_automation.tools.daily_automation import run_daily_automation
@@ -157,8 +157,8 @@ class TestDailyAutomationTool:
         assert result['success'] is False
         assert 'error' in result
 
-    @patch('project_management_automation.tools.daily_automation.find_project_root')
-    @patch('project_management_automation.tools.daily_automation.DailyAutomation')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
     def test_run_daily_automation_custom_output_path(self, mock_automation_class, mock_find_root):
         """Test with custom output path."""
         from project_management_automation.tools.daily_automation import run_daily_automation

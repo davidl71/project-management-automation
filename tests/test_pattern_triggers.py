@@ -20,8 +20,9 @@ class TestPatternTriggersTool:
 
     @patch('project_management_automation.tools.pattern_triggers.find_project_root')
     @patch('project_management_automation.tools.pattern_triggers.Path.exists')
+    @patch('project_management_automation.tools.pattern_triggers.Path.mkdir')
     @patch('builtins.open', new_callable=mock_open)
-    def test_setup_pattern_triggers_default(self, mock_file, mock_exists, mock_find_root):
+    def test_setup_pattern_triggers_default(self, mock_file, mock_mkdir, mock_exists, mock_find_root):
         """Test setup with default patterns."""
         from project_management_automation.tools.pattern_triggers import setup_pattern_triggers
 
@@ -51,8 +52,9 @@ class TestPatternTriggersTool:
 
     @patch('project_management_automation.tools.pattern_triggers.find_project_root')
     @patch('project_management_automation.tools.pattern_triggers.Path.exists')
+    @patch('project_management_automation.tools.pattern_triggers.Path.mkdir')
     @patch('builtins.open', new_callable=mock_open)
-    def test_setup_pattern_triggers_custom_patterns(self, mock_file, mock_exists, mock_find_root):
+    def test_setup_pattern_triggers_custom_patterns(self, mock_file, mock_mkdir, mock_exists, mock_find_root):
         """Test with custom patterns."""
         from project_management_automation.tools.pattern_triggers import setup_pattern_triggers
 
@@ -75,8 +77,9 @@ class TestPatternTriggersTool:
 
     @patch('project_management_automation.tools.pattern_triggers.find_project_root')
     @patch('project_management_automation.tools.pattern_triggers.Path.exists')
+    @patch('project_management_automation.tools.pattern_triggers.Path.mkdir')
     @patch('builtins.open', new_callable=mock_open)
-    def test_setup_pattern_triggers_from_config_file(self, mock_file, mock_exists, mock_find_root):
+    def test_setup_pattern_triggers_from_config_file(self, mock_file, mock_mkdir, mock_exists, mock_find_root):
         """Test loading patterns from config file."""
         from project_management_automation.tools.pattern_triggers import setup_pattern_triggers
 
@@ -142,15 +145,18 @@ class TestPatternTriggersTool:
         assert 'check_docs' in tools
         assert 'run_tests' in tools
 
-    @patch('project_management_automation.tools.pattern_triggers.Path.exists')
-    def test_setup_git_hooks_integration_no_git(self, mock_exists):
+    def test_setup_git_hooks_integration_no_git(self):
         """Test git hooks integration when .git doesn't exist."""
         from project_management_automation.tools.pattern_triggers import _setup_git_hooks_integration
-
-        mock_exists.return_value = False
-        results = {}
         
-        _setup_git_hooks_integration(Path("/test"), {"git_events": {}}, results)
+        # Create a mock Path that returns False for exists()
+        mock_path = Mock(spec=Path)
+        mock_path.__truediv__ = Mock(return_value=mock_path)
+        mock_path.exists = Mock(return_value=False)
+        
+        results = {"patterns_skipped": []}
+        
+        _setup_git_hooks_integration(mock_path, {"git_events": {}}, results)
         
         assert len(results.get('patterns_skipped', [])) > 0
 

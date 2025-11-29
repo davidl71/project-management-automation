@@ -152,35 +152,46 @@ class TestTaskClarificationResolutionTool:
     @patch('project_management_automation.tools.task_clarification_resolution.find_project_root')
     @patch('project_management_automation.tools.task_clarification_resolution.Path.exists')
     @patch('project_management_automation.tools.task_clarification_resolution.subprocess.run')
-    @patch('project_management_automation.tools.task_clarification_resolution.tempfile.NamedTemporaryFile')
+    @patch('tempfile.NamedTemporaryFile')
     def test_resolve_multiple_clarifications_success(self, mock_tempfile, mock_subprocess, mock_exists, mock_find_root):
         """Test resolving multiple clarifications."""
         from project_management_automation.tools.task_clarification_resolution import resolve_multiple_clarifications
+        import tempfile
 
         mock_find_root.return_value = Path("/test/project")
         mock_exists.return_value = True
         
-        # Mock temp file
+        # Mock temp file properly
         mock_file = Mock()
         mock_file.name = "/tmp/decisions.json"
-        mock_tempfile.return_value.__enter__.return_value = mock_file
+        mock_file.__enter__ = Mock(return_value=mock_file)
+        mock_file.__exit__ = Mock(return_value=None)
+        mock_tempfile.return_value = mock_file
         
-        mock_subprocess.return_value = Mock(
-            returncode=0,
-            stdout="✅ Updated task T-1\n✅ Updated task T-2",
-            stderr=""
-        )
-        
-        decisions = {
-            "T-1": {"clarification": "Q1", "decision": "A1"},
-            "T-2": {"clarification": "Q2", "decision": "A2"}
-        }
-        
-        result = resolve_multiple_clarifications(decisions)
-        
-        assert result['status'] == 'success'
-        assert result['tasks_processed'] == 2
-        assert result['tasks_updated'] == 2
+        # Mock Path to handle temp file path
+        with patch('project_management_automation.tools.task_clarification_resolution.Path') as mock_path_class:
+            mock_temp_path = Mock()
+            mock_temp_path.exists.return_value = True
+            mock_temp_path.unlink = Mock()
+            # When Path is called with the temp file name, return our mock
+            mock_path_class.return_value = mock_temp_path
+            
+            mock_subprocess.return_value = Mock(
+                returncode=0,
+                stdout="✅ Updated task T-1\n✅ Updated task T-2",
+                stderr=""
+            )
+            
+            decisions = {
+                "T-1": {"clarification": "Q1", "decision": "A1"},
+                "T-2": {"clarification": "Q2", "decision": "A2"}
+            }
+            
+            result = resolve_multiple_clarifications(decisions)
+            
+            assert result['status'] == 'success'
+            assert result['tasks_processed'] == 2
+            assert result['tasks_updated'] == 2
 
     @patch('project_management_automation.tools.task_clarification_resolution.find_project_root')
     @patch('project_management_automation.tools.task_clarification_resolution.Path.exists')
