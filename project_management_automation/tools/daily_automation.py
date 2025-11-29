@@ -69,7 +69,19 @@ def run_daily_automation(
         from project_management_automation.utils import find_project_root
 
         # Find project root
-        project_root = find_project_root()
+        try:
+            project_root = find_project_root()
+        except Exception as e:
+            error_msg = f"Failed to find project root: {str(e)}"
+            logger.error(error_msg)
+            return json.dumps(
+                format_error_response(
+                    error_msg,
+                    ErrorCode.AUTOMATION_ERROR,
+                    include_traceback=False
+                ),
+                indent=2
+            )
 
         # Build config
         config = {
@@ -80,8 +92,20 @@ def run_daily_automation(
         }
 
         # Create automation and run
-        automation = DailyAutomation(config, project_root)
-        results = automation.run()
+        try:
+            automation = DailyAutomation(config, project_root)
+            results = automation.run()
+        except Exception as e:
+            error_msg = f"Failed to run daily automation: {str(e)}"
+            logger.error(error_msg, exc_info=True)
+            return json.dumps(
+                format_error_response(
+                    error_msg,
+                    ErrorCode.AUTOMATION_ERROR,
+                    include_traceback=True
+                ),
+                indent=2
+            )
 
         # Extract key metrics
         summary = results.get('results', {}).get('summary', {})
@@ -118,14 +142,28 @@ def run_daily_automation(
             indent=2
         )
 
+    except ImportError as e:
+        duration = time.time() - start_time
+        error_msg = f"Failed to import required modules: {str(e)}. Ensure all dependencies are installed."
+        log_automation_execution('run_daily_automation', duration, False, error_msg)
+        logger.error(error_msg, exc_info=True)
+        return json.dumps(
+            format_error_response(
+                error_msg,
+                ErrorCode.AUTOMATION_ERROR,
+                include_traceback=False
+            ),
+            indent=2
+        )
     except Exception as e:
         duration = time.time() - start_time
-        log_automation_execution('run_daily_automation', duration, False, str(e))
-        logger.error(f"Error in daily automation: {e}", exc_info=True)
+        error_msg = f"Daily automation failed: {str(e)}"
+        log_automation_execution('run_daily_automation', duration, False, error_msg)
+        logger.error(error_msg, exc_info=True)
 
         return json.dumps(
             format_error_response(
-                f"Daily automation failed: {str(e)}",
+                error_msg,
                 ErrorCode.AUTOMATION_ERROR,
                 include_traceback=True
             ),

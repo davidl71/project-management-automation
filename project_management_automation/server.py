@@ -2934,8 +2934,32 @@ def main():
     # Check for explicit MCP mode or auto-detect
     if "--mcp" in args or _is_mcp_mode():
         # MCP server mode
-        _print_banner()
-        mcp.run(show_banner=False)
+        if not MCP_AVAILABLE:
+            print("Error: MCP not available. Install with: pip install mcp", file=sys.stderr)
+            sys.exit(1)
+        
+        if not USE_STDIO and mcp:
+            # FastMCP mode
+            _print_banner()
+            mcp.run(show_banner=False)
+        elif USE_STDIO and stdio_server_instance:
+            # Stdio server mode
+            _print_banner()
+            import asyncio
+            async def run():
+                async with stdio_server() as (read_stream, write_stream):
+                    init_options = stdio_server_instance.create_initialization_options()
+                    await stdio_server_instance.run(read_stream, write_stream, init_options)
+            try:
+                asyncio.run(run())
+            except KeyboardInterrupt:
+                logger.info("Server stopped by user")
+            except Exception as e:
+                logger.error(f"Server error: {e}", exc_info=True)
+                sys.exit(1)
+        else:
+            print("Error: MCP server not initialized properly", file=sys.stderr)
+            sys.exit(1)
         return
 
     # Interactive terminal without args - show usage
