@@ -178,7 +178,7 @@ def generate_config(
         from .cursorignore_generator import generate_cursorignore
         return generate_cursorignore(include_indexing, analyze_project, dry_run)
     elif action == "simplify":
-        from .rule_simplifier import simplify_rules
+        from .simplify_rules import simplify_rules
         parsed_files = None
         if rule_files:
             try:
@@ -266,10 +266,10 @@ def prompt_tracking(
     if action == "log":
         if not prompt:
             return {"status": "error", "error": "prompt parameter required for log action"}
-        from .prompt_tracker import log_prompt_iteration
+        from .prompt_iteration_tracker import log_prompt_iteration
         return log_prompt_iteration(prompt, task_id, mode, outcome, iteration)
     elif action == "analyze":
-        from .prompt_tracker import analyze_prompt_iterations
+        from .prompt_iteration_tracker import analyze_prompt_iterations
         return analyze_prompt_iterations(days)
     else:
         return {
@@ -512,7 +512,7 @@ def task_analysis(
         from .tag_consolidation import consolidate_tags
         return consolidate_tags(dry_run, custom_rules, remove_tags, output_path)
     elif action == "hierarchy":
-        from .task_hierarchy import analyze_task_hierarchy
+        from .task_hierarchy_analyzer import analyze_task_hierarchy
         return analyze_task_hierarchy(output_format, output_path, include_recommendations)
     else:
         return {
@@ -839,7 +839,7 @@ def task_discovery(
 
     def find_orphans():
         """Find orphaned Todo2 tasks."""
-        from .task_hierarchy import analyze_task_hierarchy
+        from .task_hierarchy_analyzer import analyze_task_hierarchy
         result = analyze_task_hierarchy(output_format="json", include_recommendations=False)
         orphans = result.get("networkx_analysis", {}).get("orphans", [])
         return [{"type": "ORPHAN", "task_id": o, "source": "todo2"} for o in orphans]
