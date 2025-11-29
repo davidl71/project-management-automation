@@ -4,14 +4,14 @@
       "id": "AUTO-20251126050522",
       "name": "Automation: Sprint Automation",
       "content": "Automated Sprint Automation execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "sprint-automation",
         "automation"
       ],
       "created": "2025-11-26T05:05:22.158567",
-      "lastModified": "2025-11-27T04:14:55.582818",
+      "lastModified": "2025-11-30T00:11:45.244541",
       "dependencies": [],
       "comments": [
         {
@@ -34,7 +34,7 @@
       "id": "T-20251126032538-40",
       "name": "Fix broken documentation links",
       "content": "Fix 18 broken links in documentation",
-      "status": "Done",
+      "status": "completed",
       "priority": "high",
       "tags": [
         "links",
@@ -45,7 +45,7 @@
         "AUTO-20251126032538"
       ],
       "created": "2025-11-26T03:25:38.412765",
-      "lastModified": "2025-11-26T03:49:23.485678",
+      "lastModified": "2025-11-30T00:11:45.244564",
       "comments": [
         {
           "type": "note",
@@ -119,16 +119,16 @@
       "id": "AUTO-20251126032540",
       "name": "Automation: Automation Opportunity Finder",
       "content": "Automated Automation Opportunity Finder execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "automation",
-        "coverage-analyzer",
         "test-runner",
+        "coverage-analyzer",
         "automation-finder"
       ],
       "created": "2025-11-26T03:25:40.179056",
-      "lastModified": "2025-11-26T03:49:23.485417",
+      "lastModified": "2025-11-30T00:11:45.244568",
       "dependencies": [],
       "comments": [
         {
@@ -206,6 +206,19 @@
           "content": "**Automation Results:**\n\n**Found 0 automation opportunities:**\n- 0 high-priority (score \u2265 8)\n- 0 medium-priority (score 5-7)\n- 0 low-priority (score < 5)\n\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.\n\n**Key Findings:**\n{\n  \"existing_automations\": 0,\n  \"opportunities_found\": 0,\n  \"opportunities\": [],\n  \"high_priority\": [],\n  \"medium_priority\": [],\n  \"low_priority\": []\n}",
           "created": "2025-11-26T03:29:34.069610",
           "lastModified": "2025-11-26T03:29:34.069620"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127041455-625085: Automation: Automation Opportunity Finder",
+          "created": "2025-11-29T23:50:58.115415"
+        },
+        {
+          "id": "AUTO-20251127041455-625085-C-1",
+          "todoId": "AUTO-20251127041455-625085",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Found 0 automation opportunities:**\n- 0 high-priority (score \u2265 8)\n- 0 medium-priority (score 5-7)\n- 0 low-priority (score < 5)\n\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.\n\n**Key Findings:**\n{\"existing_automations\":0,\"opportunities_found\":0,\"opportunities\":[],\"high_priority\":[],\"medium_priority\":[],\"low_priority\":[]}",
+          "created": "2025-11-27T04:14:56.856391",
+          "lastModified": "2025-11-27T04:14:56.856402"
         }
       ],
       "project_id": "davidl71/project-management-automation"
@@ -214,14 +227,14 @@
       "id": "AUTO-20251126110118",
       "name": "Automation: Test Runner",
       "content": "Automated Test Runner execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
-        "test-runner",
-        "automation"
+        "automation",
+        "test-runner"
       ],
       "created": "2025-11-26T11:01:18.383265",
-      "lastModified": "2025-11-27T04:14:55.584482",
+      "lastModified": "2025-11-30T00:11:45.244570",
       "dependencies": [],
       "comments": [
         {
@@ -244,34 +257,22 @@
           "content": "**Automation Results:**\n\n**Test Execution (unknown):** 0 tests run\n- Passed: 0\n- Failed: 0\n\n**Key Findings:**\n{\n  \"framework\": \"pytest\",\n  \"tests_run\": 0,\n  \"tests_passed\": 0,\n  \"tests_failed\": 0,\n  \"tests_skipped\": 0,\n  \"output\": \"\",\n  \"error\": \"/usr/local/opt/python@3.14/bin/python3.14: No module named pytest\\n\",\n  \"returncode\": 1,\n  \"output_file\": \"test-results/junit.xml\",\n  \"status\": \"success\"\n}",
           "created": "2025-11-26T23:20:18.375029",
           "lastModified": "2025-11-26T23:20:18.375059"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127041456-876519: Automation: Test Runner",
+          "created": "2025-11-29T23:50:58.116655"
+        },
+        {
+          "id": "AUTO-20251127041456-876519-C-1",
+          "todoId": "AUTO-20251127041456-876519",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Execution (unknown):** 0 tests run\n- Passed: 0\n- Failed: 0\n\n**Key Findings:**\n{\n  \"framework\": \"pytest\",\n  \"tests_run\": 0,\n  \"tests_passed\": 0,\n  \"tests_failed\": 0,\n  \"tests_skipped\": 0,\n  \"output\": \"\",\n  \"error\": \"/usr/local/opt/python@3.14/bin/python3.14: No module named pytest\\n\",\n  \"returncode\": 1,\n  \"output_file\": \"test-results/junit.xml\",\n  \"status\": \"success\"\n}",
+          "created": "2025-11-27T04:14:57.076907",
+          "lastModified": "2025-11-27T04:14:57.076945"
         }
       ],
       "project_id": "davidl71/project-management-automation"
-    },
-    {
-      "id": "AUTO-20251126032540-2",
-      "name": "Automation: Test Coverage Analyzer",
-      "content": "Automated Test Coverage Analyzer execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "coverage-analyzer"
-      ],
-      "created": "2025-11-26T03:25:40.938139",
-      "lastModified": "2025-11-27T04:14:57.287840",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251126032540-2-C-1",
-          "todoId": "AUTO-20251126032540-2",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
-          "created": "2025-11-27T04:14:57.281301",
-          "lastModified": "2025-11-27T04:14:57.281309"
-        }
-      ]
     },
     {
       "id": "T-20251126034108-60",
@@ -503,7 +504,7 @@
     {
       "id": "RESEARCH-ca28a3e8",
       "name": "Research: Exarp Cursor Extension Architecture",
-      "status": "Todo",
+      "status": "completed",
       "priority": "high",
       "tags": [
         "research",
@@ -520,15 +521,22 @@
           "type": "research_with_links",
           "content": "**MANDATORY RESEARCH COMPLETED** \u2705\n\n**Local Codebase Analysis:**\n- Existing MCP server in `src/project_management_automation/`\n- Todo2 state in `.todo2/state.todo2.json`\n- 30+ MCP tools for AI interaction\n\n**Internet Research (2025):**\n\n\ud83d\udd17 **[VS Code Extension API](https://code.visualstudio.com/api)**\n- Comprehensive extension development guide\n- Tree View, Status Bar, CodeLens APIs\n\n\ud83d\udd17 **[MCP Proxy Patterns](https://mcpproxy.app/blog/2025-08-10-productivity-tools-for-ai-agents/)**\n- Tool aggregation strategies\n- Performance optimization for AI agents\n\n**Synthesis & Recommendation:**\nRecommend Extension + MCP (no proxy) approach. Extension handles UI, MCP handles AI-facing tools. Direct file I/O for fast UI, MCP calls for complex operations.",
           "created_at": "2025-11-26T13:50:17.624003"
+        },
+        {
+          "type": "research_with_links",
+          "content": "\u2705 **RESEARCH COMPLETED**\n\n**Research Document Created**: `docs/research/CURSOR_EXTENSION_RESEARCH.md`\n\n**Key Findings**:\n\n1. **Architecture Decision**: Extension + MCP (No Proxy)\n   - Extension handles UI via direct file I/O\n   - MCP server handles AI-facing tools\n   - No HTTP proxy needed initially\n\n2. **VS Code Extension APIs Identified**:\n   - Status Bar API for task count display\n   - Tree View API for hierarchical task list\n   - File Watcher API for real-time updates\n   - CodeLens API for task ID detection\n   - Hover Provider API for task details\n\n3. **Implementation Phases Defined**:\n   - Phase 1: Minimal Extension (2-3 weeks) - Status bar + basic commands\n   - Phase 2: Sidebar + Tree View (2-3 weeks)\n   - Phase 3: Code Integration (3-4 weeks)\n   - Phase 4: MCP Integration (Optional, 2-3 weeks)\n\n4. **Technical Approach**:\n   - Direct file I/O for Todo2 state (fast, simple)\n   - Optional MCP client for complex operations\n   - TypeScript extension with VS Code API\n   - File watcher for real-time synchronization\n\n5. **Next Steps**:\n   - Create extension scaffold\n   - Implement status bar\n   - Add basic commands\n   - Test file watcher\n\n**References**:\n- VS Code Extension API: https://code.visualstudio.com/api\n- MCP Specification: https://modelcontextprotocol.io\n- Existing Architecture: `docs/design/EXARP_EXTENSION_ARCHITECTURE.md`",
+          "created": "2025-11-29T23:48:30.796817"
         }
       ],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "lastModified": "2025-11-30T00:11:45.244574",
+      "completedAt": "2025-11-29T23:48:30.796810"
     },
     {
       "id": "ENHANCE-001",
       "name": "Enhance Exarp to validate and use Todo2 project ownership",
       "long_description": "Implement project ownership validation in Exarp to ensure it operates on the correct project and enable future \"one system to track them all\" capability.\n\n## Changes Made\n- Added `project` object to state.todo2.json root with: id, name, path, repository\n- Added `project_id` field to every task (538 tasks across 2 projects)\n\n## Required Exarp Enhancements\n\n### 1. Project Validation (High Priority)\n- On startup, compare PROJECT_ROOT env var with Todo2's project.path\n- Warn or fail if mismatch detected\n- Log project context for debugging\n\n### 2. Task Project Validation\n- When creating tasks, auto-populate project_id\n- When loading tasks, verify project_id matches current project\n- Flag cross-project tasks for attention\n\n### 3. Cross-Project Visibility (Future)\n- Resource to list tasks across all known projects\n- Filter by project_id in task queries\n- Dashboard showing all project task counts\n\n### 4. \"One System\" Foundation\n- Central registry of known projects\n- Cross-project task dependencies\n- Unified task search across projects\n\n## Files to Update\n- project_management_automation/server.py - Add validation on init\n- project_management_automation/utils/__init__.py - Add project info helpers\n- project_management_automation/tools/*.py - Use project_id in task operations\n- project_management_automation/resources/tasks.py - Add project filtering",
-      "status": "Todo",
+      "status": "completed",
       "priority": "high",
       "tags": [
         "enhancement",
@@ -544,20 +552,27 @@
           "type": "note",
           "content": "Created after implementing task-level project_id in both ib_box_spread and exarp projects.",
           "created_at": "2025-11-26T14:50:15.578569"
+        },
+        {
+          "type": "note",
+          "content": "\u2705 High-Priority Requirements Completed:\n\n**1. Project Validation (\u2705 Complete)**\n- Implemented `validate_project_ownership()` in `utils/todo2_utils.py`\n- Integrated into `server.py` startup with warning on mismatch\n- Logs project context for debugging\n\n**2. Task Project Validation (\u2705 Complete)**\n- Auto-populate `project_id` via `annotate_task_project()` in task creation\n- Task filtering by project in `resources/tasks.py`\n- Cross-project task detection and warnings\n- Updated `tool_count_health.py` to use project validation\n\n**Files Updated:**\n- `project_management_automation/server.py` - Startup validation\n- `project_management_automation/utils/todo2_utils.py` - Core validation functions\n- `project_management_automation/utils/__init__.py` - Exported helpers\n- `project_management_automation/tools/tool_count_health.py` - Project-aware task creation\n- `project_management_automation/resources/tasks.py` - Project filtering\n\n**Future Work (Low Priority):**\n- Cross-project visibility resource\n- \"One System\" foundation features\n- Central project registry",
+          "created": "2025-11-29T23:47:55.189857"
         }
-      ]
+      ],
+      "lastModified": "2025-11-30T00:11:45.244576",
+      "completedAt": "2025-11-29T23:47:55.189852"
     },
     {
       "id": "TOOL-001",
       "name": "Problems Advisor MCP Tool",
-      "status": "Done",
+      "status": "completed",
       "priority": "high",
       "created_at": "2025-11-26T16:06:25.994834",
       "updated_at": "2025-11-26T16:06:25.994848",
       "long_description": "New MCP tool that analyzes IDE diagnostics and provides resolution hints.\n\n## Features\n- Categorizes problems (spelling, type_error, import_error, unused_code, etc.)\n- Provides resolution hints for each problem\n- Identifies auto-fixable issues\n- Suggests quick fix commands\n- Generates detailed reports\n\n## Usage\n```python\n# Analyze problems from read_lints output\nanalyze_problems(problems_json=\"[{...}]\", include_hints=True)\n\n# List all categories\nlist_problem_categories()\n```\n\n## Categories Supported\n- spelling (cspell)\n- type_error (pyright, rust-analyzer)\n- import_error (pip, cargo)\n- unused_code (ruff, autoflake)\n- security (semgrep, bandit)\n- style (eslint, prettier)\n- deprecation\n- syntax_error",
       "tags": [
         "mcp",
-        "tools",
+        "tool",
         "diagnostics"
       ],
       "comments": [
@@ -566,13 +581,14 @@
           "content": "\u2705 **Problems Advisor Tool Complete**\n\nFiles created:\n- `project_management_automation/tools/problems_advisor.py`\n\nMCP Tools registered:\n- `analyze_problems` - Analyze problems JSON, provide hints\n- `list_problem_categories` - List all categories\n\nTest results:\n- 4 sample problems analyzed correctly\n- Categories: spelling, import_error, unused_code, type_error\n- Auto-fixable detection working\n- Quick fix suggestions provided",
           "created_at": "2025-11-26T16:06:25.994852"
         }
-      ]
+      ],
+      "lastModified": "2025-11-30T00:11:45.244577"
     },
     {
       "id": "T-20251126180006-01",
       "name": "Implement generate_prd tool for PRD generation from codebase",
       "long_description": "Create a new MCP tool that generates Product Requirements Documents by analyzing the existing codebase.\n\n**Objective:** Help users create/maintain PRD files as their \"North Star\" document.\n\n## Research Summary\n\n### Key PRD AI Tools Analyzed\n1. **ChatPRD** - AI copilot specifically for PMs, $5/month, MCP integration available\n2. **MakePRD** - Generate detailed PRDs from product descriptions\n3. **Miro AI PRD Generator** - Visual PRD creation with collaboration\n4. **Leiga** - AI-assisted drafts with customizable frameworks\n5. **QuillBot AI PRD Generator** - Structured output generation\n\n### Best Practices from Research\n\n**From ChatPRD (chatprd.ai):**\n- Start with simple prompts, iterate with AI feedback\n- PRD should include: objectives, key features, user stories, technical requirements, success metrics, risks/dependencies\n- Use AI to identify gaps and strengthen narratives\n- Keep PRD updated as project evolves\n\n**Recommended PRD Sections:**\n1. Project Purpose / Problem Statement\n2. User Stories / Personas\n3. Key Features / Requirements\n4. Technical Requirements / Constraints\n5. Success Metrics / KPIs\n6. Risks and Dependencies\n7. Timeline / Milestones\n\n**AI PRD Generation Prompts:**\n```\nInitial Draft:\n\"You are a product management expert. Help me create a comprehensive Product Requirement Document (PRD) for [project name]. Include: project purpose, user stories, key features, technical requirements, success metrics, and potential risks.\"\n\nImprovement:\n\"Review this PRD for [project name]. Highlight areas for improvement, identify gaps, suggest stronger success metrics, and ensure alignment with best practices.\"\n```\n\n## Implementation Features\n\n**Core Capabilities:**\n- Analyze codebase structure and architecture\n- Extract requirements from existing Todo2 tasks\n- Integrate with PROJECT_GOALS.md alignment\n- Generate structured markdown PRD\n- Iterative refinement with AI feedback\n\n**Output Structure:**\n```markdown\n# PRD: [Project Name]\n\n## 1. Overview\n- Problem Statement\n- Product Vision\n- Target Users\n\n## 2. User Stories\n- [Extracted from Todo2 tasks]\n\n## 3. Key Features\n- [Derived from codebase analysis]\n\n## 4. Technical Requirements\n- Architecture constraints\n- Tech stack requirements\n- Integration needs\n\n## 5. Success Metrics\n- [Aligned with PROJECT_GOALS.md]\n\n## 6. Risks & Dependencies\n- [From task blockers and analysis]\n\n## 7. Timeline\n- [From task priorities and estimates]\n```\n\n**Acceptance Criteria:**\n- Tool generates valid PRD markdown\n- Includes user stories from existing tasks\n- Includes technical requirements from code analysis\n- Can update existing PRD incrementally\n- Provides AI-driven improvement suggestions\n\n## Research Links\n\n- [ChatPRD - Using AI to Write PRDs](https://www.chatprd.ai/resources/using-ai-to-write-prd)\n- [Medium: We Used AI Tools to Write Our PRD](https://medium.com/@rahul.sikder3/we-used-ai-tools-to-write-our-prd-here-are-the-results-8c6043014a9b)\n- [Reddit: Best PRD AI Tools Discussion](https://www.reddit.com/r/ProductManagement/comments/1meh0ox/best_prd_al_tool_projects_chatprd_reforge_etc/)\n- [MakePRD](https://www.makeprd.ai/)\n- [Miro AI PRD Generator](https://miro.com/ai/product-development/ai-prd/)\n- [Leiga PRD Writing Tool](https://www.leiga.com/free-tools/prd-writing-tool)\n\n**Reference:** Best Practice #1 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "high",
       "tags": [
         "best-practices",
@@ -588,13 +604,14 @@
           "created_at": "2025-11-26T18:02:45.353874Z"
         }
       ],
-      "completedAt": "2025-11-27T03:40:00Z"
+      "completedAt": "2025-11-27T03:40:00Z",
+      "lastModified": "2025-11-30T00:11:45.244579"
     },
     {
       "id": "T-20251126180006-02",
       "name": "Implement recommend_workflow_mode tool for AGENT vs ASK guidance",
       "long_description": "Create a tool that recommends Cursor workflow mode (AGENT vs ASK) based on task description.\n\n**Objective:** Help users choose the right Cursor mode for each task.\n\n**Features:**\n- Analyze task description for implementation vs analysis intent\n- Map Exarp tools to recommended modes\n- Suggest relevant Exarp tools for the task\n- Integrate with tractatus \u2192 exarp \u2192 sequential workflow\n\n**Mode Mapping:**\n- ASK: project_scorecard, check_documentation_health, analyze_todo2_alignment\n- AGENT: sprint_automation, batch_approve_tasks, run_tests\n- CONDITIONAL: detect_duplicate_tasks (AGENT if auto_fix=True)\n\n**Reference:** Best Practice #3 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "high",
       "tags": [
         "best-practices",
@@ -603,13 +620,14 @@
       ],
       "created_at": "2025-11-26T18:00:06.524766Z",
       "updated_at": "2025-11-26T18:00:06.524768Z",
-      "completedAt": "2025-11-27T03:40:00Z"
+      "completedAt": "2025-11-27T03:40:00Z",
+      "lastModified": "2025-11-30T00:11:45.244581"
     },
     {
       "id": "T-20251126180006-03",
       "name": "Implement prompt iteration tracking tools",
       "long_description": "Create tools for tracking and improving prompt iterations.\n\n**Objective:** Embody the \"iterate, iterate, iterate\" philosophy from best practices.\n\n**New Tools:**\n1. record_prompt_iteration - Track original prompt, issue, refined prompt\n2. suggest_prompt_refinement - Coach better prompts based on issue type\n\n**Features:**\n- Store iteration history in session_memory\n- Build project-specific prompt patterns\n- Integrate with advisor system for coaching\n- Suggest refinements for common issues\n\n**Issue Types:**\n- ambiguous: Multiple interpretations possible\n- missing_context: Not enough file/code references\n- too_broad: Scope too large for single prompt\n- missing_constraints: No architecture/style constraints\n\n**Reference:** Best Practice #8 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "high",
       "tags": [
         "best-practices",
@@ -618,13 +636,14 @@
       ],
       "created_at": "2025-11-26T18:00:06.524771Z",
       "updated_at": "2025-11-26T18:00:06.524773Z",
-      "completedAt": "2025-11-27T03:42:00Z"
+      "completedAt": "2025-11-27T03:42:00Z",
+      "lastModified": "2025-11-30T00:11:45.244583"
     },
     {
       "id": "T-20251126180006-04",
       "name": "Implement generate_cursor_rules tool for .mdc generation",
       "long_description": "Create a tool that generates Cursor rules from codebase analysis.\n\n**Objective:** Automate creation of .cursor/rules/*.mdc files.\n\n**Features:**\n- Analyze existing code for patterns/conventions\n- Extract library preferences from imports/deps\n- Detect architecture patterns from structure\n- Generate tech-stack specific rules\n\n**Output Structure:**\n.cursor/rules/\n\u251c\u2500\u2500 general.mdc        # Project-wide conventions\n\u251c\u2500\u2500 python.mdc         # Python-specific rules\n\u251c\u2500\u2500 testing.mdc        # Testing patterns\n\u2514\u2500\u2500 architecture.mdc   # Architecture decisions\n\n**Reference:** Best Practice #2 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "best-practices",
@@ -633,13 +652,14 @@
       ],
       "created_at": "2025-11-26T18:00:06.524775Z",
       "updated_at": "2025-11-26T18:00:06.524777Z",
-      "completedAt": "2025-11-27T03:35:00Z"
+      "completedAt": "2025-11-27T03:35:00Z",
+      "lastModified": "2025-11-30T00:11:45.244585"
     },
     {
       "id": "T-20251126180006-05",
       "name": "Enhance HINT system with rich tool descriptions",
       "long_description": "Expand the HINT system from minimal to comprehensive descriptions.\n\n**Objective:** Follow \"detailed prompts yield accurate results\" principle.\n\n**Current Format:**\n[HINT: Docs health. Score 0-100, broken links, tasks created.]\n\n**Enhanced Format:**\n[HINT: Docs health. Score 0-100, broken links, tasks created.]\n\n\ud83d\udcca Output: Health score, broken links list, recommended fixes\n\ud83d\udd27 Side Effects: Creates Todo2 tasks if create_tasks=True\n\ud83d\udcc1 Affected: docs/ directory analysis\n\u23f1\ufe0f Typical Runtime: 5-30 seconds\n\nExample Prompt: \"Check documentation health and create tasks\"\n\nRelated Tools: add_external_tool_hints, sync_todo_tasks\n\n**Scope:** Update all 22+ MCP tools with enhanced HINTs\n\n**Reference:** Best Practice #6 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "best-practices",
@@ -648,13 +668,14 @@
       ],
       "created_at": "2025-11-26T18:00:06.524780Z",
       "updated_at": "2025-11-26T18:00:06.524781Z",
-      "completedAt": "2025-11-27T03:42:00Z"
+      "completedAt": "2025-11-27T03:42:00Z",
+      "lastModified": "2025-11-30T00:11:45.244587"
     },
     {
       "id": "T-20251126180006-06",
       "name": "Implement generate_cursorignore tool",
       "long_description": "Create a tool that generates .cursorignore and .cursorindexignore files.\n\n**Objective:** Help users configure file exclusions to speed up Cursor.\n\n**Features:**\n- Analyze project for build artifacts\n- Detect dependency directories (node_modules, .venv)\n- Find large files (>100KB non-source)\n- Identify generated files (*.pyc, *.o)\n- Flag sensitive patterns (.env, credentials)\n\n**Output Files:**\n- .cursorignore: Complete exclusions (invisible to Cursor)\n- .cursorindexignore: Not indexed but referenceable\n\n**Default Patterns:**\n__pycache__/, *.pyc, node_modules/, build/, dist/, .venv/, *.log\n\n**Reference:** Best Practice #9 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "best-practices",
@@ -663,13 +684,14 @@
       ],
       "created_at": "2025-11-26T18:00:06.524784Z",
       "updated_at": "2025-11-26T18:00:06.524786Z",
-      "completedAt": "2025-11-27T03:35:00Z"
+      "completedAt": "2025-11-27T03:35:00Z",
+      "lastModified": "2025-11-30T00:11:45.244588"
     },
     {
       "id": "T-20251126180006-07",
       "name": "Implement check_definition_of_done tool",
       "long_description": "Create a tool that verifies task completion quality.\n\n**Objective:** Ensure completed tasks include tests, logs, and docs.\n\n**Checks:**\n\u2705 Unit tests written for new code?\n\u2705 Logging statements in place?\n\u2705 Documentation updated?\n\u2705 Code follows project rules?\n\n**Features:**\n- Analyze git diff for task changes\n- Check for test files matching changed files\n- Verify logging imports/usage\n- Check docstrings presence\n\n**Output:**\n- DoD checklist with pass/fail\n- Suggestions for missing items\n- Can block task completion until satisfied\n\n**Reference:** Best Practice #7 from CURSOR_IDE_BEST_PRACTICES.md",
-      "status": "Done",
+      "status": "completed",
       "priority": "low",
       "tags": [
         "best-practices",
@@ -678,7 +700,8 @@
       ],
       "created_at": "2025-11-26T18:00:06.524791Z",
       "updated_at": "2025-11-26T18:00:06.524793Z",
-      "completedAt": "2025-11-27T03:35:00Z"
+      "completedAt": "2025-11-27T03:35:00Z",
+      "lastModified": "2025-11-30T00:11:45.244592"
     },
     {
       "id": "T-20251126180006-08",
@@ -698,14 +721,14 @@
       "id": "AUTO-20251127000005-270015",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
-        "shared-todo-table-synchronization",
+        "todo-sync",
         "automation"
       ],
       "created": "2025-11-27T00:00:05.270128",
-      "lastModified": "2025-11-27T04:14:55.584865",
+      "lastModified": "2025-11-30T00:11:45.244594",
       "dependencies": [],
       "comments": [
         {
@@ -780,6 +803,58 @@
           "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 79 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[79 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[79 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
           "created": "2025-11-27T04:00:12.675535",
           "lastModified": "2025-11-27T04:00:12.675545"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127130005-058470: Automation: Shared TODO Table Synchronization",
+          "created": "2025-11-29T23:50:58.116900"
+        },
+        {
+          "id": "AUTO-20251127130005-058470-C-1",
+          "todoId": "AUTO-20251127130005-058470",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 56 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[56 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[56 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T13:00:05.067661",
+          "lastModified": "2025-11-27T13:00:05.067670"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127140006-190921: Automation: Shared TODO Table Synchronization",
+          "created": "2025-11-29T23:50:58.116920"
+        },
+        {
+          "id": "AUTO-20251127140006-190921-C-1",
+          "todoId": "AUTO-20251127140006-190921",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 57 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[57 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[57 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T14:00:06.199182",
+          "lastModified": "2025-11-27T14:00:06.199192"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127150007-966078: Automation: Shared TODO Table Synchronization",
+          "created": "2025-11-29T23:50:58.116943"
+        },
+        {
+          "id": "AUTO-20251127150007-966078-C-1",
+          "todoId": "AUTO-20251127150007-966078",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 58 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[58 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[58 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T15:00:07.973576",
+          "lastModified": "2025-11-27T15:00:07.973586"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127160007-708855: Automation: Shared TODO Table Synchronization",
+          "created": "2025-11-29T23:50:58.116961"
+        },
+        {
+          "id": "AUTO-20251127160007-708855-C-1",
+          "todoId": "AUTO-20251127160007-708855",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 59 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[59 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[59 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-11-27T16:00:07.716956",
+          "lastModified": "2025-11-27T16:00:07.716965"
         }
       ]
     },
@@ -787,14 +862,14 @@
       "id": "AUTO-20251127003154-301126",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
-        "automation",
-        "todo2-alignment-analysis"
+        "task-alignment",
+        "automation"
       ],
       "created": "2025-11-27T00:31:54.301184",
-      "lastModified": "2025-11-27T04:14:55.584403",
+      "lastModified": "2025-11-30T00:11:45.244596",
       "dependencies": [],
       "comments": [
         {
@@ -856,6 +931,19 @@
           "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":14},\"by_phase\":{\"phase1\":{\"total\":50,\"high_priority\":22,\"aligned\":50},\"phase2\":{\"total\":49,\"high_priority\":20,\"aligned\":49},\"phase3\":{\"total\":56,\"high_priority\":26,\"aligned\":56},\"phase4\":{\"total\":57,\"high_priority\":27,\"aligned\":57},\"phase5\":{\"total\":35,\"high_priority\":17,\"aligned\":35}},\"strategy_critical\":\"[31 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"alignment_score\":100.0}",
           "created": "2025-11-27T04:14:54.390034",
           "lastModified": "2025-11-27T04:14:54.390043"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129234938-127787: Automation: Todo2 Alignment Analysis",
+          "created": "2025-11-29T23:50:58.117011"
+        },
+        {
+          "id": "AUTO-20251129234938-127787-C-1",
+          "todoId": "AUTO-20251129234938-127787",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":50,\"high_priority\":22,\"aligned\":50},\"phase2\":{\"total\":49,\"high_priority\":20,\"aligned\":49},\"phase3\":{\"total\":56,\"high_priority\":26,\"aligned\":56},\"phase4\":{\"total\":57,\"high_priority\":27,\"aligned\":57},\"phase5\":{\"total\":35,\"high_priority\":17,\"aligned\":35}},\"strategy_critical\":\"[31 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"alignment_score\":100.0}",
+          "created": "2025-11-29T23:49:38.169451",
+          "lastModified": "2025-11-29T23:49:38.169464"
         }
       ]
     },
@@ -967,14 +1055,14 @@
       "id": "AUTO-20251127013512-665919",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "automation",
-        "documentation-health-analysis"
+        "docs-health"
       ],
       "created": "2025-11-27T01:35:12.665964",
-      "lastModified": "2025-11-27T04:14:55.584303",
+      "lastModified": "2025-11-30T00:11:45.244599",
       "dependencies": [],
       "comments": [
         {
@@ -1296,6 +1384,58 @@
           "content": "**Automation Results:**\n\n**Documentation Health Score: 82.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":278,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":82.0}",
           "created": "2025-11-27T04:14:54.299981",
           "lastModified": "2025-11-27T04:14:54.299990"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127163111-243279: Automation: Documentation Health Analysis",
+          "created": "2025-11-29T23:50:58.117085"
+        },
+        {
+          "id": "AUTO-20251127163111-243279-C-1",
+          "todoId": "AUTO-20251127163111-243279",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"SPRINT_AUTOMATION_REPORT.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":81.0}",
+          "created": "2025-11-27T16:31:12.656912",
+          "lastModified": "2025-11-27T16:31:12.656934"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127163215-913438: Automation: Documentation Health Analysis",
+          "created": "2025-11-29T23:50:58.117107"
+        },
+        {
+          "id": "AUTO-20251127163215-913438-C-1",
+          "todoId": "AUTO-20251127163215-913438",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"SPRINT_AUTOMATION_REPORT.md\"]},\"health_score\":81.0}",
+          "created": "2025-11-27T16:32:18.855774",
+          "lastModified": "2025-11-27T16:32:18.855784"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127163321-045367: Automation: Documentation Health Analysis",
+          "created": "2025-11-29T23:50:58.117130"
+        },
+        {
+          "id": "AUTO-20251127163321-045367-C-1",
+          "todoId": "AUTO-20251127163321-045367",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"SPRINT_AUTOMATION_REPORT.md\"]},\"health_score\":81.0}",
+          "created": "2025-11-27T16:33:24.021588",
+          "lastModified": "2025-11-27T16:33:24.021597"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127163558-177115: Automation: Documentation Health Analysis",
+          "created": "2025-11-29T23:50:58.117149"
+        },
+        {
+          "id": "AUTO-20251127163558-177115-C-1",
+          "todoId": "AUTO-20251127163558-177115",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"SPRINT_AUTOMATION_REPORT.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":81.0}",
+          "created": "2025-11-27T16:35:58.789834",
+          "lastModified": "2025-11-27T16:35:58.789842"
         }
       ]
     },
@@ -1303,14 +1443,15 @@
       "id": "AUTO-20251127013531-404869",
       "name": "Automation: Todo2 Duplicate Detection",
       "content": "Automated Todo2 Duplicate Detection execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
+        "automation",
         "todo2-duplicate-detection",
-        "automation"
+        "duplicate-detect"
       ],
       "created": "2025-11-27T01:35:31.404888",
-      "lastModified": "2025-11-27T04:14:55.584463",
+      "lastModified": "2025-11-30T00:11:45.244601",
       "dependencies": [],
       "comments": [
         {
@@ -1351,6 +1492,37 @@
           "type": "note",
           "content": "Merged with duplicate task AUTO-20251127041454-405726: Automation: Todo2 Duplicate Detection",
           "created": "2025-11-27T04:14:55.584460"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129234938-200247: Automation: Todo2 Duplicate Detection",
+          "created": "2025-11-29T23:50:58.117220"
+        },
+        {
+          "id": "AUTO-20251129234938-200247-C-1",
+          "todoId": "AUTO-20251129234938-200247",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 97 duplicate issues**\n\n\ud83d\udd0d **9 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **88 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":77,\"duplicates_found\":97,\"duplicate_ids\":[],\"exact_name_matches\":\"[9 items - truncated]\",\"similar_name_matches\":\"[88 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-11-29T23:49:40.622867",
+          "lastModified": "2025-11-29T23:49:40.622881"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129235050-296576: Automation: Todo2 Duplicate Detection",
+          "created": "2025-11-29T23:50:58.117243"
+        },
+        {
+          "id": "AUTO-20251129235050-296576-C-1",
+          "todoId": "AUTO-20251129235050-296576",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 99 duplicate issues**\n\n\ud83d\udd0d **9 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **90 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":78,\"duplicates_found\":99,\"duplicate_ids\":[],\"exact_name_matches\":\"[9 items - truncated]\",\"similar_name_matches\":\"[90 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-11-29T23:50:54.557355",
+          "lastModified": "2025-11-29T23:50:54.558643"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129235054-725275: Automation: Todo2 Duplicate Detection",
+          "created": "2025-11-29T23:50:58.117266"
         }
       ]
     },
@@ -1392,14 +1564,14 @@
       "id": "AUTO-20251127015719-113742",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
-        "dependency-security-scan",
-        "automation"
+        "automation",
+        "security-scan"
       ],
       "created": "2025-11-27T01:57:19.113851",
-      "lastModified": "2025-11-27T04:14:55.584676",
+      "lastModified": "2025-11-30T00:11:45.244603",
       "dependencies": [],
       "comments": [
         {
@@ -1474,6 +1646,97 @@
           "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
           "created": "2025-11-27T02:09:35.539631",
           "lastModified": "2025-11-27T02:09:35.539643"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127122301-726528: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117379"
+        },
+        {
+          "id": "AUTO-20251127122301-726528-C-1",
+          "todoId": "AUTO-20251127122301-726528",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T12:23:31.986014",
+          "lastModified": "2025-11-27T12:23:31.986040"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127124322-643991: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117399"
+        },
+        {
+          "id": "AUTO-20251127124322-643991-C-1",
+          "todoId": "AUTO-20251127124322-643991",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T12:43:22.759590",
+          "lastModified": "2025-11-27T12:43:22.759603"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127124535-991668: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117416"
+        },
+        {
+          "id": "AUTO-20251127124535-991668-C-1",
+          "todoId": "AUTO-20251127124535-991668",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T12:45:36.079735",
+          "lastModified": "2025-11-27T12:45:36.079746"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127124917-367745: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117433"
+        },
+        {
+          "id": "AUTO-20251127124917-367745-C-1",
+          "todoId": "AUTO-20251127124917-367745",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T12:49:17.444545",
+          "lastModified": "2025-11-27T12:49:17.444558"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127125703-923316: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117451"
+        },
+        {
+          "id": "AUTO-20251127125703-923316-C-1",
+          "todoId": "AUTO-20251127125703-923316",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-27T12:57:04.004352",
+          "lastModified": "2025-11-27T12:57:04.004366"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129201820-947865: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117470"
+        },
+        {
+          "id": "AUTO-20251129201820-947865-C-1",
+          "todoId": "AUTO-20251129201820-947865",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-29T20:18:20.963643",
+          "lastModified": "2025-11-29T20:18:20.963656"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129201821-352746: Automation: Dependency Security Scan",
+          "created": "2025-11-29T23:50:58.117490"
+        },
+        {
+          "id": "AUTO-20251129201821-352746-C-1",
+          "todoId": "AUTO-20251129201821-352746",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-11-29T20:18:21.361739",
+          "lastModified": "2025-11-29T20:18:21.361747"
         }
       ]
     },
@@ -1481,15 +1744,14 @@
       "id": "AUTO-20251127015719-639027",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "completed",
       "priority": "medium",
       "tags": [
         "tool-hints",
-        "external-tool-hints-automation",
         "automation"
       ],
       "created": "2025-11-27T01:57:19.639143",
-      "lastModified": "2025-11-27T04:14:55.584771",
+      "lastModified": "2025-11-30T00:11:45.244605",
       "dependencies": [],
       "comments": [
         {
@@ -1564,146 +1826,12 @@
           "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 14 documentation files\n\ud83d\udcda Libraries detected: 8 unique libraries\n\ud83d\udcca Coverage: 15.1% of files received hints\n\n**Key Findings:**\n- Added hints to 14 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: React, Pydantic, Python\n  - docs/PRD.md: TypeScript, Python, Pydantic\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: Python, FastAPI\n  - docs/DESIGN_DECISIONS.md: Uvicorn, Python, Pydantic",
           "created": "2025-11-27T02:09:35.794178",
           "lastModified": "2025-11-27T02:09:35.794188"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127041455-625085",
-      "name": "Automation: Automation Opportunity Finder",
-      "content": "Automated Automation Opportunity Finder execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "automation-opportunity-finder"
-      ],
-      "created": "2025-11-27T04:14:55.625041",
-      "lastModified": "2025-11-27T04:14:56.867142",
-      "dependencies": [],
-      "comments": [
+        },
         {
-          "id": "AUTO-20251127041455-625085-C-1",
-          "todoId": "AUTO-20251127041455-625085",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Found 0 automation opportunities:**\n- 0 high-priority (score \u2265 8)\n- 0 medium-priority (score 5-7)\n- 0 low-priority (score < 5)\n\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.\n\n**Key Findings:**\n{\"existing_automations\":0,\"opportunities_found\":0,\"opportunities\":[],\"high_priority\":[],\"medium_priority\":[],\"low_priority\":[]}",
-          "created": "2025-11-27T04:14:56.856391",
-          "lastModified": "2025-11-27T04:14:56.856402"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127041456-876519",
-      "name": "Automation: Test Runner",
-      "content": "Automated Test Runner execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "test-runner"
-      ],
-      "created": "2025-11-27T04:14:56.876580",
-      "lastModified": "2025-11-27T04:14:57.082681",
-      "dependencies": [],
-      "comments": [
-        {
-          "id": "AUTO-20251127041456-876519-C-1",
-          "todoId": "AUTO-20251127041456-876519",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Test Execution (unknown):** 0 tests run\n- Passed: 0\n- Failed: 0\n\n**Key Findings:**\n{\n  \"framework\": \"pytest\",\n  \"tests_run\": 0,\n  \"tests_passed\": 0,\n  \"tests_failed\": 0,\n  \"tests_skipped\": 0,\n  \"output\": \"\",\n  \"error\": \"/usr/local/opt/python@3.14/bin/python3.14: No module named pytest\\n\",\n  \"returncode\": 1,\n  \"output_file\": \"test-results/junit.xml\",\n  \"status\": \"success\"\n}",
-          "created": "2025-11-27T04:14:57.076907",
-          "lastModified": "2025-11-27T04:14:57.076945"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127041905-452383",
-      "name": "Automation: Test Coverage Analyzer",
-      "content": "Automated Test Coverage Analyzer execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "test-coverage-analyzer"
-      ],
-      "created": "2025-11-27T04:19:05.455195",
-      "lastModified": "2025-11-27T04:19:05.759860",
-      "dependencies": [],
-      "comments": [
-        {
-          "id": "AUTO-20251127041905-452383-C-1",
-          "todoId": "AUTO-20251127041905-452383",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
-          "created": "2025-11-27T04:19:05.750366",
-          "lastModified": "2025-11-27T04:19:05.751333"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127122218-061391",
-      "name": "Automation: Test Coverage Analyzer",
-      "content": "Automated Test Coverage Analyzer execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "test-coverage-analyzer"
-      ],
-      "created": "2025-11-27T12:22:18.061408",
-      "lastModified": "2025-11-27T12:22:19.608219",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127122218-061391-C-1",
-          "todoId": "AUTO-20251127122218-061391",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
-          "created": "2025-11-27T12:22:19.603173",
-          "lastModified": "2025-11-27T12:22:19.603184"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127122301-726528",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "dependency-security-scan"
-      ],
-      "created": "2025-11-27T12:23:01.726660",
-      "lastModified": "2025-11-27T12:23:31.992227",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127122301-726528-C-1",
-          "todoId": "AUTO-20251127122301-726528",
-          "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-27T12:23:31.986014",
-          "lastModified": "2025-11-27T12:23:31.986040"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127122332-396430",
-      "name": "Automation: External Tool Hints Automation",
-      "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "external-tool-hints-automation"
-      ],
-      "created": "2025-11-27T12:23:32.396564",
-      "lastModified": "2025-11-27T12:23:32.620968",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127122332-396430: Automation: External Tool Hints Automation",
+          "created": "2025-11-29T23:50:58.117573"
+        },
         {
           "id": "AUTO-20251127122332-396430-C-1",
           "todoId": "AUTO-20251127122332-396430",
@@ -1711,74 +1839,12 @@
           "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 15 documentation files\n\ud83d\udcda Libraries detected: 9 unique libraries\n\ud83d\udcca Coverage: 16.0% of files received hints\n\n**Key Findings:**\n- Added hints to 15 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: Python, React, Pydantic\n  - docs/PRD.md: Python, Pydantic, TypeScript\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: Python, FastAPI\n  - docs/DESIGN_DECISIONS.md: Python, Uvicorn, Pydantic",
           "created": "2025-11-27T12:23:32.609121",
           "lastModified": "2025-11-27T12:23:32.609131"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127122359-365160",
-      "name": "Automation: Test Coverage Analyzer",
-      "content": "Automated Test Coverage Analyzer execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "test-coverage-analyzer"
-      ],
-      "created": "2025-11-27T12:23:59.365230",
-      "lastModified": "2025-11-27T12:24:03.000443",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+        },
         {
-          "id": "AUTO-20251127122359-365160-C-1",
-          "todoId": "AUTO-20251127122359-365160",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"json\",\n    \"files\": [\n      {\n        \"filename\": \"project_management_automation/__init__.py\",\n        \"lines\": 4,\n        \"covered\": 4\n      },\n      {\n        \"filename\": \"project_management_automation/context_helpers.py\",\n        \"lines\": 152,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/lifespan.py\",\n        \"lines\": 110,\n        \"covered\": 25\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/__init__.py\",\n        \"lines\": 7,\n        \"covered\": 7\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/access_control.py\",\n        \"lines\": 39,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/logging_middleware.py\",\n        \"lines\": 69,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/path_validation.py\",\n        \"lines\": 54,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/rate_limit.py\",\n        \"lines\": 46,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/security.py\",\n        \"lines\": 41,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/tool_filter.py\",\n        \"lines\": 56,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/naming.py\",\n        \"lines\": 30,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/resources/__init__.py\",\n        \"lines\": 2,\n        \"covered\": 2\n      },\n      {\n        \"filename\": \"project_management_automation/resources/cache.py\",\n        \"lines\": 32,\n        \"covered\": 26\n      },\n      {\n        \"filename\": \"project_management_automation/resources/catalog.py\",\n        \"lines\": 84,\n        \"covered\": 10\n      },\n      {\n        \"filename\": \"project_management_automation/resources/history.py\",\n        \"lines\": 27,\n        \"covered\": 24\n      },\n      {\n        \"filename\": \"project_management_automation/resources/list.py\",\n        \"lines\": 11,\n        \"covered\": 8\n      },\n      {\n        \"filename\": \"project_management_automation/resources/memories.py\",\n        \"lines\": 188,\n        \"covered\": 158\n      },\n      {\n        \"filename\": \"project_management_automation/resources/status.py\",\n        \"lines\": 17,\n        \"covered\": 14\n      },\n      {\n        \"filename\": \"project_management_automation/resources/tasks.py\",\n        \"lines\": 93,\n        \"covered\": 12\n      },\n      {\n        \"filename\": \"project_management_automation/resources/templates.py\",\n        \"lines\": 144,\n        \"covered\": 36\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/__init__.py\",\n        \"lines\": 0,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_automation_opportunities.py\",\n        \"lines\": 218,\n        \"covered\": 31\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_daily.py\",\n        \"lines\": 129,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_dependency_security.py\",\n        \"lines\": 364,\n        \"covered\": 126\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_docs_health_v2.py\",\n        \"lines\": 236,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_external_tool_hints.py\",\n        \"lines\": 179,\n        \"covered\": 143\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_pwa_review.py\",\n        \"lines\": 175,\n        \"covered\": 30\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_run_tests.py\",\n        \"lines\": 209,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_sprint.py\",\n        \"lines\": 474,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_test_coverage.py\",\n        \"lines\": 217,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_todo2_alignment_v2.py\",\n        \"lines\": 278,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_todo2_duplicate_detection.py\",\n        \"lines\": 375,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_todo_sync.py\",\n        \"lines\": 281,\n        \"covered\": 34\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/base/__init__.py\",\n        \"lines\": 3,\n        \"covered\": 3\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/base/intelligent_automation_base.py\",\n        \"lines\": 343,\n        \"covered\": 203\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/base/mcp_client.py\",\n        \"lines\": 117,\n        \"covered\": 70\n      },\n      {\n        \"filename\": \"project_management_automation/server.py\",\n        \"lines\": 777,\n        \"covered\": 384\n      },\n      {\n        \"filename\": \"project_management_automation/tools/__init__.py\",\n        \"lines\": 9,\n        \"covered\": 9\n      },\n      {\n        \"filename\": \"project_management_automation/tools/automation_opportunities.py\",\n        \"lines\": 47,\n        \"covered\": 33\n      },\n      {\n        \"filename\": \"project_management_automation/tools/batch_task_approval.py\",\n        \"lines\": 59,\n        \"covered\": 5\n      },\n      {\n        \"filename\": \"project_management_automation/tools/ci_cd_validation.py\",\n        \"lines\": 183,\n        \"covered\": 101\n      },\n      {\n        \"filename\": \"project_management_automation/tools/codeql_security.py\",\n        \"lines\": 180,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/tools/consolidated.py\",\n        \"lines\": 304,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/tools/context_summarizer.py\",\n        \"lines\": 213,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/cursor_rules_generator.py\",\n        \"lines\": 114,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/cursorignore_generator.py\",\n        \"lines\": 87,\n        \"covered\": 18\n      },\n      {\n        \"filename\": \"project_management_automation/tools/daily_automation.py\",\n        \"lines\": 46,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/tools/definition_of_done.py\",\n        \"lines\": 161,\n        \"covered\": 27\n      },\n      {\n        \"filename\": \"project_management_automation/tools/dependabot_integration.py\",\n        \"lines\": 93,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/tools/dependency_security.py\",\n        \"lines\": 113,\n        \"covered\": 82\n      },\n      {\n        \"filename\": \"project_management_automation/tools/docs_health.py\",\n        \"lines\": 45,\n        \"covered\": 36\n      },\n      {\n        \"filename\": \"project_management_automation/tools/duplicate_detection.py\",\n        \"lines\": 68,\n        \"covered\": 42\n      },\n      {\n        \"filename\": \"project_management_automation/tools/dynamic_tools.py\",\n        \"lines\": 306,\n        \"covered\": 80\n      },\n      {\n        \"filename\": \"project_management_automation/tools/external_tool_hints.py\",\n        \"lines\": 48,\n        \"covered\": 34\n      },\n      {\n        \"filename\": \"project_management_automation/tools/git_hooks.py\",\n        \"lines\": 81,\n        \"covered\": 38\n      },\n      {\n        \"filename\": \"project_management_automation/tools/hint_catalog.py\",\n        \"lines\": 65,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/tools/linter.py\",\n        \"lines\": 141,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/tools/model_recommender.py\",\n        \"lines\": 74,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/tools/nightly_task_automation.py\",\n        \"lines\": 297,\n        \"covered\": 85\n      },\n      {\n        \"filename\": \"project_management_automation/tools/pattern_triggers.py\",\n        \"lines\": 87,\n        \"covered\": 38\n      },\n      {\n        \"filename\": \"project_management_automation/tools/prd_alignment.py\",\n        \"lines\": 140,\n        \"covered\": 26\n      },\n      {\n        \"filename\": \"project_management_automation/tools/prd_generator.py\",\n        \"lines\": 444,\n        \"covered\": 35\n      },\n      {\n        \"filename\": \"project_management_automation/tools/problems_advisor.py\",\n        \"lines\": 130,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/tools/project_overview.py\",\n        \"lines\": 234,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/project_scorecard.py\",\n        \"lines\": 383,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/prompt_iteration_tracker.py\",\n        \"lines\": 110,\n        \"covered\": 23\n      },\n      {\n        \"filename\": \"project_management_automation/tools/pwa_review.py\",\n        \"lines\": 51,\n        \"covered\": 36\n      },\n      {\n        \"filename\": \"project_management_automation/tools/run_tests.py\",\n        \"lines\": 102,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/session_memory.py\",\n        \"lines\": 145,\n        \"covered\": 93\n      },\n      {\n        \"filename\": \"project_management_automation/tools/simplify_rules.py\",\n        \"lines\": 71,\n        \"covered\": 45\n      },\n      {\n        \"filename\": \"project_management_automation/tools/sprint_automation.py\",\n        \"lines\": 68,\n        \"covered\": 17\n      },\n      {\n        \"filename\": \"project_management_automation/tools/tag_consolidation.py\",\n        \"lines\": 193,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/task_clarification_resolution.py\",\n        \"lines\": 91,\n        \"covered\": 64\n      },\n      {\n        \"filename\": \"project_management_automation/tools/task_hierarchy_analyzer.py\",\n        \"lines\": 145,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/tools/test_coverage.py\",\n        \"lines\": 42,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/tools/todo2_alignment.py\",\n        \"lines\": 47,\n        \"covered\": 33\n      },\n      {\n        \"filename\": \"project_management_automation/tools/todo_sync.py\",\n        \"lines\": 48,\n        \"covered\": 34\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/__init__.py\",\n        \"lines\": 30,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/advisors.py\",\n        \"lines\": 125,\n        \"covered\": 113\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/pistis_sophia.py\",\n        \"lines\": 72,\n        \"covered\": 35\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/sefaria.py\",\n        \"lines\": 172,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/sources.py\",\n        \"lines\": 132,\n        \"covered\": 61\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/voice.py\",\n        \"lines\": 195,\n        \"covered\": 105\n      },\n      {\n        \"filename\": \"project_management_automation/tools/workflow_recommender.py\",\n        \"lines\": 126,\n        \"covered\": 23\n      },\n      {\n        \"filename\": \"project_management_automation/tools/working_copy_health.py\",\n        \"lines\": 172,\n        \"covered\": 71\n      },\n      {\n        \"filename\": \"project_management_automation/utils/__init__.py\",\n        \"lines\": 29,\n        \"covered\": 24\n      },\n      {\n        \"filename\": \"project_management_automation/utils/dev_reload.py\",\n        \"lines\": 82,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/utils/logging_config.py\",\n        \"lines\": 38,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/utils/output.py\",\n        \"lines\": 36,\n        \"covered\": 8\n      },\n      {\n        \"filename\": \"project_management_automation/utils/security.py\",\n        \"lines\": 177,\n        \"covered\": 60\n      },\n      {\n        \"filename\": \"project_management_automation/utils/todo2_utils.py\",\n        \"lines\": 61,\n        \"covered\": 30\n      },\n      {\n        \"filename\": \"project_management_automation/version.py\",\n        \"lines\": 205,\n        \"covered\": 60\n      }\n    ],\n    \"total_lines\": 12498,\n    \"covered_lines\": 3634,\n    \"total_coverage\": 29.0766522643623\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [\n    {\n      \"filename\": \"project_management_automation/naming.py\",\n      \"coverage\": 0.0,\n      \"lines\": 30,\n      \"covered\": 0,\n      \"missing\": 30\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_run_tests.py\",\n      \"coverage\": 0.0,\n      \"lines\": 209,\n      \"covered\": 0,\n      \"missing\": 209\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_sprint.py\",\n      \"coverage\": 0.0,\n      \"lines\": 474,\n      \"covered\": 0,\n      \"missing\": 474\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_test_coverage.py\",\n      \"coverage\": 0.0,\n      \"lines\": 217,\n      \"covered\": 0,\n      \"missing\": 217\n    },\n    {\n      \"filename\": \"project_management_automation/tools/codeql_security.py\",\n      \"coverage\": 0.0,\n      \"lines\": 180,\n      \"covered\": 0,\n      \"missing\": 180\n    },\n    {\n      \"filename\": \"project_management_automation/tools/dependabot_integration.py\",\n      \"coverage\": 0.0,\n      \"lines\": 93,\n      \"covered\": 0,\n      \"missing\": 93\n    },\n    {\n      \"filename\": \"project_management_automation/tools/project_scorecard.py\",\n      \"coverage\": 5.221932114882506,\n      \"lines\": 383,\n      \"covered\": 20,\n      \"missing\": 363\n    },\n    {\n      \"filename\": \"project_management_automation/tools/prd_generator.py\",\n      \"coverage\": 7.882882882882883,\n      \"lines\": 444,\n      \"covered\": 35,\n      \"missing\": 409\n    },\n    {\n      \"filename\": \"project_management_automation/tools/batch_task_approval.py\",\n      \"coverage\": 8.47457627118644,\n      \"lines\": 59,\n      \"covered\": 5,\n      \"missing\": 54\n    },\n    {\n      \"filename\": \"project_management_automation/tools/project_overview.py\",\n      \"coverage\": 8.547008547008547,\n      \"lines\": 234,\n      \"covered\": 20,\n      \"missing\": 214\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/sefaria.py\",\n      \"coverage\": 8.720930232558139,\n      \"lines\": 172,\n      \"covered\": 15,\n      \"missing\": 157\n    },\n    {\n      \"filename\": \"project_management_automation/tools/context_summarizer.py\",\n      \"coverage\": 9.389671361502346,\n      \"lines\": 213,\n      \"covered\": 20,\n      \"missing\": 193\n    },\n    {\n      \"filename\": \"project_management_automation/tools/tag_consolidation.py\",\n      \"coverage\": 10.362694300518134,\n      \"lines\": 193,\n      \"covered\": 20,\n      \"missing\": 173\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_todo2_duplicate_detection.py\",\n      \"coverage\": 10.4,\n      \"lines\": 375,\n      \"covered\": 39,\n      \"missing\": 336\n    },\n    {\n      \"filename\": \"project_management_automation/tools/task_hierarchy_analyzer.py\",\n      \"coverage\": 11.03448275862069,\n      \"lines\": 145,\n      \"covered\": 16,\n      \"missing\": 129\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_todo2_alignment_v2.py\",\n      \"coverage\": 11.510791366906476,\n      \"lines\": 278,\n      \"covered\": 32,\n      \"missing\": 246\n    },\n    {\n      \"filename\": \"project_management_automation/resources/catalog.py\",\n      \"coverage\": 11.904761904761903,\n      \"lines\": 84,\n      \"covered\": 10,\n      \"missing\": 74\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_todo_sync.py\",\n      \"coverage\": 12.099644128113878,\n      \"lines\": 281,\n      \"covered\": 34,\n      \"missing\": 247\n    },\n    {\n      \"filename\": \"project_management_automation/tools/consolidated.py\",\n      \"coverage\": 12.828947368421053,\n      \"lines\": 304,\n      \"covered\": 39,\n      \"missing\": 265\n    },\n    {\n      \"filename\": \"project_management_automation/resources/tasks.py\",\n      \"coverage\": 12.903225806451612,\n      \"lines\": 93,\n      \"covered\": 12,\n      \"missing\": 81\n    },\n    {\n      \"filename\": \"project_management_automation/tools/linter.py\",\n      \"coverage\": 13.47517730496454,\n      \"lines\": 141,\n      \"covered\": 19,\n      \"missing\": 122\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_docs_health_v2.py\",\n      \"coverage\": 13.559322033898304,\n      \"lines\": 236,\n      \"covered\": 32,\n      \"missing\": 204\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_automation_opportunities.py\",\n      \"coverage\": 14.220183486238533,\n      \"lines\": 218,\n      \"covered\": 31,\n      \"missing\": 187\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_daily.py\",\n      \"coverage\": 15.503875968992247,\n      \"lines\": 129,\n      \"covered\": 20,\n      \"missing\": 109\n    },\n    {\n      \"filename\": \"project_management_automation/tools/definition_of_done.py\",\n      \"coverage\": 16.77018633540373,\n      \"lines\": 161,\n      \"covered\": 27,\n      \"missing\": 134\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_pwa_review.py\",\n      \"coverage\": 17.142857142857142,\n      \"lines\": 175,\n      \"covered\": 30,\n      \"missing\": 145\n    },\n    {\n      \"filename\": \"project_management_automation/tools/cursor_rules_generator.py\",\n      \"coverage\": 17.543859649122805,\n      \"lines\": 114,\n      \"covered\": 20,\n      \"missing\": 94\n    },\n    {\n      \"filename\": \"project_management_automation/tools/workflow_recommender.py\",\n      \"coverage\": 18.253968253968253,\n      \"lines\": 126,\n      \"covered\": 23,\n      \"missing\": 103\n    },\n    {\n      \"filename\": \"project_management_automation/tools/prd_alignment.py\",\n      \"coverage\": 18.571428571428573,\n      \"lines\": 140,\n      \"covered\": 26,\n      \"missing\": 114\n    },\n    {\n      \"filename\": \"project_management_automation/utils/dev_reload.py\",\n      \"coverage\": 19.51219512195122,\n      \"lines\": 82,\n      \"covered\": 16,\n      \"missing\": 66\n    },\n    {\n      \"filename\": \"project_management_automation/tools/run_tests.py\",\n      \"coverage\": 19.607843137254903,\n      \"lines\": 102,\n      \"covered\": 20,\n      \"missing\": 82\n    },\n    {\n      \"filename\": \"project_management_automation/tools/cursorignore_generator.py\",\n      \"coverage\": 20.689655172413794,\n      \"lines\": 87,\n      \"covered\": 18,\n      \"missing\": 69\n    },\n    {\n      \"filename\": \"project_management_automation/tools/prompt_iteration_tracker.py\",\n      \"coverage\": 20.909090909090907,\n      \"lines\": 110,\n      \"covered\": 23,\n      \"missing\": 87\n    },\n    {\n      \"filename\": \"project_management_automation/tools/model_recommender.py\",\n      \"coverage\": 21.62162162162162,\n      \"lines\": 74,\n      \"covered\": 16,\n      \"missing\": 58\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/logging_middleware.py\",\n      \"coverage\": 21.73913043478261,\n      \"lines\": 69,\n      \"covered\": 15,\n      \"missing\": 54\n    },\n    {\n      \"filename\": \"project_management_automation/utils/output.py\",\n      \"coverage\": 22.22222222222222,\n      \"lines\": 36,\n      \"covered\": 8,\n      \"missing\": 28\n    },\n    {\n      \"filename\": \"project_management_automation/lifespan.py\",\n      \"coverage\": 22.727272727272727,\n      \"lines\": 110,\n      \"covered\": 25,\n      \"missing\": 85\n    },\n    {\n      \"filename\": \"project_management_automation/tools/hint_catalog.py\",\n      \"coverage\": 24.615384615384617,\n      \"lines\": 65,\n      \"covered\": 16,\n      \"missing\": 49\n    },\n    {\n      \"filename\": \"project_management_automation/resources/templates.py\",\n      \"coverage\": 25.0,\n      \"lines\": 144,\n      \"covered\": 36,\n      \"missing\": 108\n    },\n    {\n      \"filename\": \"project_management_automation/tools/sprint_automation.py\",\n      \"coverage\": 25.0,\n      \"lines\": 68,\n      \"covered\": 17,\n      \"missing\": 51\n    },\n    {\n      \"filename\": \"project_management_automation/context_helpers.py\",\n      \"coverage\": 25.657894736842106,\n      \"lines\": 152,\n      \"covered\": 39,\n      \"missing\": 113\n    },\n    {\n      \"filename\": \"project_management_automation/tools/dynamic_tools.py\",\n      \"coverage\": 26.143790849673206,\n      \"lines\": 306,\n      \"covered\": 80,\n      \"missing\": 226\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/tool_filter.py\",\n      \"coverage\": 26.785714285714285,\n      \"lines\": 56,\n      \"covered\": 15,\n      \"missing\": 41\n    },\n    {\n      \"filename\": \"project_management_automation/tools/nightly_task_automation.py\",\n      \"coverage\": 28.619528619528616,\n      \"lines\": 297,\n      \"covered\": 85,\n      \"missing\": 212\n    },\n    {\n      \"filename\": \"project_management_automation/version.py\",\n      \"coverage\": 29.268292682926827,\n      \"lines\": 205,\n      \"covered\": 60,\n      \"missing\": 145\n    },\n    {\n      \"filename\": \"project_management_automation/tools/problems_advisor.py\",\n      \"coverage\": 30.0,\n      \"lines\": 130,\n      \"covered\": 39,\n      \"missing\": 91\n    },\n    {\n      \"filename\": \"project_management_automation/utils/security.py\",\n      \"coverage\": 33.89830508474576,\n      \"lines\": 177,\n      \"covered\": 60,\n      \"missing\": 117\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_dependency_security.py\",\n      \"coverage\": 34.61538461538461,\n      \"lines\": 364,\n      \"covered\": 126,\n      \"missing\": 238\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/rate_limit.py\",\n      \"coverage\": 34.78260869565217,\n      \"lines\": 46,\n      \"covered\": 16,\n      \"missing\": 30\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/path_validation.py\",\n      \"coverage\": 35.18518518518518,\n      \"lines\": 54,\n      \"covered\": 19,\n      \"missing\": 35\n    },\n    {\n      \"filename\": \"project_management_automation/tools/test_coverage.py\",\n      \"coverage\": 35.714285714285715,\n      \"lines\": 42,\n      \"covered\": 15,\n      \"missing\": 27\n    },\n    {\n      \"filename\": \"project_management_automation/tools/working_copy_health.py\",\n      \"coverage\": 41.27906976744186,\n      \"lines\": 172,\n      \"covered\": 71,\n      \"missing\": 101\n    },\n    {\n      \"filename\": \"project_management_automation/tools/pattern_triggers.py\",\n      \"coverage\": 43.67816091954023,\n      \"lines\": 87,\n      \"covered\": 38,\n      \"missing\": 49\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/sources.py\",\n      \"coverage\": 46.21212121212121,\n      \"lines\": 132,\n      \"covered\": 61,\n      \"missing\": 71\n    },\n    {\n      \"filename\": \"project_management_automation/tools/git_hooks.py\",\n      \"coverage\": 46.913580246913575,\n      \"lines\": 81,\n      \"covered\": 38,\n      \"missing\": 43\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/pistis_sophia.py\",\n      \"coverage\": 48.61111111111111,\n      \"lines\": 72,\n      \"covered\": 35,\n      \"missing\": 37\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/access_control.py\",\n      \"coverage\": 48.717948717948715,\n      \"lines\": 39,\n      \"covered\": 19,\n      \"missing\": 20\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/security.py\",\n      \"coverage\": 48.78048780487805,\n      \"lines\": 41,\n      \"covered\": 20,\n      \"missing\": 21\n    },\n    {\n      \"filename\": \"project_management_automation/utils/todo2_utils.py\",\n      \"coverage\": 49.18032786885246,\n      \"lines\": 61,\n      \"covered\": 30,\n      \"missing\": 31\n    },\n    {\n      \"filename\": \"project_management_automation/server.py\",\n      \"coverage\": 49.42084942084942,\n      \"lines\": 777,\n      \"covered\": 384,\n      \"missing\": 393\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/voice.py\",\n      \"coverage\": 53.84615384615385,\n      \"lines\": 195,\n      \"covered\": 105,\n      \"missing\": 90\n    },\n    {\n      \"filename\": \"project_management_automation/tools/ci_cd_validation.py\",\n      \"coverage\": 55.19125683060109,\n      \"lines\": 183,\n      \"covered\": 101,\n      \"missing\": 82\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/base/intelligent_automation_base.py\",\n      \"coverage\": 59.183673469387756,\n      \"lines\": 343,\n      \"covered\": 203,\n      \"missing\": 140\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/base/mcp_client.py\",\n      \"coverage\": 59.82905982905983,\n      \"lines\": 117,\n      \"covered\": 70,\n      \"missing\": 47\n    },\n    {\n      \"filename\": \"project_management_automation/tools/duplicate_detection.py\",\n      \"coverage\": 61.76470588235294,\n      \"lines\": 68,\n      \"covered\": 42,\n      \"missing\": 26\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/__init__.py\",\n      \"coverage\": 63.33333333333333,\n      \"lines\": 30,\n      \"covered\": 19,\n      \"missing\": 11\n    },\n    {\n      \"filename\": \"project_management_automation/tools/simplify_rules.py\",\n      \"coverage\": 63.38028169014085,\n      \"lines\": 71,\n      \"covered\": 45,\n      \"missing\": 26\n    },\n    {\n      \"filename\": \"project_management_automation/tools/session_memory.py\",\n      \"coverage\": 64.13793103448275,\n      \"lines\": 145,\n      \"covered\": 93,\n      \"missing\": 52\n    },\n    {\n      \"filename\": \"project_management_automation/tools/daily_automation.py\",\n      \"coverage\": 69.56521739130434,\n      \"lines\": 46,\n      \"covered\": 32,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/automation_opportunities.py\",\n      \"coverage\": 70.2127659574468,\n      \"lines\": 47,\n      \"covered\": 33,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/todo2_alignment.py\",\n      \"coverage\": 70.2127659574468,\n      \"lines\": 47,\n      \"covered\": 33,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/task_clarification_resolution.py\",\n      \"coverage\": 70.32967032967034,\n      \"lines\": 91,\n      \"covered\": 64,\n      \"missing\": 27\n    },\n    {\n      \"filename\": \"project_management_automation/tools/pwa_review.py\",\n      \"coverage\": 70.58823529411765,\n      \"lines\": 51,\n      \"covered\": 36,\n      \"missing\": 15\n    },\n    {\n      \"filename\": \"project_management_automation/tools/external_tool_hints.py\",\n      \"coverage\": 70.83333333333334,\n      \"lines\": 48,\n      \"covered\": 34,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/todo_sync.py\",\n      \"coverage\": 70.83333333333334,\n      \"lines\": 48,\n      \"covered\": 34,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/dependency_security.py\",\n      \"coverage\": 72.56637168141593,\n      \"lines\": 113,\n      \"covered\": 82,\n      \"missing\": 31\n    },\n    {\n      \"filename\": \"project_management_automation/resources/list.py\",\n      \"coverage\": 72.72727272727273,\n      \"lines\": 11,\n      \"covered\": 8,\n      \"missing\": 3\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_external_tool_hints.py\",\n      \"coverage\": 79.88826815642457,\n      \"lines\": 179,\n      \"covered\": 143,\n      \"missing\": 36\n    }\n  ],\n  \"meets_threshold\": false\n}",
-          "created": "2025-11-27T12:24:02.994688",
-          "lastModified": "2025-11-27T12:24:02.994697"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127124322-643991",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "dependency-security-scan"
-      ],
-      "created": "2025-11-27T12:43:22.643977",
-      "lastModified": "2025-11-27T12:43:22.764507",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127124322-643991-C-1",
-          "todoId": "AUTO-20251127124322-643991",
-          "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-27T12:43:22.759590",
-          "lastModified": "2025-11-27T12:43:22.759603"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127124322-933465",
-      "name": "Automation: External Tool Hints Automation",
-      "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "external-tool-hints-automation"
-      ],
-      "created": "2025-11-27T12:43:22.933503",
-      "lastModified": "2025-11-27T12:43:23.151242",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127124322-933465: Automation: External Tool Hints Automation",
+          "created": "2025-11-29T23:50:58.117593"
+        },
         {
           "id": "AUTO-20251127124322-933465-C-1",
           "todoId": "AUTO-20251127124322-933465",
@@ -1786,49 +1852,12 @@
           "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 15 documentation files\n\ud83d\udcda Libraries detected: 9 unique libraries\n\ud83d\udcca Coverage: 16.0% of files received hints\n\n**Key Findings:**\n- Added hints to 15 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: Python, FastAPI, Pydantic\n  - docs/PRD.md: Python, Pydantic, TypeScript\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: Python, FastAPI\n  - docs/DESIGN_DECISIONS.md: Uvicorn, Python, Pydantic",
           "created": "2025-11-27T12:43:23.139070",
           "lastModified": "2025-11-27T12:43:23.139082"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127124535-991668",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "dependency-security-scan"
-      ],
-      "created": "2025-11-27T12:45:35.991707",
-      "lastModified": "2025-11-27T12:45:36.085265",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+        },
         {
-          "id": "AUTO-20251127124535-991668-C-1",
-          "todoId": "AUTO-20251127124535-991668",
-          "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-27T12:45:36.079735",
-          "lastModified": "2025-11-27T12:45:36.079746"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127124536-277353",
-      "name": "Automation: External Tool Hints Automation",
-      "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "external-tool-hints-automation"
-      ],
-      "created": "2025-11-27T12:45:36.277456",
-      "lastModified": "2025-11-27T12:45:36.633448",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127124536-277353: Automation: External Tool Hints Automation",
+          "created": "2025-11-29T23:50:58.117611"
+        },
         {
           "id": "AUTO-20251127124536-277353-C-1",
           "todoId": "AUTO-20251127124536-277353",
@@ -1836,49 +1865,12 @@
           "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 15 documentation files\n\ud83d\udcda Libraries detected: 9 unique libraries\n\ud83d\udcca Coverage: 16.0% of files received hints\n\n**Key Findings:**\n- Added hints to 15 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: Python, React, Pydantic\n  - docs/PRD.md: Python, Pydantic, TypeScript\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: Python, FastAPI\n  - docs/DESIGN_DECISIONS.md: Python, Uvicorn, Pydantic",
           "created": "2025-11-27T12:45:36.618407",
           "lastModified": "2025-11-27T12:45:36.618418"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127124917-367745",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "dependency-security-scan"
-      ],
-      "created": "2025-11-27T12:49:17.367879",
-      "lastModified": "2025-11-27T12:49:17.450109",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+        },
         {
-          "id": "AUTO-20251127124917-367745-C-1",
-          "todoId": "AUTO-20251127124917-367745",
-          "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-27T12:49:17.444545",
-          "lastModified": "2025-11-27T12:49:17.444558"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127124917-624097",
-      "name": "Automation: External Tool Hints Automation",
-      "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "external-tool-hints-automation"
-      ],
-      "created": "2025-11-27T12:49:17.624407",
-      "lastModified": "2025-11-27T12:49:17.874426",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127124917-624097: Automation: External Tool Hints Automation",
+          "created": "2025-11-29T23:50:58.117635"
+        },
         {
           "id": "AUTO-20251127124917-624097-C-1",
           "todoId": "AUTO-20251127124917-624097",
@@ -1886,49 +1878,12 @@
           "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 15 documentation files\n\ud83d\udcda Libraries detected: 9 unique libraries\n\ud83d\udcca Coverage: 16.0% of files received hints\n\n**Key Findings:**\n- Added hints to 15 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: Pydantic, Python, React\n  - docs/PRD.md: Pydantic, Python, TypeScript\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: Python, FastAPI\n  - docs/DESIGN_DECISIONS.md: Pydantic, Python, FastAPI",
           "created": "2025-11-27T12:49:17.862116",
           "lastModified": "2025-11-27T12:49:17.862127"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127125703-923316",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "dependency-security-scan"
-      ],
-      "created": "2025-11-27T12:57:03.923381",
-      "lastModified": "2025-11-27T12:57:04.011298",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+        },
         {
-          "id": "AUTO-20251127125703-923316-C-1",
-          "todoId": "AUTO-20251127125703-923316",
-          "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-27T12:57:04.004352",
-          "lastModified": "2025-11-27T12:57:04.004366"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127125704-196180",
-      "name": "Automation: External Tool Hints Automation",
-      "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "external-tool-hints-automation"
-      ],
-      "created": "2025-11-27T12:57:04.196184",
-      "lastModified": "2025-11-27T12:57:04.438022",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127125704-196180: Automation: External Tool Hints Automation",
+          "created": "2025-11-29T23:50:58.117653"
+        },
         {
           "id": "AUTO-20251127125704-196180-C-1",
           "todoId": "AUTO-20251127125704-196180",
@@ -1936,365 +1891,12 @@
           "content": "**Automation Results:**\n\n\u2705 Added Context7 hints to 15 documentation files\n\ud83d\udcda Libraries detected: 9 unique libraries\n\ud83d\udcca Coverage: 16.0% of files received hints\n\n**Key Findings:**\n- Added hints to 15 files\n  - docs/CURSOR_IDE_BEST_PRACTICES.md: FastAPI, React, Pydantic\n  - docs/PRD.md: Pydantic, TypeScript, Python\n  - docs/PROJECT_OVERVIEW.md: Python\n  - docs/EXARP_IMPROVEMENT_FROM_BEST_PRACTICES.md: FastAPI, Python\n  - docs/DESIGN_DECISIONS.md: FastAPI, Pydantic, Uvicorn",
           "created": "2025-11-27T12:57:04.422810",
           "lastModified": "2025-11-27T12:57:04.422820"
-        }
-      ]
-    },
-    {
-      "id": "T-20251127-TESTCOV-01",
-      "name": "Implement test coverage improvement plan",
-      "content": "Implemented test coverage plan to increase coverage from 30% to 32%.\n\n## Work Completed:\n1. **tests/test_utils_security.py** (40 tests)\n   - PathValidator: boundary checks, blocked patterns, path traversal prevention\n   - Input validation: sanitize_string, validate_identifier, validate_enum, validate_range\n   - RateLimiter: burst limits, token refill, separate keys\n   - AccessController: tool permissions, read-only mode\n\n2. **tests/test_utils_todo2.py** (27 tests)\n   - _normalize_git_remote: HTTPS/SSH URL normalization\n   - get_repo_project_id: Git remote detection\n   - task_belongs_to_project: Project ownership checks\n   - filter_tasks_by_project: Task filtering\n   - annotate_task_project: Task annotation\n\n3. **tests/test_consolidated_tools.py** (27 tests)\n   - generate_config, setup_hooks, prompt_tracking\n   - health, report, task_analysis, task_workflow, analyze_alignment\n\n4. **tests/test_context_summarizer.py** (30 tests)\n   - summarize_context: all levels (brief, detailed, key_metrics, actionable)\n   - batch_summarize, estimate_context_budget\n   - TOOL_PATTERNS configuration validation\n\n## Results:\n- Tests: 175 \u2192 299 (+124 tests)\n- Coverage: 30% \u2192 32% (+337 lines covered)\n- All tests passing",
-      "status": "Done",
-      "priority": "high",
-      "tags": [
-        "testing",
-        "coverage",
-        "completed"
-      ],
-      "created": "2025-11-27T12:59:01.630273",
-      "lastModified": "2025-11-27T12:59:01.630273",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "completedAt": "2025-11-27T12:59:01.630273",
-      "comments": []
-    },
-    {
-      "id": "T-20251127-TESTCOV-02",
-      "name": "Add tests for 0% coverage modules (quick wins)",
-      "content": "Target modules with 0% coverage for easy wins:\n\n## Completed:\n1. \u2705 **tools/codeql_security.py** - test_codeql_security.py (5 tests)\n2. \u2705 **tools/dependabot_integration.py** - test_dependabot_integration.py (5 tests)\n3. \u2705 **tools/model_recommender.py** - test_model_recommender.py (5 tests)\n4. \u2705 **tools/daily_automation.py** - test_daily_automation.py (7 tests)\n5. \u2705 **tools/task_clarification_resolution.py** - test_task_clarification_resolution.py (9 tests)\n6. \u2705 **tools/pattern_triggers.py** - test_pattern_triggers.py (8 tests)\n7. \u2705 **tools/simplify_rules.py** - test_simplify_rules.py (9 tests)\n\n## Remaining:\n- Additional test cases for edge cases\n- Integration tests\n\n## Impact:\n- 48+ new tests added\n- Coverage increase: 45% \u2192 ~50%+",
-      "status": "Done",
-      "priority": "high",
-      "tags": [
-        "testing",
-        "coverage",
-        "quick-wins"
-      ],
-      "created": "2025-11-27T12:59:01.630273",
-      "lastModified": "2025-11-29T19:30:00.000000",
-      "dependencies": [
-        "T-20251127-TESTCOV-01"
-      ],
-      "project_id": "davidl71/project-management-automation",
-      "completedAt": "2025-11-29T19:30:00.000000",
-      "comments": []
-    },
-    {
-      "id": "T-20251127-TESTCOV-03",
-      "name": "Fix module import mismatches in consolidated.py",
-      "content": "Fix bugs discovered during test coverage work.\n\n## Issues Found:\n1. **Line 180**: imports from .rule_simplifier but module is .simplify_rules\n2. **Line 268, 271**: imports from .prompt_tracker but module is .prompt_iteration_tracker  \n3. **Line 514, 841**: imports from .task_hierarchy but module is .task_hierarchy_analyzer\n\n## Impact:\n- These actions will fail at runtime if called\n- Tests had to skip these cases\n\n## Fix:\nUpdate import statements to use correct module names.",
-      "status": "Todo",
-      "priority": "high",
-      "tags": [
-        "bug",
-        "imports",
-        "consolidated"
-      ],
-      "created": "2025-11-27T12:59:01.630273",
-      "lastModified": "2025-11-27T12:59:01.630273",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": []
-    },
-    {
-      "id": "T-20251127-TESTCOV-04",
-      "name": "Add tests for linter.py (13% coverage)",
-      "content": "Add tests for the linter tool module.\n\n## Current State:\n- Coverage: 13% (122 lines missed)\n- Key functions untested\n\n## Test Areas:\n1. Linter configuration parsing\n2. Ruff/flake8 command generation\n3. Problem analysis and hints\n4. Auto-fix functionality\n5. Output formatting\n\n## Approach:\n- Mock subprocess calls to linters\n- Test various problem types\n- Verify hint generation logic",
-      "status": "Todo",
-      "priority": "medium",
-      "tags": [
-        "testing",
-        "coverage",
-        "linter"
-      ],
-      "created": "2025-11-27T12:59:01.630273",
-      "lastModified": "2025-11-27T12:59:01.630273",
-      "dependencies": [
-        "T-20251127-TESTCOV-01"
-      ],
-      "project_id": "davidl71/project-management-automation",
-      "comments": []
-    },
-    {
-      "id": "T-20251127-TESTCOV-05",
-      "name": "Add tests for wisdom/sefaria.py (9% coverage)",
-      "content": "Add tests for Sefaria wisdom integration.\n\n## Current State:\n- Coverage: 9% (157 lines missed)\n- External API integration\n\n## Test Areas:\n1. API response parsing\n2. Quote extraction\n3. Error handling for API failures\n4. Caching behavior\n5. Text formatting\n\n## Approach:\n- Mock Sefaria API responses\n- Test various text types\n- Verify quote selection logic",
-      "status": "Todo",
-      "priority": "low",
-      "tags": [
-        "testing",
-        "coverage",
-        "wisdom"
-      ],
-      "created": "2025-11-27T12:59:01.630273",
-      "lastModified": "2025-11-27T12:59:01.630273",
-      "dependencies": [
-        "T-20251127-TESTCOV-01"
-      ],
-      "project_id": "davidl71/project-management-automation",
-      "comments": []
-    },
-    {
-      "id": "AUTO-20251127130005-058470",
-      "name": "Automation: Shared TODO Table Synchronization",
-      "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "shared-todo-table-synchronization"
-      ],
-      "created": "2025-11-27T13:00:05.058653",
-      "lastModified": "2025-11-27T13:00:05.079301",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+        },
         {
-          "id": "AUTO-20251127130005-058470-C-1",
-          "todoId": "AUTO-20251127130005-058470",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 56 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[56 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[56 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
-          "created": "2025-11-27T13:00:05.067661",
-          "lastModified": "2025-11-27T13:00:05.067670"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127140006-190921",
-      "name": "Automation: Shared TODO Table Synchronization",
-      "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "shared-todo-table-synchronization"
-      ],
-      "created": "2025-11-27T14:00:06.191005",
-      "lastModified": "2025-11-27T14:00:06.210298",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127140006-190921-C-1",
-          "todoId": "AUTO-20251127140006-190921",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 57 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[57 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[57 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
-          "created": "2025-11-27T14:00:06.199182",
-          "lastModified": "2025-11-27T14:00:06.199192"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127150007-966078",
-      "name": "Automation: Shared TODO Table Synchronization",
-      "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "shared-todo-table-synchronization"
-      ],
-      "created": "2025-11-27T15:00:07.966084",
-      "lastModified": "2025-11-27T15:00:07.985094",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127150007-966078-C-1",
-          "todoId": "AUTO-20251127150007-966078",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 58 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[58 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[58 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
-          "created": "2025-11-27T15:00:07.973576",
-          "lastModified": "2025-11-27T15:00:07.973586"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127160007-708855",
-      "name": "Automation: Shared TODO Table Synchronization",
-      "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "shared-todo-table-synchronization"
-      ],
-      "created": "2025-11-27T16:00:07.708921",
-      "lastModified": "2025-11-27T16:00:07.727923",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127160007-708855-C-1",
-          "todoId": "AUTO-20251127160007-708855",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 59 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[59 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[59 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
-          "created": "2025-11-27T16:00:07.716956",
-          "lastModified": "2025-11-27T16:00:07.716965"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127163111-243279",
-      "name": "Automation: Documentation Health Analysis",
-      "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "documentation-health-analysis"
-      ],
-      "created": "2025-11-27T16:31:11.243318",
-      "lastModified": "2025-11-27T16:31:12.673003",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127163111-243279-C-1",
-          "todoId": "AUTO-20251127163111-243279",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"SPRINT_AUTOMATION_REPORT.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":81.0}",
-          "created": "2025-11-27T16:31:12.656912",
-          "lastModified": "2025-11-27T16:31:12.656934"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127163215-913438",
-      "name": "Automation: Documentation Health Analysis",
-      "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "documentation-health-analysis"
-      ],
-      "created": "2025-11-27T16:32:15.913565",
-      "lastModified": "2025-11-27T16:32:18.921115",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127163215-913438-C-1",
-          "todoId": "AUTO-20251127163215-913438",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"SPRINT_AUTOMATION_REPORT.md\"]},\"health_score\":81.0}",
-          "created": "2025-11-27T16:32:18.855774",
-          "lastModified": "2025-11-27T16:32:18.855784"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127163321-045367",
-      "name": "Automation: Documentation Health Analysis",
-      "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "documentation-health-analysis"
-      ],
-      "created": "2025-11-27T16:33:21.045461",
-      "lastModified": "2025-11-27T16:33:24.105181",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127163321-045367-C-1",
-          "todoId": "AUTO-20251127163321-045367",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"SPRINT_AUTOMATION_REPORT.md\"]},\"health_score\":81.0}",
-          "created": "2025-11-27T16:33:24.021588",
-          "lastModified": "2025-11-27T16:33:24.021597"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251127163558-177115",
-      "name": "Automation: Documentation Health Analysis",
-      "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "documentation-health-analysis"
-      ],
-      "created": "2025-11-27T16:35:58.177211",
-      "lastModified": "2025-11-27T16:35:58.803415",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251127163558-177115-C-1",
-          "todoId": "AUTO-20251127163558-177115",
-          "type": "result",
-          "content": "**Automation Results:**\n\n**Documentation Health Score: 81.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":295,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":304}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"SPRINT_AUTOMATION_REPORT.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\"]},\"health_score\":81.0}",
-          "created": "2025-11-27T16:35:58.789834",
-          "lastModified": "2025-11-27T16:35:58.789842"
-        }
-      ]
-    },
-    {
-      "id": "T-20251129190111-1",
-      "name": "Implement Exarp improvements from ib_box_spread_full_universal",
-      "content": "Implement wrapper script, enhanced daily automation, improved error handling, and comprehensive documentation based on fixes from ib_box_spread_full_universal project",
-      "status": "Done",
-      "priority": "high",
-      "tags": [
-        "exarp",
-        "automation",
-        "improvements",
-        "wrapper-script"
-      ],
-      "created": "2025-11-29T19:01:11.142373",
-      "lastModified": "2025-11-29T19:01:11.142389",
-      "dependencies": [],
-      "comments": [
-        {
-          "type": "result",
-          "content": "**Implementation Complete** \u2705\n\n**Files Created:**\n- `scripts/exarp_daily_automation_wrapper.py` - Wrapper script with timeout handling, JSON output, error handling\n- `docs/EXARP_WRAPPER_SCRIPT_USAGE.md` - Complete usage guide\n- `docs/EXARP_WRAPPER_EXAMPLES.md` - 22 comprehensive examples\n- `docs/EXARP_QUICK_REFERENCE.md` - Quick reference card\n- `docs/EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md` - Implementation summary\n- `EXAMPLES_INDEX.md` - Examples navigation guide\n\n**Files Modified:**\n- `scripts/cron/run_daily_exarp.sh` - Enhanced with phases, error tracking, comprehensive reporting\n- `project_management_automation/tools/daily_automation.py` - Improved error handling with better messages\n\n**Key Features Implemented:**\n1. \u2705 Exarp Daily Automation Wrapper Script\n   - Direct Python imports (more reliable than CLI)\n   - Timeout handling (300s per tool)\n   - JSON output support\n   - Dry-run mode\n   - Auto-fix option for duplicates\n   - Comprehensive error handling\n\n2. \u2705 Enhanced Daily Automation Script\n   - Phase separation (Exarp checks vs additional tasks)\n   - Error tracking with failure counter\n   - Comprehensive reporting with log file locations\n   - Visual formatting with separators\n\n3. \u2705 Improved Error Handling\n   - More specific error messages\n   - Separate handling for ImportError vs general exceptions\n   - Better error context and logging\n\n4. \u2705 Comprehensive Documentation\n   - Complete usage guide\n   - 22 practical examples\n   - Quick reference card\n   - Real-world scenarios (pre-commit hooks, CI/CD, cron, monitoring)\n\n**Testing:**\n- \u2705 Script syntax validated\n- \u2705 Imports verified\n- \u2705 Help command works\n- \u2705 No linter errors\n\n**Ready for use!**"
-        }
-      ],
-      "project_id": "davidl71/project-management-automation"
-    },
-    {
-      "id": "AUTO-20251129201820-947865",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "dependency-security-scan"
-      ],
-      "created": "2025-11-29T20:18:20.947950",
-      "lastModified": "2025-11-29T20:18:20.995868",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
-        {
-          "id": "AUTO-20251129201820-947865-C-1",
-          "todoId": "AUTO-20251129201820-947865",
-          "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-29T20:18:20.963643",
-          "lastModified": "2025-11-29T20:18:20.963656"
-        }
-      ]
-    },
-    {
-      "id": "AUTO-20251129201821-079166",
-      "name": "Automation: External Tool Hints Automation",
-      "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
-      "priority": "medium",
-      "tags": [
-        "automation",
-        "external-tool-hints-automation"
-      ],
-      "created": "2025-11-29T20:18:21.079233",
-      "lastModified": "2025-11-29T20:18:22.051996",
-      "dependencies": [],
-      "project_id": "davidl71/project-management-automation",
-      "comments": [
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129201821-079166: Automation: External Tool Hints Automation",
+          "created": "2025-11-29T23:50:58.117673"
+        },
         {
           "id": "AUTO-20251129201821-079166-C-1",
           "todoId": "AUTO-20251129201821-079166",
@@ -2314,32 +1916,327 @@
       ]
     },
     {
-      "id": "AUTO-20251129201821-352746",
-      "name": "Automation: Dependency Security Scan",
-      "content": "Automated Dependency Security Scan execution",
-      "status": "done",
-      "priority": "medium",
+      "id": "T-20251127-TESTCOV-01",
+      "name": "Implement test coverage improvement plan",
+      "content": "Implemented test coverage plan to increase coverage from 30% to 32%.\n\n## Work Completed:\n1. **tests/test_utils_security.py** (40 tests)\n   - PathValidator: boundary checks, blocked patterns, path traversal prevention\n   - Input validation: sanitize_string, validate_identifier, validate_enum, validate_range\n   - RateLimiter: burst limits, token refill, separate keys\n   - AccessController: tool permissions, read-only mode\n\n2. **tests/test_utils_todo2.py** (27 tests)\n   - _normalize_git_remote: HTTPS/SSH URL normalization\n   - get_repo_project_id: Git remote detection\n   - task_belongs_to_project: Project ownership checks\n   - filter_tasks_by_project: Task filtering\n   - annotate_task_project: Task annotation\n\n3. **tests/test_consolidated_tools.py** (27 tests)\n   - generate_config, setup_hooks, prompt_tracking\n   - health, report, task_analysis, task_workflow, analyze_alignment\n\n4. **tests/test_context_summarizer.py** (30 tests)\n   - summarize_context: all levels (brief, detailed, key_metrics, actionable)\n   - batch_summarize, estimate_context_budget\n   - TOOL_PATTERNS configuration validation\n\n## Results:\n- Tests: 175 \u2192 299 (+124 tests)\n- Coverage: 30% \u2192 32% (+337 lines covered)\n- All tests passing",
+      "status": "completed",
+      "priority": "high",
       "tags": [
-        "automation",
-        "dependency-security-scan"
+        "testing",
+        "coverage",
+        "completed"
       ],
-      "created": "2025-11-29T20:18:21.352838",
-      "lastModified": "2025-11-29T20:18:21.415968",
+      "created": "2025-11-27T12:59:01.630273",
+      "lastModified": "2025-11-30T00:11:45.244606",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "completedAt": "2025-11-27T12:59:01.630273",
+      "comments": []
+    },
+    {
+      "id": "T-20251127-TESTCOV-02",
+      "name": "Add tests for 0% coverage modules (quick wins)",
+      "content": "Target modules with 0% coverage for easy wins:\n\n## Completed:\n1. \u2705 **tools/codeql_security.py** - test_codeql_security.py (5 tests)\n2. \u2705 **tools/dependabot_integration.py** - test_dependabot_integration.py (5 tests)\n3. \u2705 **tools/model_recommender.py** - test_model_recommender.py (5 tests)\n4. \u2705 **tools/daily_automation.py** - test_daily_automation.py (7 tests)\n5. \u2705 **tools/task_clarification_resolution.py** - test_task_clarification_resolution.py (9 tests)\n6. \u2705 **tools/pattern_triggers.py** - test_pattern_triggers.py (8 tests)\n7. \u2705 **tools/simplify_rules.py** - test_simplify_rules.py (9 tests)\n\n## Remaining:\n- Additional test cases for edge cases\n- Integration tests\n\n## Impact:\n- 48+ new tests added\n- Coverage increase: 45% \u2192 ~50%+",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "testing",
+        "coverage",
+        "quick-wins"
+      ],
+      "created": "2025-11-27T12:59:01.630273",
+      "lastModified": "2025-11-30T00:11:45.244608",
+      "dependencies": [
+        "T-20251127-TESTCOV-01"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "completedAt": "2025-11-29T19:30:00.000000",
+      "comments": []
+    },
+    {
+      "id": "T-20251127-TESTCOV-03",
+      "name": "Fix module import mismatches in consolidated.py",
+      "content": "Fix bugs discovered during test coverage work.\n\n## Issues Found:\n1. **Line 180**: imports from .rule_simplifier but module is .simplify_rules\n2. **Line 268, 271**: imports from .prompt_tracker but module is .prompt_iteration_tracker  \n3. **Line 514, 841**: imports from .task_hierarchy but module is .task_hierarchy_analyzer\n\n## Impact:\n- These actions will fail at runtime if called\n- Tests had to skip these cases\n\n## Fix:\nUpdate import statements to use correct module names.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "bug",
+        "imports",
+        "consolidated"
+      ],
+      "created": "2025-11-27T12:59:01.630273",
+      "lastModified": "2025-11-30T00:11:45.244610",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
         {
-          "id": "AUTO-20251129201821-352746-C-1",
-          "todoId": "AUTO-20251129201821-352746",
+          "type": "note",
+          "content": "Verified imports are already correct. All imports use correct module names:\n- Line 181: .simplify_rules \u2713\n- Lines 269, 272: .prompt_iteration_tracker \u2713\n- Lines 515, 842: .task_hierarchy_analyzer \u2713",
+          "created": "2025-11-29T23:45:16.832233"
+        }
+      ],
+      "completedAt": "2025-11-29T23:45:16.832228"
+    },
+    {
+      "id": "T-20251127-TESTCOV-04",
+      "name": "Add tests for linter.py (13% coverage)",
+      "content": "Add tests for the linter tool module.\n\n## Current State:\n- Coverage: 13% (122 lines missed)\n- Key functions untested\n\n## Test Areas:\n1. Linter configuration parsing\n2. Ruff/flake8 command generation\n3. Problem analysis and hints\n4. Auto-fix functionality\n5. Output formatting\n\n## Approach:\n- Mock subprocess calls to linters\n- Test various problem types\n- Verify hint generation logic",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "testing",
+        "coverage",
+        "linter"
+      ],
+      "created": "2025-11-27T12:59:01.630273",
+      "lastModified": "2025-11-30T00:11:45.244611",
+      "dependencies": [
+        "T-20251127-TESTCOV-01"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [],
+      "completedAt": "2025-11-29T23:47:03.652012"
+    },
+    {
+      "id": "T-20251127-TESTCOV-05",
+      "name": "Add tests for wisdom/sefaria.py (9% coverage)",
+      "content": "Add tests for Sefaria wisdom integration.\n\n## Current State:\n- Coverage: 9% (157 lines missed)\n- External API integration\n\n## Test Areas:\n1. API response parsing\n2. Quote extraction\n3. Error handling for API failures\n4. Caching behavior\n5. Text formatting\n\n## Approach:\n- Mock Sefaria API responses\n- Test various text types\n- Verify quote selection logic",
+      "status": "completed",
+      "priority": "low",
+      "tags": [
+        "testing",
+        "coverage",
+        "wisdom"
+      ],
+      "created": "2025-11-27T12:59:01.630273",
+      "lastModified": "2025-11-30T00:11:45.244613",
+      "dependencies": [
+        "T-20251127-TESTCOV-01"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [],
+      "completedAt": "2025-11-29T23:47:03.652113"
+    },
+    {
+      "id": "T-20251129190111-1",
+      "name": "Implement Exarp improvements from ib_box_spread_full_universal",
+      "content": "Implement wrapper script, enhanced daily automation, improved error handling, and comprehensive documentation based on fixes from ib_box_spread_full_universal project",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "exarp",
+        "automation",
+        "improvements",
+        "wrapper-script"
+      ],
+      "created": "2025-11-29T19:01:11.142373",
+      "lastModified": "2025-11-30T00:11:45.244615",
+      "dependencies": [],
+      "comments": [
+        {
           "type": "result",
-          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
-          "created": "2025-11-29T20:18:21.361739",
-          "lastModified": "2025-11-29T20:18:21.361747"
+          "content": "**Implementation Complete** \u2705\n\n**Files Created:**\n- `scripts/exarp_daily_automation_wrapper.py` - Wrapper script with timeout handling, JSON output, error handling\n- `docs/EXARP_WRAPPER_SCRIPT_USAGE.md` - Complete usage guide\n- `docs/EXARP_WRAPPER_EXAMPLES.md` - 22 comprehensive examples\n- `docs/EXARP_QUICK_REFERENCE.md` - Quick reference card\n- `docs/EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md` - Implementation summary\n- `EXAMPLES_INDEX.md` - Examples navigation guide\n\n**Files Modified:**\n- `scripts/cron/run_daily_exarp.sh` - Enhanced with phases, error tracking, comprehensive reporting\n- `project_management_automation/tools/daily_automation.py` - Improved error handling with better messages\n\n**Key Features Implemented:**\n1. \u2705 Exarp Daily Automation Wrapper Script\n   - Direct Python imports (more reliable than CLI)\n   - Timeout handling (300s per tool)\n   - JSON output support\n   - Dry-run mode\n   - Auto-fix option for duplicates\n   - Comprehensive error handling\n\n2. \u2705 Enhanced Daily Automation Script\n   - Phase separation (Exarp checks vs additional tasks)\n   - Error tracking with failure counter\n   - Comprehensive reporting with log file locations\n   - Visual formatting with separators\n\n3. \u2705 Improved Error Handling\n   - More specific error messages\n   - Separate handling for ImportError vs general exceptions\n   - Better error context and logging\n\n4. \u2705 Comprehensive Documentation\n   - Complete usage guide\n   - 22 practical examples\n   - Quick reference card\n   - Real-world scenarios (pre-commit hooks, CI/CD, cron, monitoring)\n\n**Testing:**\n- \u2705 Script syntax validated\n- \u2705 Imports verified\n- \u2705 Help command works\n- \u2705 No linter errors\n\n**Ready for use!**"
+        }
+      ],
+      "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "AUTO-20251129232149-186184",
+      "name": "Automation: Test Coverage Analyzer",
+      "content": "Automated Test Coverage Analyzer execution",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "coverage-analyzer",
+        "automation"
+      ],
+      "created": "2025-11-29T23:21:49.186256",
+      "lastModified": "2025-11-30T00:11:45.244616",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251129232149-186184-C-1",
+          "todoId": "AUTO-20251129232149-186184",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"error\",\n  \"error\": \"No coverage file found and unable to generate\",\n  \"coverage_data\": null\n}",
+          "created": "2025-11-29T23:21:50.028762",
+          "lastModified": "2025-11-29T23:21:50.028782"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251126032540-2: Automation: Test Coverage Analyzer",
+          "created": "2025-11-29T23:50:58.116746"
+        },
+        {
+          "id": "AUTO-20251126032540-2-C-1",
+          "todoId": "AUTO-20251126032540-2",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
+          "created": "2025-11-27T04:14:57.281301",
+          "lastModified": "2025-11-27T04:14:57.281309"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127041905-452383: Automation: Test Coverage Analyzer",
+          "created": "2025-11-29T23:50:58.116771"
+        },
+        {
+          "id": "AUTO-20251127041905-452383-C-1",
+          "todoId": "AUTO-20251127041905-452383",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
+          "created": "2025-11-27T04:19:05.750366",
+          "lastModified": "2025-11-27T04:19:05.751333"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127122218-061391: Automation: Test Coverage Analyzer",
+          "created": "2025-11-29T23:50:58.116792"
+        },
+        {
+          "id": "AUTO-20251127122218-061391-C-1",
+          "todoId": "AUTO-20251127122218-061391",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
+          "created": "2025-11-27T12:22:19.603173",
+          "lastModified": "2025-11-27T12:22:19.603184"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251127122359-365160: Automation: Test Coverage Analyzer",
+          "created": "2025-11-29T23:50:58.116814"
+        },
+        {
+          "id": "AUTO-20251127122359-365160-C-1",
+          "todoId": "AUTO-20251127122359-365160",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"json\",\n    \"files\": [\n      {\n        \"filename\": \"project_management_automation/__init__.py\",\n        \"lines\": 4,\n        \"covered\": 4\n      },\n      {\n        \"filename\": \"project_management_automation/context_helpers.py\",\n        \"lines\": 152,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/lifespan.py\",\n        \"lines\": 110,\n        \"covered\": 25\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/__init__.py\",\n        \"lines\": 7,\n        \"covered\": 7\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/access_control.py\",\n        \"lines\": 39,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/logging_middleware.py\",\n        \"lines\": 69,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/path_validation.py\",\n        \"lines\": 54,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/rate_limit.py\",\n        \"lines\": 46,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/security.py\",\n        \"lines\": 41,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/middleware/tool_filter.py\",\n        \"lines\": 56,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/naming.py\",\n        \"lines\": 30,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/resources/__init__.py\",\n        \"lines\": 2,\n        \"covered\": 2\n      },\n      {\n        \"filename\": \"project_management_automation/resources/cache.py\",\n        \"lines\": 32,\n        \"covered\": 26\n      },\n      {\n        \"filename\": \"project_management_automation/resources/catalog.py\",\n        \"lines\": 84,\n        \"covered\": 10\n      },\n      {\n        \"filename\": \"project_management_automation/resources/history.py\",\n        \"lines\": 27,\n        \"covered\": 24\n      },\n      {\n        \"filename\": \"project_management_automation/resources/list.py\",\n        \"lines\": 11,\n        \"covered\": 8\n      },\n      {\n        \"filename\": \"project_management_automation/resources/memories.py\",\n        \"lines\": 188,\n        \"covered\": 158\n      },\n      {\n        \"filename\": \"project_management_automation/resources/status.py\",\n        \"lines\": 17,\n        \"covered\": 14\n      },\n      {\n        \"filename\": \"project_management_automation/resources/tasks.py\",\n        \"lines\": 93,\n        \"covered\": 12\n      },\n      {\n        \"filename\": \"project_management_automation/resources/templates.py\",\n        \"lines\": 144,\n        \"covered\": 36\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/__init__.py\",\n        \"lines\": 0,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_automation_opportunities.py\",\n        \"lines\": 218,\n        \"covered\": 31\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_daily.py\",\n        \"lines\": 129,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_dependency_security.py\",\n        \"lines\": 364,\n        \"covered\": 126\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_docs_health_v2.py\",\n        \"lines\": 236,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_external_tool_hints.py\",\n        \"lines\": 179,\n        \"covered\": 143\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_pwa_review.py\",\n        \"lines\": 175,\n        \"covered\": 30\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_run_tests.py\",\n        \"lines\": 209,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_sprint.py\",\n        \"lines\": 474,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_test_coverage.py\",\n        \"lines\": 217,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_todo2_alignment_v2.py\",\n        \"lines\": 278,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_todo2_duplicate_detection.py\",\n        \"lines\": 375,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/automate_todo_sync.py\",\n        \"lines\": 281,\n        \"covered\": 34\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/base/__init__.py\",\n        \"lines\": 3,\n        \"covered\": 3\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/base/intelligent_automation_base.py\",\n        \"lines\": 343,\n        \"covered\": 203\n      },\n      {\n        \"filename\": \"project_management_automation/scripts/base/mcp_client.py\",\n        \"lines\": 117,\n        \"covered\": 70\n      },\n      {\n        \"filename\": \"project_management_automation/server.py\",\n        \"lines\": 777,\n        \"covered\": 384\n      },\n      {\n        \"filename\": \"project_management_automation/tools/__init__.py\",\n        \"lines\": 9,\n        \"covered\": 9\n      },\n      {\n        \"filename\": \"project_management_automation/tools/automation_opportunities.py\",\n        \"lines\": 47,\n        \"covered\": 33\n      },\n      {\n        \"filename\": \"project_management_automation/tools/batch_task_approval.py\",\n        \"lines\": 59,\n        \"covered\": 5\n      },\n      {\n        \"filename\": \"project_management_automation/tools/ci_cd_validation.py\",\n        \"lines\": 183,\n        \"covered\": 101\n      },\n      {\n        \"filename\": \"project_management_automation/tools/codeql_security.py\",\n        \"lines\": 180,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/tools/consolidated.py\",\n        \"lines\": 304,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/tools/context_summarizer.py\",\n        \"lines\": 213,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/cursor_rules_generator.py\",\n        \"lines\": 114,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/cursorignore_generator.py\",\n        \"lines\": 87,\n        \"covered\": 18\n      },\n      {\n        \"filename\": \"project_management_automation/tools/daily_automation.py\",\n        \"lines\": 46,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/tools/definition_of_done.py\",\n        \"lines\": 161,\n        \"covered\": 27\n      },\n      {\n        \"filename\": \"project_management_automation/tools/dependabot_integration.py\",\n        \"lines\": 93,\n        \"covered\": 0\n      },\n      {\n        \"filename\": \"project_management_automation/tools/dependency_security.py\",\n        \"lines\": 113,\n        \"covered\": 82\n      },\n      {\n        \"filename\": \"project_management_automation/tools/docs_health.py\",\n        \"lines\": 45,\n        \"covered\": 36\n      },\n      {\n        \"filename\": \"project_management_automation/tools/duplicate_detection.py\",\n        \"lines\": 68,\n        \"covered\": 42\n      },\n      {\n        \"filename\": \"project_management_automation/tools/dynamic_tools.py\",\n        \"lines\": 306,\n        \"covered\": 80\n      },\n      {\n        \"filename\": \"project_management_automation/tools/external_tool_hints.py\",\n        \"lines\": 48,\n        \"covered\": 34\n      },\n      {\n        \"filename\": \"project_management_automation/tools/git_hooks.py\",\n        \"lines\": 81,\n        \"covered\": 38\n      },\n      {\n        \"filename\": \"project_management_automation/tools/hint_catalog.py\",\n        \"lines\": 65,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/tools/linter.py\",\n        \"lines\": 141,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/tools/model_recommender.py\",\n        \"lines\": 74,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/tools/nightly_task_automation.py\",\n        \"lines\": 297,\n        \"covered\": 85\n      },\n      {\n        \"filename\": \"project_management_automation/tools/pattern_triggers.py\",\n        \"lines\": 87,\n        \"covered\": 38\n      },\n      {\n        \"filename\": \"project_management_automation/tools/prd_alignment.py\",\n        \"lines\": 140,\n        \"covered\": 26\n      },\n      {\n        \"filename\": \"project_management_automation/tools/prd_generator.py\",\n        \"lines\": 444,\n        \"covered\": 35\n      },\n      {\n        \"filename\": \"project_management_automation/tools/problems_advisor.py\",\n        \"lines\": 130,\n        \"covered\": 39\n      },\n      {\n        \"filename\": \"project_management_automation/tools/project_overview.py\",\n        \"lines\": 234,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/project_scorecard.py\",\n        \"lines\": 383,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/prompt_iteration_tracker.py\",\n        \"lines\": 110,\n        \"covered\": 23\n      },\n      {\n        \"filename\": \"project_management_automation/tools/pwa_review.py\",\n        \"lines\": 51,\n        \"covered\": 36\n      },\n      {\n        \"filename\": \"project_management_automation/tools/run_tests.py\",\n        \"lines\": 102,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/session_memory.py\",\n        \"lines\": 145,\n        \"covered\": 93\n      },\n      {\n        \"filename\": \"project_management_automation/tools/simplify_rules.py\",\n        \"lines\": 71,\n        \"covered\": 45\n      },\n      {\n        \"filename\": \"project_management_automation/tools/sprint_automation.py\",\n        \"lines\": 68,\n        \"covered\": 17\n      },\n      {\n        \"filename\": \"project_management_automation/tools/tag_consolidation.py\",\n        \"lines\": 193,\n        \"covered\": 20\n      },\n      {\n        \"filename\": \"project_management_automation/tools/task_clarification_resolution.py\",\n        \"lines\": 91,\n        \"covered\": 64\n      },\n      {\n        \"filename\": \"project_management_automation/tools/task_hierarchy_analyzer.py\",\n        \"lines\": 145,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/tools/test_coverage.py\",\n        \"lines\": 42,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/tools/todo2_alignment.py\",\n        \"lines\": 47,\n        \"covered\": 33\n      },\n      {\n        \"filename\": \"project_management_automation/tools/todo_sync.py\",\n        \"lines\": 48,\n        \"covered\": 34\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/__init__.py\",\n        \"lines\": 30,\n        \"covered\": 19\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/advisors.py\",\n        \"lines\": 125,\n        \"covered\": 113\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/pistis_sophia.py\",\n        \"lines\": 72,\n        \"covered\": 35\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/sefaria.py\",\n        \"lines\": 172,\n        \"covered\": 15\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/sources.py\",\n        \"lines\": 132,\n        \"covered\": 61\n      },\n      {\n        \"filename\": \"project_management_automation/tools/wisdom/voice.py\",\n        \"lines\": 195,\n        \"covered\": 105\n      },\n      {\n        \"filename\": \"project_management_automation/tools/workflow_recommender.py\",\n        \"lines\": 126,\n        \"covered\": 23\n      },\n      {\n        \"filename\": \"project_management_automation/tools/working_copy_health.py\",\n        \"lines\": 172,\n        \"covered\": 71\n      },\n      {\n        \"filename\": \"project_management_automation/utils/__init__.py\",\n        \"lines\": 29,\n        \"covered\": 24\n      },\n      {\n        \"filename\": \"project_management_automation/utils/dev_reload.py\",\n        \"lines\": 82,\n        \"covered\": 16\n      },\n      {\n        \"filename\": \"project_management_automation/utils/logging_config.py\",\n        \"lines\": 38,\n        \"covered\": 32\n      },\n      {\n        \"filename\": \"project_management_automation/utils/output.py\",\n        \"lines\": 36,\n        \"covered\": 8\n      },\n      {\n        \"filename\": \"project_management_automation/utils/security.py\",\n        \"lines\": 177,\n        \"covered\": 60\n      },\n      {\n        \"filename\": \"project_management_automation/utils/todo2_utils.py\",\n        \"lines\": 61,\n        \"covered\": 30\n      },\n      {\n        \"filename\": \"project_management_automation/version.py\",\n        \"lines\": 205,\n        \"covered\": 60\n      }\n    ],\n    \"total_lines\": 12498,\n    \"covered_lines\": 3634,\n    \"total_coverage\": 29.0766522643623\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [\n    {\n      \"filename\": \"project_management_automation/naming.py\",\n      \"coverage\": 0.0,\n      \"lines\": 30,\n      \"covered\": 0,\n      \"missing\": 30\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_run_tests.py\",\n      \"coverage\": 0.0,\n      \"lines\": 209,\n      \"covered\": 0,\n      \"missing\": 209\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_sprint.py\",\n      \"coverage\": 0.0,\n      \"lines\": 474,\n      \"covered\": 0,\n      \"missing\": 474\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_test_coverage.py\",\n      \"coverage\": 0.0,\n      \"lines\": 217,\n      \"covered\": 0,\n      \"missing\": 217\n    },\n    {\n      \"filename\": \"project_management_automation/tools/codeql_security.py\",\n      \"coverage\": 0.0,\n      \"lines\": 180,\n      \"covered\": 0,\n      \"missing\": 180\n    },\n    {\n      \"filename\": \"project_management_automation/tools/dependabot_integration.py\",\n      \"coverage\": 0.0,\n      \"lines\": 93,\n      \"covered\": 0,\n      \"missing\": 93\n    },\n    {\n      \"filename\": \"project_management_automation/tools/project_scorecard.py\",\n      \"coverage\": 5.221932114882506,\n      \"lines\": 383,\n      \"covered\": 20,\n      \"missing\": 363\n    },\n    {\n      \"filename\": \"project_management_automation/tools/prd_generator.py\",\n      \"coverage\": 7.882882882882883,\n      \"lines\": 444,\n      \"covered\": 35,\n      \"missing\": 409\n    },\n    {\n      \"filename\": \"project_management_automation/tools/batch_task_approval.py\",\n      \"coverage\": 8.47457627118644,\n      \"lines\": 59,\n      \"covered\": 5,\n      \"missing\": 54\n    },\n    {\n      \"filename\": \"project_management_automation/tools/project_overview.py\",\n      \"coverage\": 8.547008547008547,\n      \"lines\": 234,\n      \"covered\": 20,\n      \"missing\": 214\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/sefaria.py\",\n      \"coverage\": 8.720930232558139,\n      \"lines\": 172,\n      \"covered\": 15,\n      \"missing\": 157\n    },\n    {\n      \"filename\": \"project_management_automation/tools/context_summarizer.py\",\n      \"coverage\": 9.389671361502346,\n      \"lines\": 213,\n      \"covered\": 20,\n      \"missing\": 193\n    },\n    {\n      \"filename\": \"project_management_automation/tools/tag_consolidation.py\",\n      \"coverage\": 10.362694300518134,\n      \"lines\": 193,\n      \"covered\": 20,\n      \"missing\": 173\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_todo2_duplicate_detection.py\",\n      \"coverage\": 10.4,\n      \"lines\": 375,\n      \"covered\": 39,\n      \"missing\": 336\n    },\n    {\n      \"filename\": \"project_management_automation/tools/task_hierarchy_analyzer.py\",\n      \"coverage\": 11.03448275862069,\n      \"lines\": 145,\n      \"covered\": 16,\n      \"missing\": 129\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_todo2_alignment_v2.py\",\n      \"coverage\": 11.510791366906476,\n      \"lines\": 278,\n      \"covered\": 32,\n      \"missing\": 246\n    },\n    {\n      \"filename\": \"project_management_automation/resources/catalog.py\",\n      \"coverage\": 11.904761904761903,\n      \"lines\": 84,\n      \"covered\": 10,\n      \"missing\": 74\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_todo_sync.py\",\n      \"coverage\": 12.099644128113878,\n      \"lines\": 281,\n      \"covered\": 34,\n      \"missing\": 247\n    },\n    {\n      \"filename\": \"project_management_automation/tools/consolidated.py\",\n      \"coverage\": 12.828947368421053,\n      \"lines\": 304,\n      \"covered\": 39,\n      \"missing\": 265\n    },\n    {\n      \"filename\": \"project_management_automation/resources/tasks.py\",\n      \"coverage\": 12.903225806451612,\n      \"lines\": 93,\n      \"covered\": 12,\n      \"missing\": 81\n    },\n    {\n      \"filename\": \"project_management_automation/tools/linter.py\",\n      \"coverage\": 13.47517730496454,\n      \"lines\": 141,\n      \"covered\": 19,\n      \"missing\": 122\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_docs_health_v2.py\",\n      \"coverage\": 13.559322033898304,\n      \"lines\": 236,\n      \"covered\": 32,\n      \"missing\": 204\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_automation_opportunities.py\",\n      \"coverage\": 14.220183486238533,\n      \"lines\": 218,\n      \"covered\": 31,\n      \"missing\": 187\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_daily.py\",\n      \"coverage\": 15.503875968992247,\n      \"lines\": 129,\n      \"covered\": 20,\n      \"missing\": 109\n    },\n    {\n      \"filename\": \"project_management_automation/tools/definition_of_done.py\",\n      \"coverage\": 16.77018633540373,\n      \"lines\": 161,\n      \"covered\": 27,\n      \"missing\": 134\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_pwa_review.py\",\n      \"coverage\": 17.142857142857142,\n      \"lines\": 175,\n      \"covered\": 30,\n      \"missing\": 145\n    },\n    {\n      \"filename\": \"project_management_automation/tools/cursor_rules_generator.py\",\n      \"coverage\": 17.543859649122805,\n      \"lines\": 114,\n      \"covered\": 20,\n      \"missing\": 94\n    },\n    {\n      \"filename\": \"project_management_automation/tools/workflow_recommender.py\",\n      \"coverage\": 18.253968253968253,\n      \"lines\": 126,\n      \"covered\": 23,\n      \"missing\": 103\n    },\n    {\n      \"filename\": \"project_management_automation/tools/prd_alignment.py\",\n      \"coverage\": 18.571428571428573,\n      \"lines\": 140,\n      \"covered\": 26,\n      \"missing\": 114\n    },\n    {\n      \"filename\": \"project_management_automation/utils/dev_reload.py\",\n      \"coverage\": 19.51219512195122,\n      \"lines\": 82,\n      \"covered\": 16,\n      \"missing\": 66\n    },\n    {\n      \"filename\": \"project_management_automation/tools/run_tests.py\",\n      \"coverage\": 19.607843137254903,\n      \"lines\": 102,\n      \"covered\": 20,\n      \"missing\": 82\n    },\n    {\n      \"filename\": \"project_management_automation/tools/cursorignore_generator.py\",\n      \"coverage\": 20.689655172413794,\n      \"lines\": 87,\n      \"covered\": 18,\n      \"missing\": 69\n    },\n    {\n      \"filename\": \"project_management_automation/tools/prompt_iteration_tracker.py\",\n      \"coverage\": 20.909090909090907,\n      \"lines\": 110,\n      \"covered\": 23,\n      \"missing\": 87\n    },\n    {\n      \"filename\": \"project_management_automation/tools/model_recommender.py\",\n      \"coverage\": 21.62162162162162,\n      \"lines\": 74,\n      \"covered\": 16,\n      \"missing\": 58\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/logging_middleware.py\",\n      \"coverage\": 21.73913043478261,\n      \"lines\": 69,\n      \"covered\": 15,\n      \"missing\": 54\n    },\n    {\n      \"filename\": \"project_management_automation/utils/output.py\",\n      \"coverage\": 22.22222222222222,\n      \"lines\": 36,\n      \"covered\": 8,\n      \"missing\": 28\n    },\n    {\n      \"filename\": \"project_management_automation/lifespan.py\",\n      \"coverage\": 22.727272727272727,\n      \"lines\": 110,\n      \"covered\": 25,\n      \"missing\": 85\n    },\n    {\n      \"filename\": \"project_management_automation/tools/hint_catalog.py\",\n      \"coverage\": 24.615384615384617,\n      \"lines\": 65,\n      \"covered\": 16,\n      \"missing\": 49\n    },\n    {\n      \"filename\": \"project_management_automation/resources/templates.py\",\n      \"coverage\": 25.0,\n      \"lines\": 144,\n      \"covered\": 36,\n      \"missing\": 108\n    },\n    {\n      \"filename\": \"project_management_automation/tools/sprint_automation.py\",\n      \"coverage\": 25.0,\n      \"lines\": 68,\n      \"covered\": 17,\n      \"missing\": 51\n    },\n    {\n      \"filename\": \"project_management_automation/context_helpers.py\",\n      \"coverage\": 25.657894736842106,\n      \"lines\": 152,\n      \"covered\": 39,\n      \"missing\": 113\n    },\n    {\n      \"filename\": \"project_management_automation/tools/dynamic_tools.py\",\n      \"coverage\": 26.143790849673206,\n      \"lines\": 306,\n      \"covered\": 80,\n      \"missing\": 226\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/tool_filter.py\",\n      \"coverage\": 26.785714285714285,\n      \"lines\": 56,\n      \"covered\": 15,\n      \"missing\": 41\n    },\n    {\n      \"filename\": \"project_management_automation/tools/nightly_task_automation.py\",\n      \"coverage\": 28.619528619528616,\n      \"lines\": 297,\n      \"covered\": 85,\n      \"missing\": 212\n    },\n    {\n      \"filename\": \"project_management_automation/version.py\",\n      \"coverage\": 29.268292682926827,\n      \"lines\": 205,\n      \"covered\": 60,\n      \"missing\": 145\n    },\n    {\n      \"filename\": \"project_management_automation/tools/problems_advisor.py\",\n      \"coverage\": 30.0,\n      \"lines\": 130,\n      \"covered\": 39,\n      \"missing\": 91\n    },\n    {\n      \"filename\": \"project_management_automation/utils/security.py\",\n      \"coverage\": 33.89830508474576,\n      \"lines\": 177,\n      \"covered\": 60,\n      \"missing\": 117\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_dependency_security.py\",\n      \"coverage\": 34.61538461538461,\n      \"lines\": 364,\n      \"covered\": 126,\n      \"missing\": 238\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/rate_limit.py\",\n      \"coverage\": 34.78260869565217,\n      \"lines\": 46,\n      \"covered\": 16,\n      \"missing\": 30\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/path_validation.py\",\n      \"coverage\": 35.18518518518518,\n      \"lines\": 54,\n      \"covered\": 19,\n      \"missing\": 35\n    },\n    {\n      \"filename\": \"project_management_automation/tools/test_coverage.py\",\n      \"coverage\": 35.714285714285715,\n      \"lines\": 42,\n      \"covered\": 15,\n      \"missing\": 27\n    },\n    {\n      \"filename\": \"project_management_automation/tools/working_copy_health.py\",\n      \"coverage\": 41.27906976744186,\n      \"lines\": 172,\n      \"covered\": 71,\n      \"missing\": 101\n    },\n    {\n      \"filename\": \"project_management_automation/tools/pattern_triggers.py\",\n      \"coverage\": 43.67816091954023,\n      \"lines\": 87,\n      \"covered\": 38,\n      \"missing\": 49\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/sources.py\",\n      \"coverage\": 46.21212121212121,\n      \"lines\": 132,\n      \"covered\": 61,\n      \"missing\": 71\n    },\n    {\n      \"filename\": \"project_management_automation/tools/git_hooks.py\",\n      \"coverage\": 46.913580246913575,\n      \"lines\": 81,\n      \"covered\": 38,\n      \"missing\": 43\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/pistis_sophia.py\",\n      \"coverage\": 48.61111111111111,\n      \"lines\": 72,\n      \"covered\": 35,\n      \"missing\": 37\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/access_control.py\",\n      \"coverage\": 48.717948717948715,\n      \"lines\": 39,\n      \"covered\": 19,\n      \"missing\": 20\n    },\n    {\n      \"filename\": \"project_management_automation/middleware/security.py\",\n      \"coverage\": 48.78048780487805,\n      \"lines\": 41,\n      \"covered\": 20,\n      \"missing\": 21\n    },\n    {\n      \"filename\": \"project_management_automation/utils/todo2_utils.py\",\n      \"coverage\": 49.18032786885246,\n      \"lines\": 61,\n      \"covered\": 30,\n      \"missing\": 31\n    },\n    {\n      \"filename\": \"project_management_automation/server.py\",\n      \"coverage\": 49.42084942084942,\n      \"lines\": 777,\n      \"covered\": 384,\n      \"missing\": 393\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/voice.py\",\n      \"coverage\": 53.84615384615385,\n      \"lines\": 195,\n      \"covered\": 105,\n      \"missing\": 90\n    },\n    {\n      \"filename\": \"project_management_automation/tools/ci_cd_validation.py\",\n      \"coverage\": 55.19125683060109,\n      \"lines\": 183,\n      \"covered\": 101,\n      \"missing\": 82\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/base/intelligent_automation_base.py\",\n      \"coverage\": 59.183673469387756,\n      \"lines\": 343,\n      \"covered\": 203,\n      \"missing\": 140\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/base/mcp_client.py\",\n      \"coverage\": 59.82905982905983,\n      \"lines\": 117,\n      \"covered\": 70,\n      \"missing\": 47\n    },\n    {\n      \"filename\": \"project_management_automation/tools/duplicate_detection.py\",\n      \"coverage\": 61.76470588235294,\n      \"lines\": 68,\n      \"covered\": 42,\n      \"missing\": 26\n    },\n    {\n      \"filename\": \"project_management_automation/tools/wisdom/__init__.py\",\n      \"coverage\": 63.33333333333333,\n      \"lines\": 30,\n      \"covered\": 19,\n      \"missing\": 11\n    },\n    {\n      \"filename\": \"project_management_automation/tools/simplify_rules.py\",\n      \"coverage\": 63.38028169014085,\n      \"lines\": 71,\n      \"covered\": 45,\n      \"missing\": 26\n    },\n    {\n      \"filename\": \"project_management_automation/tools/session_memory.py\",\n      \"coverage\": 64.13793103448275,\n      \"lines\": 145,\n      \"covered\": 93,\n      \"missing\": 52\n    },\n    {\n      \"filename\": \"project_management_automation/tools/daily_automation.py\",\n      \"coverage\": 69.56521739130434,\n      \"lines\": 46,\n      \"covered\": 32,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/automation_opportunities.py\",\n      \"coverage\": 70.2127659574468,\n      \"lines\": 47,\n      \"covered\": 33,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/todo2_alignment.py\",\n      \"coverage\": 70.2127659574468,\n      \"lines\": 47,\n      \"covered\": 33,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/task_clarification_resolution.py\",\n      \"coverage\": 70.32967032967034,\n      \"lines\": 91,\n      \"covered\": 64,\n      \"missing\": 27\n    },\n    {\n      \"filename\": \"project_management_automation/tools/pwa_review.py\",\n      \"coverage\": 70.58823529411765,\n      \"lines\": 51,\n      \"covered\": 36,\n      \"missing\": 15\n    },\n    {\n      \"filename\": \"project_management_automation/tools/external_tool_hints.py\",\n      \"coverage\": 70.83333333333334,\n      \"lines\": 48,\n      \"covered\": 34,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/todo_sync.py\",\n      \"coverage\": 70.83333333333334,\n      \"lines\": 48,\n      \"covered\": 34,\n      \"missing\": 14\n    },\n    {\n      \"filename\": \"project_management_automation/tools/dependency_security.py\",\n      \"coverage\": 72.56637168141593,\n      \"lines\": 113,\n      \"covered\": 82,\n      \"missing\": 31\n    },\n    {\n      \"filename\": \"project_management_automation/resources/list.py\",\n      \"coverage\": 72.72727272727273,\n      \"lines\": 11,\n      \"covered\": 8,\n      \"missing\": 3\n    },\n    {\n      \"filename\": \"project_management_automation/scripts/automate_external_tool_hints.py\",\n      \"coverage\": 79.88826815642457,\n      \"lines\": 179,\n      \"covered\": 143,\n      \"missing\": 36\n    }\n  ],\n  \"meets_threshold\": false\n}",
+          "created": "2025-11-27T12:24:02.994688",
+          "lastModified": "2025-11-27T12:24:02.994697"
+        },
+        {
+          "type": "note",
+          "content": "Merged with duplicate task AUTO-20251129232339-756637: Automation: Test Coverage Analyzer",
+          "created": "2025-11-29T23:50:58.116834"
+        },
+        {
+          "id": "AUTO-20251129232339-756637-C-1",
+          "todoId": "AUTO-20251129232339-756637",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"error\",\n  \"error\": \"No coverage file found and unable to generate\",\n  \"coverage_data\": null\n}",
+          "created": "2025-11-29T23:28:40.082114",
+          "lastModified": "2025-11-29T23:28:40.082130"
         }
       ]
+    },
+    {
+      "id": "T-20251129-EXT-01",
+      "name": "Implement Cursor Extension Phase 1: Status Bar",
+      "long_description": "Create minimal Cursor extension with status bar showing task count. Based on research in docs/research/CURSOR_EXTENSION_RESEARCH.md",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-29T23:49:22.972054",
+      "updated_at": "2025-11-29T23:49:22.972062",
+      "comments": []
+    },
+    {
+      "id": "T-20251129-EXT-02",
+      "name": "Implement Cursor Extension Phase 1: Basic Commands",
+      "long_description": "Add commands: exarp.createTask, exarp.listTasks, exarp.completeTask. See Phase 1 requirements in CURSOR_EXTENSION_RESEARCH.md",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "commands"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-29T23:49:22.972076",
+      "updated_at": "2025-11-29T23:49:22.972079",
+      "comments": []
+    },
+    {
+      "id": "T-20251129-EXT-03",
+      "name": "Add file watcher for Todo2 state changes",
+      "long_description": "Implement file system watcher to update extension UI when .todo2/state.todo2.json changes",
+      "status": "Todo",
+      "priority": "medium",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "file-watcher"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-29T23:49:22.972088",
+      "updated_at": "2025-11-29T23:49:22.972091",
+      "comments": []
+    },
+    {
+      "id": "T-20251129-PROJ-01",
+      "name": "Implement cross-project visibility resource",
+      "long_description": "Add MCP resource to list tasks across all known projects. Part of ENHANCE-001 future work.",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "project-ownership",
+        "mcp",
+        "resource",
+        "future"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-29T23:49:22.972101",
+      "updated_at": "2025-11-29T23:49:22.972103",
+      "comments": []
+    },
+    {
+      "id": "T-20251129-PROJ-02",
+      "name": "Create central project registry",
+      "long_description": "Build foundation for 'one system to track them all' - central registry of known projects",
+      "status": "Todo",
+      "priority": "low",
+      "tags": [
+        "project-ownership",
+        "registry",
+        "one-system",
+        "future"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-29T23:49:22.972112",
+      "updated_at": "2025-11-29T23:49:22.972115",
+      "comments": []
+    },
+    {
+      "id": "T-20251129-EXT-04",
+      "name": "Create Cursor Extension scaffold",
+      "long_description": "Initialize VS Code extension project with TypeScript, package.json, and basic structure",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "scaffold",
+        "setup"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-29T23:49:22.972124",
+      "updated_at": "2025-11-29T23:49:22.972127",
+      "comments": []
     }
   ],
-  "lastModified": "2025-11-27T12:59:01.630273",
+  "lastModified": "2025-11-29T23:50:58.118162",
   "updated_at": "2025-11-26T11:28:29.945680+00:00",
   "project": {
     "id": "davidl71/project-management-automation",
