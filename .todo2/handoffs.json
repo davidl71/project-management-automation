@@ -100,6 +100,44 @@
       "warnings": [
         "\u26a0\ufe0f 5 uncommitted file(s) - consider committing before ending session"
       ]
+    },
+    {
+      "id": "handoff-1764454833",
+      "timestamp": "2025-11-29T22:20:33.350098Z",
+      "host": "dlowes-dell",
+      "summary": "Improved project completion score from 51.9% to 78.8%",
+      "tasks_in_progress": [],
+      "tasks_completed_today": [],
+      "blockers": [],
+      "next_steps": [
+        "Continue improving testing score (currently 51.5%)",
+        "Address alignment and clarity metrics (currently low)",
+        "Complete remaining 11 pending tasks"
+      ],
+      "git_status": {
+        "branch": "main",
+        "uncommitted_files": 20,
+        "changed_files": [
+          "M .cursor/mcp.json",
+          "M MCP_CONFIG_EXAMPLE.json",
+          "M README.md",
+          "M exarp-switch.sh",
+          "M project_management_automation/lifespan.py",
+          "M project_management_automation/resources/tasks.py",
+          "M project_management_automation/scripts/automate_test_coverage.py",
+          "M project_management_automation/server.py",
+          "M project_management_automation/tools/project_scorecard.py",
+          "M project_management_automation/tools/tool_count_health.py"
+        ],
+        "ahead_of_remote": false,
+        "behind_remote": false,
+        "needs_push": false,
+        "needs_pull": false
+      },
+      "tasks_unassigned": 0,
+      "warnings": [
+        "\u26a0\ufe0f 20 uncommitted file(s) - consider committing before ending session"
+      ]
     }
   ]
 }
