@@ -2405,9 +2405,134 @@
           "lastModified": "2025-11-30T09:00:53.883125"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251130092446-435265",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-30T09:24:46.435311",
+      "lastModified": "2025-11-30T09:24:50.584848",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251130092446-435265-C-1",
+          "todoId": "AUTO-20251130092446-435265",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 59.0%**\n\u26a0\ufe0f 2 broken links need attention\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":301,\"broken_internal\":[{\"url\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"source\":\"docs/INDEX.md\"},{\"url\":\"../../agents/shared/COORDINATION.md\",\"source\":\"docs/TASK_ASSIGNEE_GUIDE.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"TASK_STATUS_STANDARDIZATION.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"TASK_ASSIGNEE_GUIDE.md\",\"UVX_LOCATION_GUIDE.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"PROJECT_SCORECARD.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"PORTABILITY_ANALYSIS.md\",\"RECOMMENDED_MCP_COMPANIONS.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\",\"MODE-002_SETUP_COMPLETE.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"PARALLELIZATION_SETUP.md\",\"EXARP_QUICK_REFERENCE.md\",\"SPRINT_AUTOMATION_REPORT.md\"]},\"health_score\":59.0}",
+          "created": "2025-11-30T09:24:50.570051",
+          "lastModified": "2025-11-30T09:24:50.570059"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251130092645-654590",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-30T09:26:45.654624",
+      "lastModified": "2025-11-30T09:26:46.201871",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251130092645-654590-C-1",
+          "todoId": "AUTO-20251130092645-654590",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":50,\"high_priority\":22,\"aligned\":50},\"phase2\":{\"total\":49,\"high_priority\":20,\"aligned\":49},\"phase3\":{\"total\":56,\"high_priority\":26,\"aligned\":56},\"phase4\":{\"total\":57,\"high_priority\":27,\"aligned\":57},\"phase5\":{\"total\":35,\"high_priority\":17,\"aligned\":35}},\"strategy_critical\":\"[31 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"alignment_score\":100.0}",
+          "created": "2025-11-30T09:26:46.189031",
+          "lastModified": "2025-11-30T09:26:46.189042"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251130092819-957845",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-11-30T09:28:19.957938",
+      "lastModified": "2025-11-30T09:28:22.129785",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251130092819-957845-C-1",
+          "todoId": "AUTO-20251130092819-957845",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\ud83d\udea8 2 tasks violate Tool Count Limit constraint (\u226430)\n   Current tool count: 35/30\n   Recommendation: Consolidate tools or use resources instead\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":50,\"high_priority\":22,\"aligned\":50},\"phase2\":{\"total\":49,\"high_priority\":20,\"aligned\":49},\"phase3\":{\"total\":56,\"high_priority\":26,\"aligned\":56},\"phase4\":{\"total\":57,\"high_priority\":27,\"aligned\":57},\"phase5\":{\"total\":35,\"high_priority\":17,\"aligned\":35}},\"strategy_critical\":\"[31 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"constraint_violations\":[{\"id\":\"98da663e-bfc6-4ff1-a7f7-8e73a7ea55bf\",\"content\":\"Implement suggest_test_cases tool for Exarp\",\"constraint\":\"Tool Count Limit (\\u226430)\",\"violation\":\"Would create new tool when already at limit (35/30)\",\"priority\":\"medium\",\"status\":\"pending\",\"recommendation\":\"Consider consolidating with existing tools or using resources instead\"},{\"id\":\"cb760617-2368-4edc-aeab-cde5b68fe387\",\"content\":\"Implement validate_test_structure tool for Exarp\",\"constraint\":\"Tool Count Limit (\\u226430)\",\"violation\":\"Would create new tool when already at limit (35/30)\",\"priority\":\"medium\",\"status\":\"pending\",\"recommendation\":\"Consider consolidating with existing tools or using resources instead\"}],\"current_tool_count\":35,\"tool_limit\":30,\"alignment_score\":100.0}",
+          "created": "2025-11-30T09:28:22.123044",
+          "lastModified": "2025-11-30T09:28:22.123053"
+        }
+      ]
+    },
+    {
+      "id": "232f24f7-ffdd-4fa0-9018-6d92b4a93142",
+      "name": "Phase 2B: Consolidate Context Tools (3\u21921)",
+      "content": "Create context() function in consolidated.py to combine summarize_context, get_context_summary, and refresh_context_summary into single tool with action parameter",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "consolidation",
+        "context",
+        "priority-2",
+        "parallel"
+      ],
+      "created": "2025-11-30T07:35:18.120724Z",
+      "lastModified": "2025-11-30T07:35:18.121164Z",
+      "dependencies": [],
+      "long_description": "**Objective:** Consolidate context tools (3\u21921) to reduce tool count.\n\n**Tasks:**\n1. Create `context()` function in `consolidated.py` (45 min)\n2. Update `server.py` registration (20 min)\n3. Update tests (15 min)\n4. Verify tool count (10 min)\n\n**Files:**\n- `project_management_automation/tools/consolidated.py` (MODIFY)\n- `project_management_automation/tools/context_summarizer.py` (REFERENCE)\n- `project_management_automation/server.py` (MODIFY)\n\n**Deliverables:**\n- Single `context()` tool with action parameter\n- Consolidate: `summarize_context`, `get_context_summary`, `refresh_context_summary`\n- Remove individual tool registrations\n- Update tests\n\n**Reference:** `docs/TOOL_CONSOLIDATION_PLAN.md` and `docs/TOOL_CONSOLIDATION_PARALLELIZATION.md`\n",
+      "project_id": "davidl71/project-management-automation",
+      "assignee": {
+        "type": "host",
+        "name": "remote-agent-196.57",
+        "hostname": "192.168.196.57",
+        "assigned_at": "2025-11-30T07:35:18.121186Z",
+        "assigned_by": "manual"
+      }
+    },
+    {
+      "id": "615e8748-7cf0-43d7-9ba5-8c25a50a9170",
+      "name": "Phase 2C: Consolidate Discovery Tools (2\u21921)",
+      "content": "Create discovery() function in consolidated.py to combine find_tasks_in_comments and find_tasks_in_markdown into single tool with action parameter",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "consolidation",
+        "discovery",
+        "priority-2",
+        "parallel"
+      ],
+      "created": "2025-11-30T07:35:18.121233Z",
+      "lastModified": "2025-11-30T07:35:18.121248Z",
+      "dependencies": [],
+      "long_description": "**Objective:** Consolidate discovery tools (2\u21921) to reduce tool count.\n\n**Tasks:**\n1. Create `discovery()` function in `consolidated.py` (30 min)\n2. Update `server.py` registration (15 min)\n3. Update tests (10 min)\n4. Verify tool count (5 min)\n\n**Files:**\n- `project_management_automation/tools/consolidated.py` (MODIFY)\n- `project_management_automation/tools/task_discovery.py` (REFERENCE)\n- `project_management_automation/server.py` (MODIFY)\n\n**Deliverables:**\n- Single `discovery()` tool with action parameter\n- Consolidate: `find_tasks_in_comments`, `find_tasks_in_markdown`\n- Remove individual tool registrations\n- Update tests\n\n**Reference:** `docs/TOOL_CONSOLIDATION_PLAN.md` and `docs/TOOL_CONSOLIDATION_PARALLELIZATION.md`\n",
+      "project_id": "davidl71/project-management-automation",
+      "assignee": {
+        "type": "host",
+        "name": "remote-agent-196.57",
+        "hostname": "192.168.196.57",
+        "assigned_at": "2025-11-30T07:35:18.121261Z",
+        "assigned_by": "manual"
+      }
     }
   ],
-  "lastModified": "2025-11-27T12:59:01.630273",
+  "lastModified": "2025-11-30T07:35:18.121292Z",
   "updated_at": "2025-11-26T11:28:29.945680+00:00",
   "project": {
     "id": "davidl71/project-management-automation",
