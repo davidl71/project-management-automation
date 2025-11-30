@@ -395,46 +395,78 @@ def register_resource_templates(mcp) -> None:
     try:
         # Task resources
         @mcp.resource("tasks://{task_id}")
-        def task_resource(task_id: str) -> dict:
+        def task_resource(task_id: str) -> str:
             """Get a task by ID."""
-            return get_task_by_id(task_id)
+            result = get_task_by_id(task_id)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         @mcp.resource("tasks://status/{status}")
-        def tasks_by_status_resource(status: str) -> dict:
+        def tasks_by_status_resource(status: str) -> str:
             """Get tasks by status."""
-            return get_tasks_by_status(status)
+            result = get_tasks_by_status(status)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         @mcp.resource("tasks://tag/{tag}")
-        def tasks_by_tag_resource(tag: str) -> dict:
+        def tasks_by_tag_resource(tag: str) -> str:
             """Get tasks by tag."""
-            return get_tasks_by_tag(tag)
+            result = get_tasks_by_tag(tag)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         @mcp.resource("tasks://priority/{priority}")
-        def tasks_by_priority_resource(priority: str) -> dict:
+        def tasks_by_priority_resource(priority: str) -> str:
             """Get tasks by priority."""
-            return get_tasks_by_priority(priority)
+            result = get_tasks_by_priority(priority)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         # Advisor resources
         @mcp.resource("advisor://{advisor_id}")
-        def advisor_resource(advisor_id: str) -> dict:
+        def advisor_resource(advisor_id: str) -> str:
             """Get advisor information."""
-            return get_advisor_info(advisor_id)
+            result = get_advisor_info(advisor_id)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         @mcp.resource("advisor://consultations/{days}")
-        def consultations_resource(days: str) -> dict:
+        def consultations_resource(days: str) -> str:
             """Get recent consultations."""
-            return get_advisor_consultations(int(days) if days.isdigit() else 7)
+            result = get_advisor_consultations(int(days) if days.isdigit() else 7)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         # Memory resources
         @mcp.resource("memory://{memory_id}")
-        def memory_resource(memory_id: str) -> dict:
+        def memory_resource(memory_id: str) -> str:
             """Get a memory by ID."""
-            return get_memory_by_id(memory_id)
+            result = get_memory_by_id(memory_id)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         @mcp.resource("memory://category/{category}")
-        def memories_by_category_resource(category: str) -> dict:
+        def memories_by_category_resource(category: str) -> str:
             """Get memories by category."""
-            return get_memories_by_category(category)
+            result = get_memories_by_category(category)
+            # Ensure we always return a JSON string
+            if isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            return json.dumps({"result": str(result)}, indent=2)
 
         logger.info("✅ Registered 8 resource templates")
 

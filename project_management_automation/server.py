@@ -1277,10 +1277,15 @@ if mcp:
                 log=log,
                 session_mode=None  # Will be auto-detected in consolidated function
             )
-            # Convert dict to JSON string if needed
-            if isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            return result if isinstance(result, str) else json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a string (JSON)
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                # Defensive: if somehow a dict is returned, convert to JSON
+                return json.dumps(result, indent=2)
+            else:
+                # Fallback: convert to JSON string
+                return json.dumps({"result": str(result)}, indent=2)
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
 
@@ -1759,10 +1764,23 @@ if mcp:
             📊 Output: Discovered tasks with locations
             🔧 Side Effects: Can create Todo2 tasks (create_tasks=true)
             """
-            result = _task_discovery(
-                action, file_patterns, include_fixme, doc_path, output_path, create_tasks
-            )
-            return json.dumps(result, separators=(",", ":"))
+            try:
+                result = _task_discovery(
+                    action, file_patterns, include_fixme, doc_path, output_path, create_tasks
+                )
+                # Ensure we always return a string (JSON)
+                if isinstance(result, str):
+                    return result
+                elif isinstance(result, dict):
+                    return json.dumps(result, indent=2)
+                else:
+                    return json.dumps({"result": str(result)}, indent=2)
+            except Exception as e:
+                logger.error(f"Error in task_discovery tool: {e}", exc_info=True)
+                return json.dumps({
+                    "status": "error",
+                    "error": str(e),
+                }, indent=2)
 
         @mcp.tool()
         def task_workflow(

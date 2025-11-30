@@ -946,7 +946,7 @@ def recommend(
     context: str = "",
     log: bool = True,
     session_mode: Optional[str] = None,
-) -> dict[str, Any] | str:
+) -> str:
     """
     Unified recommendation tool.
 
@@ -974,12 +974,24 @@ def recommend(
     if action == "model":
         from .model_recommender import recommend_model
         result = recommend_model(task_description, task_type, optimize_for, include_alternatives)
-        return json.loads(result) if isinstance(result, str) else result
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
     
     elif action == "workflow":
         from .workflow_recommender import recommend_workflow_mode
         result = recommend_workflow_mode(task_description, task_id, include_rationale)
-        return json.loads(result) if isinstance(result, str) else result
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
     
     elif action == "advisor":
         from .wisdom.advisors import consult_advisor
@@ -1003,7 +1015,13 @@ def recommend(
             log=log,
             session_mode=session_mode
         )
-        return result
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
     
     else:
         return json.dumps({
@@ -1023,7 +1041,7 @@ def task_discovery(
     # common
     output_path: Optional[str] = None,
     create_tasks: bool = False,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified task discovery tool.
 
@@ -1039,7 +1057,7 @@ def task_discovery(
         create_tasks: Auto-create Todo2 tasks from discoveries
 
     Returns:
-        Discovery results with found tasks
+        JSON string with discovery results and found tasks
     """
     import re
     from pathlib import Path
@@ -1144,7 +1162,8 @@ def task_discovery(
     if output_path:
         Path(output_path).write_text(json.dumps(results, indent=2))
 
-    return results
+    # Always return JSON string
+    return json.dumps(results, indent=2)
 
 
 def task_workflow(

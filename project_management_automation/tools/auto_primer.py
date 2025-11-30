@@ -489,15 +489,27 @@ def auto_prime(
         else:
             result.update(primer)
 
-        return json.dumps(result, indent=2)
+        # Ensure we always return a JSON string
+        output = json.dumps(result, indent=2)
+        if not isinstance(output, str):
+            # Defensive: if json.dumps somehow fails, create a safe string
+            logger.warning(f"json.dumps returned non-string: {type(output)}")
+            output = json.dumps({
+                "auto_primed": False,
+                "error": "Serialization error",
+                "fallback_mode": "development",
+            }, indent=2)
+        return output
 
     except Exception as e:
-        logger.error(f"Auto-prime error: {e}")
-        return json.dumps({
+        logger.error(f"Auto-prime error: {e}", exc_info=True)
+        # Ensure error response is always a string
+        error_response = {
             "auto_primed": False,
             "error": str(e),
             "fallback_mode": "development",
-        }, indent=2)
+        }
+        return json.dumps(error_response, indent=2)
 
 
 def get_session_context(task_id: Optional[str] = None) -> str:
@@ -540,11 +552,23 @@ def get_session_context(task_id: Optional[str] = None) -> str:
                 except Exception:
                     pass
 
-        return json.dumps(base, indent=2)
+        # Ensure we always return a JSON string
+        output = json.dumps(base, indent=2)
+        if not isinstance(output, str):
+            # Defensive: if json.dumps somehow fails, create a safe string
+            logger.warning(f"json.dumps returned non-string: {type(output)}")
+            output = json.dumps({"error": "Serialization error"}, indent=2)
+        return output
 
     except Exception as e:
-        logger.error(f"Session context error: {e}")
-        return json.dumps({"error": str(e)}, indent=2)
+        logger.error(f"Session context error: {e}", exc_info=True)
+        # Ensure error response is always a string
+        error_response = {"error": str(e)}
+        output = json.dumps(error_response, indent=2)
+        if not isinstance(output, str):
+            # Defensive fallback
+            output = '{"error": "Serialization error"}'
+        return output
 
 
 def prime_for_mode(mode: str) -> str:
@@ -578,11 +602,28 @@ def register_auto_primer_tools(mcp) -> None:
             Auto-prime AI context at session start.
             Call this at the beginning of each session for optimal context.
             """
-            return auto_prime(
-                include_hints=include_hints,
-                include_tasks=include_tasks,
-                override_mode=override_mode,
-            )
+            try:
+                result = auto_prime(
+                    include_hints=include_hints,
+                    include_tasks=include_tasks,
+                    override_mode=override_mode,
+                )
+                # Ensure we always return a string (JSON)
+                if isinstance(result, str):
+                    return result
+                elif isinstance(result, dict):
+                    # Defensive: if somehow a dict is returned, convert to JSON
+                    return json.dumps(result, indent=2)
+                else:
+                    # Fallback: convert to JSON string
+                    return json.dumps({"result": str(result)}, indent=2)
+            except Exception as e:
+                logger.error(f"Error in auto_prime_session: {e}", exc_info=True)
+                return json.dumps({
+                    "auto_primed": False,
+                    "error": str(e),
+                    "fallback_mode": "development",
+                }, indent=2)
 
         @mcp.tool()
         def get_task_context(task_id: Optional[str] = None) -> str:
@@ -591,7 +632,23 @@ def register_auto_primer_tools(mcp) -> None:
             
             Get context optimized for a specific task.
             """
-            return get_session_context(task_id=task_id)
+            try:
+                result = get_session_context(task_id=task_id)
+                # Ensure we always return a string (JSON)
+                if isinstance(result, str):
+                    return result
+                elif isinstance(result, dict):
+                    # Defensive: if somehow a dict is returned, convert to JSON
+                    return json.dumps(result, indent=2)
+                else:
+                    # Fallback: convert to JSON string
+                    return json.dumps({"result": str(result)}, indent=2)
+            except Exception as e:
+                logger.error(f"Error in get_task_context: {e}", exc_info=True)
+                return json.dumps({
+                    "error": str(e),
+                    "task_id": task_id,
+                }, indent=2)
 
         logger.info("✅ Registered 2 auto-primer tools")
 

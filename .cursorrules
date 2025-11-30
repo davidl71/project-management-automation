@@ -84,3 +84,77 @@ pipx install uv
 
 Then proceed with `uv` commands.
 
+## 🚨 CRITICAL: Task Management via MCP Tools
+
+**NEVER directly edit `.todo2/state.todo2.json` or any Todo2 files manually.**
+
+**ALWAYS use agentic-tools MCP server for task operations:**
+- ✅ `mcp_agentic-tools_create_task` - Create new tasks
+- ✅ `mcp_agentic-tools_update_task` - Update existing tasks
+- ✅ `mcp_agentic-tools_list_tasks` - List tasks
+- ✅ `mcp_agentic-tools_get_task` - Get task details
+- ❌ NEVER: Direct JSON file manipulation
+- ❌ NEVER: Manual file editing for task management
+
+**Why?**
+- Ensures proper validation and consistency
+- Maintains task relationships and metadata
+- Works with the project's task management system
+- Follows the established architecture
+
+**Example:**
+```python
+# ✅ CORRECT: Use MCP tool
+mcp_agentic-tools_create_task(
+    workingDirectory="/path/to/project",
+    projectId="project-id",
+    name="Task name",
+    details="Task details",
+    status="pending",
+    priority=5
+)
+
+# ❌ WRONG: Direct file manipulation
+# with open('.todo2/state.todo2.json') as f:
+#     data = json.load(f)
+#     data['todos'].append(new_task)
+```
+
+## 🚨 CRITICAL: FastMCP Return Type Requirements
+
+**ALL MCP tools and resources MUST return JSON strings, NEVER dicts.**
+
+**Pattern to ALWAYS use:**
+```python
+@mcp.tool()
+def my_tool(...) -> str:
+    """Tool description."""
+    try:
+        result = some_function()
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2)
+```
+
+**Why?**
+- FastMCP expects strings, not dicts
+- Prevents "object dict can't be used in 'await' expression" errors
+- Ensures consistent return types across all tools/resources
+
+**Files to check:**
+- All `@mcp.tool()` decorated functions → Must return `str`
+- All `@mcp.resource()` decorated functions → Must return `str`
+- Prompts are fine (they return template strings)
+
+**Common mistakes:**
+- ❌ Returning `dict` directly
+- ❌ Returning `dict | str` union type
+- ❌ Forgetting to convert dict to JSON string
+- ✅ Always return `str` with JSON content
+

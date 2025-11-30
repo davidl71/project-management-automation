@@ -111,16 +111,19 @@ project-management-automation/
 
 ### Tool Pattern
 
+**🚨 CRITICAL: All tools MUST return JSON strings, not dicts.**
+
 ```python
 from fastmcp import FastMCP
+import json
 
 mcp = FastMCP("exarp")
 
 @mcp.tool()
-async def my_new_tool(
+def my_new_tool(
     param1: str,
     param2: Optional[int] = None
-) -> dict:
+) -> str:  # ✅ MUST return str, not dict
     """
     Tool description.
     
@@ -129,15 +132,40 @@ async def my_new_tool(
         param2: Optional description
         
     Returns:
-        dict: Result with success/data or error
+        str: JSON string with result or error
     """
     try:
         # Tool logic
         result = {"success": True, "data": {...}}
-        return result
+        # ✅ ALWAYS convert to JSON string
+        return json.dumps(result, indent=2)
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        # ✅ ALWAYS return JSON string, even for errors
+        return json.dumps({"success": False, "error": str(e)}, indent=2)
 ```
+
+**Defensive Pattern (Recommended):**
+```python
+@mcp.tool()
+def my_tool(...) -> str:
+    """Tool description."""
+    try:
+        result = some_function()
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2)
+```
+
+**Why?**
+- FastMCP expects strings, not dicts
+- Prevents "object dict can't be used in 'await' expression" errors
+- Ensures consistent return types across all tools/resources
 
 ## Error Handling
 
@@ -227,6 +255,39 @@ Or for development with hot-reload:
   }
 }
 ```
+
+## Task Management
+
+**🚨 CRITICAL: Use agentic-tools MCP for ALL task operations.**
+
+**NEVER directly edit `.todo2/state.todo2.json` or any Todo2 files.**
+
+**Available MCP Tools:**
+- `mcp_agentic-tools_create_task` - Create new tasks
+- `mcp_agentic-tools_update_task` - Update existing tasks
+- `mcp_agentic-tools_list_tasks` - List tasks
+- `mcp_agentic-tools_get_task` - Get task details
+- `mcp_agentic-tools_delete_task` - Delete tasks (with confirmation)
+
+**Example:**
+```python
+# ✅ CORRECT: Use MCP tool
+mcp_agentic-tools_create_task(
+    workingDirectory="/path/to/project",
+    projectId="project-id",
+    name="Task name",
+    details="Task details",
+    status="pending",
+    priority=5,
+    tags=["tag1", "tag2"]
+)
+```
+
+**Why?**
+- Ensures proper validation and consistency
+- Maintains task relationships and metadata
+- Works with the project's task management system
+- Follows the established architecture
 
 ## Related Documentation
 
