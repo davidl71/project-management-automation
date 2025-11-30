@@ -7,6 +7,12 @@
 
 ## Install
 
+**Using `uv` (Recommended - Faster):**
+```bash
+uv pip install exarp
+```
+
+**Using `pip` (Fallback):**
 ```bash
 pip install exarp
 ```

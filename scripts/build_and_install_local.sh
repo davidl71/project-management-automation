@@ -25,7 +25,15 @@ fi
 # Install in editable mode
 echo -e "${BLUE}Installing in editable mode (development)...${NC}"
 cd "$PROJECT_DIR"
-pip install -e .
+
+# Prefer uv if available (faster, modern tooling)
+if command -v uv >/dev/null 2>&1; then
+    echo -e "${BLUE}Using uv for installation...${NC}"
+    uv pip install -e .
+else
+    echo -e "${BLUE}Using pip for installation...${NC}"
+    pip install -e .
+fi
 
 echo -e "${GREEN}Installation complete!${NC}"
 echo ""

@@ -146,11 +146,123 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     # 2. TESTING
     # ═══════════════════════════════════════════════════════════════
-    test_dir = project_root / 'tests'
-    test_files = list(test_dir.rglob('test_*.py')) if test_dir.exists() else []
-    test_lines = sum(len(f.read_text().splitlines()) for f in test_files if f.exists())
-
-    test_ratio = (test_lines / total_py_lines * 100) if total_py_lines > 0 else 0
+    # Detect test files across multiple languages and locations
+    test_files = []
+    test_lines = 0
+    
+    # Common test directories
+    test_dirs = [
+        project_root / 'tests',
+        project_root / 'test',
+        project_root / 'native' / 'tests',
+        project_root / 'native' / 'test',
+        project_root / 'agents' / 'backend' / 'tests',
+        project_root / 'web' / 'src' / '__tests__',
+        project_root / 'web' / '__tests__',
+    ]
+    
+    # Python tests: test_*.py
+    for test_dir in test_dirs:
+        if test_dir.exists():
+            test_files.extend(test_dir.rglob('test_*.py'))
+    
+    # C++ tests: test_*.cpp, *_test.cpp, *test*.cpp
+    for test_dir in test_dirs:
+        if test_dir.exists():
+            test_files.extend(test_dir.rglob('test_*.cpp'))
+            test_files.extend(test_dir.rglob('*_test.cpp'))
+            test_files.extend(test_dir.rglob('*test*.cpp'))
+    
+    # Rust tests: *_test.rs, test_*.rs, tests/*.rs (in Rust, tests are in tests/ directory)
+    rust_test_dirs = [project_root / 'agents' / 'backend', project_root / 'native']
+    for base_dir in rust_test_dirs:
+        if base_dir.exists():
+            # Rust convention: tests in tests/ directory
+            tests_dir = base_dir / 'tests'
+            if tests_dir.exists():
+                test_files.extend(tests_dir.rglob('*.rs'))
+            # Also check for inline tests: *_test.rs
+            test_files.extend(base_dir.rglob('*_test.rs'))
+            test_files.extend(base_dir.rglob('test_*.rs'))
+    
+    # TypeScript/JavaScript tests: *.test.ts, *.test.tsx, *.spec.ts, *.spec.tsx
+    ts_dirs = [project_root / 'web', project_root / 'agents' / 'web']
+    for ts_dir in ts_dirs:
+        if ts_dir.exists():
+            test_files.extend(ts_dir.rglob('*.test.ts'))
+            test_files.extend(ts_dir.rglob('*.test.tsx'))
+            test_files.extend(ts_dir.rglob('*.spec.ts'))
+            test_files.extend(ts_dir.rglob('*.spec.tsx'))
+    
+    # Swift tests: *Tests.swift, *Test.swift
+    swift_dirs = [project_root / 'ios', project_root / 'desktop']
+    for swift_dir in swift_dirs:
+        if swift_dir.exists():
+            test_files.extend(swift_dir.rglob('*Tests.swift'))
+            test_files.extend(swift_dir.rglob('*Test.swift'))
+    
+    # Remove duplicates
+    test_files = list(set(test_files))
+    
+    # Calculate total test lines
+    for f in test_files:
+        if f.exists():
+            try:
+                test_lines += len(f.read_text().splitlines())
+            except (OSError, UnicodeDecodeError):
+                pass
+    
+    # Calculate test ratio - compare test lines to source code lines
+    # For multi-language projects, use all source lines (Python + C++ + Rust + TypeScript + Swift)
+    
+    # C++ source files (exclude tests)
+    cpp_files = list(project_root.rglob('*.cpp'))
+    cpp_files = [f for f in cpp_files if 'venv' not in str(f) and '.build-env' not in str(f)
+                and '__pycache__' not in str(f) and 'test' not in str(f).lower()
+                and 'target' not in str(f)]
+    total_cpp_lines = 0
+    for f in cpp_files:
+        try:
+            total_cpp_lines += len(f.read_text().splitlines())
+        except (OSError, UnicodeDecodeError):
+            pass
+    
+    # Rust source files (exclude tests)
+    rust_files = list(project_root.rglob('*.rs'))
+    rust_files = [f for f in rust_files if 'target' not in str(f) and 'test' not in str(f).lower()
+                  and 'tests' not in str(f)]
+    total_rust_lines = 0
+    for f in rust_files:
+        try:
+            total_rust_lines += len(f.read_text().splitlines())
+        except (OSError, UnicodeDecodeError):
+            pass
+    
+    # TypeScript source files (exclude tests)
+    ts_files = list(project_root.rglob('*.ts'))
+    ts_files.extend(project_root.rglob('*.tsx'))
+    ts_files = [f for f in ts_files if 'node_modules' not in str(f) and 'test' not in str(f).lower()
+                and 'spec' not in str(f).lower() and '.test.' not in str(f)]
+    total_ts_lines = 0
+    for f in ts_files:
+        try:
+            total_ts_lines += len(f.read_text().splitlines())
+        except (OSError, UnicodeDecodeError):
+            pass
+    
+    # Swift source files (exclude tests)
+    swift_files = list(project_root.rglob('*.swift'))
+    swift_files = [f for f in swift_files if 'test' not in str(f).lower() and 'build' not in str(f)]
+    total_swift_lines = 0
+    for f in swift_files:
+        try:
+            total_swift_lines += len(f.read_text().splitlines())
+        except (OSError, UnicodeDecodeError):
+            pass
+    
+    # Total source lines across all languages
+    total_source_lines = total_py_lines + total_cpp_lines + total_rust_lines + total_ts_lines + total_swift_lines
+    test_ratio = (test_lines / total_source_lines * 100) if total_source_lines > 0 else 0
     scores['testing'] = min(100, test_ratio * 3)  # 33% ratio = 100%
 
     metrics['testing'] = {

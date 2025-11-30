@@ -25,7 +25,15 @@ fi
 
 # Install from Git
 echo -e "${BLUE}Installing from Git repository...${NC}"
-pip install "git+$INSTALL_URL"
+
+# Prefer uv if available (faster, modern tooling)
+if command -v uv >/dev/null 2>&1; then
+    echo -e "${BLUE}Using uv for installation...${NC}"
+    uv pip install "git+$INSTALL_URL"
+else
+    echo -e "${BLUE}Using pip for installation...${NC}"
+    pip install "git+$INSTALL_URL"
+fi
 
 echo -e "${GREEN}Installation complete!${NC}"
 echo ""

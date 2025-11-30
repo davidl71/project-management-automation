@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#4A90E2" stroke="#2E5C8A" stroke-width="2"/>
+  
+  <!-- Project management symbol - interconnected nodes -->
+  <g stroke="white" stroke-width="3" fill="none">
+    <!-- Central hub -->
+    <circle cx="64" cy="64" r="12" fill="white"/>
+    
+    <!-- Connected nodes -->
+    <circle cx="64" cy="32" r="8" fill="white"/>
+    <circle cx="96" cy="64" r="8" fill="white"/>
+    <circle cx="64" cy="96" r="8" fill="white"/>
+    <circle cx="32" cy="64" r="8" fill="white"/>
+    
+    <!-- Connection lines -->
+    <line x1="64" y1="44" x2="64" y2="52" stroke-width="2"/>
+    <line x1="56" y1="64" x2="52" y2="64" stroke-width="2"/>
+    <line x1="76" y1="64" x2="88" y2="64" stroke-width="2"/>
+    <line x1="64" y1="76" x2="64" y2="88" stroke-width="2"/>
+    
+    <!-- Diagonal connections -->
+    <line x1="44" y1="44" x2="54" y2="54" stroke-width="2" opacity="0.6"/>
+    <line x1="84" y1="44" x2="74" y2="54" stroke-width="2" opacity="0.6"/>
+    <line x1="84" y1="84" x2="74" y2="74" stroke-width="2" opacity="0.6"/>
+    <line x1="44" y1="84" x2="54" y2="74" stroke-width="2" opacity="0.6"/>
+  </g>
+  
+  <!-- Automation symbol - gear -->
+  <g transform="translate(64, 64)">
+    <circle r="16" fill="none" stroke="white" stroke-width="2" opacity="0.8"/>
+    <circle r="10" fill="white" opacity="0.9"/>
+  </g>
+</svg>
+
