@@ -1,0 +1,151 @@
+{
+  "name": "exarp",
+  "displayName": "Exarp - Project Management Automation",
+  "description": "Cursor extension for Exarp project management automation - task management, documentation health, alignment analysis, and more",
+  "version": "0.1.0",
+  "publisher": "exarp",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Snippets"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "exarp.showTasks",
+        "title": "Show Tasks",
+        "category": "Exarp",
+        "icon": "$(list-unordered)"
+      },
+      {
+        "command": "exarp.createTask",
+        "title": "Create Task",
+        "category": "Exarp",
+        "icon": "$(add)"
+      },
+      {
+        "command": "exarp.refreshTasks",
+        "title": "Refresh Tasks",
+        "category": "Exarp"
+      },
+      {
+        "command": "exarp.projectScorecard",
+        "title": "Project Scorecard",
+        "category": "Exarp",
+        "icon": "$(dashboard)"
+      },
+      {
+        "command": "exarp.tests.runAll",
+        "title": "Run All Tests",
+        "category": "Exarp Tests",
+        "icon": "$(play)"
+      },
+      {
+        "command": "exarp.tests.runFile",
+        "title": "Run Test File",
+        "category": "Exarp Tests",
+        "icon": "$(play)"
+      },
+      {
+        "command": "exarp.tests.refresh",
+        "title": "Refresh Tests",
+        "category": "Exarp Tests",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "exarp.showTasks",
+          "when": "true"
+        },
+        {
+          "command": "exarp.createTask",
+          "when": "true"
+        },
+        {
+          "command": "exarp.refreshTasks",
+          "when": "true"
+        },
+        {
+          "command": "exarp.projectScorecard",
+          "when": "true"
+        },
+        {
+          "command": "exarp.tests.runAll",
+          "when": "true"
+        },
+        {
+          "command": "exarp.tests.runFile",
+          "when": "true"
+        },
+        {
+          "command": "exarp.tests.refresh",
+          "when": "true"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "exarp.tests.runAll",
+          "when": "view == exarp.tests",
+          "group": "navigation"
+        },
+        {
+          "command": "exarp.tests.refresh",
+          "when": "view == exarp.tests",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "exarp.tests.runFile",
+          "when": "view == exarp.tests && viewItem == testFile",
+          "group": "inline"
+        }
+      ]
+    },
+    "views": {
+      "exarp": [
+        {
+          "id": "exarp.tests",
+          "name": "Tests",
+          "when": "true"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "exarp",
+          "title": "Exarp",
+          "icon": "media/icon.svg"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "test": "npm run compile && node ./out/test/runTest.js",
+    "test:watch": "npm run watch"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.25",
+    "@types/vscode": "^1.80.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^2.22.0",
+    "glob": "^13.0.0",
+    "mocha": "^11.7.5",
+    "typescript": "^5.0.0"
+  }
+}
