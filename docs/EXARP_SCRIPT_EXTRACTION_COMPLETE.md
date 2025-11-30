@@ -31,7 +31,6 @@
 - `automate_todo2_duplicate_detection.py` ✅
 - `automate_dependency_security.py` ✅
 - `automate_automation_opportunities.py` ✅
-- `automate_pwa_review.py` ✅
 - `automate_todo_sync.py` ✅
 - `automate_external_tool_hints.py` ✅
 - `automate_daily.py` ✅
@@ -45,7 +44,6 @@
 - `tools/duplicate_detection.py` ✅
 - `tools/dependency_security.py` ✅
 - `tools/automation_opportunities.py` ✅
-- `tools/pwa_review.py` ✅
 - `tools/todo_sync.py` ✅
 - `tools/external_tool_hints.py` ✅
 - `tools/daily_automation.py` ✅
@@ -108,7 +106,6 @@ project_management_automation/
 │   ├── automate_todo2_duplicate_detection.py
 │   ├── automate_dependency_security.py
 │   ├── automate_automation_opportunities.py
-│   ├── automate_pwa_review.py
 │   ├── automate_todo_sync.py
 │   ├── automate_external_tool_hints.py
 │   └── automate_daily.py

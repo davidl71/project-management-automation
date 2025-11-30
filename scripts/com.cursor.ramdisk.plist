@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.cursor.ramdisk</string>
+    
+    <key>Comment</key>
+    <string>Cursor RAM Disk Manager - Creates RAM disk on login, syncs periodically</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Volumes/SSD1_APFS/project-management-automation/scripts/cursor-ramdisk.sh</string>
+        <string>start</string>
+    </array>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <false/>
+    
+    <key>StandardOutPath</key>
+    <string>/tmp/cursor-ramdisk.out.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/tmp/cursor-ramdisk.err.log</string>
+    
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <!-- Adjust RAM disk size here (in MB) -->
+        <key>CURSOR_RAMDISK_SIZE</key>
+        <string>512</string>
+    </dict>
+</dict>
+</plist>
+

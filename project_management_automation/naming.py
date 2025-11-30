@@ -67,7 +67,6 @@ PROMPT_RENAMES: dict[str, str] = {
     "scan_security_rust": "scan_rs",
     "find_automation": "auto",
     "find_automation_high_value": "auto_high",
-    "review_pwa": "pwa",
     "analyze_alignment": "align",
     "run_weekly": "weekly",
     "run_pre_sprint": "pre_sprint",

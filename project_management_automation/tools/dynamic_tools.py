@@ -189,7 +189,6 @@ TOOL_GROUP_MAPPING: dict[str, ToolGroup] = {
     "generate_cursorignore": ToolGroup.CONFIG,
     "simplify_rules": ToolGroup.CONFIG,
     "add_external_tool_hints": ToolGroup.CONFIG,
-    "review_pwa_config": ToolGroup.CONFIG,
     "validate_ci_cd_workflow": ToolGroup.CONFIG,
 
     # Testing

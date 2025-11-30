@@ -70,7 +70,6 @@ These prompts guide you to use a specific tool:
 | `security_scan_rust` | Scan Rust dependencies | "Use security_scan_rust to check Rust deps" |
 | `automation_discovery` | Find automation opportunities | "Discover automations with automation_discovery" |
 | `automation_high_value` | Find high-value automations only | "Find best automations with automation_high_value" |
-| `pwa_review` | Review PWA configuration | "Review PWA config with pwa_review prompt" |
 
 ### Workflow Prompts
 

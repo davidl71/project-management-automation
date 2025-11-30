@@ -5,6 +5,7 @@ This directory contains Cursor IDE configuration for developing the Project Mana
 ## Structure
 
 - **`commands.json`** - Project-specific commands for development workflow
+- **`docs.json`** - Cursor Doc resources configuration (external documentation to index)
 - **`rules/`** - Development rules and guidelines
   - `project-development.mdc` - Development guidelines and conventions
 - **`mcp.json`** - MCP server configuration (create manually or copy from example)
@@ -13,8 +14,20 @@ This directory contains Cursor IDE configuration for developing the Project Mana
 
 ### 1. Install Development Dependencies
 
+**🚨 CRITICAL: This project uses `uv` for package management. Always use `uv` commands.**
+
 ```bash
-pip install -e '.[dev]'
+# Install dependencies and sync environment (REQUIRED)
+uv sync
+
+# This replaces: pip install -e '.[dev]'
+# uv automatically handles editable installs and dev dependencies
+```
+
+**If `uv` is not installed:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Or: pipx install uv
 ```
 
 ### 2. Configure MCP Servers (Optional)
@@ -43,12 +56,24 @@ If you want to use complementary MCP servers during development, create `.cursor
 }
 ```
 
-### 3. Test Configuration
+### 3. Configure Doc Resources (Optional)
+
+Cursor can index external documentation for better context. See `docs.json` for recommended resources.
+
+**Quick setup:**
+- Add FastMCP docs: `https://gofastmcp.com`
+- Add MCP spec: `https://modelcontextprotocol.io`
+- Or use Context7 MCP (already configured) for library docs
+
+See [CURSOR_DOC_RESOURCES_SETUP.md](../docs/CURSOR_DOC_RESOURCES_SETUP.md) for detailed instructions.
+
+### 4. Test Configuration
 
 Restart Cursor and verify:
 - Commands are available in Command Palette (`Cmd+Shift+P`)
 - Rules are loaded (check Cursor settings)
 - MCP servers appear if configured
+- Doc resources are indexed (check Cursor settings → Features → Docs)
 
 ## Available Commands
 

@@ -12,9 +12,6 @@ Exports:
     - is_mcp_mode: Check if running as MCP server
 """
 
-from pathlib import Path
-from typing import Optional
-
 from .dev_reload import (
     get_module_info,
     is_dev_mode,
@@ -24,6 +21,7 @@ from .dev_reload import (
 )
 from .logging_config import configure_logging, get_logger, is_mcp_mode, suppress_noisy_loggers
 from .output import compact_json, output_to_human_and_ai, progress_wrapper, split_output
+from .project_root import find_project_root
 from .security import (
     AccessController,
     # Access control
@@ -48,6 +46,27 @@ from .security import (
     validate_path,
     validate_range,
 )
+from .branch_utils import (
+    BRANCH_TAG_PREFIX,
+    MAIN_BRANCH,
+    create_branch_tag,
+    extract_branch_from_tags,
+    filter_tasks_by_branch,
+    get_all_branch_statistics,
+    get_all_branches,
+    get_branch_statistics,
+    get_task_branch,
+    set_task_branch,
+)
+from .commit_tracking import (
+    CommitTracker,
+    TaskCommit,
+    get_commit_tracker,
+    track_task_create,
+    track_task_delete,
+    track_task_status_change,
+    track_task_update,
+)
 from .todo2_utils import (
     annotate_task_project,
     filter_tasks_by_project,
@@ -57,55 +76,6 @@ from .todo2_utils import (
     task_belongs_to_project,
     validate_project_ownership,
 )
-
-
-def find_project_root(start_path: Optional[Path] = None) -> Path:
-    """
-    Find project root by looking for marker files.
-
-    Looks for .git, .todo2, or CMakeLists.txt to identify project root.
-
-    Search order:
-    1. If start_path provided, search up from there
-    2. Search up from current working directory
-    3. Search up from package location (for MCP server context)
-
-    Args:
-        start_path: Starting path for search (optional)
-
-    Returns:
-        Path to project root, or current working directory if not found
-    """
-    def _search_up(path: Path) -> Optional[Path]:
-        """Search upward for project markers."""
-        current = path.resolve()
-        while current != current.parent:
-            if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists():
-                return current
-            current = current.parent
-        return None
-
-    # If explicit start_path, use only that
-    if start_path is not None:
-        result = _search_up(Path(start_path))
-        if result:
-            return result
-        return Path(start_path).resolve()
-
-    # Try current working directory first
-    result = _search_up(Path.cwd())
-    if result:
-        return result
-
-    # Try package location (for MCP server context)
-    # Go up from utils/__init__.py to project root
-    package_path = Path(__file__).parent.parent.parent  # utils -> project_management_automation -> project root
-    result = _search_up(package_path)
-    if result:
-        return result
-
-    # Fallback to current working directory
-    return Path.cwd()
 
 
 __all__ = [
@@ -155,5 +125,24 @@ __all__ = [
     'load_todo2_project_info',
     'task_belongs_to_project',
     'validate_project_ownership',
+    # Branch utilities
+    'BRANCH_TAG_PREFIX',
+    'MAIN_BRANCH',
+    'create_branch_tag',
+    'extract_branch_from_tags',
+    'filter_tasks_by_branch',
+    'get_all_branch_statistics',
+    'get_all_branches',
+    'get_branch_statistics',
+    'get_task_branch',
+    'set_task_branch',
+    # Commit tracking
+    'CommitTracker',
+    'TaskCommit',
+    'get_commit_tracker',
+    'track_task_create',
+    'track_task_delete',
+    'track_task_status_change',
+    'track_task_update',
 ]
 

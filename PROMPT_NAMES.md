@@ -20,7 +20,6 @@ Prompt names have been shortened to fit better in Cursor's chat popup (triggered
 | `security_scan_rust` | `scan_rs` | 7 | Scan Rust dependencies |
 | `automation_discovery` | `auto` | 4 | Discover automation opportunities |
 | `automation_high_value` | `auto_high` | 9 | High-value automation only |
-| `pwa_review` | `pwa` | 3 | Review PWA configuration |
 | `pre_sprint_cleanup` | `pre_sprint` | 9 | Pre-sprint cleanup workflow |
 | `post_implementation_review` | `post_impl` | 9 | Post-implementation review |
 | `weekly_maintenance` | `weekly` | 6 | Weekly maintenance workflow |
@@ -77,9 +76,6 @@ You can still reference prompts by their old names or new names:
 ### Automation
 - `/auto` - Discover automation opportunities
 - `/auto_high` - High-value automation only
-
-### PWA
-- `/pwa` - Review PWA configuration
 
 ### Workflows
 - `/pre_sprint` - Pre-sprint cleanup

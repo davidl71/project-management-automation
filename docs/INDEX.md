@@ -22,6 +22,7 @@ Welcome to the EXARP (Expert Automated Repository & Project-management) document
 ### Initial Setup
 - [EXARP_INSTALLATION_COMPLETE.md](EXARP_INSTALLATION_COMPLETE.md) - Installation verification
 - [EXARP_CURSOR_SETUP_COMPLETE.md](EXARP_CURSOR_SETUP_COMPLETE.md) - Cursor IDE setup
+- [CURSOR_DOC_RESOURCES_SETUP.md](CURSOR_DOC_RESOURCES_SETUP.md) - Cursor Doc resources and Context7 setup
 - [PRIVATE_REPOSITORY_SETUP.md](PRIVATE_REPOSITORY_SETUP.md) - Private repo configuration
 - [GITHUB_SETUP.md](GITHUB_SETUP.md) - GitHub integration setup
 
@@ -109,7 +110,6 @@ Welcome to the EXARP (Expert Automated Repository & Project-management) document
 - [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md) - Key design decisions
 - [EXARP_OPTIMIZATION_INTEGRATION.md](EXARP_OPTIMIZATION_INTEGRATION.md) - Optimization strategy
 - [EXARP_SELF_IMPROVEMENT.md](EXARP_SELF_IMPROVEMENT.md) - Self-improvement approach
-- [EXARP_PWA_ENHANCEMENT_STRATEGY.md](EXARP_PWA_ENHANCEMENT_STRATEGY.md) - PWA enhancement
 - [EXARP_MULTI_PROJECT_AGGREGATION.md](EXARP_MULTI_PROJECT_AGGREGATION.md) - Multi-project support
 
 ### Packaging & Distribution

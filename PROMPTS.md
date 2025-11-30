@@ -106,15 +106,6 @@ This server provides reusable prompt templates that guide users through common p
 
 ---
 
-### PWA Configuration
-
-#### `pwa_review`
-**Description:** Review PWA configuration and generate improvement recommendations
-
-**Use Case:** Before PWA deployment, after major updates
-
-**Tool:** `review_pwa_config_tool()`
-
 ---
 
 ### Workflow Prompts

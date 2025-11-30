@@ -140,7 +140,6 @@ project-management-automation/
 │   │   ├── dependency_security.py
 │   │   ├── automation_opportunities.py
 │   │   ├── todo_sync.py
-│   │   ├── pwa_review.py
 │   │   ├── external_tool_hints.py
 │   │   ├── daily_automation.py
 │   │   ├── ci_cd_validation.py

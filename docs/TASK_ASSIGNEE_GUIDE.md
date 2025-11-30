@@ -288,7 +288,6 @@ In `cursor-agent.json`:
 
 - [Nightly Automation](./SPRINT_AUTOMATION_PROPOSAL.md) - Background task execution
 - [Context Priming](../CONTEXT_HINTS.md) - Agent session setup
-- [Agents Coordination](../../agents/shared/COORDINATION.md) - Multi-agent workflow
 
 ---
 

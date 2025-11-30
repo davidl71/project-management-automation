@@ -38,12 +38,7 @@
 **Fix Needed**: Test via MCP server instance or skip this test  
 **Priority**: Low
 
-### 2. PWA Review Tool Test (1 failure)
-**Issue**: `PWAAnalyzer` doesn't have `run()` method - uses direct methods  
-**Fix Needed**: Update test to mock `analyze()` method instead  
-**Priority**: Medium
-
-### 3. CI/CD Validation Tool Test (1 failure)
+### 2. CI/CD Validation Tool Test (1 failure)
 **Issue**: Missing `yaml` module in test environment  
 **Fix Needed**: Add `pyyaml` to test dependencies or mock yaml module  
 **Priority**: Medium

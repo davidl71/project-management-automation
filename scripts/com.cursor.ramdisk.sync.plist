@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.cursor.ramdisk.sync</string>
+    
+    <key>Comment</key>
+    <string>Cursor RAM Disk Periodic Sync - Backs up RAM disk to SSD every 5 minutes</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Volumes/SSD1_APFS/project-management-automation/scripts/cursor-ramdisk.sh</string>
+        <string>sync</string>
+    </array>
+    
+    <key>StartInterval</key>
+    <integer>300</integer>
+    
+    <key>RunAtLoad</key>
+    <false/>
+    
+    <key>StandardOutPath</key>
+    <string>/tmp/cursor-ramdisk-sync.out.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/tmp/cursor-ramdisk-sync.err.log</string>
+    
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>
+

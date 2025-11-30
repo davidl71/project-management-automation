@@ -57,7 +57,6 @@
     "run_daily_automation",
     "run_nightly_task_automation",
     "run_tests",
-    "review_pwa_config",
     "scan_dependency_security",
     "setup_git_hooks",
     "setup_pattern_triggers",

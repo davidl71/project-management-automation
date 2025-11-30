@@ -58,8 +58,7 @@ The exarp server provides:
 4. **Security Scanning** - `scan_dependency_security_tool`
 5. **Automation Discovery** - `find_automation_opportunities_tool`
 6. **Todo Sync** - `sync_todo_tasks_tool`
-7. **PWA Review** - `review_pwa_config_tool`
-8. **Daily Automation** - `run_daily_automation_tool`
+7. **Daily Automation** - `run_daily_automation_tool`
 9. **Nightly Automation** - `run_nightly_task_automation_tool`
 10. **Working Copy Health** - `check_working_copy_health_tool`
 11. **CI/CD Validation** - `validate_ci_cd_workflow_tool`

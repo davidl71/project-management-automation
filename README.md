@@ -7,12 +7,18 @@
 
 ## Install
 
+**🚨 For Development: This project uses `uv` for all package management. See `.cursorrules` for details.**
+
 **Using `uv` (Recommended - Faster):**
 ```bash
+# For end users installing from PyPI
 uv pip install exarp
+
+# For developers working on this repo
+uv sync
 ```
 
-**Using `pip` (Fallback):**
+**Using `pip` (Fallback - Not recommended for development):**
 ```bash
 pip install exarp
 ```
@@ -165,3 +171,10 @@ man exarp-zsh   # ZSH plugin documentation
 ## License
 
 MIT License - see [LICENSE](LICENSE)
+
+## Attributions
+
+This project includes features inspired by third-party projects:
+- **Git-Inspired Task Management**: Concepts inspired by [GitTask](https://github.com/Bengerthelorf/gittask) (GPL-3.0). See [ATTRIBUTIONS.md](ATTRIBUTIONS.md) for details.
+
+All implementations are original code. No third-party code was copied.

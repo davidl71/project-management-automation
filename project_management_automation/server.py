@@ -12,7 +12,6 @@ Provides AI assistants with access to:
 - Dependency security scanning
 - Automation opportunity discovery
 - Todo synchronization
-- PWA configuration review
 
 Complementary MCP Servers:
 - tractatus_thinking: Use BEFORE Exarp tools for structural analysis (WHAT)
@@ -413,6 +412,7 @@ try:
         from .tools.daily_automation import run_daily_automation as _run_daily_automation
         from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from .tools.dependency_security import scan_dependency_security as _scan_dependency_security
+        from .tools.attribution_check import check_attribution_compliance as _check_attribution_compliance
         from .tools.docs_health import check_documentation_health as _check_documentation_health
         from .tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
         from .tools.dynamic_tools import (
@@ -513,6 +513,7 @@ try:
         from tools.daily_automation import run_daily_automation as _run_daily_automation
         from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
         from tools.dependency_security import scan_dependency_security as _scan_dependency_security
+        from tools.attribution_check import check_attribution_compliance as _check_attribution_compliance
         from tools.docs_health import check_documentation_health as _check_documentation_health
         from tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
         from tools.dynamic_tools import (
@@ -1512,6 +1513,45 @@ if mcp:
                 task_id, changed_files, auto_check, workflow_path, check_runners
             )
             return json.dumps(result, separators=(",", ":"))
+
+        @mcp.tool()
+        def check_attribution(
+            output_path: Optional[str] = None,
+            create_tasks: bool = True,
+        ) -> str:
+            """
+            [HINT: Attribution compliance check. Verify proper attribution for all third-party components.]
+
+            Checks attribution compliance across the codebase:
+            - Missing attribution in file headers
+            - Missing entries in ATTRIBUTIONS.md
+            - Uncredited third-party references
+            - Dependency license compliance
+
+            📊 Output: Attribution score (0-100), compliance status, issues found
+            🔧 Side Effects: Creates compliance report and optional Todo2 tasks
+            ⏱️ Typical Runtime: 1-3 seconds
+
+            Args:
+                output_path: Path for report output (default: docs/ATTRIBUTION_COMPLIANCE_REPORT.md)
+                create_tasks: Whether to create Todo2 tasks for issues found (default: true)
+
+            Returns:
+                JSON with attribution_score, status, compliant_files count, issues_found, warnings, report_path
+
+            Examples:
+                check_attribution()
+                → Full compliance check with default settings
+
+                check_attribution(create_tasks=False)
+                → Check without creating tasks
+
+                check_attribution(output_path="custom_report.md")
+                → Custom report location
+            """
+            result = _check_attribution_compliance(output_path, create_tasks)
+            # Result is already JSON string from tool wrapper
+            return result
 
         @mcp.tool()
         def report(

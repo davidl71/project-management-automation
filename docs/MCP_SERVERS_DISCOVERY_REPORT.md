@@ -131,7 +131,6 @@ Tools provide **active operations**—explicit actions the AI can perform.
 | Tool | Priority | Description |
 |------|----------|-------------|
 | `generate_config` | Medium | Generate .cursor rules, ignore files |
-| `review_pwa_config` | Low | PWA configuration review |
 | `add_external_tool_hints` | Medium | Add tool hints to files |
 
 #### Testing Tools

@@ -1,0 +1,86 @@
+# Project Management Automation - AI Agent Rules
+
+## 🚨 CRITICAL: Use `uv` for Python Package Management
+
+**This project uses `uv` for all Python package management. NEVER use `pip` or manually create virtual environments.**
+
+### Package Installation & Environment Setup
+
+**ALWAYS use `uv` commands:**
+- `uv sync` - Install dependencies and sync environment (replaces `pip install`)
+- `uv run <command>` - Run commands in the managed environment
+- `uv pip install` - Only if you must use pip-compatible commands (still uses uv)
+- `uvx <package>` - Run packages without installation (like npx for Python)
+
+**NEVER use:**
+- ❌ `pip install` (use `uv sync` or `uv pip install` instead)
+- ❌ `python -m venv` (uv manages environments automatically)
+- ❌ `source venv/bin/activate` (use `uv run` instead)
+- ❌ Manual virtual environment creation
+
+### Development Setup
+
+```bash
+# Install dependencies (replaces: pip install -e '.[dev]')
+uv sync
+
+# Run commands in the environment
+uv run exarp --version
+uv run pytest tests/
+uv run black .
+```
+
+### Why `uv`?
+
+- **10-100x faster** than pip
+- **Automatic environment management** (no manual venv creation)
+- **Better dependency resolution** with lockfile support
+- **Project already configured** with `uv.lock` file
+
+### Project Structure
+
+- `uv.lock` - Dependency lockfile (commit this!)
+- `pyproject.toml` - Project configuration
+- `.venv/` - Managed by uv (don't manually modify)
+
+## Development Workflow
+
+1. **Setup**: `uv sync` (one-time setup)
+2. **Run commands**: `uv run <command>` (always use this)
+3. **Install new deps**: Add to `pyproject.toml`, then `uv sync`
+4. **Update deps**: `uv sync --upgrade`
+
+## Testing
+
+```bash
+uv run pytest tests/ -v
+uv run pytest tests/ --cov
+```
+
+## Code Quality
+
+```bash
+uv run black .
+uv run ruff check .
+uv run mypy .
+```
+
+## Running the Server
+
+```bash
+uv run exarp --version
+uv run python -m project_management_automation.server
+```
+
+## If `uv` is Not Available
+
+If `uv` is not installed, inform the user and suggest:
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Or via pipx
+pipx install uv
+```
+
+Then proceed with `uv` commands.
+

@@ -103,7 +103,6 @@
 - **docs/EXARP_FUTURE_IMPROVEMENTS.md**: No external libraries detected
 - **docs/EXARP_IMPROVEMENTS_PROGRESS.md**: Hint already exists
 - **docs/EXARP_MCP_TRANSPORT_ANALYSIS.md**: Hint already exists
-- **docs/EXARP_PWA_ENHANCEMENT_STRATEGY.md**: Hint already exists
 - **docs/EXARP_QUICK_REFERENCE.md**: No external libraries detected
 - **docs/EXARP_RENAMING_COMPLETE.md**: No external libraries detected
 - **docs/EXARP_PHASE1_FOLLOWUP_TASKS.md**: Hint already exists

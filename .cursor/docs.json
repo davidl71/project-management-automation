@@ -1,0 +1,155 @@
+{
+  "name": "Exarp Developer Documentation Resources",
+  "description": "External developer documentation indexed for Cursor IDE",
+  "version": "1.0.0",
+  "resources": [
+    {
+      "name": "FastMCP Documentation",
+      "url": "https://gofastmcp.com",
+      "type": "website",
+      "priority": "essential",
+      "description": "Primary MCP framework documentation - getting started, API reference, patterns, deployment",
+      "sections": [
+        "getting-started",
+        "api-reference",
+        "patterns",
+        "deployment"
+      ]
+    },
+    {
+      "name": "Model Context Protocol Specification",
+      "url": "https://modelcontextprotocol.io",
+      "type": "website",
+      "priority": "essential",
+      "description": "Core MCP protocol specification - tools, resources, prompts, protocol details",
+      "sections": [
+        "specification",
+        "tools",
+        "resources",
+        "prompts"
+      ]
+    },
+    {
+      "name": "Pydantic Documentation",
+      "url": "https://docs.pydantic.dev",
+      "type": "website",
+      "priority": "essential",
+      "description": "Data validation library (v2.0+) - models, validators, settings, migration guide",
+      "sections": [
+        "models",
+        "validators",
+        "settings",
+        "migration-guide"
+      ],
+      "note": "Also available via Context7 MCP - consider using Context7 for up-to-date version-specific docs"
+    },
+    {
+      "name": "Python Documentation",
+      "url": "https://docs.python.org/3",
+      "type": "website",
+      "priority": "essential",
+      "description": "Python standard library and language reference",
+      "sections": [
+        "library",
+        "reference",
+        "tutorial"
+      ],
+      "note": "Also available via Context7 MCP - consider using Context7 for version-specific docs"
+    },
+    {
+      "name": "pytest Documentation",
+      "url": "https://docs.pytest.org",
+      "type": "website",
+      "priority": "essential",
+      "description": "Testing framework - getting started, fixtures, parametrization, plugins",
+      "sections": [
+        "getting-started",
+        "fixtures",
+        "parametrization",
+        "plugins"
+      ],
+      "note": "Also available via Context7 MCP - consider using Context7 for up-to-date docs"
+    },
+    {
+      "name": "VS Code Extension API",
+      "url": "https://code.visualstudio.com/api",
+      "type": "website",
+      "priority": "recommended",
+      "description": "VS Code Extension API for Cursor extension development",
+      "sections": [
+        "extension-guides",
+        "commands",
+        "tree-view",
+        "file-system"
+      ]
+    },
+    {
+      "name": "Ruff Documentation",
+      "url": "https://docs.astral.sh/ruff",
+      "type": "website",
+      "priority": "recommended",
+      "description": "Python linter and formatter - rules, configuration, CLI reference",
+      "sections": [
+        "rules",
+        "configuration",
+        "cli-reference"
+      ]
+    },
+    {
+      "name": "Black Documentation",
+      "url": "https://black.readthedocs.io",
+      "type": "website",
+      "priority": "recommended",
+      "description": "Python code formatter - usage, configuration, editor integration",
+      "sections": [
+        "usage",
+        "configuration",
+        "editor-integration"
+      ]
+    },
+    {
+      "name": "mypy Documentation",
+      "url": "https://mypy.readthedocs.io",
+      "type": "website",
+      "priority": "optional",
+      "description": "Python static type checker - type system, configuration, error codes",
+      "sections": [
+        "type-system",
+        "configuration",
+        "error-codes"
+      ]
+    },
+    {
+      "name": "setuptools Documentation",
+      "url": "https://setuptools.pypa.io",
+      "type": "website",
+      "priority": "optional",
+      "description": "Python build system - configuration, entry points, packaging",
+      "sections": [
+        "configuration",
+        "entry-points",
+        "packaging"
+      ]
+    }
+  ],
+  "context7_alternative": {
+    "enabled": true,
+    "description": "Context7 MCP provides up-to-date documentation for many libraries",
+    "covers": [
+      "Pydantic",
+      "Python",
+      "pytest",
+      "FastMCP",
+      "and many other Python libraries"
+    ],
+    "benefits": [
+      "Always up-to-date (2025)",
+      "Version-specific API references",
+      "Real code examples (no hallucinations)",
+      "Current best practices"
+    ],
+    "usage": "Append 'use context7' to prompts, e.g., 'How do I use Pydantic patterns? use context7'"
+  },
+  "setup_instructions": "See docs/CURSOR_DOC_RESOURCES_SETUP.md for detailed setup guide"
+}
+

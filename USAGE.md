@@ -197,28 +197,6 @@ Discover new automation opportunities in the codebase.
 
 ### Review Tools
 
-#### `review_pwa_config_tool`
-Review PWA configuration and generate improvement recommendations.
-
-**Parameters:**
-- `output_path` (Optional[str]): Path for analysis output
-- `config_path` (Optional[str]): Path to PWA review config file
-
-**Returns:**
-- Components count
-- Hooks count
-- API integrations count
-- PWA features detected
-- Missing features
-- Goal-aligned tasks
-- Report path
-
-**Example Usage:**
-```
-"Review PWA configuration and suggest improvements"
-"Analyze PWA setup and generate recommendations"
-```
-
 ---
 
 ## Resources

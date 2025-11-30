@@ -21,42 +21,69 @@ This document provides development guidelines and conventions for the Project Ma
 
 ### 1. Setup Development Environment
 
+**🚨 CRITICAL: This project uses `uv` for package management. NEVER use `pip` directly.**
+
 ```bash
-# Install in editable mode with dev dependencies
-pip install -e '.[dev]'
+# Install dependencies and sync environment (REQUIRED - uses uv.lock)
+uv sync
+
+# This replaces the old: pip install -e '.[dev]'
+# uv automatically handles editable installs and dev dependencies
+```
+
+**Why `uv`?**
+- 10-100x faster than pip
+- Automatic environment management
+- Better dependency resolution
+- Project has `uv.lock` file configured
+
+**If `uv` is not available:**
+```bash
+# Install uv first
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Or: pipx install uv
 ```
 
 ### 2. Running Tests
 
+**Always use `uv run` to execute commands in the managed environment:**
+
 ```bash
 # Run all tests
-pytest tests/ -v
+uv run pytest tests/ -v
 
 # Run specific test file
-pytest tests/test_tools.py -v
+uv run pytest tests/test_tools.py -v
 
 # Run with coverage
-pytest tests/ --cov=project_management_automation --cov-report=html
+uv run pytest tests/ --cov=project_management_automation --cov-report=html
 ```
 
 ### 3. Code Quality Checks
 
+**Always use `uv run` to execute commands in the managed environment:**
+
 ```bash
 # Format code
-black .
+uv run black .
 
 # Type check
-mypy .
+uv run mypy .
 
 # Lint
-ruff check .
+uv run ruff check .
 ```
 
 ### 4. Testing MCP Server
 
+**Always use `uv run` to execute commands in the managed environment:**
+
 ```bash
 # Run server directly for testing
-python3 -m project_management_automation.server
+uv run python -m project_management_automation.server
+
+# Or use the exarp command
+uv run exarp --version
 ```
 
 ## Project Structure

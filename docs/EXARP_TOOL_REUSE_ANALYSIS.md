@@ -25,7 +25,6 @@ This document analyzes integration strategies to identify where existing Exarp t
 ### Documentation & Quality Tools
 1. `check_documentation_health_tool` - Documentation analysis
 2. `add_external_tool_hints_tool` - Add Context7 hints
-3. `review_pwa_config_tool` - PWA configuration review
 
 ### Task Management Tools
 4. `analyze_todo2_alignment_tool` - Task alignment analysis

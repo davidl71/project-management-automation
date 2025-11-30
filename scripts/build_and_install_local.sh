@@ -27,11 +27,14 @@ echo -e "${BLUE}Installing in editable mode (development)...${NC}"
 cd "$PROJECT_DIR"
 
 # Prefer uv if available (faster, modern tooling)
+# For development, uv sync is preferred as it uses uv.lock
 if command -v uv >/dev/null 2>&1; then
-    echo -e "${BLUE}Using uv for installation...${NC}"
-    uv pip install -e .
+    echo -e "${BLUE}Using uv sync for installation (recommended for development)...${NC}"
+    uv sync
+    echo -e "${GREEN}Note: Use 'uv run <command>' to run commands in the managed environment${NC}"
 else
-    echo -e "${BLUE}Using pip for installation...${NC}"
+    echo -e "${YELLOW}Warning: uv not found. Falling back to pip (not recommended for development)${NC}"
+    echo -e "${YELLOW}Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh${NC}"
     pip install -e .
 fi
 

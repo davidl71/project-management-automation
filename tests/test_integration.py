@@ -108,7 +108,6 @@ class TestMCPServerIntegration:
             'dependency_security.py',
             'automation_opportunities.py',
             'todo_sync.py',
-            'pwa_review.py'
         ]
 
         for tool_file in expected_tools:

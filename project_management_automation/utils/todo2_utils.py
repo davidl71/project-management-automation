@@ -50,7 +50,7 @@ def _normalize_git_remote(url: str) -> Optional[str]:
 def get_repo_project_id(project_root: Optional[Path] = None) -> Optional[str]:
     """Return the git owner/repo identifier for the current project."""
     # Local import to avoid circular dependency
-    from . import find_project_root
+    from .project_root import find_project_root
     root = find_project_root(project_root)
     try:
         result = subprocess.run(
@@ -120,7 +120,7 @@ def load_todo2_project_info(project_root: Optional[Path] = None) -> Optional[dic
     Returns:
         Project dict with id, name, path, repository, added_at, or None if not found
     """
-    from . import find_project_root
+    from .project_root import find_project_root
     root = find_project_root(project_root)
     todo2_file = root / ".todo2" / "state.todo2.json"
     
@@ -152,7 +152,7 @@ def validate_project_ownership(
         - is_valid: True if validation passes or project info not found
         - error_message: None if valid, otherwise description of mismatch
     """
-    from . import find_project_root
+    from .project_root import find_project_root
     import os
     
     current_root = find_project_root(project_root)

@@ -1,5 +1,12 @@
 # Context Priming & Summarization System
 
+## 🚨 CRITICAL: Package Management
+
+**This project uses `uv` for all Python package management.**
+- **Development**: Use `uv sync` (not `pip install`)
+- **Run commands**: Use `uv run <command>` (not direct python/pytest/etc)
+- **See `.cursorrules`** for complete instructions
+
 ## Overview
 
 Exarp provides a comprehensive context priming system to help AI assistants quickly understand the project and tools with minimal token usage.
@@ -95,10 +102,6 @@ Each tool description starts with a `[HINT: ...]` line that provides:
 ### Automation
 - **`find_automation_opportunities_tool`**
   - `[HINT: Automation discovery. Returns opportunity count, value scores, recommendations.]`
-
-### PWA
-- **`review_pwa_config_tool`**
-  - `[HINT: PWA review. Returns config status, missing features, recommendations.]`
 
 ### System
 - **`server_status`**

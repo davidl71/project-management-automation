@@ -1,0 +1,38 @@
+#!/bin/bash
+# Fix MCP configuration path for exarp-uvx-wrapper.sh
+# This script outputs the correct absolute path for your MCP configuration
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+WRAPPER_PATH="$PROJECT_ROOT/exarp-uvx-wrapper.sh"
+
+echo "Current workspace: $PROJECT_ROOT"
+echo ""
+echo "Update your Cursor MCP configuration with:"
+echo ""
+echo "{"
+echo "  \"mcpServers\": {"
+echo "    \"exarp_pma\": {"
+echo "      \"command\": \"$WRAPPER_PATH\","
+echo "      \"args\": [\"--mcp\"],"
+echo "      \"env\": {"
+echo "        \"EXARP_DEV_MODE\": \"1\","
+echo "        \"PROJECT_ROOT\": \"$PROJECT_ROOT\""
+echo "      },"
+echo "      \"description\": \"Exarp for Project Management Automation - auto-detects uvx location\""
+echo "    }"
+echo "  }"
+echo "}"
+echo ""
+echo "To update:"
+echo "1. Open Cursor Settings → MCP Servers"
+echo "2. Find the 'exarp_pma' or 'exarp' server"
+echo "3. Update the 'command' field to: $WRAPPER_PATH"
+echo "4. Update PROJECT_ROOT in env to: $PROJECT_ROOT"
+echo "5. Restart Cursor completely"
+echo ""
+echo "Or edit the config file directly (location varies by OS):"
+echo "  macOS: ~/Library/Application Support/Cursor/User/globalStorage/mcp.json"
+echo "  Linux: ~/.config/Cursor/User/globalStorage/mcp.json"
+echo "  Windows: %APPDATA%\\Cursor\\User\\globalStorage\\mcp.json"
+

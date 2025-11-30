@@ -63,9 +63,6 @@
 7. ❌ **`sync_todo_tasks`** (`tools/todo_sync.py`)
    - No tests
 
-8. ❌ **`review_pwa_config`** (`tools/pwa_review.py`)
-   - No tests
-
 9. ❌ **`add_external_tool_hints`** (`tools/external_tool_hints.py`)
    - No tests
 
@@ -120,7 +117,6 @@ All prompts are defined in `prompts.py` and registered in `server.py`, but **non
 8. ❌ **`scan_rs`** - Security scan (Rust) prompt
 9. ❌ **`auto`** - Automation discovery prompt
 10. ❌ **`auto_high`** - High-value automation discovery prompt
-11. ❌ **`pwa`** - PWA configuration review prompt
 12. ❌ **`pre_sprint`** - Pre-sprint cleanup workflow prompt
 13. ❌ **`post_impl`** - Post-implementation review workflow prompt
 14. ❌ **`weekly`** - Weekly maintenance workflow prompt

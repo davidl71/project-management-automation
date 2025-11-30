@@ -84,7 +84,6 @@ FILESYSTEM (13 vulnerable tools)
 ├── analyze_test_coverage
 ├── check_documentation_health
 ├── daily_automation
-└── pwa_review
 
 SUBPROCESS (27 calls)
 ├── git (14 calls)

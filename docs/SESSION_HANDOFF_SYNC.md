@@ -241,7 +241,7 @@ Potential improvements:
 
 ## Related Documentation
 
-- [Session Handoff Guide](./SESSION_HANDOFF.md) - General session handoff usage
+- [Session Handoff Workaround Guide](./SESSION_HANDOFF_WORKAROUND_GUIDE.md) - Workaround for MCP errors
 - [Session Handoff Tool Fix](./SESSION_HANDOFF_TOOL_FIX.md) - Error fix documentation (2025-11-30)
 - [Agentic-Tools Integration](./AGENTIC_TOOLS_INTEGRATION_PLAN.md) - MCP integration details
 - [Task Assignee Guide](./TASK_ASSIGNEE_GUIDE.md) - Cross-host task coordination

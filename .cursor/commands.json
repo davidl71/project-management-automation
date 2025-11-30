@@ -4,56 +4,56 @@
   "commands": [
     {
       "name": "install:dev",
-      "description": "Install package in editable mode for development",
-      "command": "pip install -e .",
+      "description": "Install package in editable mode for development (uses uv)",
+      "command": "uv sync",
       "category": "setup"
     },
     {
       "name": "install:dev-full",
-      "description": "Install package with all dev dependencies",
-      "command": "pip install -e '.[dev]'",
+      "description": "Install package with all dev dependencies (uses uv)",
+      "command": "uv sync",
       "category": "setup"
     },
     {
       "name": "test:run",
-      "description": "Run all tests with pytest",
-      "command": "pytest tests/ -v",
+      "description": "Run all tests with pytest (uses uv)",
+      "command": "uv run pytest tests/ -v",
       "category": "test"
     },
     {
       "name": "test:watch",
-      "description": "Run tests in watch mode",
-      "command": "pytest-watch tests/",
+      "description": "Run tests in watch mode (uses uv)",
+      "command": "uv run pytest-watch tests/",
       "category": "test"
     },
     {
       "name": "lint:run",
-      "description": "Run all linters (black, mypy, ruff)",
-      "command": "black . --check && mypy . && ruff check .",
+      "description": "Run all linters (black, mypy, ruff) using uv",
+      "command": "uv run black . --check && uv run mypy . && uv run ruff check .",
       "category": "quality"
     },
     {
       "name": "lint:fix",
-      "description": "Auto-fix linting issues",
-      "command": "black . && ruff check . --fix",
+      "description": "Auto-fix linting issues using uv",
+      "command": "uv run black . && uv run ruff check . --fix",
       "category": "quality"
     },
     {
       "name": "format:code",
-      "description": "Format code with black",
-      "command": "black .",
+      "description": "Format code with black using uv",
+      "command": "uv run black .",
       "category": "format"
     },
     {
       "name": "typecheck",
-      "description": "Run type checking with mypy",
-      "command": "mypy .",
+      "description": "Run type checking with mypy using uv",
+      "command": "uv run mypy .",
       "category": "quality"
     },
     {
       "name": "server:test",
-      "description": "Test MCP server locally",
-      "command": "python3 -m project_management_automation.server",
+      "description": "Test MCP server locally using uv",
+      "command": "uv run python -m project_management_automation.server",
       "category": "test"
     },
     {

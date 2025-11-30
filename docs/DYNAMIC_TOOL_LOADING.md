@@ -89,7 +89,7 @@ Use the MCP `tools/list_changed` notification to dynamically show/hide tools bas
 | **TASKS** | Task management | alignment, duplicates, sync, clarification, batch_approve |
 | **SECURITY** | Security scanning | dependency_scan, dependabot, security_report |
 | **AUTOMATION** | Automation | run_automation, git_hooks, pattern_triggers |
-| **CONFIG** | Configuration | cursor_rules, cursorignore, simplify_rules, pwa_config |
+| **CONFIG** | Configuration | cursor_rules, cursorignore, simplify_rules |
 | **TESTING** | Testing | run_tests, coverage, definition_of_done, problems |
 | **ADVISORS** | Advisor system | consult, briefing, list_advisors, podcast |
 | **MEMORY** | Session memory | save, recall, search, session_summary |
