@@ -25,6 +25,7 @@ Consolidated tools:
 - context(action=summarize|budget|batch) ← summarize_context, estimate_context_budget, batch_summarize
 - discovery(action=list|help) ← list_tools, get_tool_help
 - workflow_mode(action=focus|suggest|stats) ← focus_mode, suggest_mode, get_tool_usage_stats
+- recommend(action=model|workflow|advisor) ← recommend_model, recommend_workflow_mode, consult_advisor
 """
 
 import asyncio
@@ -924,6 +925,90 @@ def workflow_mode(
         return json.dumps({
             "status": "error",
             "error": f"Unknown workflow_mode action: {action}. Use 'focus', 'suggest', or 'stats'.",
+        }, indent=2)
+
+
+def recommend(
+    action: str = "model",
+    # model action params
+    task_description: Optional[str] = None,
+    task_type: Optional[str] = None,
+    optimize_for: str = "quality",
+    include_alternatives: bool = True,
+    # workflow action params
+    task_id: Optional[str] = None,
+    include_rationale: bool = True,
+    # advisor action params
+    metric: Optional[str] = None,
+    tool: Optional[str] = None,
+    stage: Optional[str] = None,
+    score: float = 50.0,
+    context: str = "",
+    log: bool = True,
+    session_mode: Optional[str] = None,
+) -> dict[str, Any] | str:
+    """
+    Unified recommendation tool.
+
+    Consolidates model recommendations, workflow mode suggestions, and advisor consultations.
+
+    Args:
+        action: "model" for AI model recommendations, "workflow" for mode suggestions, "advisor" for wisdom
+        task_description: Description of the task (model/workflow actions)
+        task_type: Optional explicit task type (model action)
+        optimize_for: "quality", "speed", or "cost" (model action)
+        include_alternatives: Include alternative recommendations (model action)
+        task_id: Optional Todo2 task ID to analyze (workflow action)
+        include_rationale: Whether to include detailed reasoning (workflow action)
+        metric: Scorecard metric to get advice for (advisor action)
+        tool: Tool to get advice for (advisor action)
+        stage: Workflow stage to get advice for (advisor action)
+        score: Current score for wisdom tier selection (advisor action, 0-100)
+        context: What you're working on (advisor action)
+        log: Whether to log consultation (advisor action)
+        session_mode: Inferred session mode for mode-aware guidance (advisor action)
+
+    Returns:
+        JSON with recommendation results (model/workflow) or dict (advisor)
+    """
+    if action == "model":
+        from .model_recommender import recommend_model
+        result = recommend_model(task_description, task_type, optimize_for, include_alternatives)
+        return json.loads(result) if isinstance(result, str) else result
+    
+    elif action == "workflow":
+        from .workflow_recommender import recommend_workflow_mode
+        result = recommend_workflow_mode(task_description, task_id, include_rationale)
+        return json.loads(result) if isinstance(result, str) else result
+    
+    elif action == "advisor":
+        from .wisdom.advisors import consult_advisor
+        # Get session mode if not provided
+        if session_mode is None:
+            try:
+                from ..resources.session import get_session_mode_resource
+                import json as json_lib
+                mode_resource_json = get_session_mode_resource()
+                mode_data = json_lib.loads(mode_resource_json)
+                session_mode = mode_data.get("mode") or mode_data.get("inferred_mode")
+            except Exception:
+                pass  # Fallback gracefully if mode inference unavailable
+        
+        result = consult_advisor(
+            metric=metric,
+            tool=tool,
+            stage=stage,
+            score=score,
+            context=context,
+            log=log,
+            session_mode=session_mode
+        )
+        return result
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown recommend action: {action}. Use 'model', 'workflow', or 'advisor'.",
         }, indent=2)
 
 

@@ -1026,7 +1026,7 @@ if mcp:
         # NOTE: log_prompt_iteration removed - use prompt_tracking(action="log")
         # NOTE: analyze_prompt_iterations removed - use prompt_tracking(action="analyze")
 
-        # NOTE: recommend_model removed - use resource automation://models for model info
+        # NOTE: recommend_model, recommend_workflow_mode, consult_advisor removed - use recommend(action=model|workflow|advisor)
         # NOTE: list_available_models removed - use resource automation://models
 
         # ═══════════════════════════════════════════════════════════════════
@@ -1202,58 +1202,84 @@ if mcp:
         # NOTE: analyze_task_hierarchy removed - use task_analysis(action="hierarchy")
 
         # ═══════════════════════════════════════════════════════════════════
-        # TRUSTED ADVISOR SYSTEM TOOLS
+        # RECOMMENDATION TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
         @mcp.tool()
-        def consult_advisor(
+        def recommend(
+            action: str = "model",
+            task_description: Optional[str] = None,
+            task_type: Optional[str] = None,
+            optimize_for: str = "quality",
+            include_alternatives: bool = True,
+            task_id: Optional[str] = None,
+            include_rationale: bool = True,
             metric: Optional[str] = None,
             tool: Optional[str] = None,
             stage: Optional[str] = None,
             score: float = 50.0,
             context: str = "",
+            log: bool = True,
         ) -> str:
             """
-            [HINT: Trusted advisor. Wisdom from assigned advisors by metric/tool/stage.]
+            [HINT: Recommendations. action=model|workflow|advisor. Unified recommendation system.]
 
-            Consult a trusted advisor assigned to a metric, tool, or workflow stage.
-            Advisors provide wisdom matched to project health and context.
-            Automatically uses inferred session mode for mode-aware guidance (MODE-003).
+            Unified recommendation tool consolidating model selection, workflow mode suggestions, and advisor consultations.
+
+            Actions:
+            - action="model": Recommend optimal AI model based on task
+            - action="workflow": Suggest AGENT vs ASK mode based on task complexity
+            - action="advisor": Get wisdom from trusted advisors
+
+            📊 Output: Model recommendations, mode suggestions, or advisor wisdom
+            🔧 Side Effects: May log consultations (advisor action)
+            ⏱️ Typical Runtime: <1 second
 
             Args:
-                metric: Scorecard metric (security, testing, documentation, etc.)
-                tool: Tool name (project_scorecard, sprint_automation, etc.)
-                stage: Workflow stage (daily_checkin, planning, review, etc.)
-                score: Current score for wisdom tier selection (0-100)
-                context: What you're working on (for logging)
+                action: "model" for AI model recommendations, "workflow" for mode suggestions, "advisor" for wisdom
+                task_description: Description of the task (model/workflow actions)
+                task_type: Optional explicit task type (model action)
+                optimize_for: "quality", "speed", or "cost" (model action)
+                include_alternatives: Include alternative recommendations (model action)
+                task_id: Optional Todo2 task ID to analyze (workflow action)
+                include_rationale: Whether to include detailed reasoning (workflow action)
+                metric: Scorecard metric to get advice for (advisor action)
+                tool: Tool to get advice for (advisor action)
+                stage: Workflow stage to get advice for (advisor action)
+                score: Current score for wisdom tier selection (advisor action, 0-100)
+                context: What you're working on (advisor action)
+                log: Whether to log consultation (advisor action)
 
-            Returns:
-                Advisor wisdom with quote, encouragement, and rationale
+            Examples:
+                recommend(action="model", task_description="implement authentication")
+                → AI model recommendation
+
+                recommend(action="workflow", task_description="refactor database layer")
+                → AGENT/ASK mode suggestion
+
+                recommend(action="advisor", metric="security", score=75.0)
+                → Advisor wisdom for security metric
             """
-            from .tools.wisdom.advisors import consult_advisor as _consult_advisor
-            from .tools.dynamic_tools import get_tool_manager
-            from .resources.session import get_session_mode_resource
-            import json as json_module
-
-            # Get inferred session mode for mode-aware guidance
-            session_mode = None
-            try:
-                mode_resource_json = get_session_mode_resource()
-                mode_data = json_module.loads(mode_resource_json)
-                session_mode = mode_data.get("mode") or mode_data.get("inferred_mode")
-            except Exception:
-                pass  # Fallback gracefully if mode inference unavailable
-
-            result = _consult_advisor(
+            result = _recommend(
+                action=action,
+                task_description=task_description,
+                task_type=task_type,
+                optimize_for=optimize_for,
+                include_alternatives=include_alternatives,
+                task_id=task_id,
+                include_rationale=include_rationale,
                 metric=metric,
                 tool=tool,
                 stage=stage,
                 score=score,
                 context=context,
-                log=True,
-                session_mode=session_mode
+                log=log,
+                session_mode=None  # Will be auto-detected in consolidated function
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Convert dict to JSON string if needed
+            if isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            return result if isinstance(result, str) else json.dumps(result, separators=(",", ":"))
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
 
@@ -1328,6 +1354,9 @@ if mcp:
         )
         from .tools.consolidated import (
             workflow_mode as _workflow_mode,
+        )
+        from .tools.consolidated import (
+            recommend as _recommend,
         )
         CONSOLIDATED_AVAILABLE = True
     except ImportError:
