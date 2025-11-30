@@ -16,7 +16,7 @@ Consolidated tools:
 - report(action=overview|scorecard|briefing|prd) ← generate_project_overview, generate_project_scorecard, get_daily_briefing, generate_prd
 - advisor_audio(action=quote|podcast|export) ← synthesize_advisor_quote, generate_podcast_audio, export_advisor_podcast
 - task_analysis(action=duplicates|tags|hierarchy) ← detect_duplicate_tasks, consolidate_tags, analyze_task_hierarchy
-- testing(action=run|coverage) ← run_tests, analyze_test_coverage
+- testing(action=run|coverage|suggest|validate) ← run_tests, analyze_test_coverage, suggest_test_cases, validate_test_structure
 - lint(action=run|analyze) ← run_linter, analyze_problems
 - memory(action=save|recall|search) ← save_memory, recall_context, search_memories
 - memory_maint(action=health|gc|prune|consolidate|dream) ← memory lifecycle management and advisor dreaming
@@ -534,6 +534,11 @@ async def testing_async(
     coverage_file: Optional[str] = None,
     min_coverage: int = 80,
     format: str = "html",
+    # suggest params
+    target_file: Optional[str] = None,
+    min_confidence: float = 0.7,
+    # validate params
+    framework: Optional[str] = None,
     # common
     output_path: Optional[str] = None,
     ctx: Optional[Any] = None,
@@ -542,7 +547,7 @@ async def testing_async(
     Unified testing tool (async with progress).
 
     Args:
-        action: "run" to execute tests, "coverage" to analyze coverage
+        action: "run" to execute tests, "coverage" to analyze coverage, "suggest" to suggest test cases, "validate" to validate test structure
         test_path: Path to test file/directory (run action)
         test_framework: pytest, unittest, ctest, or auto (run action)
         verbose: Show detailed output (run action)
@@ -550,11 +555,14 @@ async def testing_async(
         coverage_file: Path to coverage file (coverage action)
         min_coverage: Minimum coverage threshold (coverage action)
         format: Report format - html, json, terminal (coverage action)
+        target_file: File to analyze for suggestions (suggest action)
+        min_confidence: Minimum confidence threshold for suggestions (suggest action, default: 0.7)
+        framework: Expected framework for validation (validate action, default: auto)
         output_path: Save results to file
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Test or coverage results as JSON string
+        Test, coverage, suggestion, or validation results as dict
     """
     if action == "run":
         from .run_tests import run_tests_async
@@ -564,10 +572,18 @@ async def testing_async(
         from .test_coverage import analyze_test_coverage
         result = analyze_test_coverage(coverage_file, min_coverage, output_path, format)
         return json.loads(result) if isinstance(result, str) else result
+    elif action == "suggest":
+        from .test_suggestions import suggest_test_cases
+        result = suggest_test_cases(target_file, test_framework, min_confidence, output_path)
+        return json.loads(result) if isinstance(result, str) else result
+    elif action == "validate":
+        from .test_validation import validate_test_structure
+        result = validate_test_structure(test_path, framework, output_path)
+        return json.loads(result) if isinstance(result, str) else result
     else:
         return {
             "status": "error",
-            "error": f"Unknown testing action: {action}. Use 'run' or 'coverage'.",
+            "error": f"Unknown testing action: {action}. Use 'run', 'coverage', 'suggest', or 'validate'.",
         }
 
 
@@ -582,6 +598,11 @@ def testing(
     coverage_file: Optional[str] = None,
     min_coverage: int = 80,
     format: str = "html",
+    # suggest params
+    target_file: Optional[str] = None,
+    min_confidence: float = 0.7,
+    # validate params
+    framework: Optional[str] = None,
     # common
     output_path: Optional[str] = None,
     ctx: Optional[Any] = None,
@@ -590,19 +611,22 @@ def testing(
     Unified testing tool (sync wrapper).
 
     Args:
-        action: "run" to execute tests, "coverage" to analyze coverage
-        test_path: Path to test file/directory (run action)
-        test_framework: pytest, unittest, ctest, or auto (run action)
+        action: "run" to execute tests, "coverage" to analyze coverage, "suggest" to suggest test cases, "validate" to validate test structure
+        test_path: Path to test file/directory (run/validate action)
+        test_framework: pytest, unittest, ctest, or auto (run/suggest action)
         verbose: Show detailed output (run action)
         coverage: Generate coverage during test run (run action)
         coverage_file: Path to coverage file (coverage action)
         min_coverage: Minimum coverage threshold (coverage action)
         format: Report format - html, json, terminal (coverage action)
+        target_file: File to analyze for suggestions (suggest action)
+        min_confidence: Minimum confidence threshold for suggestions (suggest action, default: 0.7)
+        framework: Expected framework for validation (validate action, default: auto)
         output_path: Save results to file
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Test or coverage results as dict
+        Test, coverage, suggestion, or validation results as dict
     """
     # Toggle: check if we're in an async context
     in_async = False
@@ -614,7 +638,7 @@ def testing(
 
     if in_async:
         raise RuntimeError("Use testing_async() in async context, or call from sync code")
-    return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
+    return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
 
 
 def lint(

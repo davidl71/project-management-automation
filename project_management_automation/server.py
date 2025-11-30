@@ -951,7 +951,7 @@ if mcp:
         # NOTE: clarification removed - use task_workflow(action="clarify")
         # NOTE: setup_git_hooks removed - use setup_hooks(type="git")
         # NOTE: setup_pattern_triggers removed - use setup_hooks(type="patterns")
-        # NOTE: run_tests, analyze_test_coverage removed - use testing(action=run|coverage)
+        # NOTE: run_tests, analyze_test_coverage removed - use testing(action=run|coverage|suggest|validate)
 
         # Helper for sprint automation (shared implementation)
         def _sprint_automation_impl(
@@ -1620,21 +1620,27 @@ if mcp:
             coverage_file: Optional[str] = None,
             min_coverage: int = 80,
             format: str = "html",
+            target_file: Optional[str] = None,
+            min_confidence: float = 0.7,
+            framework: Optional[str] = None,
             output_path: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Testing tool. action=run|coverage. Execute tests or analyze coverage.]
+            [HINT: Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest test cases, or validate test structure.]
 
             Unified testing:
             - action="run": Execute test suite (pytest/unittest/ctest)
             - action="coverage": Analyze test coverage with threshold
+            - action="suggest": Suggest test cases based on code analysis
+            - action="validate": Validate test organization and patterns
 
-            📊 Output: Test results or coverage analysis
-            🔧 Side Effects: May generate coverage reports
+            📊 Output: Test results, coverage analysis, test suggestions, or validation report
+            🔧 Side Effects: May generate coverage reports, suggestion files, or validation reports
             """
             result = _testing(
                 action, test_path, test_framework, verbose, coverage,
-                coverage_file, min_coverage, format, output_path
+                coverage_file, min_coverage, format, target_file, min_confidence,
+                framework, output_path
             )
             return json.dumps(result, separators=(",", ":"))
 
