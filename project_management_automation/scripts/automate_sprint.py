@@ -30,6 +30,14 @@ else:
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
+# Import status normalization utilities
+try:
+    from project_management_automation.utils.todo2_utils import normalize_status, is_pending_status
+except ImportError:
+    # Fallback if running as standalone script
+    sys.path.insert(0, str(repo_root / 'project_management_automation'))
+    from utils.todo2_utils import normalize_status, is_pending_status
+
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
 
@@ -549,9 +557,8 @@ class SprintAutomation(IntelligentAutomationBase):
         long_desc = (task.get('long_description', '') or task.get('details', '')).lower()
         status = task.get('status', '')
 
-        # Skip if not in actionable status
-        actionable_statuses = ['Todo', 'todo', 'pending', 'Pending']
-        if status not in actionable_statuses:
+        # Skip if not in actionable status (normalized)
+        if not is_pending_status(status):
             return False
 
         # Interactive indicators (exclude)

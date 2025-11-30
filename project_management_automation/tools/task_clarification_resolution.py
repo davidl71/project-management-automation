@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from ..utils import find_project_root
+from ..utils.todo2_utils import is_review_status
 
 logger = logging.getLogger(__name__)
 
@@ -255,7 +256,7 @@ def list_tasks_awaiting_clarification() -> dict[str, Any]:
             data = json.load(f)
 
         todos = data.get('todos', [])
-        review_tasks = [t for t in todos if t.get('status') == 'Review']
+        review_tasks = [t for t in todos if is_review_status(t.get('status', ''))]
 
         # Extract clarification questions
         import re

@@ -27,6 +27,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Literal
 
+from ..utils.todo2_utils import normalize_status, is_pending_status, is_review_status
+
 logger = logging.getLogger(__name__)
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -458,9 +460,10 @@ def get_workload_summary() -> str:
 
             if assignee is None:
                 unassigned["total"] += 1
-                if status == "In Progress":
+                normalized_status = normalize_status(status)
+                if normalized_status == "in_progress":
                     unassigned["in_progress"] += 1
-                elif status == "Todo":
+                elif normalized_status == "todo":
                     unassigned["todo"] += 1
                 continue
 
@@ -486,13 +489,14 @@ def get_workload_summary() -> str:
                 }
 
             bucket[aname]["total"] += 1
-            if status == "In Progress":
+            normalized_status = normalize_status(status)
+            if normalized_status == "in_progress":
                 bucket[aname]["in_progress"] += 1
-            elif status == "Todo":
+            elif normalized_status == "todo":
                 bucket[aname]["todo"] += 1
-            elif status == "Done":
+            elif normalized_status == "completed":
                 bucket[aname]["done"] += 1
-            elif status == "Review":
+            elif normalized_status == "review":
                 bucket[aname]["review"] += 1
 
         # Get available agents from project
@@ -631,8 +635,8 @@ def auto_assign_background_tasks(
             if task.get("assignee"):
                 continue
 
-            # Skip if not in Todo status
-            if task.get("status") not in ["Todo", "todo"]:
+            # Skip if not in Todo status (normalized)
+            if not is_pending_status(task.get("status", "")):
                 continue
 
             # Apply priority filter

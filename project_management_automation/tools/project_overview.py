@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from ..utils import find_project_root
+from ..utils.todo2_utils import normalize_status, is_pending_status, is_active_status
 
 
 def generate_project_overview(
@@ -200,14 +201,17 @@ def _get_task_metrics(project_root: Path) -> dict:
 
     for task in todos:
         status = task.get('status', 'pending')
+        normalized_status = normalize_status(status)
         priority = task.get('priority', 'medium')
         tags = task.get('tags', [])
         hours = task.get('estimatedHours', 0)
 
-        by_status[status] = by_status.get(status, 0) + 1
+        # Use normalized status for counting
+        by_status[normalized_status] = by_status.get(normalized_status, 0) + 1
         by_priority[priority] = by_priority.get(priority, 0) + 1
 
-        if status in ['pending', 'in_progress', 'Todo']:
+        # Count hours for active (non-completed) tasks
+        if is_active_status(status):
             remaining_hours += hours
 
         for tag in tags[:2]:
@@ -280,7 +284,7 @@ def _get_next_actions(project_root: Path) -> list[dict]:
 
     todos = data.get('todos', [])
     high_priority = [t for t in todos if t.get('priority') == 'high'
-                     and t.get('status') in ['pending', 'Todo', 'in_progress']]
+                     and is_active_status(t.get('status', ''))]
 
     actions = []
     for task in high_priority[:5]:

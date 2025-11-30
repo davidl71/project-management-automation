@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
     from tools.intelligent_automation_base import IntelligentAutomationBase
+    from utils.todo2_utils import normalize_status, is_pending_status, is_review_status
 except ImportError:
     # Fallback if base class not available
     class IntelligentAutomationBase:
@@ -224,16 +225,16 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         long_desc = task.get('long_description', '').lower()
         status = task.get('status', '')
 
-        # Skip if not in Todo status
-        if status not in ['Todo', 'todo']:
+        # Skip if not in Todo status (normalized)
+        if not is_pending_status(status):
             return False
 
         # Skip Review status (already reviewed)
-        if status == 'Review':
+        if is_review_status(status):
             return False
 
         # Interactive indicators (exclude)
-        is_review = status == 'Review'
+        is_review = is_review_status(status)
         needs_clarification = 'clarification required' in long_desc
         needs_user_input = 'user input' in long_desc or 'user interaction' in long_desc
         is_design = 'design' in name and any(x in name for x in ['framework', 'system', 'strategy', 'allocation'])
@@ -456,7 +457,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
                 background_tasks.append(task)
             else:
                 # Check if interactive task should be moved to review
-                if task.get('status') in ['Todo', 'todo']:
+                if is_pending_status(task.get('status', '')):
                     # Check if it needs user input
                     long_desc = task.get('long_description', '').lower()
                     needs_clarification = 'clarification required' in long_desc
@@ -544,7 +545,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         if not dry_run and self.batch_script.exists():
             try:
                 # Count Review tasks with no clarification before approval
-                review_tasks_before = [t for t in todos if t.get('status') == 'Review']
+                review_tasks_before = [t for t in todos if is_review_status(t.get('status', ''))]
 
                 # Run batch approval script for Review tasks with no clarification needed
                 result = subprocess.run(
@@ -569,7 +570,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
                     todos = state.get('todos', [])
 
                     # Count Review tasks after approval
-                    review_tasks_after = [t for t in todos if t.get('status') == 'Review']
+                    review_tasks_after = [t for t in todos if is_review_status(t.get('status', ''))]
                     batch_approved_count = len(review_tasks_before) - len(review_tasks_after)
             except Exception as e:
                 # Log error but don't fail the automation

@@ -217,6 +217,140 @@ def get_current_project_id(project_root: Optional[Path] = None) -> Optional[str]
     return get_repo_project_id(project_root)
 
 
+# ═══════════════════════════════════════════════════════════════
+# STATUS NORMALIZATION
+# ═══════════════════════════════════════════════════════════════
+
+def normalize_status(status: str) -> str:
+    """
+    Normalize task status to canonical lowercase form.
+    
+    Handles case-insensitive matching and variant status values.
+    Maps common variants to canonical forms for consistent processing.
+    
+    Canonical statuses:
+    - 'todo': Pending/not started
+    - 'in_progress': Currently being worked on
+    - 'review': Awaiting review/approval
+    - 'completed': Finished (normalizes 'done' to 'completed')
+    - 'blocked': Cannot proceed
+    - 'cancelled': Cancelled/abandoned
+    
+    Args:
+        status: Raw status value (case-insensitive, handles variants)
+    
+    Returns:
+        Canonical lowercase status value (defaults to 'todo' if empty/invalid)
+    
+    Examples:
+        >>> normalize_status('Todo')
+        'todo'
+        >>> normalize_status('DONE')
+        'completed'
+        >>> normalize_status('in-progress')
+        'in_progress'
+        >>> normalize_status('')
+        'todo'
+    """
+    if not status:
+        return 'todo'
+    
+    status_lower = status.lower().strip()
+    
+    # Map variants to canonical forms
+    status_map = {
+        # Pending/Todo variants
+        'pending': 'todo',
+        'not started': 'todo',
+        'new': 'todo',
+        
+        # In Progress variants
+        'in progress': 'in_progress',
+        'in-progress': 'in_progress',
+        'in_progress': 'in_progress',
+        'working': 'in_progress',
+        'active': 'in_progress',
+        
+        # Review variants
+        'review': 'review',
+        'needs review': 'review',
+        'awaiting review': 'review',
+        
+        # Completed variants (normalize 'done' to 'completed')
+        'completed': 'completed',
+        'done': 'completed',  # Normalize 'done' to 'completed'
+        'finished': 'completed',
+        'closed': 'completed',
+        
+        # Blocked variants
+        'blocked': 'blocked',
+        'waiting': 'blocked',
+        
+        # Cancelled variants
+        'cancelled': 'cancelled',
+        'canceled': 'cancelled',  # US spelling
+        'abandoned': 'cancelled',
+    }
+    
+    return status_map.get(status_lower, status_lower)
+
+
+def is_pending_status(status: str) -> bool:
+    """
+    Check if status represents a pending task.
+    
+    Args:
+        status: Task status value
+    
+    Returns:
+        True if status is 'todo' (normalized)
+    """
+    normalized = normalize_status(status)
+    return normalized == 'todo'
+
+
+def is_completed_status(status: str) -> bool:
+    """
+    Check if status represents a completed task.
+    
+    Args:
+        status: Task status value
+    
+    Returns:
+        True if status is 'completed' or 'cancelled' (normalized)
+    """
+    normalized = normalize_status(status)
+    return normalized in ['completed', 'cancelled']
+
+
+def is_active_status(status: str) -> bool:
+    """
+    Check if status represents an active (non-completed) task.
+    
+    Args:
+        status: Task status value
+    
+    Returns:
+        True if status is 'todo', 'in_progress', 'review', or 'blocked' (normalized)
+    """
+    normalized = normalize_status(status)
+    return normalized in ['todo', 'in_progress', 'review', 'blocked']
+
+
+def is_review_status(status: str) -> bool:
+    """
+    Check if status represents a task awaiting review.
+    
+    Args:
+        status: Task status value
+    
+    Returns:
+        True if status is 'review' (normalized)
+    """
+    normalized = normalize_status(status)
+    return normalized == 'review'
+
+
 __all__ = [
     "get_repo_project_id",
     "task_belongs_to_project",
@@ -225,5 +359,11 @@ __all__ = [
     "load_todo2_project_info",
     "validate_project_ownership",
     "get_current_project_id",
+    # Status normalization
+    "normalize_status",
+    "is_pending_status",
+    "is_completed_status",
+    "is_active_status",
+    "is_review_status",
 ]
 
