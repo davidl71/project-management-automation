@@ -738,6 +738,121 @@ def memory(
         }
 
 
+def context(
+    action: str = "summarize",
+    # summarize action params
+    data: Optional[str] = None,
+    level: str = "brief",
+    tool_type: Optional[str] = None,
+    max_tokens: Optional[int] = None,
+    include_raw: bool = False,
+    # budget action params
+    items: Optional[str] = None,
+    budget_tokens: int = 4000,
+    # batch action params
+    combine: bool = True,
+) -> str:
+    """
+    Unified context management tool.
+
+    Consolidates context summarization, budgeting, and batch operations.
+
+    Args:
+        action: "summarize" for single item, "budget" for token analysis, "batch" for multiple items
+        data: JSON string to summarize (summarize action)
+        level: Summarization level - "brief", "detailed", "key_metrics", "actionable" (summarize action)
+        tool_type: Tool type hint for smarter summarization (summarize action)
+        max_tokens: Maximum tokens for output (summarize action)
+        include_raw: Include original data in response (summarize action)
+        items: JSON array of items to analyze (budget/batch actions)
+        budget_tokens: Target token budget (budget action)
+        combine: Merge summaries into combined view (batch action)
+
+    Returns:
+        JSON with context operation results
+    """
+    if action == "summarize":
+        if not data:
+            return json.dumps({
+                "status": "error",
+                "error": "data parameter required for summarize action",
+            }, indent=2)
+        from .context_summarizer import summarize_context
+        return summarize_context(data, level, tool_type, max_tokens, include_raw)
+    
+    elif action == "budget":
+        if not items:
+            return json.dumps({
+                "status": "error",
+                "error": "items parameter required for budget action",
+            }, indent=2)
+        import json as json_lib
+        parsed_items = json_lib.loads(items) if isinstance(items, str) else items
+        from .context_summarizer import estimate_context_budget
+        return estimate_context_budget(parsed_items, budget_tokens)
+    
+    elif action == "batch":
+        if not items:
+            return json.dumps({
+                "status": "error",
+                "error": "items parameter required for batch action",
+            }, indent=2)
+        import json as json_lib
+        parsed_items = json_lib.loads(items) if isinstance(items, str) else items
+        from .context_summarizer import batch_summarize
+        return batch_summarize(parsed_items, level, combine)
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown context action: {action}. Use 'summarize', 'budget', or 'batch'.",
+        }, indent=2)
+
+
+def discovery(
+    action: str = "list",
+    # list action params
+    category: Optional[str] = None,
+    persona: Optional[str] = None,
+    include_examples: bool = True,
+    # help action params
+    tool_name: Optional[str] = None,
+) -> str:
+    """
+    Unified discovery tool.
+
+    Consolidates tool discovery and help operations.
+
+    Args:
+        action: "list" for tool catalog, "help" for specific tool documentation
+        category: Filter by category (list action)
+        persona: Filter by persona (list action)
+        include_examples: Include example prompts (list action)
+        tool_name: Name of tool to get help for (help action)
+
+    Returns:
+        JSON with discovery results
+    """
+    if action == "list":
+        from .hint_catalog import list_tools
+        return list_tools(category, persona, include_examples)
+    
+    elif action == "help":
+        if not tool_name:
+            return json.dumps({
+                "status": "error",
+                "error": "tool_name parameter required for help action",
+            }, indent=2)
+        from .hint_catalog import get_tool_help
+        return get_tool_help(tool_name)
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown discovery action: {action}. Use 'list' or 'help'.",
+        }, indent=2)
+
+
 def task_discovery(
     action: str = "all",
     # comments params

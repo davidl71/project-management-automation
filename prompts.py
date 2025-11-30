@@ -388,9 +388,9 @@ CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
 
 **Tools Available:**
 
-1. **summarize()** - Compress verbose outputs
+1. **context(action="summarize")** - Compress verbose outputs
    ```
-   summarize(data=json_output, level="brief")
+   context(action="summarize", data=json_output, level="brief")
    → "Health: 85/100, 3 issues, 2 actions"
    
    Levels:
@@ -400,13 +400,19 @@ CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
    - actionable: Recommendations/tasks only
    ```
 
-2. **context_budget()** - Analyze token usage
+2. **context(action="budget")** - Analyze token usage
    ```
-   context_budget(items=json_array, budget_tokens=4000)
+   context(action="budget", items=json_array, budget_tokens=4000)
    → Shows which items to summarize to fit budget
    ```
 
-3. **focus_mode()** - Reduce visible tools
+3. **context(action="batch")** - Summarize multiple items
+   ```
+   context(action="batch", items=json_array, level="brief")
+   → Combined summaries of multiple items
+   ```
+
+4. **focus_mode()** - Reduce visible tools
    ```
    focus_mode(mode="security_review")
    → 74% fewer tools shown = less context
@@ -417,15 +423,15 @@ CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
 | Method | Reduction | Best For |
 |--------|-----------|----------|
 | focus_mode() | 50-80% tools | Start of task |
-| summarize(level="brief") | 70-90% data | Tool results |
-| summarize(level="key_metrics") | 80-95% data | Numeric data |
-| context_budget() | Planning | Multiple results |
+| context(action="summarize", level="brief") | 70-90% data | Tool results |
+| context(action="summarize", level="key_metrics") | 80-95% data | Numeric data |
+| context(action="budget") | Planning | Multiple results |
 
 **Example Workflow:**
 
 1. Start task → `focus_mode(mode="security_review")`
 2. Run tool → Get large JSON output
-3. Compress → `summarize(data=output, level="brief")`
+3. Compress → `context(action="summarize", data=output, level="brief")`
 4. Continue → Reduced context, same key info
 
 **Token Estimation:**

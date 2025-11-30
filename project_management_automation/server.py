@@ -1029,22 +1029,42 @@ if mcp:
         # NOTE: recommend_model removed - use resource automation://models for model info
         # NOTE: list_available_models removed - use resource automation://models
 
+        # ═══════════════════════════════════════════════════════════════════
+        # DISCOVERY TOOL (CONSOLIDATED)
+        # ═══════════════════════════════════════════════════════════════════
+
         @mcp.tool()
-        def list_tools(
+        def discovery(
+            action: str = "list",
             category: Optional[str] = None,
             persona: Optional[str] = None,
-            include_examples: bool = True
+            include_examples: bool = True,
+            tool_name: Optional[str] = None,
         ) -> str:
-            """[HINT: Tool catalog. Lists all tools with rich descriptions and examples.]
+            """
+            [HINT: Discovery tool. action=list|help. Unified tool discovery and help.]
 
-            📊 Output: Filtered tool catalog with usage guidance
+            Unified discovery tool consolidating tool catalog and help operations.
+
+            📊 Output: Tool catalog or detailed tool documentation
             🔧 Side Effects: None
             ⏱️ Typical Runtime: <1 second
 
-            Categories: Project Health, Task Management, Code Quality,
-            Security, Planning, Workflow, Configuration
+            Args:
+                action: "list" for tool catalog, "help" for specific tool documentation
+                category: Filter by category (list action)
+                persona: Filter by persona (list action)
+                include_examples: Include example prompts (list action)
+                tool_name: Name of tool to get help for (help action)
+
+            Examples:
+                discovery(action="list", category="security")
+                → Filtered tool catalog
+
+                discovery(action="help", tool_name="project_scorecard")
+                → Detailed tool documentation
             """
-            return _list_tools(category, persona, include_examples)
+            return _discovery(action, category, persona, include_examples, tool_name)
 
         @mcp.tool()
         async def focus_mode(
@@ -1165,72 +1185,52 @@ if mcp:
             return _get_tool_usage_stats()
 
         # ═══════════════════════════════════════════════════════════════════
-        # CONTEXT SUMMARIZATION TOOLS
+        # CONTEXT MANAGEMENT TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
         @mcp.tool()
-        def summarize(
-            data: str,
+        def context(
+            action: str = "summarize",
+            data: Optional[str] = None,
             level: str = "brief",
             tool_type: Optional[str] = None,
             max_tokens: Optional[int] = None,
             include_raw: bool = False,
+            items: Optional[str] = None,
+            budget_tokens: int = 4000,
+            combine: bool = True,
         ) -> str:
             """
-            [HINT: Context summarizer. Compresses verbose outputs to key metrics. Levels: brief|detailed|key_metrics|actionable.]
+            [HINT: Context management. action=summarize|budget|batch. Unified context operations.]
 
-            Strategically summarizes tool outputs for efficient context usage.
-            Reduces token consumption by 50-80% while preserving key information.
+            Unified context management tool consolidating summarization, budgeting, and batch operations.
 
-            📊 Output: Compressed summary with key metrics and token estimates
+            📊 Output: Context operation results (summary, budget analysis, or batch summaries)
             🔧 Side Effects: None
             ⏱️ Typical Runtime: <10ms
 
             Args:
-                data: JSON string to summarize (tool output, API response, etc.)
-                level: Summarization level
-                    - "brief": One-line summary with key metrics (default)
-                    - "detailed": Multi-line with categories
-                    - "key_metrics": Just the numbers/scores
-                    - "actionable": Only recommendations and tasks
-                tool_type: Hint for smarter summarization (auto-detected if not provided)
-                    - "health", "security", "task", "testing", "scorecard", etc.
-                max_tokens: Maximum tokens for output (truncates if needed)
-                include_raw: Include original data in response
+                action: "summarize" for single item, "budget" for token analysis, "batch" for multiple items
+                data: JSON string to summarize (summarize action)
+                level: Summarization level - "brief", "detailed", "key_metrics", "actionable" (summarize/batch actions)
+                tool_type: Tool type hint for smarter summarization (summarize action)
+                max_tokens: Maximum tokens for output (summarize action)
+                include_raw: Include original data in response (summarize action)
+                items: JSON array of items to analyze (budget/batch actions)
+                budget_tokens: Target token budget (budget action)
+                combine: Merge summaries into combined view (batch action)
 
             Examples:
-                summarize(health_result, level="brief")
+                context(action="summarize", data=health_result, level="brief")
                 → "Health: 85/100, 3 issues, 2 actions"
 
-                summarize(security_scan, level="key_metrics")
-                → {"critical": 0, "high": 2, "medium": 5}
+                context(action="budget", items=json_array, budget_tokens=4000)
+                → Token analysis with reduction strategy
+
+                context(action="batch", items=json_array, level="brief")
+                → Combined summaries of multiple items
             """
-            return _summarize_context(data, level, tool_type, max_tokens, include_raw)
-
-        @mcp.tool()
-        def context_budget(
-            items: str,
-            budget_tokens: int = 4000,
-        ) -> str:
-            """
-            [HINT: Context budget. Estimates tokens and suggests what to keep/summarize to fit budget.]
-
-            Analyze token usage and get recommendations for context reduction.
-
-            📊 Output: Token analysis with reduction strategy
-            🔧 Side Effects: None
-            ⏱️ Typical Runtime: <10ms
-
-            Args:
-                items: JSON array of items to analyze
-                budget_tokens: Target token budget (default: 4000)
-
-            Returns:
-                JSON with total tokens, items by size, and reduction strategy
-            """
-            import json
-            parsed_items = json.loads(items) if isinstance(items, str) else items
-            return _estimate_context_budget(parsed_items, budget_tokens)
+            return _context(action, data, level, tool_type, max_tokens, include_raw, items, budget_tokens, combine)
 
         # NOTE: get_tool_help removed - use resource automation://tools for tool info
         # NOTE: project_overview removed - use generate_project_overview
@@ -1356,6 +1356,12 @@ if mcp:
         )
         from .tools.consolidated import (
             testing as _testing,
+        )
+        from .tools.consolidated import (
+            context as _context,
+        )
+        from .tools.consolidated import (
+            discovery as _discovery,
         )
         CONSOLIDATED_AVAILABLE = True
     except ImportError:
