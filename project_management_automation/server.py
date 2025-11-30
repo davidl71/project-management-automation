@@ -334,6 +334,16 @@ if MCP_AVAILABLE:
         except Exception as e:
             logger.warning(f"Failed to register auto-primer tools: {e}")
         
+        # Session mode resources (MODE-002)
+        try:
+            from .resources.session import register_session_resources
+            register_session_resources(mcp)
+            logger.debug("✅ Session mode resources registered")
+        except ImportError as e:
+            logger.debug(f"Session mode resources not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register session mode resources: {e}")
+        
         # Prompt discovery resources and tools
         try:
             from .resources.prompt_discovery import (

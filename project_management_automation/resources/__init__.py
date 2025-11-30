@@ -61,6 +61,13 @@ from .capabilities import (
     register_capabilities_resources,
 )
 
+from .session import (
+    SessionModeStorage,
+    get_session_mode_resource,
+    infer_session_mode_tool,
+    register_session_resources,
+)
+
 __all__ = [
     # Registration
     "register_resource_templates",
@@ -107,4 +114,9 @@ __all__ = [
     "get_capabilities_summary",
     "get_domain_capabilities",
     "register_capabilities_resources",
+    # Session mode (MODE-002)
+    "SessionModeStorage",
+    "get_session_mode_resource",
+    "infer_session_mode_tool",
+    "register_session_resources",
 ]

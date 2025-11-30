@@ -2457,6 +2457,164 @@
           "lastModified": "2025-11-30T00:15:02.475994"
         }
       ]
+    },
+    {
+      "id": "MODE-002-A1",
+      "name": "MODE-002-A1: Implement FileEditTracker class",
+      "long_description": "Implement FileEditTracker class for tracking file edits during tool calls.\n\n**Agent**: A (Infrastructure)\n**Estimated Time**: 30 minutes\n**Dependencies**: None (can start immediately)\n\n**Deliverables**:\n1. Create FileEditTracker dataclass in dynamic_tools.py\n2. Implement file tracking methods:\n   - record_file_edit(file_path: str)\n   - get_unique_files_count() -> int\n   - get_edit_frequency(window_seconds: float) -> float\n   - is_multi_file_session(threshold: int) -> bool\n3. Add serialization methods (to_dict, from_dict)\n4. Write unit tests\n\n**Interface Contract**: See session_mode_inference_interfaces.py\n\n**Files to Modify**:\n- project_management_automation/tools/dynamic_tools.py\n\n**Acceptance Criteria**:\n- [ ] FileEditTracker class implemented\n- [ ] All methods working correctly\n- [ ] Unit tests pass\n- [ ] Interface contract satisfied",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "enhancement",
+        "agent-a"
+      ],
+      "created": "2025-11-30T08:47:58.948591",
+      "lastModified": "2025-11-30T08:48:18.781740",
+      "dependencies": [
+        "MODE-002"
+      ],
+      "estimatedHours": 0.5,
+      "assignee": {
+        "type": "agent",
+        "name": "backend-agent",
+        "hostname": null,
+        "assigned_at": "2025-11-30T08:48:18.781710Z",
+        "assigned_by": "parallelization_script"
+      }
+    },
+    {
+      "id": "MODE-002-B1",
+      "name": "MODE-002-B1: Implement SessionModeInference engine",
+      "long_description": "Implement SessionModeInference engine for analyzing patterns and inferring AGENT/ASK/MANUAL modes.\n\n**Agent**: B (Algorithm)\n**Estimated Time**: 45 minutes\n**Dependencies**: None (can start immediately)\n\n**Deliverables**:\n1. Create session_mode_inference.py file\n2. Implement SessionMode enum (AGENT, ASK, MANUAL, UNKNOWN)\n3. Implement ModeInferenceResult dataclass\n4. Implement detection heuristics:\n   - AGENT: High tool frequency (>5/min), multi-file (>2), longer sessions (>5min)\n   - ASK: Lower frequency (1-3/min), single/few files (\u22642), shorter (<5min)\n   - MANUAL: Very low/no tool calls (<1/min), direct file edits\n5. Implement sliding window analysis\n6. Write unit tests with mock data\n\n**Interface Contract**: See session_mode_inference_interfaces.py\n\n**Files to Create**:\n- project_management_automation/tools/session_mode_inference.py\n\n**Acceptance Criteria**:\n- [ ] SessionModeInference class implemented\n- [ ] Detection heuristics working correctly\n- [ ] Confidence scores calculated properly\n- [ ] Sliding window analysis functional\n- [ ] Unit tests pass\n- [ ] Interface contract satisfied",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "enhancement",
+        "agent-b"
+      ],
+      "created": "2025-11-30T08:47:58.948628",
+      "lastModified": "2025-11-30T08:48:18.781797",
+      "dependencies": [
+        "MODE-002"
+      ],
+      "estimatedHours": 0.75,
+      "assignee": {
+        "type": "agent",
+        "name": "algorithm-agent",
+        "hostname": null,
+        "assigned_at": "2025-11-30T08:48:18.781793Z",
+        "assigned_by": "parallelization_script"
+      }
+    },
+    {
+      "id": "MODE-002-C1",
+      "name": "MODE-002-C1: Implement Storage & MCP Resources",
+      "long_description": "Implement session mode storage and MCP resource/tool endpoints.\n\n**Agent**: C (Resources/API)\n**Estimated Time**: 30 minutes\n**Dependencies**: None (can start immediately, but will need integration later)\n\n**Deliverables**:\n1. Create resources/session.py file\n2. Implement session mode storage in .exarp/session_mode.json\n3. Create MCP resource: automation://session/mode\n4. Create MCP tool: infer_session_mode\n5. Register resource and tool in server.py\n\n**Interface Contract**: See session_mode_inference_interfaces.py\n\n**Files to Create/Modify**:\n- project_management_automation/resources/session.py (NEW)\n- project_management_automation/server.py (MODIFY)\n\n**MCP Resource Format**:\nautomation://session/mode \u2192 Returns current mode JSON\n\n**MCP Tool**:\ninfer_session_mode(force_recompute: bool = False) -> str\n\n**Acceptance Criteria**:\n- [ ] Storage system implemented\n- [ ] MCP resource working\n- [ ] MCP tool working\n- [ ] Registered in server.py\n- [ ] Interface contract satisfied",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "resource",
+        "enhancement",
+        "agent-c"
+      ],
+      "created": "2025-11-30T08:47:58.948636",
+      "lastModified": "2025-11-30T08:48:18.781813",
+      "dependencies": [
+        "MODE-002"
+      ],
+      "estimatedHours": 0.5,
+      "assignee": {
+        "type": "agent",
+        "name": "api-agent",
+        "hostname": null,
+        "assigned_at": "2025-11-30T08:48:18.781809Z",
+        "assigned_by": "parallelization_script"
+      }
+    },
+    {
+      "id": "MODE-002-A2",
+      "name": "MODE-002-A2: Integrate FileEditTracker with DynamicToolManager",
+      "long_description": "Integrate FileEditTracker and SessionModeInference into DynamicToolManager.\n\n**Agent**: A (Infrastructure)\n**Estimated Time**: 30 minutes\n**Dependencies**: MODE-002-A1, MODE-002-B1 (needs both components)\n\n**Deliverables**:\n1. Add FileEditTracker field to DynamicToolManager\n2. Add SessionModeInference field to DynamicToolManager\n3. Enhance record_tool_usage() to accept tool_args parameter\n4. Add update_inferred_mode() method\n5. Add mode history tracking\n6. Integrate with existing ToolUsageTracker\n\n**Files to Modify**:\n- project_management_automation/tools/dynamic_tools.py\n\n**Acceptance Criteria**:\n- [ ] FileEditTracker integrated into DynamicToolManager\n- [ ] SessionModeInference integrated into DynamicToolManager\n- [ ] record_tool_usage() enhanced\n- [ ] update_inferred_mode() working\n- [ ] Mode history tracked\n- [ ] Integration tests pass",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "enhancement",
+        "agent-a"
+      ],
+      "created": "2025-11-30T08:47:58.948643",
+      "lastModified": "2025-11-30T08:48:18.781764",
+      "dependencies": [
+        "MODE-002",
+        "MODE-002-A1",
+        "MODE-002-B1"
+      ],
+      "estimatedHours": 0.5,
+      "assignee": {
+        "type": "agent",
+        "name": "backend-agent",
+        "hostname": null,
+        "assigned_at": "2025-11-30T08:48:18.781758Z",
+        "assigned_by": "parallelization_script"
+      }
+    },
+    {
+      "id": "MODE-002-A3",
+      "name": "MODE-002-A3: Integrate file edit tracking in middleware",
+      "long_description": "Integrate file edit tracking into middleware to automatically extract file paths from tool calls.\n\n**Agent**: A (Infrastructure)\n**Estimated Time**: 30 minutes\n**Dependencies**: MODE-002-A1, MODE-002-A2 (needs FileEditTracker and DynamicToolManager integration)\n\n**Deliverables**:\n1. Enhance logging middleware (or create new middleware)\n2. Extract file paths from tool arguments:\n   - search_replace: file_path argument\n   - write: file_path argument\n   - edit_file: file_path argument\n   - read_file: target_file argument\n3. Record file edits automatically via DynamicToolManager\n4. Trigger periodic mode inference (every 5 tool calls or 2 minutes)\n\n**Files to Modify**:\n- project_management_automation/middleware/logging_middleware.py\n- OR create: project_management_automation/middleware/mode_tracking_middleware.py\n\n**Acceptance Criteria**:\n- [ ] File paths extracted from tool calls\n- [ ] File edits recorded automatically\n- [ ] Mode inference triggered periodically\n- [ ] Middleware tests pass\n- [ ] Integration with DynamicToolManager working",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "implementation",
+        "mode-awareness",
+        "enhancement",
+        "agent-a"
+      ],
+      "created": "2025-11-30T08:47:58.948649",
+      "lastModified": "2025-11-30T08:48:18.781780",
+      "dependencies": [
+        "MODE-002",
+        "MODE-002-A1",
+        "MODE-002-A2"
+      ],
+      "estimatedHours": 0.5,
+      "assignee": {
+        "type": "agent",
+        "name": "backend-agent",
+        "hostname": null,
+        "assigned_at": "2025-11-30T08:48:18.781777Z",
+        "assigned_by": "parallelization_script"
+      }
+    },
+    {
+      "id": "MODE-002-TEST",
+      "name": "MODE-002-TEST: Integration testing and validation",
+      "long_description": "Integration testing and validation of complete MODE-002 implementation.\n\n**Agent**: Any (Testing)\n**Estimated Time**: 15 minutes\n**Dependencies**: All MODE-002 subtasks (A1, A2, A3, B1, C1)\n\n**Deliverables**:\n1. Test with simulated AGENT mode patterns\n2. Test with simulated ASK mode patterns\n3. Test with simulated MANUAL mode patterns\n4. Validate confidence scores\n5. Test sliding window analysis\n6. Test MCP resource/tool endpoints\n\n**Acceptance Criteria**:\n- [ ] AGENT mode detection works correctly\n- [ ] ASK mode detection works correctly\n- [ ] MANUAL mode detection works correctly\n- [ ] Confidence scores >0.7 for clear patterns\n- [ ] Sliding window analysis functional\n- [ ] MCP endpoints working\n- [ ] All integration tests pass",
+      "status": "todo",
+      "priority": "low",
+      "tags": [
+        "testing",
+        "mode-awareness",
+        "enhancement"
+      ],
+      "created": "2025-11-30T08:47:58.948656",
+      "lastModified": "2025-11-30T08:47:58.948659",
+      "dependencies": [
+        "MODE-002",
+        "MODE-002-A1",
+        "MODE-002-A2",
+        "MODE-002-A3",
+        "MODE-002-B1",
+        "MODE-002-C1"
+      ],
+      "estimatedHours": 0.25
     }
   ],
   "lastModified": "2025-11-29T23:50:58.118162",
