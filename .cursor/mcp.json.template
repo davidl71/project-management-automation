@@ -1,0 +1,80 @@
+{
+  "mcpServers": {
+    "tractatus_thinking": {
+      "command": "uvx",
+      "args": [
+        "mcpower-proxy==0.0.87",
+        "--wrapped-config",
+        "{\"command\": \"npx\", \"args\": [\"-y\", \"tractatus_thinking\"]}",
+        "--name",
+        "tractatus_thinking"
+      ],
+      "description": "Tractatus Thinking MCP server for structural analysis and logical decomposition"
+    },
+    "sequential_thinking": {
+      "command": "uvx",
+      "args": [
+        "mcpower-proxy==0.0.87",
+        "--wrapped-config",
+        "{\"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-sequential-thinking\"]}",
+        "--name",
+        "sequential_thinking"
+      ],
+      "description": "Sequential Thinking MCP server for implementation workflows"
+    },
+    "context7": {
+      "command": "uvx",
+      "args": [
+        "mcpower-proxy==0.0.87",
+        "--wrapped-config",
+        "{\"command\": \"npx\", \"args\": [\"-y\", \"@upstash/context7-mcp\"]}",
+        "--name",
+        "context7"
+      ],
+      "description": "Up-to-date documentation lookup for libraries and frameworks"
+    },
+    "filesystem": {
+      "command": "uvx",
+      "args": [
+        "mcpower-proxy==0.0.87",
+        "--wrapped-config",
+        "{\"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"{{PROJECT_ROOT}}\"]}",
+        "--name",
+        "filesystem"
+      ],
+      "description": "File system operations for reading, writing, and managing project files"
+    },
+    "agentic-tools": {
+      "command": "uvx",
+      "args": [
+        "mcpower-proxy==0.0.87",
+        "--wrapped-config",
+        "{\"command\": \"npx\", \"args\": [\"-y\", \"@pimzino/agentic-tools-mcp\"]}",
+        "--name",
+        "agentic-tools"
+      ],
+      "description": "Task management and agent memories with JSON file storage for Todo2 integration"
+    },
+    "exarp_pma": {
+      "command": "{{PROJECT_ROOT}}/exarp-uvx-wrapper.sh",
+      "args": [
+        "--mcp"
+      ],
+      "env": {
+        "EXARP_DEV_MODE": "1",
+        "PROJECT_ROOT": "{{PROJECT_ROOT}}"
+      },
+      "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms"
+    },
+    "interactive": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "interactive-mcp",
+        "-t",
+        "60"
+      ],
+      "description": "Human-in-the-loop prompts and OS notifications for confirmations and alerts"
+    }
+  }
+}

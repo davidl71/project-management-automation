@@ -13,7 +13,7 @@ import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
@@ -111,7 +111,7 @@ class TestRunner(IntelligentAutomationBase):
 
     def _run_pytest(self) -> dict:
         """Run pytest tests."""
-        cmd = ['python3', '-m', 'pytest', str(self.test_path)]
+        cmd = [sys.executable, '-m', 'pytest', str(self.test_path)]
 
         if self.verbose:
             cmd.append('-v')

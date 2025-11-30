@@ -17,7 +17,7 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 try:
     from fastmcp import FastMCP
@@ -162,25 +162,47 @@ async def exarp_lifespan(server: "FastMCP") -> AsyncIterator[dict[str, Any]]:
 
     try:
         # 1. Initialize project root
-        state.project_root = await _init_project_root()
-        logger.info(f"📁 Project root: {state.project_root}")
+        try:
+            state.project_root = await _init_project_root()
+            logger.info(f"📁 Project root: {state.project_root}")
+        except Exception as e:
+            logger.error(f"Failed to initialize project root: {e}", exc_info=True)
+            # Fallback to current directory
+            state.project_root = Path.cwd().resolve()
+            logger.warning(f"Using fallback project root: {state.project_root}")
 
         # 2. Initialize Todo2 database
-        state.todo2_path = await _init_todo2(state.project_root)
-        logger.info(f"📋 Todo2 database: {state.todo2_path}")
+        try:
+            state.todo2_path = await _init_todo2(state.project_root)
+            logger.info(f"📋 Todo2 database: {state.todo2_path}")
+        except Exception as e:
+            logger.error(f"Failed to initialize Todo2 database: {e}", exc_info=True)
+            state.todo2_path = None
 
         # 3. Initialize advisor logs
-        state.advisor_log_path = await _init_advisor_logs(state.project_root)
-        logger.info(f"📝 Advisor logs: {state.advisor_log_path}")
+        try:
+            state.advisor_log_path = await _init_advisor_logs(state.project_root)
+            logger.info(f"📝 Advisor logs: {state.advisor_log_path}")
+        except Exception as e:
+            logger.error(f"Failed to initialize advisor logs: {e}", exc_info=True)
+            state.advisor_log_path = None
 
         # 4. Initialize memory storage
-        state.memory_path = await _init_memory(state.project_root)
-        logger.info(f"🧠 Memory storage: {state.memory_path}")
+        try:
+            state.memory_path = await _init_memory(state.project_root)
+            logger.info(f"🧠 Memory storage: {state.memory_path}")
+        except Exception as e:
+            logger.error(f"Failed to initialize memory storage: {e}", exc_info=True)
+            state.memory_path = None
 
-        # 5. Clean up old logs
-        cleaned = await _cleanup_old_logs(state.advisor_log_path)
-        if cleaned:
-            logger.info(f"🧹 Cleaned {cleaned} old log files")
+        # 5. Clean up old logs (non-critical, continue even if it fails)
+        if state.advisor_log_path:
+            try:
+                cleaned = await _cleanup_old_logs(state.advisor_log_path)
+                if cleaned:
+                    logger.info(f"🧹 Cleaned {cleaned} old log files")
+            except Exception as e:
+                logger.warning(f"Failed to clean old logs: {e}")
 
         state._initialized = True
         logger.info("✅ Exarp MCP Server ready")
@@ -194,8 +216,16 @@ async def exarp_lifespan(server: "FastMCP") -> AsyncIterator[dict[str, Any]]:
         }
 
     except Exception as e:
-        logger.error(f"❌ Startup failed: {e}")
-        raise
+        logger.error(f"❌ Startup failed: {e}", exc_info=True)
+        # Don't raise - let the server start with partial initialization
+        # Tools can check state.is_initialized to see if they can run
+        state._initialized = False
+        yield {
+            "project_root": state.project_root or Path.cwd().resolve(),
+            "todo2_path": None,
+            "advisor_log_path": None,
+            "memory_path": None,
+        }
 
     finally:
         # ═══════════════════════════════════════════════════════════════════

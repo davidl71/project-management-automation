@@ -11,7 +11,7 @@ import json
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -47,29 +47,63 @@ CONSOLIDATION_CANDIDATES = {
 
 
 def _count_registered_tools() -> Dict[str, Any]:
-    """Count tools registered in the MCP server."""
+    """Count tools registered in the MCP server (tools only, not resources or prompts)."""
     try:
         # Try to import from server to get actual count
         from project_management_automation.server import mcp
+
+        # Try to access _tool_manager which FastMCP uses internally
+        # This gives us the actual registered tools (not resources or prompts)
+        if hasattr(mcp, '_tool_manager'):
+            tool_manager = mcp._tool_manager
+            if hasattr(tool_manager, '_tools'):
+                tools = tool_manager._tools
+                if isinstance(tools, dict):
+                    tool_names = list(tools.keys())
+                    return {
+                        "count": len(tool_names),
+                        "tools": tool_names,
+                        "source": "tool_manager",
+                        "note": "Counts only callable tools, not resources or prompts",
+                    }
         
-        # Get tool count from MCP instance
+        # Fallback: try _tools attribute
         if hasattr(mcp, '_tools'):
-            tools = list(mcp._tools.keys())
-            return {
-                "count": len(tools),
-                "tools": tools,
-                "source": "mcp_instance",
-            }
+            tools = mcp._tools
+            if isinstance(tools, dict):
+                tool_names = list(tools.keys())
+                return {
+                    "count": len(tool_names),
+                    "tools": tool_names,
+                    "source": "mcp_tools_attr",
+                }
     except Exception as e:
         logger.debug(f"Could not get tools from MCP instance: {e}")
-    
-    # Fallback: estimate from known registrations
-    estimated_count = 25 + 6 + 2 + 2  # server.py + assignee + auto_primer + prompt_discovery
+
+    # Fallback: count @mcp.tool() decorators in server.py
+    try:
+        import re
+        from pathlib import Path
+        server_file = Path(__file__).parent.parent / "server.py"
+        if server_file.exists():
+            content = server_file.read_text()
+            tool_decorators = len(re.findall(r'@mcp\.tool\(\)', content))
+            return {
+                "count": tool_decorators,
+                "tools": [],
+                "source": "decorator_count",
+                "note": "Counted @mcp.tool() decorators in server.py",
+            }
+    except Exception as e:
+        logger.debug(f"Could not count decorators: {e}")
+
+    # Final fallback: estimate
+    estimated_count = 22  # Updated after consolidation
     return {
         "count": estimated_count,
         "tools": [],
         "source": "estimated",
-        "note": "Could not access MCP instance, using estimate",
+        "note": "Using fallback estimate (22 tools after consolidation)",
     }
 
 
@@ -98,7 +132,7 @@ def check_tool_count_health(
     try:
         tool_info = _count_registered_tools()
         count = tool_info["count"]
-        
+
         # Determine status
         if count <= MAX_TOOL_COUNT:
             status = "healthy"
@@ -130,28 +164,30 @@ def check_tool_count_health(
                         "suggestion": f"Consolidate {len(tools)} {category} tools into 1 tool with action= parameter",
                         "savings": len(tools) - 1,
                     })
-            
+
             result["consolidation_suggestions"] = suggestions
             result["potential_savings"] = sum(s["savings"] for s in suggestions)
 
         # Create task if requested and over limit
         if create_task and status in ["warning", "over_limit"]:
             try:
-                from project_management_automation.utils import find_project_root
                 import json as json_mod
-                from pathlib import Path
-                
+
+                from project_management_automation.utils import find_project_root
+
                 project_root = find_project_root()
                 todo2_file = project_root / ".todo2" / "state.todo2.json"
-                
+
                 if todo2_file.exists():
                     state = json_mod.loads(todo2_file.read_text())
                     todos = state.get("todos", [])
-                    
+
                     # Check if task already exists
                     existing = [t for t in todos if "tool count" in t.get("name", "").lower()]
                     if not existing:
-                        new_task = {
+                        from project_management_automation.utils import annotate_task_project, get_current_project_id
+                        project_id = get_current_project_id(project_root)
+                        new_task = annotate_task_project({
                             "id": f"TOOL-COUNT-{int(time.time())}",
                             "name": f"Consolidate tools: {count} exceeds limit of {MAX_TOOL_COUNT}",
                             "long_description": f"Tool count health check detected {count} tools, exceeding the design limit of {MAX_TOOL_COUNT}.\n\nConsolidation suggestions:\n" + "\n".join(f"- {s['suggestion']}" for s in result.get("consolidation_suggestions", [])),
@@ -160,7 +196,7 @@ def check_tool_count_health(
                             "tags": ["automation", "consolidation", "tool-count"],
                             "created": datetime.utcnow().isoformat() + "Z",
                             "lastModified": datetime.utcnow().isoformat() + "Z",
-                        }
+                        }, project_id)
                         todos.append(new_task)
                         state["todos"] = todos
                         todo2_file.write_text(json_mod.dumps(state, indent=2))
@@ -190,7 +226,7 @@ def get_tool_count_for_context_primer() -> Dict[str, Any]:
     """
     tool_info = _count_registered_tools()
     count = tool_info["count"]
-    
+
     return {
         "tool_count": count,
         "limit": MAX_TOOL_COUNT,

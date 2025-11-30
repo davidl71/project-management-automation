@@ -4,12 +4,10 @@ Unit Tests for Duplicate Detection Auto-Fix Functionality
 Tests the auto-fix feature for consolidating duplicate tasks.
 """
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
 import sys
-import json
-from typing import Dict, List
+from pathlib import Path
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -22,7 +20,7 @@ class TestDuplicateDetectionAutoFix:
     def test_auto_fix_enabled(self):
         """Test that auto_fix can be enabled."""
         from project_management_automation.scripts.automate_todo2_duplicate_detection import Todo2DuplicateDetector
-        
+
         config = {
             'similarity_threshold': 0.85,
             'auto_fix': True,
@@ -33,7 +31,7 @@ class TestDuplicateDetectionAutoFix:
         test_project_root = Path("/tmp/test_project")
         test_project_root.mkdir(exist_ok=True)
         (test_project_root / '.todo2').mkdir(exist_ok=True)
-        
+
         detector = Todo2DuplicateDetector(config, project_root=test_project_root)
 
         # Assertions
@@ -73,7 +71,7 @@ class TestDuplicateDetectionAutoFix:
         # Test best task selection logic - simulates _select_best_task behavior
         best_task_id = None
         best_score = -1
-        
+
         for task in tasks:
             score = 0
             if task['status'] == 'In Progress':
@@ -82,9 +80,9 @@ class TestDuplicateDetectionAutoFix:
                 score += 8
             elif task['status'] == 'Done':
                 score += 5
-            
+
             score += len(task.get('comments', []))
-            
+
             if score > best_score:
                 best_score = score
                 best_task_id = task['id']
@@ -101,7 +99,7 @@ class TestDuplicateDetectionAutoFix:
             "tags": ["tag1"],
             "comments": ["comment1"]
         }
-        
+
         duplicate_task = {
             "id": "T-2",
             "name": "Task",
@@ -123,7 +121,7 @@ class TestDuplicateDetectionAutoFix:
         # Test dependency update logic directly
         best_task_id = "T-1"
         duplicate_task_id = "T-2"
-        
+
         other_task = {
             "id": "T-3",
             "dependencies": [duplicate_task_id]

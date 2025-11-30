@@ -56,13 +56,14 @@ class LoggingMiddleware(Middleware):
         self.slow_threshold_ms = slow_threshold_ms
 
     async def on_call_tool(self, context: MiddlewareContext, call_next: Callable):
-        """Log tool call with timing."""
+        """Log tool call with timing and track for mode inference (MODE-002)."""
         if not FASTMCP_AVAILABLE:
             return await call_next(context)
 
         tool_name = getattr(context, "tool_name", None) or "unknown"
         client_id = getattr(context.fastmcp_context, "client_id", "unknown") if hasattr(context, "fastmcp_context") else "unknown"
         request_id = getattr(context.fastmcp_context, "request_id", None) if hasattr(context, "fastmcp_context") else None
+        arguments = getattr(context, "arguments", {}) or {}
 
         # Log request
         log_parts = [f"Tool call: {tool_name}"]
@@ -72,7 +73,6 @@ class LoggingMiddleware(Middleware):
             log_parts.append(f"client={client_id}")
 
         if self.log_arguments:
-            arguments = getattr(context, "arguments", {}) or {}
             # Truncate large arguments
             arg_str = str(arguments)
             if len(arg_str) > 200:
@@ -80,6 +80,19 @@ class LoggingMiddleware(Middleware):
             log_parts.append(f"args={arg_str}")
 
         logger.log(self.log_level, " | ".join(log_parts))
+
+        # Track tool usage for mode inference (MODE-002)
+        try:
+            from ..tools.dynamic_tools import get_tool_manager
+            manager = get_tool_manager()
+            manager.record_tool_usage(tool_name, tool_args=arguments)
+            
+            # Periodically update mode inference (every 5 tool calls)
+            tool_call_count = sum(manager.usage_tracker.tool_counts.values())
+            if tool_call_count % 5 == 0:
+                manager.update_inferred_mode()
+        except Exception as e:
+            logger.debug(f"Failed to track tool usage for mode inference: {e}")
 
         # Execute tool
         start_time = time.time()

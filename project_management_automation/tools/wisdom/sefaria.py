@@ -19,7 +19,7 @@ import random
 import urllib.error
 import urllib.request
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Sefaria API base URL
 SEFARIA_API = "https://www.sefaria.org/api"

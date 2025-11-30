@@ -36,12 +36,28 @@ Add to your MCP client config (Cursor, Claude Desktop, VS Code):
 {
   "mcpServers": {
     "exarp": {
-      "command": "exarp",
-      "args": []
+      "command": "/path/to/project-management-automation/exarp-uvx-wrapper.sh",
+      "args": ["--mcp"]
     }
   }
 }
 ```
+
+**Recommended**: Use `exarp-uvx-wrapper.sh` which automatically detects `uvx` location across platforms (Ubuntu, macOS Intel/Apple Silicon).
+
+**Alternative**: If `uvx` is in your PATH, use directly:
+```json
+{
+  "mcpServers": {
+    "exarp": {
+      "command": "uvx",
+      "args": ["exarp", "--mcp"]
+    }
+  }
+}
+```
+
+See [UVX Location Guide](docs/UVX_LOCATION_GUIDE.md) for detailed platform-specific instructions.
 
 ## Features
 

@@ -15,18 +15,16 @@ Resources:
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
 
-from ..utils import find_project_root
 from ..tools.task_assignee import (
-    list_tasks_by_assignee,
-    get_workload_summary,
-    _load_todo2_state,
-    _get_current_hostname,
-    _detect_agents_from_project,
-    _get_known_hosts,
     KNOWN_AGENTS,
     KNOWN_HUMANS,
+    _detect_agents_from_project,
+    _get_current_hostname,
+    _get_known_hosts,
+    _load_todo2_state,
+    get_workload_summary,
+    list_tasks_by_assignee,
 )
 
 logger = logging.getLogger(__name__)
@@ -42,19 +40,19 @@ def get_all_assignees_resource() -> str:
     try:
         state = _load_todo2_state()
         todos = state.get("todos", [])
-        
+
         # Collect unique assignees
         assignees: dict[str, dict] = {}
-        
+
         for task in todos:
             assignee = task.get("assignee")
             if not assignee:
                 continue
-            
+
             atype = assignee.get("type", "unknown")
             aname = assignee.get("name", "unknown")
             key = f"{atype}:{aname}"
-            
+
             if key not in assignees:
                 assignees[key] = {
                     "type": atype,
@@ -64,7 +62,7 @@ def get_all_assignees_resource() -> str:
                     "in_progress_count": 0,
                     "tasks": [],
                 }
-            
+
             assignees[key]["task_count"] += 1
             if task.get("status") == "In Progress":
                 assignees[key]["in_progress_count"] += 1
@@ -73,11 +71,11 @@ def get_all_assignees_resource() -> str:
                 "name": task.get("name", "")[:50],
                 "status": task.get("status"),
             })
-        
+
         # Get available agents/hosts
         available_agents = _detect_agents_from_project()
         known_hosts = _get_known_hosts()
-        
+
         result = {
             "assignees": list(assignees.values()),
             "available": {
@@ -94,9 +92,9 @@ def get_all_assignees_resource() -> str:
             "current_host": _get_current_hostname(),
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         logger.error(f"Error getting assignees resource: {e}")
         return json.dumps({
@@ -138,7 +136,7 @@ def get_unassigned_tasks_resource() -> str:
     try:
         state = _load_todo2_state()
         todos = state.get("todos", [])
-        
+
         unassigned = []
         for task in todos:
             if not task.get("assignee"):
@@ -149,7 +147,7 @@ def get_unassigned_tasks_resource() -> str:
                     "priority": task.get("priority"),
                     "tags": task.get("tags", []),
                 })
-        
+
         # Group by status
         by_status: dict[str, list] = {}
         for task in unassigned:
@@ -157,14 +155,14 @@ def get_unassigned_tasks_resource() -> str:
             if status not in by_status:
                 by_status[status] = []
             by_status[status].append(task)
-        
+
         return json.dumps({
             "unassigned_tasks": unassigned,
             "by_status": by_status,
             "total": len(unassigned),
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }, indent=2)
-        
+
     except Exception as e:
         logger.error(f"Error getting unassigned tasks: {e}")
         return json.dumps({
@@ -186,7 +184,7 @@ def get_tasks_for_host_resource(hostname: str) -> str:
     try:
         state = _load_todo2_state()
         todos = state.get("todos", [])
-        
+
         # Find tasks where assignee hostname matches
         host_tasks = []
         for task in todos:
@@ -201,7 +199,7 @@ def get_tasks_for_host_resource(hostname: str) -> str:
                     "assignee_type": assignee.get("type"),
                     "assigned_at": assignee.get("assigned_at"),
                 })
-        
+
         return json.dumps({
             "hostname": hostname,
             "tasks": host_tasks,
@@ -210,7 +208,7 @@ def get_tasks_for_host_resource(hostname: str) -> str:
             "is_current_host": hostname == _get_current_hostname(),
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }, indent=2)
-        
+
     except Exception as e:
         logger.error(f"Error getting tasks for host: {e}")
         return json.dumps({
@@ -253,39 +251,39 @@ def register_assignee_resources(mcp) -> None:
         def assignees_resource() -> str:
             """Get list of all assignees with task counts."""
             return get_all_assignees_resource()
-        
+
         @mcp.resource("automation://assignees/workload")
         def workload_resource() -> str:
             """Get workload distribution across assignees."""
             return get_workload_resource()
-        
+
         @mcp.resource("automation://tasks/assignee/{assignee_name}")
         def tasks_by_assignee_resource(assignee_name: str) -> str:
             """Get tasks for a specific assignee."""
             return get_tasks_for_assignee_resource(assignee_name)
-        
+
         @mcp.resource("automation://tasks/unassigned")
         def unassigned_tasks_resource() -> str:
             """Get all unassigned tasks."""
             return get_unassigned_tasks_resource()
-        
+
         @mcp.resource("automation://tasks/host/{hostname}")
         def tasks_by_host_resource(hostname: str) -> str:
             """Get tasks assigned to a specific host."""
             return get_tasks_for_host_resource(hostname)
-        
+
         @mcp.resource("automation://tasks/mine")
         def my_tasks_resource() -> str:
             """Get tasks assigned to the current host."""
             return get_my_tasks_resource()
-        
+
         @mcp.resource("automation://handoff/latest")
         def handoff_latest_resource() -> str:
             """Get the most recent session handoff note."""
             return get_latest_handoff_resource()
-        
+
         logger.info("✅ Registered 7 assignee/handoff resources")
-        
+
     except Exception as e:
         logger.warning(f"Could not register assignee resources: {e}")
 

@@ -76,14 +76,6 @@ def get_tools_list_resource() -> str:
                     "parameters": ["dry_run", "output_path"]
                 },
                 {
-                    "name": "review_pwa_config",
-                    "description": "Review PWA configuration and generate improvement recommendations",
-                    "category": "review",
-                    "priority": "medium",
-                    "wraps": "PWAAnalyzer",
-                    "parameters": ["output_path", "config_path"]
-                },
-                {
                     "name": "add_external_tool_hints",
                     "description": "Automatically detect where Context7/external tool hints should be added to documentation and insert them following the standard pattern",
                     "category": "automation",

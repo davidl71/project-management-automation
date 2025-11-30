@@ -17,12 +17,16 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Add project root to path
 # Project root will be passed to __init__
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase
+from project_management_automation.utils.todo2_utils import (
+    filter_tasks_by_project,
+    get_repo_project_id,
+)
 
 # Configure logging (will be configured after project_root is set)
 logger = logging.getLogger(__name__)
@@ -140,6 +144,17 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             logger.error(f"Error loading PROJECT_GOALS.md: {e}")
             return self._get_default_phases(), default_infrastructure
 
+    def _get_current_tool_count(self) -> int:
+        """Get current tool count from tool_count_health module."""
+        try:
+            from project_management_automation.tools.tool_count_health import _count_registered_tools
+            tool_info = _count_registered_tools()
+            return tool_info.get('count', 0)
+        except Exception as e:
+            logger.debug(f"Could not get tool count: {e}")
+            # Fallback: try to count from server.py or estimate
+            return 30  # Default estimate
+
     def _get_default_phases(self) -> dict:
         """Return default phases for generic projects."""
         return {
@@ -226,26 +241,42 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         """
         from .base.mcp_client import load_json_with_retry
 
+        project_id = get_repo_project_id(self.project_root)
+
         # Try agentic-tools MCP format first (preferred) with retry
         data = load_json_with_retry(self.agentic_tools_path, default=None)
         if data is not None:
             raw_tasks = data.get('tasks', [])
             tasks = [self._normalize_task(t) for t in raw_tasks]
-            logger.info(f"Loaded {len(tasks)} tasks from agentic-tools MCP")
-            return tasks
+            filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
+            logger.info(
+                "Loaded %d tasks from agentic-tools MCP (%d matched project)",
+                len(tasks),
+                len(filtered),
+            )
+            return filtered
 
         # Fall back to legacy Todo2 format with retry
         data = load_json_with_retry(self.todo2_path, default=None)
         if data is not None:
             tasks = data.get('todos', [])
-            logger.info(f"Loaded {len(tasks)} tasks from legacy Todo2 format")
-            return tasks
+            filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
+            logger.info(
+                "Loaded %d tasks from legacy Todo2 format (%d matched project)",
+                len(tasks),
+                len(filtered),
+            )
+            return filtered
 
         logger.info("No task files found - no tasks to analyze")
         return []
 
     def _analyze_task_alignment(self, tasks: list[dict]) -> dict:
         """Analyze task alignment."""
+        # Get current tool count to check constraint
+        current_tool_count = self._get_current_tool_count()
+        tool_limit = 30
+        
         analysis = {
             'total_tasks': len(tasks),
             'by_priority': {'high': 0, 'medium': 0, 'low': 0, 'critical': 0},
@@ -256,7 +287,10 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
             'misaligned_tasks': [],
             'stale_tasks': [],
             'blocked_tasks': [],
-            'infrastructure_tasks': []
+            'infrastructure_tasks': [],
+            'constraint_violations': [],
+            'current_tool_count': current_tool_count,
+            'tool_limit': tool_limit
         }
 
         for task in tasks:
@@ -355,6 +389,29 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
                         'status': status
                     })
 
+            # Check Tool Count Limit constraint (≤30 tools)
+            # Detect tasks that would create new tools
+            tool_creation_keywords = [
+                'new tool', 'create tool', 'add tool', 'implement tool', 'register tool',
+                'tool for', 'mcp tool', 'tool function', 'tool handler', 'tool endpoint',
+                '@mcp.tool', 'register.*tool', 'def.*tool', 'tool.*function'
+            ]
+            task_text_lower = task_text.lower()
+            would_create_tool = any(keyword in task_text_lower for keyword in tool_creation_keywords)
+            
+            if would_create_tool and status not in ['done', 'completed']:
+                # Check if this would violate the constraint
+                if current_tool_count >= tool_limit:
+                    analysis['constraint_violations'].append({
+                        'id': task_id,
+                        'content': task.get('content', ''),
+                        'constraint': 'Tool Count Limit (≤30)',
+                        'violation': f'Would create new tool when already at limit ({current_tool_count}/{tool_limit})',
+                        'priority': priority,
+                        'status': status,
+                        'recommendation': 'Consider consolidating with existing tools or using resources instead'
+                    })
+
         return analysis
 
     def _calculate_alignment_score(self, analysis: dict) -> float:
@@ -394,7 +451,21 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         if blocked > 0:
             insights.append(f"⚠️ {blocked} tasks are blocked by incomplete dependencies")
 
-        if alignment_score >= 80:
+        # Check Tool Count Limit constraint
+        constraint_violations = analysis_results.get('constraint_violations', [])
+        current_tool_count = analysis_results.get('current_tool_count', 0)
+        tool_limit = analysis_results.get('tool_limit', 30)
+        
+        if constraint_violations:
+            insights.append(f"🚨 {len(constraint_violations)} tasks violate Tool Count Limit constraint (≤{tool_limit})")
+            insights.append(f"   Current tool count: {current_tool_count}/{tool_limit}")
+            insights.append("   Recommendation: Consolidate tools or use resources instead")
+        elif current_tool_count >= tool_limit:
+            insights.append(f"⚠️ Tool count at limit ({current_tool_count}/{tool_limit}) - no new tools should be created")
+        elif current_tool_count >= tool_limit - 5:
+            insights.append(f"⚠️ Tool count approaching limit ({current_tool_count}/{tool_limit})")
+
+        if alignment_score >= 80 and not constraint_violations:
             insights.append("✅ Task alignment is good!")
 
         return '\n'.join(insights)
@@ -424,6 +495,24 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
         # Generate phase summary
         phase_summary = self._generate_phase_summary(analysis_results)
+        
+        # Generate constraint violations section
+        constraint_violations = analysis_results.get('constraint_violations', [])
+        constraint_section = ""
+        if constraint_violations:
+            constraint_section = f"""
+## Design Constraint Violations
+
+**Tool Count Limit (≤{analysis_results.get('tool_limit', 30)} tools)**
+
+The following tasks would create new tools and violate the design constraint:
+
+"""
+            for violation in constraint_violations:
+                constraint_section += f"- **{violation['id']}**: {violation['content']}\n"
+                constraint_section += f"  - Priority: {violation['priority']}\n"
+                constraint_section += f"  - Issue: {violation['violation']}\n"
+                constraint_section += f"  - Recommendation: {violation.get('recommendation', 'Review and consolidate')}\n\n"
 
         return f"""# Todo2 Task Alignment Analysis
 
@@ -441,6 +530,8 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 - Misaligned: {len(analysis_results.get('misaligned_tasks', []))}
 - Infrastructure: {len(analysis_results.get('infrastructure_tasks', []))}
 - Blocked: {len(analysis_results.get('blocked_tasks', []))}
+- Constraint Violations: {len(analysis_results.get('constraint_violations', []))}
+- Current Tool Count: {analysis_results.get('current_tool_count', 0)}/{analysis_results.get('tool_limit', 30)}
 
 ---
 
@@ -454,7 +545,7 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
 
 {insights}
 
-{networkx_section}
+{constraint_section}{networkx_section}
 ---
 
 *This report was generated using intelligent automation with Tractatus Thinking, Sequential Thinking, and NetworkX analysis.*

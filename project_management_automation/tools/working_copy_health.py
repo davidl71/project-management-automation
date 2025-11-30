@@ -9,7 +9,7 @@ import os
 import socket
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 def _ssh_command(host: str, command: str, timeout: int = 10) -> subprocess.CompletedProcess:

@@ -22,7 +22,7 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 # Base version - increment this for releases
 # Format: MAJOR.MINOR.PATCH

@@ -16,10 +16,13 @@ import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
-# Import MCP-aware logging (quiet in MCP mode, verbose in CLI)
 from project_management_automation.utils.logging_config import configure_logging
+from project_management_automation.utils.todo2_utils import (
+    annotate_task_project,
+    get_repo_project_id,
+)
 
 # Configure logging for this module
 logger = configure_logging(__name__, level=logging.INFO)
@@ -62,6 +65,8 @@ class IntelligentAutomationBase(ABC):
         self.sequential_session = None
         self.todo2_task = None
         self.networkx_graph = None
+
+        self.project_id = get_repo_project_id(self.project_root)
 
         # Results storage
         self.results = {
@@ -224,6 +229,7 @@ class IntelligentAutomationBase(ABC):
                     # Reuse existing task
                     reusable_task['status'] = 'in_progress'
                     reusable_task['lastModified'] = datetime.now().isoformat()
+                    annotate_task_project(reusable_task, self.project_id)
                     self.todo2_task = reusable_task
                     logger.info(f"Reusing Todo2 task: {reusable_task['id']}")
 
@@ -237,7 +243,7 @@ class IntelligentAutomationBase(ABC):
                 unique_suffix = f"{datetime.now().strftime('%f')[:4]}{random.randint(10, 99)}"
                 task_id = f"AUTO-{datetime.now().strftime('%Y%m%d%H%M%S')}-{unique_suffix}"
 
-                task = {
+                task = annotate_task_project({
                     'id': task_id,
                     'name': task_name,
                     'content': f"Automated {self.automation_name} execution",
@@ -247,7 +253,7 @@ class IntelligentAutomationBase(ABC):
                     'created': datetime.now().isoformat(),
                     'lastModified': datetime.now().isoformat(),
                     'dependencies': []
-                }
+                }, self.project_id)
 
                 if 'todos' not in todo2_data:
                     todo2_data['todos'] = []
@@ -385,7 +391,7 @@ class IntelligentAutomationBase(ABC):
                     unique_suffix = f"{datetime.now().strftime('%f')[:4]}{random.randint(10, 99)}"
                     task_id = f"T-{datetime.now().strftime('%Y%m%d%H%M%S')}-{unique_suffix}"
 
-                    task = {
+                    task = annotate_task_project({
                         'id': task_id,
                         'name': task_name,
                         'content': followup.get('description', task_name),
@@ -395,7 +401,7 @@ class IntelligentAutomationBase(ABC):
                         'dependencies': [self.todo2_task['id']] if self.todo2_task else [],
                         'created': datetime.now().isoformat(),
                         'lastModified': datetime.now().isoformat()
-                    }
+                    }, self.project_id)
 
                     if 'todos' not in todo2_data:
                         todo2_data['todos'] = []

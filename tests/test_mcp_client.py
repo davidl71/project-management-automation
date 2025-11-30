@@ -4,11 +4,11 @@ Unit Tests for MCPClient Class
 Tests MCP client functionality for calling other MCP servers.
 """
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock, AsyncMock
-from pathlib import Path
 import sys
-import json
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -23,7 +23,6 @@ class TestMCPClient:
     def test_mcp_client_init(self, mock_path, mock_open):
         """Test MCPClient initialization."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        import json
 
         # Mock config file
         mock_config_file = Mock()

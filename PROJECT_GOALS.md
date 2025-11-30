@@ -98,13 +98,20 @@ A comprehensive MCP server providing project management automation tools for AI-
 - Create confusion about which tool to use
 - Reduce tool discoverability
 
+**Important Distinction**: This constraint applies to **TOOLS** (callable functions) only, not resources or prompts:
+- **Tools**: Callable functions that appear in tool discovery/selection UI (counted toward limit)
+- **Resources**: Read-only data sources accessed via URIs (not counted)
+- **Prompts**: Reusable prompt templates (not counted)
+
+Resources and prompts don't cause context pollution because they're accessed differently and don't appear in the tool selection UI.
+
 **Strategy to stay under 30**:
 1. **Consolidate**: Combine related tools with `action=` parameter
 2. **Resources over tools**: Use resources for read-only data retrieval
 3. **Dynamic loading**: Use focus modes to show only relevant tools
 4. **Ruthless pruning**: Remove rarely-used or redundant tools
 
-**Current Count**: ~30 tools (after consolidation of assignee tools: 6→1)
+**Current Count**: 28 tools (within limit) ✅
 
 ---
 

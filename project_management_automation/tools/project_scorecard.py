@@ -13,9 +13,10 @@ import logging
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from ..utils import find_project_root
+from ..utils.todo2_utils import is_pending_status, is_completed_status
 
 scorecard_logger = logging.getLogger(__name__)
 
@@ -278,7 +279,7 @@ def generate_project_scorecard(
     md_files = list(project_root.rglob('*.md'))
     md_files = [f for f in md_files if 'venv' not in str(f)]
 
-    doc_lines = sum(len(f.read_text().splitlines()) for f in md_files if f.exists())
+    doc_lines = sum(len(f.read_text().splitlines()) for f in md_files if f.exists() and f.is_file())
     doc_ratio = (doc_lines / total_py_lines * 100) if total_py_lines > 0 else 0
 
     key_docs = ['README.md', 'INSTALL.md', 'docs/SECURITY.md', 'docs/WORKFLOW.md']
@@ -302,8 +303,9 @@ def generate_project_scorecard(
             data = json.load(f)
         todos = data.get('todos', [])
 
-        pending = [t for t in todos if t.get('status') in ['pending', 'in_progress']]
-        completed = [t for t in todos if t.get('status') == 'completed']
+        # Normalize status matching using utility functions
+        pending = [t for t in todos if is_pending_status(t.get('status', ''))]
+        completed = [t for t in todos if is_completed_status(t.get('status', ''))]
 
         completion_rate = len(completed) / len(todos) * 100 if todos else 0
         scores['completion'] = completion_rate
@@ -360,6 +362,10 @@ def generate_project_scorecard(
             alignment_scores.append(score)
 
         avg_alignment = sum(alignment_scores) / len(alignment_scores) if alignment_scores else 0
+        # If no pending tasks but we have completed tasks, use a default score based on completion rate
+        if len(pending) == 0 and len(completed) > 0:
+            # High completion suggests good alignment historically
+            avg_alignment = 75.0  # Default score for completed projects
         scores['alignment'] = avg_alignment
 
         metrics['alignment'] = {
@@ -384,6 +390,10 @@ def generate_project_scorecard(
 
         total_pending = len(pending) or 1
         clarity_score = (has_estimate + has_tags + small_enough + clear_name + no_deps) / (5 * total_pending) * 100
+        # If no pending tasks but we have completed tasks, use a default score
+        if len(pending) == 0 and len(completed) > 0:
+            # High completion suggests tasks were clear enough to complete
+            clarity_score = 70.0  # Default score for completed projects
         scores['clarity'] = clarity_score
 
         parallelizable = sum(1 for t in pending if
@@ -391,6 +401,10 @@ def generate_project_scorecard(
             not t.get('dependsOn') and
             not t.get('dependencies'))
         parallel_score = parallelizable / total_pending * 100 if total_pending else 0
+        # If no pending tasks but we have completed tasks, use a default score
+        if len(pending) == 0 and len(completed) > 0:
+            # If all tasks are completed, they were parallelizable enough to finish
+            parallel_score = 60.0  # Default score for completed projects
         scores['parallelizable'] = parallel_score
 
         metrics['clarity'] = {
@@ -471,7 +485,7 @@ def generate_project_scorecard(
         scores['security'] = base_security_score
 
     # Count pending security tasks
-    security_tasks = [t for t in todos if 'security' in t.get('tags', []) and t.get('status') == 'pending'] if todo2_file.exists() else []
+    security_tasks = [t for t in todos if 'security' in t.get('tags', []) and is_pending_status(t.get('status', ''))] if todo2_file.exists() else []
 
     metrics['security'] = {
         'checks_passed': passed,

@@ -16,7 +16,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from mcp.server.fastmcp import Context
@@ -115,6 +115,7 @@ async def scan_dependency_security_async(
     languages: Optional[list[str]] = None,
     config_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
+    alert_critical: bool = False,
 ) -> str:
     """
     Scan project dependencies for security vulnerabilities (async with progress).
@@ -203,10 +204,29 @@ async def scan_dependency_security_async(
         await _report_progress(ctx, 5, 5, "Finalizing...")
 
         total_vulns = response_data['total_vulnerabilities']
+        critical_count = response_data.get('critical_vulnerabilities', 0)
+        
         if total_vulns == 0:
             await _log_info(ctx, "✅ No vulnerabilities found!")
         else:
             await _log_info(ctx, f"⚠️ Found {total_vulns} vulnerabilities")
+            
+            # Alert on critical vulnerabilities if requested
+            if alert_critical and critical_count > 0:
+                try:
+                    from ..interactive import message_complete_notification, is_available
+                    
+                    if is_available():
+                        message = (
+                            f"🚨 {critical_count} CRITICAL vulnerabilities found! "
+                            f"Total: {total_vulns} vulnerabilities"
+                        )
+                        message_complete_notification("Exarp Security", message)
+                except ImportError:
+                    pass  # interactive-mcp not available
+                except Exception as e:
+                    if ctx:
+                        await _log_info(ctx, f"Alert notification failed: {e}")
 
         duration = time.time() - start_time
         log_automation_execution('scan_dependency_security', duration, True)
@@ -231,6 +251,7 @@ def scan_dependency_security(
     languages: Optional[list[str]] = None,
     config_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
+    alert_critical: bool = False,
 ) -> str:
     """
     Scan project dependencies for security vulnerabilities (sync wrapper).
@@ -255,4 +276,4 @@ def scan_dependency_security(
 
     if in_async:
         raise RuntimeError("Use scan_dependency_security_async() in async context, or call from sync code")
-    return asyncio.run(scan_dependency_security_async(languages, config_path, ctx))
+    return asyncio.run(scan_dependency_security_async(languages, config_path, ctx, alert_critical))

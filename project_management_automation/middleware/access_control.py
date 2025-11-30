@@ -4,7 +4,7 @@ Access Control Middleware for FastMCP.
 Provides tool-level access control based on tool names and access levels.
 """
 
-from typing import Callable, Dict, Optional, Set
+from typing import Callable, Optional
 
 try:
     from fastmcp.server.middleware import Middleware, MiddlewareContext

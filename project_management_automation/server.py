@@ -35,7 +35,7 @@ import asyncio
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 # Import our MCP-aware logging utilities
 from .utils.logging_config import configure_logging, suppress_noisy_loggers
@@ -89,8 +89,10 @@ sys.path.insert(0, str(project_root))
 
 # Initialize security controls
 # Path boundary: only allow access within project root and common temp dirs
+import tempfile
+_temp_dir = Path(tempfile.gettempdir())  # Cross-platform temp directory
 _path_validator = PathValidator(
-    allowed_roots=[project_root, Path("/tmp"), Path("/var/tmp")],
+    allowed_roots=[project_root, _temp_dir],
     allow_symlinks=False,
     blocked_patterns=[
         r"\.git(?:/|$)",  # .git directory
@@ -109,6 +111,19 @@ _access_controller = AccessController(default_level="write")
 set_access_controller(_access_controller)
 
 logger.debug(f"Security initialized: path_boundaries={len(_path_validator.allowed_roots)} roots, access_control=write")
+
+# Validate project ownership (compare PROJECT_ROOT with Todo2 project.path)
+try:
+    from .utils.todo2_utils import validate_project_ownership, get_current_project_id
+    is_valid, error_msg = validate_project_ownership(project_root, warn_only=True)
+    if error_msg:
+        logger.warning(f"⚠️  {error_msg}")
+    else:
+        project_id = get_current_project_id(project_root)
+        if project_id:
+            logger.info(f"✅ Project ownership validated: {project_id}")
+except Exception as e:
+    logger.debug(f"Project ownership validation skipped: {e}")
 
 # Add server directory to path for absolute imports when run as script
 server_dir = Path(__file__).parent
@@ -180,13 +195,17 @@ except ImportError:
             logger.info("MCP stdio server available - using stdio server")
         except ImportError:
             logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
-        MCP_AVAILABLE = False
-        Server = None
-        stdio_server = None
-        Tool = None
-        TextContent = None
+            MCP_AVAILABLE = False
+            Server = None
+            stdio_server = None
+            Tool = None
+            TextContent = None
 
 # Logging already configured above
+
+# Initialize availability flags
+TOOLS_AVAILABLE = False
+RESOURCES_AVAILABLE = False
 
 # Initialize MCP server
 mcp = None
@@ -251,7 +270,7 @@ if MCP_AVAILABLE:
 
             # Add security middleware (rate limiting + path validation + access control)
             mcp.add_middleware(SecurityMiddleware(
-                allowed_roots=[project_root, Path("/tmp"), Path("/var/tmp")],
+                allowed_roots=[project_root, _temp_dir],
                 calls_per_minute=120,  # 2 calls/sec sustained
                 burst_size=20,         # Allow bursts
             ))
@@ -286,7 +305,7 @@ if MCP_AVAILABLE:
             logger.debug(f"Resource templates not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register resource templates: {e}")
-        
+
         # Context primer resources for AI priming
         try:
             from .resources.context_primer import register_context_primer_resources
@@ -296,7 +315,7 @@ if MCP_AVAILABLE:
             logger.debug(f"Context primer resources not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register context primer resources: {e}")
-        
+
         # Hint registry resources for dynamic hint loading
         try:
             from .resources.hint_registry import register_hint_registry_resources
@@ -306,7 +325,7 @@ if MCP_AVAILABLE:
             logger.debug(f"Hint registry resources not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register hint registry resources: {e}")
-        
+
         # Auto-primer tools for session start
         try:
             from .tools.auto_primer import register_auto_primer_tools
@@ -316,6 +335,16 @@ if MCP_AVAILABLE:
             logger.debug(f"Auto-primer tools not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register auto-primer tools: {e}")
+        
+        # Session mode resources (MODE-002)
+        try:
+            from .resources.session import register_session_resources
+            register_session_resources(mcp)
+            logger.debug("✅ Session mode resources registered")
+        except ImportError as e:
+            logger.debug(f"Session mode resources not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register session mode resources: {e}")
         
         # Prompt discovery resources and tools
         try:
@@ -428,11 +457,28 @@ try:
         from .tools.prompt_iteration_tracker import (
             log_prompt_iteration as _log_prompt_iteration,
         )
-        from .tools.pwa_review import review_pwa_config as _review_pwa_config
         from .tools.run_tests import run_tests as _run_tests
         from .tools.simplify_rules import simplify_rules as _simplify_rules
         from .tools.sprint_automation import sprint_automation as _sprint_automation
         from .tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
+        from .tools.task_assignee import (
+            assign_task as _assign_task,
+        )
+        from .tools.task_assignee import (
+            auto_assign_background_tasks as _auto_assign_background_tasks,
+        )
+        from .tools.task_assignee import (
+            bulk_assign_tasks as _bulk_assign_tasks,
+        )
+        from .tools.task_assignee import (
+            get_workload_summary as _get_workload_summary,
+        )
+        from .tools.task_assignee import (
+            list_tasks_by_assignee as _list_tasks_by_assignee,
+        )
+        from .tools.task_assignee import (
+            unassign_task as _unassign_task,
+        )
         from .tools.task_clarification_resolution import (
             list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification,
         )
@@ -446,14 +492,6 @@ try:
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
         from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
-        from .tools.task_assignee import (
-            assign_task as _assign_task,
-            unassign_task as _unassign_task,
-            list_tasks_by_assignee as _list_tasks_by_assignee,
-            get_workload_summary as _get_workload_summary,
-            bulk_assign_tasks as _bulk_assign_tasks,
-            auto_assign_background_tasks as _auto_assign_background_tasks,
-        )
 
         TOOLS_AVAILABLE = True
     except ImportError:
@@ -519,11 +557,28 @@ try:
         from tools.prompt_iteration_tracker import (
             log_prompt_iteration as _log_prompt_iteration,
         )
-        from tools.pwa_review import review_pwa_config as _review_pwa_config
         from tools.run_tests import run_tests as _run_tests
         from tools.simplify_rules import simplify_rules as _simplify_rules
         from tools.sprint_automation import sprint_automation as _sprint_automation
         from tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
+        from tools.task_assignee import (
+            assign_task as _assign_task,
+        )
+        from tools.task_assignee import (
+            auto_assign_background_tasks as _auto_assign_background_tasks,
+        )
+        from tools.task_assignee import (
+            bulk_assign_tasks as _bulk_assign_tasks,
+        )
+        from tools.task_assignee import (
+            get_workload_summary as _get_workload_summary,
+        )
+        from tools.task_assignee import (
+            list_tasks_by_assignee as _list_tasks_by_assignee,
+        )
+        from tools.task_assignee import (
+            unassign_task as _unassign_task,
+        )
         from tools.task_clarification_resolution import (
             list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification,
         )
@@ -537,14 +592,6 @@ try:
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
         from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
         from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
-        from tools.task_assignee import (
-            assign_task as _assign_task,
-            unassign_task as _unassign_task,
-            list_tasks_by_assignee as _list_tasks_by_assignee,
-            get_workload_summary as _get_workload_summary,
-            bulk_assign_tasks as _bulk_assign_tasks,
-            auto_assign_background_tasks as _auto_assign_background_tasks,
-        )
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -708,17 +755,6 @@ def register_tools():
                             },
                         ),
                         Tool(
-                            name="review_pwa_config",
-                            description="Review PWA configuration and generate improvement recommendations.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                    "config_path": {"type": "string", "description": "Config file path"},
-                                },
-                            },
-                        ),
-                        Tool(
                             name="add_external_tool_hints",
                             description="Automatically detect and add Context7/external tool hints to documentation.",
                             inputSchema={
@@ -804,8 +840,6 @@ def register_tools():
                     )
                 elif name == "sync_todo_tasks":
                     result = _sync_todo_tasks(arguments.get("dry_run", False), arguments.get("output_path"))
-                elif name == "review_pwa_config":
-                    result = _review_pwa_config(arguments.get("output_path"), arguments.get("config_path"))
                 elif name == "add_external_tool_hints":
                     result = _add_external_tool_hints(
                         arguments.get("dry_run", False),
@@ -845,11 +879,6 @@ if mcp:
         # NOTE: sync_todo_tasks removed - use task_workflow(action="sync")
 
         @mcp.tool()
-        def review_pwa_config(output_path: Optional[str] = None, config_path: Optional[str] = None) -> str:
-            """[HINT: PWA review. Config status, missing features, recommendations.]"""
-            return _review_pwa_config(output_path, config_path)
-
-        @mcp.tool()
         def add_external_tool_hints(
             dry_run: bool = False, output_path: Optional[str] = None, min_file_size: int = 50
         ) -> str:
@@ -882,6 +911,7 @@ if mcp:
             tag_filter: Optional[list[str]] = None,
             dry_run: bool = False,
             output_path: Optional[str] = None,
+            notify: bool = False,
         ) -> str:
             """[HINT: Automation runner. action: discover|daily|nightly|sprint. Unified automation control.]
 
@@ -902,13 +932,14 @@ if mcp:
                     priority_filter=priority_filter,
                     tag_filter=tag_filter,
                     dry_run=dry_run,
+                    notify=notify,
                 )
                 return json.dumps(result, separators=(",", ":"))
             elif action == "sprint":
                 return _sprint_automation_impl(
                     max_iterations, auto_approve, extract_subtasks,
                     run_analysis_tools, run_testing_tools,
-                    priority_filter, tag_filter, dry_run, output_path,
+                    priority_filter, tag_filter, dry_run, output_path, notify,
                 )
             else:
                 return json.dumps({"status": "error", "error": f"Unknown action: {action}. Use discover, daily, nightly, or sprint"}, separators=(",", ":"))
@@ -920,7 +951,7 @@ if mcp:
         # NOTE: clarification removed - use task_workflow(action="clarify")
         # NOTE: setup_git_hooks removed - use setup_hooks(type="git")
         # NOTE: setup_pattern_triggers removed - use setup_hooks(type="patterns")
-        # NOTE: run_tests, analyze_test_coverage removed - use testing(action=run|coverage)
+        # NOTE: run_tests, analyze_test_coverage removed - use testing(action=run|coverage|suggest|validate)
 
         # Helper for sprint automation (shared implementation)
         def _sprint_automation_impl(
@@ -933,6 +964,7 @@ if mcp:
             tag_filter,
             dry_run,
             output_path,
+            notify,
         ) -> str:
             return _sprint_automation(
                 max_iterations,
@@ -944,6 +976,7 @@ if mcp:
                 tag_filter,
                 dry_run,
                 output_path,
+                notify,
             )
 
         # NOTE: run_sprint_automation removed - use run_automation(mode="sprint")
@@ -993,45 +1026,74 @@ if mcp:
         # NOTE: log_prompt_iteration removed - use prompt_tracking(action="log")
         # NOTE: analyze_prompt_iterations removed - use prompt_tracking(action="analyze")
 
-        # NOTE: recommend_model removed - use resource automation://models for model info
+        # NOTE: recommend_model, recommend_workflow_mode, consult_advisor removed - use recommend(action=model|workflow|advisor)
         # NOTE: list_available_models removed - use resource automation://models
 
+        # ═══════════════════════════════════════════════════════════════════
+        # DISCOVERY TOOL (CONSOLIDATED)
+        # ═══════════════════════════════════════════════════════════════════
+
         @mcp.tool()
-        def list_tools(
+        def discovery(
+            action: str = "list",
             category: Optional[str] = None,
             persona: Optional[str] = None,
-            include_examples: bool = True
+            include_examples: bool = True,
+            tool_name: Optional[str] = None,
         ) -> str:
-            """[HINT: Tool catalog. Lists all tools with rich descriptions and examples.]
+            """
+            [HINT: Discovery tool. action=list|help. Unified tool discovery and help.]
 
-            📊 Output: Filtered tool catalog with usage guidance
+            Unified discovery tool consolidating tool catalog and help operations.
+
+            📊 Output: Tool catalog or detailed tool documentation
             🔧 Side Effects: None
             ⏱️ Typical Runtime: <1 second
 
-            Categories: Project Health, Task Management, Code Quality,
-            Security, Planning, Workflow, Configuration
+            Args:
+                action: "list" for tool catalog, "help" for specific tool documentation
+                category: Filter by category (list action)
+                persona: Filter by persona (list action)
+                include_examples: Include example prompts (list action)
+                tool_name: Name of tool to get help for (help action)
+
+            Examples:
+                discovery(action="list", category="security")
+                → Filtered tool catalog
+
+                discovery(action="help", tool_name="project_scorecard")
+                → Detailed tool documentation
             """
-            return _list_tools(category, persona, include_examples)
+            return _discovery(action, category, persona, include_examples, tool_name)
+
+        # NOTE: focus_mode, suggest_mode, tool_usage_stats removed - use workflow_mode(action=focus|suggest|stats)
 
         @mcp.tool()
-        async def focus_mode(
+        async def workflow_mode(
+            action: str = "focus",
             mode: Optional[str] = None,
             enable_group: Optional[str] = None,
             disable_group: Optional[str] = None,
             status: bool = False,
+            text: Optional[str] = None,
+            auto_switch: bool = False,
             ctx: Any = None,
         ) -> str:
             """
-            [HINT: Tool curation. Dynamic tool visibility based on workflow mode.]
+            [HINT: Workflow mode management. action=focus|suggest|stats. Unified workflow operations.]
 
-            🎯 Output: Mode status, visible tools, context reduction metrics
-            🔧 Side Effects: Updates tool visibility, sends list_changed notification
+            Unified workflow mode management tool consolidating focus, suggestions, and usage statistics.
+
+            Actions:
+            - action="focus": Manage workflow modes and tool groups
+            - action="suggest": Get mode suggestions based on context/usage
+            - action="stats": View tool usage analytics and patterns
+
+            📊 Output: Mode status, suggestions, or usage statistics
+            🔧 Side Effects: May update tool visibility and send notifications
             ⏱️ Typical Runtime: <100ms
 
-            Philosophy: "An API built for humans will poison your AI agent."
-            Instead of 40+ tools polluting context, focus on what's relevant NOW.
-
-            Modes:
+            Modes (focus action):
             - daily_checkin: Health + overview (9 tools, 82% reduction)
             - security_review: Security-focused (12 tools, 77% reduction)
             - task_management: Task tools only (10 tools, 81% reduction)
@@ -1041,163 +1103,97 @@ if mcp:
             - debugging: Memory + testing (17 tools, 67% reduction)
             - all: Full tool access (52 tools)
 
-            Groups (enable/disable individually):
-            - health, tasks, security, automation, config, testing, advisors, memory, workflow, prd
-
-            Example Prompts:
-            "Switch to security review mode"
-            "Focus on task management"
-            "Enable the advisors tools"
-            "Show current tool focus status"
-
             Args:
-                mode: Workflow mode to switch to (see modes above)
-                enable_group: Specific group to enable
-                disable_group: Specific group to disable
-                status: If True, return current status without changes
+                action: "focus" to manage modes/groups, "suggest" for suggestions, "stats" for analytics
+                mode: Workflow mode to switch to (focus action)
+                enable_group: Specific group to enable (focus action)
+                disable_group: Specific group to disable (focus action)
+                status: If True, return current status without changes (focus action)
+                text: Optional text to analyze for mode suggestion (suggest action)
+                auto_switch: If True, automatically switch to suggested mode (suggest action)
 
-            Returns:
-                JSON with mode info, visible tools, and context reduction metrics
+            Examples:
+                workflow_mode(action="focus", mode="security_review")
+                → Switch to security review mode
+
+                workflow_mode(action="suggest", text="vulnerability scanning")
+                → Get mode suggestion for security work
+
+                workflow_mode(action="stats")
+                → View usage analytics
             """
-            result = _focus_mode(mode, enable_group, disable_group, status)
+            result = _workflow_mode(action, mode, enable_group, disable_group, status, text, auto_switch)
 
-            # Send notification if mode changed
-            if ctx and (mode or enable_group or disable_group):
-                try:
-                    from .context_helpers import notify_tools_changed
-                    await notify_tools_changed(ctx)
-                except Exception as e:
-                    logger.debug(f"Could not notify tools changed: {e}")
+            # Send notification if mode changed (for focus or auto-switched suggest)
+            if ctx:
+                should_notify = False
+                if action == "focus" and (mode or enable_group or disable_group):
+                    should_notify = True
+                elif action == "suggest" and auto_switch:
+                    try:
+                        import json
+                        parsed = json.loads(result)
+                        if parsed.get("auto_switched"):
+                            should_notify = True
+                    except Exception:
+                        pass
 
-            return result
-
-        @mcp.tool()
-        async def suggest_mode(
-            text: Optional[str] = None,
-            auto_switch: bool = False,
-            ctx: Any = None,
-        ) -> str:
-            """
-            [HINT: Adaptive mode suggestion. Infers best mode from context/usage patterns.]
-
-            🎯 Output: Suggested mode, confidence score, rationale
-            🔧 Side Effects: If auto_switch=True, changes mode and notifies client
-            ⏱️ Typical Runtime: <50ms
-
-            Uses keyword analysis and usage patterns to suggest the best workflow mode.
-            Call without arguments to get suggestion based on your usage history.
-
-            Example Prompts:
-            "What mode should I use for security work?"
-            "Suggest a mode based on my recent activity"
-            "Auto-switch to the best mode for vulnerability scanning"
-
-            Args:
-                text: Optional text to analyze for mode suggestion
-                auto_switch: If True, automatically switch to suggested mode
-
-            Returns:
-                JSON with suggested mode, confidence, and rationale
-            """
-            result = _suggest_mode(text, auto_switch)
-
-            # Send notification if mode was auto-switched
-            if ctx and auto_switch:
-                try:
-                    import json
-                    parsed = json.loads(result)
-                    if parsed.get("auto_switched"):
+                if should_notify:
+                    try:
                         from .context_helpers import notify_tools_changed
                         await notify_tools_changed(ctx)
-                except Exception as e:
-                    logger.debug(f"Could not notify tools changed: {e}")
+                    except Exception as e:
+                        logger.debug(f"Could not notify tools changed: {e}")
 
             return result
 
-        @mcp.tool()
-        def tool_usage_stats() -> str:
-            """
-            [HINT: Tool usage analytics. Shows usage patterns and co-occurrence data.]
-
-            🎯 Output: Usage statistics, tool relationships, mode history
-            🔧 Side Effects: None
-            ⏱️ Typical Runtime: <10ms
-
-            Shows which tools you use most, which tools are commonly used together,
-            and your workflow mode history. Useful for understanding your patterns.
-
-            Returns:
-                JSON with comprehensive usage analytics
-            """
-            return _get_tool_usage_stats()
-
         # ═══════════════════════════════════════════════════════════════════
-        # CONTEXT SUMMARIZATION TOOLS
+        # CONTEXT MANAGEMENT TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
         @mcp.tool()
-        def summarize(
-            data: str,
+        def context(
+            action: str = "summarize",
+            data: Optional[str] = None,
             level: str = "brief",
             tool_type: Optional[str] = None,
             max_tokens: Optional[int] = None,
             include_raw: bool = False,
+            items: Optional[str] = None,
+            budget_tokens: int = 4000,
+            combine: bool = True,
         ) -> str:
             """
-            [HINT: Context summarizer. Compresses verbose outputs to key metrics. Levels: brief|detailed|key_metrics|actionable.]
+            [HINT: Context management. action=summarize|budget|batch. Unified context operations.]
 
-            Strategically summarizes tool outputs for efficient context usage.
-            Reduces token consumption by 50-80% while preserving key information.
+            Unified context management tool consolidating summarization, budgeting, and batch operations.
 
-            📊 Output: Compressed summary with key metrics and token estimates
+            📊 Output: Context operation results (summary, budget analysis, or batch summaries)
             🔧 Side Effects: None
             ⏱️ Typical Runtime: <10ms
 
             Args:
-                data: JSON string to summarize (tool output, API response, etc.)
-                level: Summarization level
-                    - "brief": One-line summary with key metrics (default)
-                    - "detailed": Multi-line with categories
-                    - "key_metrics": Just the numbers/scores
-                    - "actionable": Only recommendations and tasks
-                tool_type: Hint for smarter summarization (auto-detected if not provided)
-                    - "health", "security", "task", "testing", "scorecard", etc.
-                max_tokens: Maximum tokens for output (truncates if needed)
-                include_raw: Include original data in response
+                action: "summarize" for single item, "budget" for token analysis, "batch" for multiple items
+                data: JSON string to summarize (summarize action)
+                level: Summarization level - "brief", "detailed", "key_metrics", "actionable" (summarize/batch actions)
+                tool_type: Tool type hint for smarter summarization (summarize action)
+                max_tokens: Maximum tokens for output (summarize action)
+                include_raw: Include original data in response (summarize action)
+                items: JSON array of items to analyze (budget/batch actions)
+                budget_tokens: Target token budget (budget action)
+                combine: Merge summaries into combined view (batch action)
 
             Examples:
-                summarize(health_result, level="brief")
+                context(action="summarize", data=health_result, level="brief")
                 → "Health: 85/100, 3 issues, 2 actions"
 
-                summarize(security_scan, level="key_metrics")
-                → {"critical": 0, "high": 2, "medium": 5}
+                context(action="budget", items=json_array, budget_tokens=4000)
+                → Token analysis with reduction strategy
+
+                context(action="batch", items=json_array, level="brief")
+                → Combined summaries of multiple items
             """
-            return _summarize_context(data, level, tool_type, max_tokens, include_raw)
-
-        @mcp.tool()
-        def context_budget(
-            items: str,
-            budget_tokens: int = 4000,
-        ) -> str:
-            """
-            [HINT: Context budget. Estimates tokens and suggests what to keep/summarize to fit budget.]
-
-            Analyze token usage and get recommendations for context reduction.
-
-            📊 Output: Token analysis with reduction strategy
-            🔧 Side Effects: None
-            ⏱️ Typical Runtime: <10ms
-
-            Args:
-                items: JSON array of items to analyze
-                budget_tokens: Target token budget (default: 4000)
-
-            Returns:
-                JSON with total tokens, items by size, and reduction strategy
-            """
-            import json
-            parsed_items = json.loads(items) if isinstance(items, str) else items
-            return _estimate_context_budget(parsed_items, budget_tokens)
+            return _context(action, data, level, tool_type, max_tokens, include_raw, items, budget_tokens, combine)
 
         # NOTE: get_tool_help removed - use resource automation://tools for tool info
         # NOTE: project_overview removed - use generate_project_overview
@@ -1206,37 +1202,84 @@ if mcp:
         # NOTE: analyze_task_hierarchy removed - use task_analysis(action="hierarchy")
 
         # ═══════════════════════════════════════════════════════════════════
-        # TRUSTED ADVISOR SYSTEM TOOLS
+        # RECOMMENDATION TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
         @mcp.tool()
-        def consult_advisor(
+        def recommend(
+            action: str = "model",
+            task_description: Optional[str] = None,
+            task_type: Optional[str] = None,
+            optimize_for: str = "quality",
+            include_alternatives: bool = True,
+            task_id: Optional[str] = None,
+            include_rationale: bool = True,
             metric: Optional[str] = None,
             tool: Optional[str] = None,
             stage: Optional[str] = None,
             score: float = 50.0,
             context: str = "",
+            log: bool = True,
         ) -> str:
             """
-            [HINT: Trusted advisor. Wisdom from assigned advisors by metric/tool/stage.]
+            [HINT: Recommendations. action=model|workflow|advisor. Unified recommendation system.]
 
-            Consult a trusted advisor assigned to a metric, tool, or workflow stage.
-            Advisors provide wisdom matched to project health and context.
+            Unified recommendation tool consolidating model selection, workflow mode suggestions, and advisor consultations.
+
+            Actions:
+            - action="model": Recommend optimal AI model based on task
+            - action="workflow": Suggest AGENT vs ASK mode based on task complexity
+            - action="advisor": Get wisdom from trusted advisors
+
+            📊 Output: Model recommendations, mode suggestions, or advisor wisdom
+            🔧 Side Effects: May log consultations (advisor action)
+            ⏱️ Typical Runtime: <1 second
 
             Args:
-                metric: Scorecard metric (security, testing, documentation, etc.)
-                tool: Tool name (project_scorecard, sprint_automation, etc.)
-                stage: Workflow stage (daily_checkin, planning, review, etc.)
-                score: Current score for wisdom tier selection (0-100)
-                context: What you're working on (for logging)
+                action: "model" for AI model recommendations, "workflow" for mode suggestions, "advisor" for wisdom
+                task_description: Description of the task (model/workflow actions)
+                task_type: Optional explicit task type (model action)
+                optimize_for: "quality", "speed", or "cost" (model action)
+                include_alternatives: Include alternative recommendations (model action)
+                task_id: Optional Todo2 task ID to analyze (workflow action)
+                include_rationale: Whether to include detailed reasoning (workflow action)
+                metric: Scorecard metric to get advice for (advisor action)
+                tool: Tool to get advice for (advisor action)
+                stage: Workflow stage to get advice for (advisor action)
+                score: Current score for wisdom tier selection (advisor action, 0-100)
+                context: What you're working on (advisor action)
+                log: Whether to log consultation (advisor action)
 
-            Returns:
-                Advisor wisdom with quote, encouragement, and rationale
+            Examples:
+                recommend(action="model", task_description="implement authentication")
+                → AI model recommendation
+
+                recommend(action="workflow", task_description="refactor database layer")
+                → AGENT/ASK mode suggestion
+
+                recommend(action="advisor", metric="security", score=75.0)
+                → Advisor wisdom for security metric
             """
-            from .tools.wisdom.advisors import consult_advisor as _consult_advisor
-
-            result = _consult_advisor(metric=metric, tool=tool, stage=stage, score=score, context=context, log=True)
-            return json.dumps(result, separators=(",", ":"))
+            result = _recommend(
+                action=action,
+                task_description=task_description,
+                task_type=task_type,
+                optimize_for=optimize_for,
+                include_alternatives=include_alternatives,
+                task_id=task_id,
+                include_rationale=include_rationale,
+                metric=metric,
+                tool=tool,
+                stage=stage,
+                score=score,
+                context=context,
+                log=log,
+                session_mode=None  # Will be auto-detected in consolidated function
+            )
+            # Convert dict to JSON string if needed
+            if isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            return result if isinstance(result, str) else json.dumps(result, separators=(",", ":"))
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
 
@@ -1277,6 +1320,9 @@ if mcp:
             memory as _memory,
         )
         from .tools.consolidated import (
+            memory_maint as _memory_maint,
+        )
+        from .tools.consolidated import (
             prompt_tracking as _prompt_tracking,
         )
         from .tools.consolidated import (
@@ -1299,6 +1345,18 @@ if mcp:
         )
         from .tools.consolidated import (
             testing as _testing,
+        )
+        from .tools.consolidated import (
+            context as _context,
+        )
+        from .tools.consolidated import (
+            discovery as _discovery,
+        )
+        from .tools.consolidated import (
+            workflow_mode as _workflow_mode,
+        )
+        from .tools.consolidated import (
+            recommend as _recommend,
         )
         CONSOLIDATED_AVAILABLE = True
     except ImportError:
@@ -1332,6 +1390,7 @@ if mcp:
             config_path: Optional[str] = None,
             state: str = "open",
             include_dismissed: bool = False,
+            alert_critical: bool = False,
         ) -> str:
             """
             [HINT: Security. action=scan|alerts|report. Vulnerabilities, remediation.]
@@ -1344,7 +1403,7 @@ if mcp:
             📊 Output: Vulnerabilities by severity, remediation recommendations
             🔧 Side Effects: None (read-only)
             """
-            result = _security(action, repo, languages, config_path, state, include_dismissed)
+            result = _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
             return json.dumps(result, separators=(",", ":"))
 
         @mcp.tool()
@@ -1556,21 +1615,27 @@ if mcp:
             coverage_file: Optional[str] = None,
             min_coverage: int = 80,
             format: str = "html",
+            target_file: Optional[str] = None,
+            min_confidence: float = 0.7,
+            framework: Optional[str] = None,
             output_path: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Testing tool. action=run|coverage. Execute tests or analyze coverage.]
+            [HINT: Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest test cases, or validate test structure.]
 
             Unified testing:
             - action="run": Execute test suite (pytest/unittest/ctest)
             - action="coverage": Analyze test coverage with threshold
+            - action="suggest": Suggest test cases based on code analysis
+            - action="validate": Validate test organization and patterns
 
-            📊 Output: Test results or coverage analysis
-            🔧 Side Effects: May generate coverage reports
+            📊 Output: Test results, coverage analysis, test suggestions, or validation report
+            🔧 Side Effects: May generate coverage reports, suggestion files, or validation reports
             """
             result = _testing(
                 action, test_path, test_framework, verbose, coverage,
-                coverage_file, min_coverage, format, output_path
+                coverage_file, min_coverage, format, target_file, min_confidence,
+                framework, output_path
             )
             return json.dumps(result, separators=(",", ":"))
 
@@ -1694,6 +1759,45 @@ if mcp:
             )
             return json.dumps(result, separators=(",", ":"))
 
+        @mcp.tool()
+        def memory_maint(
+            action: str = "health",
+            max_age_days: int = 90,
+            delete_orphaned: bool = True,
+            delete_duplicates: bool = True,
+            scorecard_max_age_days: int = 7,
+            value_threshold: float = 0.3,
+            keep_minimum: int = 50,
+            similarity_threshold: float = 0.85,
+            merge_strategy: str = "newest",
+            scope: str = "week",
+            advisors: Optional[str] = None,
+            generate_insights: bool = True,
+            save_dream: bool = True,
+            dry_run: bool = True,
+            interactive: bool = True,
+        ) -> str:
+            """
+            [HINT: Memory maintenance. action=health|gc|prune|consolidate|dream. Lifecycle management.]
+
+            Unified memory maintenance:
+            - action="health": Memory system health metrics and recommendations
+            - action="gc": Garbage collect stale/orphaned memories
+            - action="prune": Remove low-value memories based on scoring
+            - action="consolidate": Merge similar/duplicate memories
+            - action="dream": Reflect on memories with wisdom advisors
+
+            📊 Output: Maintenance results with recommendations
+            🔧 Side Effects: Modifies memories (gc/prune/consolidate with dry_run=False)
+            """
+            result = _memory_maint(
+                action, max_age_days, delete_orphaned, delete_duplicates,
+                scorecard_max_age_days, value_threshold, keep_minimum,
+                similarity_threshold, merge_strategy, scope, advisors,
+                generate_insights, save_dream, dry_run, interactive
+            )
+            return json.dumps(result, separators=(",", ":"))
+
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS
     # ═══════════════════════════════════════════════════════════════════════════════
@@ -1760,8 +1864,6 @@ if mcp:
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
-                # Config
-                PWA_REVIEW,
                 # Security
                 SECURITY_SCAN_ALL,
                 SECURITY_SCAN_PYTHON,
@@ -1814,8 +1916,6 @@ if mcp:
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
-                # Config
-                PWA_REVIEW,
                 # Security
                 SECURITY_SCAN_ALL,
                 SECURITY_SCAN_PYTHON,
@@ -1879,11 +1979,6 @@ if mcp:
         def auto_high() -> str:
             """Find only high-value automation opportunities."""
             return AUTOMATION_HIGH_VALUE
-
-        @mcp.prompt()
-        def pwa() -> str:
-            """Review PWA configuration and generate improvement recommendations."""
-            return PWA_REVIEW
 
         @mcp.prompt()
         def pre_sprint() -> str:
@@ -2056,6 +2151,7 @@ if mcp:
             from .resources.memories import (
                 get_memories_by_category_resource,
                 get_memories_by_task_resource,
+                get_memories_health_resource,
                 get_memories_resource,
                 get_recent_memories_resource,
                 get_session_memories_resource,
@@ -2084,6 +2180,7 @@ if mcp:
                 from resources.memories import (
                     get_memories_by_category_resource,
                     get_memories_by_task_resource,
+                    get_memories_health_resource,
                     get_memories_resource,
                     get_recent_memories_resource,
                     get_session_memories_resource,
@@ -2201,6 +2298,11 @@ if mcp:
             def get_combined_wisdom() -> str:
                 """Get combined view of memories and advisor consultations."""
                 return get_wisdom_resource()
+
+            @mcp.resource("automation://memories/health")
+            def get_memory_health() -> str:
+                """Get memory system health metrics and maintenance recommendations."""
+                return get_memories_health_resource()
 
             logger.info("Memory resources loaded successfully")
 
@@ -2885,18 +2987,48 @@ def main():
     # Check for explicit MCP mode or auto-detect
     if "--mcp" in args or _is_mcp_mode():
         # MCP server mode
-        _print_banner()
-        mcp.run(show_banner=False)
+        if not MCP_AVAILABLE:
+            print("Error: MCP not available. Install with: pip install mcp", file=sys.stderr)
+            sys.exit(1)
+        
+        if not USE_STDIO and mcp:
+            # FastMCP mode
+            _print_banner()
+            try:
+                mcp.run(show_banner=False)
+            except KeyboardInterrupt:
+                logger.info("Server stopped by user")
+            except Exception as e:
+                logger.error(f"FastMCP server error: {e}", exc_info=True)
+                # Don't exit immediately - let the connection close gracefully
+                # FastMCP will handle the connection closure
+                raise
+        elif USE_STDIO and stdio_server_instance:
+            # Stdio server mode
+            _print_banner()
+            import asyncio
+            async def run():
+                async with stdio_server() as (read_stream, write_stream):
+                    init_options = stdio_server_instance.create_initialization_options()
+                    await stdio_server_instance.run(read_stream, write_stream, init_options)
+            try:
+                asyncio.run(run())
+            except KeyboardInterrupt:
+                logger.info("Server stopped by user")
+            except Exception as e:
+                logger.error(f"Server error: {e}", exc_info=True)
+                sys.exit(1)
+        else:
+            print("Error: MCP server not initialized properly", file=sys.stderr)
+            sys.exit(1)
         return
 
     # Interactive terminal without args - show usage
     _print_usage()
 
 
-if __name__ == "__main__":
-    main()
-elif stdio_server_instance:
-    # Register resources for stdio server
+# Register resources for stdio server (runs on import when stdio_server_instance exists)
+if stdio_server_instance:
     try:
         # Try relative imports first (when run as module)
         try:
@@ -2955,27 +3087,5 @@ elif stdio_server_instance:
         RESOURCES_AVAILABLE = False
         logger.warning(f"Resource handlers not available: {e}")
 
-    # Main entry point for stdio server
-    if __name__ == "__main__":
-        logger.info("Starting stdio server...")
-        logger.info(f"Server name: {stdio_server_instance.name}")
-        logger.info(f"Tools available: {TOOLS_AVAILABLE}")
-        logger.info(
-            f"Resources available: {RESOURCES_AVAILABLE if 'RESOURCES_AVAILABLE' in globals() else 'Not registered'}"
-        )
-
-        # stdio_server provides stdin/stdout streams, Server.run() handles the protocol
-        async def run():
-            async with stdio_server() as (read_stream, write_stream):
-                init_options = stdio_server_instance.create_initialization_options()
-                logger.info(f"Initialization options: {init_options}")
-                logger.info("Server ready, waiting for client connections...")
-                await stdio_server_instance.run(read_stream, write_stream, init_options)
-
-        try:
-            asyncio.run(run())
-        except KeyboardInterrupt:
-            logger.info("Server stopped by user")
-        except Exception as e:
-            logger.error(f"Server error: {e}", exc_info=True)
-            sys.exit(1)
+if __name__ == "__main__":
+    main()

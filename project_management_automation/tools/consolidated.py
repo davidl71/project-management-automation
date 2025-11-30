@@ -16,11 +16,16 @@ Consolidated tools:
 - report(action=overview|scorecard|briefing|prd) ← generate_project_overview, generate_project_scorecard, get_daily_briefing, generate_prd
 - advisor_audio(action=quote|podcast|export) ← synthesize_advisor_quote, generate_podcast_audio, export_advisor_podcast
 - task_analysis(action=duplicates|tags|hierarchy) ← detect_duplicate_tasks, consolidate_tags, analyze_task_hierarchy
-- testing(action=run|coverage) ← run_tests, analyze_test_coverage
+- testing(action=run|coverage|suggest|validate) ← run_tests, analyze_test_coverage, suggest_test_cases, validate_test_structure
 - lint(action=run|analyze) ← run_linter, analyze_problems
 - memory(action=save|recall|search) ← save_memory, recall_context, search_memories
+- memory_maint(action=health|gc|prune|consolidate|dream) ← memory lifecycle management and advisor dreaming
 - task_discovery(action=comments|markdown|orphans|all) ← NEW: find tasks from various sources
 - task_workflow(action=sync|approve|clarify, sub_action for clarify) ← sync_todo_tasks, batch_approve_tasks, clarification
+- context(action=summarize|budget|batch) ← summarize_context, estimate_context_budget, batch_summarize
+- discovery(action=list|help) ← list_tools, get_tool_help
+- workflow_mode(action=focus|suggest|stats) ← focus_mode, suggest_mode, get_tool_usage_stats
+- recommend(action=model|workflow|advisor) ← recommend_model, recommend_workflow_mode, consult_advisor
 """
 
 import asyncio
@@ -68,6 +73,7 @@ async def security_async(
     state: str = "open",
     include_dismissed: bool = False,
     ctx: Optional[Any] = None,
+    alert_critical: bool = False,
 ) -> dict[str, Any]:
     """
     Unified security analysis tool (async with progress).
@@ -86,7 +92,7 @@ async def security_async(
     """
     if action == "scan":
         from .dependency_security import scan_dependency_security_async
-        result = await scan_dependency_security_async(languages, config_path, ctx)
+        result = await scan_dependency_security_async(languages, config_path, ctx, alert_critical)
         return json.loads(result) if isinstance(result, str) else result
     elif action == "alerts":
         from .dependabot_integration import fetch_dependabot_alerts
@@ -109,6 +115,7 @@ def security(
     state: str = "open",
     include_dismissed: bool = False,
     ctx: Optional[Any] = None,
+    alert_critical: bool = False,
 ) -> dict[str, Any]:
     """
     Unified security analysis tool (sync wrapper).
@@ -135,7 +142,7 @@ def security(
 
     if in_async:
         raise RuntimeError("Use security_async() in async context, or call from sync code")
-    return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
+    return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
 
 
 def generate_config(
@@ -177,7 +184,7 @@ def generate_config(
         from .cursorignore_generator import generate_cursorignore
         return generate_cursorignore(include_indexing, analyze_project, dry_run)
     elif action == "simplify":
-        from .rule_simplifier import simplify_rules
+        from .simplify_rules import simplify_rules
         parsed_files = None
         if rule_files:
             try:
@@ -265,10 +272,10 @@ def prompt_tracking(
     if action == "log":
         if not prompt:
             return {"status": "error", "error": "prompt parameter required for log action"}
-        from .prompt_tracker import log_prompt_iteration
+        from .prompt_iteration_tracker import log_prompt_iteration
         return log_prompt_iteration(prompt, task_id, mode, outcome, iteration)
     elif action == "analyze":
-        from .prompt_tracker import analyze_prompt_iterations
+        from .prompt_iteration_tracker import analyze_prompt_iterations
         return analyze_prompt_iterations(days)
     else:
         return {
@@ -511,7 +518,7 @@ def task_analysis(
         from .tag_consolidation import consolidate_tags
         return consolidate_tags(dry_run, custom_rules, remove_tags, output_path)
     elif action == "hierarchy":
-        from .task_hierarchy import analyze_task_hierarchy
+        from .task_hierarchy_analyzer import analyze_task_hierarchy
         return analyze_task_hierarchy(output_format, output_path, include_recommendations)
     else:
         return {
@@ -531,6 +538,11 @@ async def testing_async(
     coverage_file: Optional[str] = None,
     min_coverage: int = 80,
     format: str = "html",
+    # suggest params
+    target_file: Optional[str] = None,
+    min_confidence: float = 0.7,
+    # validate params
+    framework: Optional[str] = None,
     # common
     output_path: Optional[str] = None,
     ctx: Optional[Any] = None,
@@ -539,7 +551,7 @@ async def testing_async(
     Unified testing tool (async with progress).
 
     Args:
-        action: "run" to execute tests, "coverage" to analyze coverage
+        action: "run" to execute tests, "coverage" to analyze coverage, "suggest" to suggest test cases, "validate" to validate test structure
         test_path: Path to test file/directory (run action)
         test_framework: pytest, unittest, ctest, or auto (run action)
         verbose: Show detailed output (run action)
@@ -547,11 +559,14 @@ async def testing_async(
         coverage_file: Path to coverage file (coverage action)
         min_coverage: Minimum coverage threshold (coverage action)
         format: Report format - html, json, terminal (coverage action)
+        target_file: File to analyze for suggestions (suggest action)
+        min_confidence: Minimum confidence threshold for suggestions (suggest action, default: 0.7)
+        framework: Expected framework for validation (validate action, default: auto)
         output_path: Save results to file
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Test or coverage results as JSON string
+        Test, coverage, suggestion, or validation results as dict
     """
     if action == "run":
         from .run_tests import run_tests_async
@@ -561,10 +576,18 @@ async def testing_async(
         from .test_coverage import analyze_test_coverage
         result = analyze_test_coverage(coverage_file, min_coverage, output_path, format)
         return json.loads(result) if isinstance(result, str) else result
+    elif action == "suggest":
+        from .test_suggestions import suggest_test_cases
+        result = suggest_test_cases(target_file, test_framework, min_confidence, output_path)
+        return json.loads(result) if isinstance(result, str) else result
+    elif action == "validate":
+        from .test_validation import validate_test_structure
+        result = validate_test_structure(test_path, framework, output_path)
+        return json.loads(result) if isinstance(result, str) else result
     else:
         return {
             "status": "error",
-            "error": f"Unknown testing action: {action}. Use 'run' or 'coverage'.",
+            "error": f"Unknown testing action: {action}. Use 'run', 'coverage', 'suggest', or 'validate'.",
         }
 
 
@@ -579,6 +602,11 @@ def testing(
     coverage_file: Optional[str] = None,
     min_coverage: int = 80,
     format: str = "html",
+    # suggest params
+    target_file: Optional[str] = None,
+    min_confidence: float = 0.7,
+    # validate params
+    framework: Optional[str] = None,
     # common
     output_path: Optional[str] = None,
     ctx: Optional[Any] = None,
@@ -587,19 +615,22 @@ def testing(
     Unified testing tool (sync wrapper).
 
     Args:
-        action: "run" to execute tests, "coverage" to analyze coverage
-        test_path: Path to test file/directory (run action)
-        test_framework: pytest, unittest, ctest, or auto (run action)
+        action: "run" to execute tests, "coverage" to analyze coverage, "suggest" to suggest test cases, "validate" to validate test structure
+        test_path: Path to test file/directory (run/validate action)
+        test_framework: pytest, unittest, ctest, or auto (run/suggest action)
         verbose: Show detailed output (run action)
         coverage: Generate coverage during test run (run action)
         coverage_file: Path to coverage file (coverage action)
         min_coverage: Minimum coverage threshold (coverage action)
         format: Report format - html, json, terminal (coverage action)
+        target_file: File to analyze for suggestions (suggest action)
+        min_confidence: Minimum confidence threshold for suggestions (suggest action, default: 0.7)
+        framework: Expected framework for validation (validate action, default: auto)
         output_path: Save results to file
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Test or coverage results as dict
+        Test, coverage, suggestion, or validation results as dict
     """
     # Toggle: check if we're in an async context
     in_async = False
@@ -611,7 +642,7 @@ def testing(
 
     if in_async:
         raise RuntimeError("Use testing_async() in async context, or call from sync code")
-    return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, output_path, ctx))
+    return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
 
 
 def lint(
@@ -735,6 +766,252 @@ def memory(
         }
 
 
+def context(
+    action: str = "summarize",
+    # summarize action params
+    data: Optional[str] = None,
+    level: str = "brief",
+    tool_type: Optional[str] = None,
+    max_tokens: Optional[int] = None,
+    include_raw: bool = False,
+    # budget action params
+    items: Optional[str] = None,
+    budget_tokens: int = 4000,
+    # batch action params
+    combine: bool = True,
+) -> str:
+    """
+    Unified context management tool.
+
+    Consolidates context summarization, budgeting, and batch operations.
+
+    Args:
+        action: "summarize" for single item, "budget" for token analysis, "batch" for multiple items
+        data: JSON string to summarize (summarize action)
+        level: Summarization level - "brief", "detailed", "key_metrics", "actionable" (summarize action)
+        tool_type: Tool type hint for smarter summarization (summarize action)
+        max_tokens: Maximum tokens for output (summarize action)
+        include_raw: Include original data in response (summarize action)
+        items: JSON array of items to analyze (budget/batch actions)
+        budget_tokens: Target token budget (budget action)
+        combine: Merge summaries into combined view (batch action)
+
+    Returns:
+        JSON with context operation results
+    """
+    if action == "summarize":
+        if not data:
+            return json.dumps({
+                "status": "error",
+                "error": "data parameter required for summarize action",
+            }, indent=2)
+        from .context_summarizer import summarize_context
+        return summarize_context(data, level, tool_type, max_tokens, include_raw)
+    
+    elif action == "budget":
+        if not items:
+            return json.dumps({
+                "status": "error",
+                "error": "items parameter required for budget action",
+            }, indent=2)
+        import json as json_lib
+        parsed_items = json_lib.loads(items) if isinstance(items, str) else items
+        from .context_summarizer import estimate_context_budget
+        return estimate_context_budget(parsed_items, budget_tokens)
+    
+    elif action == "batch":
+        if not items:
+            return json.dumps({
+                "status": "error",
+                "error": "items parameter required for batch action",
+            }, indent=2)
+        import json as json_lib
+        parsed_items = json_lib.loads(items) if isinstance(items, str) else items
+        from .context_summarizer import batch_summarize
+        return batch_summarize(parsed_items, level, combine)
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown context action: {action}. Use 'summarize', 'budget', or 'batch'.",
+        }, indent=2)
+
+
+def discovery(
+    action: str = "list",
+    # list action params
+    category: Optional[str] = None,
+    persona: Optional[str] = None,
+    include_examples: bool = True,
+    # help action params
+    tool_name: Optional[str] = None,
+) -> str:
+    """
+    Unified discovery tool.
+
+    Consolidates tool discovery and help operations.
+
+    Args:
+        action: "list" for tool catalog, "help" for specific tool documentation
+        category: Filter by category (list action)
+        persona: Filter by persona (list action)
+        include_examples: Include example prompts (list action)
+        tool_name: Name of tool to get help for (help action)
+
+    Returns:
+        JSON with discovery results
+    """
+    if action == "list":
+        from .hint_catalog import list_tools
+        return list_tools(category, persona, include_examples)
+    
+    elif action == "help":
+        if not tool_name:
+            return json.dumps({
+                "status": "error",
+                "error": "tool_name parameter required for help action",
+            }, indent=2)
+        from .hint_catalog import get_tool_help
+        return get_tool_help(tool_name)
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown discovery action: {action}. Use 'list' or 'help'.",
+        }, indent=2)
+
+
+def workflow_mode(
+    action: str = "focus",
+    # focus action params
+    mode: Optional[str] = None,
+    enable_group: Optional[str] = None,
+    disable_group: Optional[str] = None,
+    status: bool = False,
+    # suggest action params
+    text: Optional[str] = None,
+    auto_switch: bool = False,
+) -> str:
+    """
+    Unified workflow mode management tool.
+
+    Consolidates workflow mode operations: focus, suggestions, and usage statistics.
+
+    Args:
+        action: "focus" to manage modes/groups, "suggest" to get mode suggestions, "stats" for usage analytics
+        mode: Workflow mode to switch to (focus action)
+        enable_group: Specific group to enable (focus action)
+        disable_group: Specific group to disable (focus action)
+        status: If True, return current status without changes (focus action)
+        text: Optional text to analyze for mode suggestion (suggest action)
+        auto_switch: If True, automatically switch to suggested mode (suggest action)
+
+    Returns:
+        JSON with workflow mode operation results
+    """
+    if action == "focus":
+        from .dynamic_tools import focus_mode
+        return focus_mode(mode, enable_group, disable_group, status)
+    
+    elif action == "suggest":
+        from .dynamic_tools import suggest_mode
+        return suggest_mode(text, auto_switch)
+    
+    elif action == "stats":
+        from .dynamic_tools import get_tool_usage_stats
+        return get_tool_usage_stats()
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown workflow_mode action: {action}. Use 'focus', 'suggest', or 'stats'.",
+        }, indent=2)
+
+
+def recommend(
+    action: str = "model",
+    # model action params
+    task_description: Optional[str] = None,
+    task_type: Optional[str] = None,
+    optimize_for: str = "quality",
+    include_alternatives: bool = True,
+    # workflow action params
+    task_id: Optional[str] = None,
+    include_rationale: bool = True,
+    # advisor action params
+    metric: Optional[str] = None,
+    tool: Optional[str] = None,
+    stage: Optional[str] = None,
+    score: float = 50.0,
+    context: str = "",
+    log: bool = True,
+    session_mode: Optional[str] = None,
+) -> dict[str, Any] | str:
+    """
+    Unified recommendation tool.
+
+    Consolidates model recommendations, workflow mode suggestions, and advisor consultations.
+
+    Args:
+        action: "model" for AI model recommendations, "workflow" for mode suggestions, "advisor" for wisdom
+        task_description: Description of the task (model/workflow actions)
+        task_type: Optional explicit task type (model action)
+        optimize_for: "quality", "speed", or "cost" (model action)
+        include_alternatives: Include alternative recommendations (model action)
+        task_id: Optional Todo2 task ID to analyze (workflow action)
+        include_rationale: Whether to include detailed reasoning (workflow action)
+        metric: Scorecard metric to get advice for (advisor action)
+        tool: Tool to get advice for (advisor action)
+        stage: Workflow stage to get advice for (advisor action)
+        score: Current score for wisdom tier selection (advisor action, 0-100)
+        context: What you're working on (advisor action)
+        log: Whether to log consultation (advisor action)
+        session_mode: Inferred session mode for mode-aware guidance (advisor action)
+
+    Returns:
+        JSON with recommendation results (model/workflow) or dict (advisor)
+    """
+    if action == "model":
+        from .model_recommender import recommend_model
+        result = recommend_model(task_description, task_type, optimize_for, include_alternatives)
+        return json.loads(result) if isinstance(result, str) else result
+    
+    elif action == "workflow":
+        from .workflow_recommender import recommend_workflow_mode
+        result = recommend_workflow_mode(task_description, task_id, include_rationale)
+        return json.loads(result) if isinstance(result, str) else result
+    
+    elif action == "advisor":
+        from .wisdom.advisors import consult_advisor
+        # Get session mode if not provided
+        if session_mode is None:
+            try:
+                from ..resources.session import get_session_mode_resource
+                import json as json_lib
+                mode_resource_json = get_session_mode_resource()
+                mode_data = json_lib.loads(mode_resource_json)
+                session_mode = mode_data.get("mode") or mode_data.get("inferred_mode")
+            except Exception:
+                pass  # Fallback gracefully if mode inference unavailable
+        
+        result = consult_advisor(
+            metric=metric,
+            tool=tool,
+            stage=stage,
+            score=score,
+            context=context,
+            log=log,
+            session_mode=session_mode
+        )
+        return result
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown recommend action: {action}. Use 'model', 'workflow', or 'advisor'.",
+        }, indent=2)
+
+
 def task_discovery(
     action: str = "all",
     # comments params
@@ -838,7 +1115,7 @@ def task_discovery(
 
     def find_orphans():
         """Find orphaned Todo2 tasks."""
-        from .task_hierarchy import analyze_task_hierarchy
+        from .task_hierarchy_analyzer import analyze_task_hierarchy
         result = analyze_task_hierarchy(output_format="json", include_recommendations=False)
         orphans = result.get("networkx_analysis", {}).get("orphans", [])
         return [{"type": "ORPHAN", "task_id": o, "source": "todo2"} for o in orphans]
@@ -932,6 +1209,7 @@ def task_workflow(
             filter_tag=filter_tag,
             task_ids=ids,
             dry_run=dry_run,
+            confirm=False,  # Can be added as parameter if needed
         )
         return json.loads(result) if isinstance(result, str) else result
 
@@ -967,5 +1245,102 @@ def task_workflow(
         return {
             "status": "error",
             "error": f"Unknown task_workflow action: {action}. Use 'sync', 'approve', or 'clarify'.",
+        }
+
+
+def memory_maint(
+    action: str = "health",
+    # gc params
+    max_age_days: int = 90,
+    delete_orphaned: bool = True,
+    delete_duplicates: bool = True,
+    scorecard_max_age_days: int = 7,
+    # prune params
+    value_threshold: float = 0.3,
+    keep_minimum: int = 50,
+    # consolidate params
+    similarity_threshold: float = 0.85,
+    merge_strategy: str = "newest",
+    # dream params
+    scope: str = "week",
+    advisors: Optional[str] = None,
+    generate_insights: bool = True,
+    save_dream: bool = True,
+    # common
+    dry_run: bool = True,
+    interactive: bool = True,
+) -> dict[str, Any]:
+    """
+    Unified memory maintenance tool.
+
+    Args:
+        action: "health", "gc", "prune", "consolidate", or "dream"
+        max_age_days: Delete memories older than this (gc)
+        delete_orphaned: Delete orphaned memories (gc)
+        delete_duplicates: Delete duplicates (gc)
+        scorecard_max_age_days: Max age for scorecard memories (gc)
+        value_threshold: Minimum value score to keep (prune)
+        keep_minimum: Always keep at least N memories (prune)
+        similarity_threshold: Title similarity threshold (consolidate)
+        merge_strategy: newest, oldest, or longest (consolidate)
+        scope: day, week, month, or all (dream)
+        advisors: JSON list of advisor keys (dream)
+        generate_insights: Generate actionable insights (dream)
+        save_dream: Save dream as new memory (dream)
+        dry_run: Preview without executing (default True)
+        interactive: Use interactive MCP for approvals (reserved for future)
+
+    Returns:
+        Maintenance operation results
+    """
+    if action == "health":
+        from .memory_maintenance import memory_health_check
+        return memory_health_check()
+
+    elif action == "gc":
+        from .memory_maintenance import memory_garbage_collect
+        return memory_garbage_collect(
+            max_age_days=max_age_days,
+            delete_orphaned=delete_orphaned,
+            delete_duplicates=delete_duplicates,
+            scorecard_max_age_days=scorecard_max_age_days,
+            dry_run=dry_run,
+        )
+
+    elif action == "prune":
+        from .memory_maintenance import memory_prune
+        return memory_prune(
+            value_threshold=value_threshold,
+            keep_minimum=keep_minimum,
+            dry_run=dry_run,
+        )
+
+    elif action == "consolidate":
+        from .memory_maintenance import memory_consolidate
+        return memory_consolidate(
+            similarity_threshold=similarity_threshold,
+            merge_strategy=merge_strategy,
+            dry_run=dry_run,
+        )
+
+    elif action == "dream":
+        from .memory_dreaming import memory_dream
+        advisor_list = None
+        if advisors:
+            try:
+                advisor_list = json.loads(advisors)
+            except json.JSONDecodeError:
+                return {"status": "error", "error": "Invalid advisors JSON"}
+        return memory_dream(
+            scope=scope,
+            advisors=advisor_list,
+            generate_insights=generate_insights,
+            save_dream=save_dream,
+        )
+
+    else:
+        return {
+            "status": "error",
+            "error": f"Unknown memory_maint action: {action}. Use 'health', 'gc', 'prune', 'consolidate', or 'dream'.",
         }
 

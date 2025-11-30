@@ -5,10 +5,17 @@ Analyzes, validates, and consolidates tags in Todo2 tasks.
 """
 
 import json
+import logging
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
+
+from ..utils.todo2_utils import (
+    filter_tasks_by_project,
+    get_repo_project_id,
+    task_belongs_to_project,
+)
 
 # Standard consolidation rules
 DEFAULT_CONSOLIDATION_RULES = {
@@ -46,6 +53,9 @@ TAGS_TO_REMOVE = set()
 
 # Maximum recommended tag length
 MAX_TAG_LENGTH = 20
+
+
+logger = logging.getLogger(__name__)
 
 
 def find_project_root() -> Path:
@@ -172,7 +182,8 @@ def apply_consolidations(
     data: dict[str, Any],
     plan: dict[str, Any],
     todo2_file: Path,
-    dry_run: bool = True
+    dry_run: bool = True,
+    project_id: Optional[str] = None,
 ) -> dict[str, Any]:
     """Apply tag consolidations to Todo2 tasks."""
     todos = data.get('todos', [])
@@ -184,6 +195,8 @@ def apply_consolidations(
     changes = []
 
     for task in todos:
+        if not task_belongs_to_project(task, project_id):
+            continue
         old_tags = task.get('tags', [])
         if not old_tags:
             continue
@@ -331,7 +344,8 @@ def consolidate_tags(
     # Find project and load data
     project_root = find_project_root()
     data, todo2_file = load_todo2_tasks(project_root)
-    todos = data.get('todos', [])
+    project_id = get_repo_project_id(project_root)
+    todos = filter_tasks_by_project(data.get('todos', []), project_id, logger=logger)
 
     # Merge rules
     rules = DEFAULT_CONSOLIDATION_RULES.copy()
@@ -349,7 +363,7 @@ def consolidate_tags(
     plan = plan_consolidations(analysis, rules, tags_to_remove)
 
     # Apply (or simulate)
-    result = apply_consolidations(data, plan, todo2_file, dry_run)
+    result = apply_consolidations(data, plan, todo2_file, dry_run, project_id)
 
     # Format report
     report = format_report(analysis, plan, result)

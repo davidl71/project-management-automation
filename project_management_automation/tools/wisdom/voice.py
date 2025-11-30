@@ -26,7 +26,7 @@ import os
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Literal, Optional
 
 # Backend type
 TTSBackend = Literal["elevenlabs", "edge-tts", "pyttsx3", "auto"]

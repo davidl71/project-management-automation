@@ -9,6 +9,42 @@ Resources:
 - Context Primer: automation://context-primer, automation://hints
 """
 
+from .capabilities import (
+    CAPABILITIES,
+    get_capabilities,
+    get_capabilities_summary,
+    get_domain_capabilities,
+    register_capabilities_resources,
+)
+from .context_primer import (
+    TOOL_HINTS_REGISTRY,
+    WORKFLOW_MODE_CONTEXT,
+    get_all_hints,
+    get_context_primer,
+    get_hints_for_mode,
+    register_context_primer_resources,
+)
+from .hint_registry import (
+    HintRegistry,
+    ToolHint,
+    create_hints_directory,
+    get_hint,
+    get_hint_registry,
+    register_hint_registry_resources,
+    reload_hints,
+)
+from .prompt_discovery import (
+    PROMPT_CATEGORIES,
+    PROMPT_DESCRIPTIONS,
+    PROMPT_MODE_MAPPING,
+    PROMPT_PERSONA_MAPPING,
+    discover_prompts,
+    get_prompts_for_category,
+    get_prompts_for_mode,
+    get_prompts_for_persona,
+    register_prompt_discovery_resources,
+    register_prompt_discovery_tools,
+)
 from .templates import (
     get_advisor_consultations,
     get_advisor_info,
@@ -21,46 +57,12 @@ from .templates import (
     register_resource_templates,
 )
 
-from .context_primer import (
-    TOOL_HINTS_REGISTRY,
-    WORKFLOW_MODE_CONTEXT,
-    get_context_primer,
-    get_hints_for_mode,
-    get_all_hints,
-    register_context_primer_resources,
+from .session import (
+    SessionModeStorage,
+    get_session_mode_resource,
+    infer_session_mode_tool,
+    register_session_resources,
 )
-
-from .hint_registry import (
-    ToolHint,
-    HintRegistry,
-    get_hint_registry,
-    reload_hints,
-    get_hint,
-    create_hints_directory,
-    register_hint_registry_resources,
-)
-
-from .prompt_discovery import (
-    PROMPT_MODE_MAPPING,
-    PROMPT_PERSONA_MAPPING,
-    PROMPT_CATEGORIES,
-    PROMPT_DESCRIPTIONS,
-    get_prompts_for_mode,
-    get_prompts_for_persona,
-    get_prompts_for_category,
-    discover_prompts,
-    register_prompt_discovery_resources,
-    register_prompt_discovery_tools,
-)
-
-from .capabilities import (
-    CAPABILITIES,
-    get_capabilities,
-    get_capabilities_summary,
-    get_domain_capabilities,
-    register_capabilities_resources,
-)
-
 __all__ = [
     # Registration
     "register_resource_templates",
@@ -107,4 +109,9 @@ __all__ = [
     "get_capabilities_summary",
     "get_domain_capabilities",
     "register_capabilities_resources",
+    # Session mode (MODE-002)
+    "SessionModeStorage",
+    "get_session_mode_resource",
+    "infer_session_mode_tool",
+    "register_session_resources",
 ]

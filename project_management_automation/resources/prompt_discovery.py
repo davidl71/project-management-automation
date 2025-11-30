@@ -18,7 +18,6 @@ Usage:
 
 import json
 import logging
-from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger("exarp.prompt_discovery")
@@ -150,7 +149,6 @@ PROMPT_CATEGORIES: Dict[str, List[str]] = {
         "automation_setup",
     ],
     "config": [
-        "pwa_review",
         "config_generation",
     ],
     "workflow": [
@@ -194,27 +192,26 @@ PROMPT_DESCRIPTIONS: Dict[str, str] = {
     # Documentation
     "doc_health_check": "Analyze documentation health and create tasks for issues",
     "doc_quick_check": "Quick documentation health check without creating tasks",
-    
+
     # Task Management
     "task_alignment": "Analyze Todo2 task alignment with project goals",
     "duplicate_cleanup": "Find and consolidate duplicate Todo2 tasks",
     "task_sync": "Synchronize tasks between shared TODO table and Todo2",
     "task_discovery": "Discover tasks from code comments, markdown, and orphans",
-    
+
     # Security
     "security_scan_all": "Scan all dependencies for security vulnerabilities",
     "security_scan_python": "Scan Python dependencies for vulnerabilities",
     "security_scan_rust": "Scan Rust dependencies for vulnerabilities",
-    
+
     # Automation
     "automation_discovery": "Discover new automation opportunities in codebase",
     "automation_high_value": "Find only high-value automation opportunities",
     "automation_setup": "One-time automation setup workflow",
-    
+
     # Config
-    "pwa_review": "Review PWA configuration and suggest improvements",
     "config_generation": "Generate IDE configuration files",
-    
+
     # Workflows
     "daily_checkin": "Daily check-in workflow for project health monitoring",
     "pre_sprint_cleanup": "Pre-sprint cleanup workflow",
@@ -224,23 +221,23 @@ PROMPT_DESCRIPTIONS: Dict[str, str] = {
     "sprint_end": "Sprint end workflow for quality assurance",
     "task_review": "Comprehensive task review workflow for backlog hygiene",
     "project_health": "Comprehensive project health assessment",
-    
+
     # Reports
     "project_scorecard": "Generate comprehensive project health scorecard",
     "project_overview": "Generate one-page project overview for stakeholders",
-    
+
     # Wisdom
     "advisor_consult": "Consult a trusted advisor for wisdom on current work",
     "advisor_briefing": "Get morning briefing from trusted advisors",
     "advisor_audio": "Generate audio from advisor consultations",
-    
+
     # Memory
     "memory_system": "Use AI session memory to persist insights across sessions",
-    
+
     # Workflow Helpers
     "mode_suggestion": "Suggest optimal Cursor IDE mode (Agent vs Ask)",
     "context_management": "Strategically manage LLM context to reduce token usage",
-    
+
     # Personas
     "persona_developer": "Developer daily workflow for writing quality code",
     "persona_project_manager": "Project Manager workflow for delivery tracking",
@@ -268,7 +265,7 @@ def get_prompts_for_mode(mode: str) -> Dict[str, Any]:
         Dict with mode info and relevant prompts
     """
     prompts = PROMPT_MODE_MAPPING.get(mode, PROMPT_MODE_MAPPING.get("development", []))
-    
+
     return {
         "mode": mode,
         "prompts": [
@@ -294,7 +291,7 @@ def get_prompts_for_persona(persona: str) -> Dict[str, Any]:
         Dict with persona info and relevant prompts
     """
     prompts = PROMPT_PERSONA_MAPPING.get(persona, [])
-    
+
     return {
         "persona": persona,
         "prompts": [
@@ -320,7 +317,7 @@ def get_prompts_for_category(category: str) -> Dict[str, Any]:
         Dict with category info and prompts
     """
     prompts = PROMPT_CATEGORIES.get(category, [])
-    
+
     return {
         "category": category,
         "prompts": [
@@ -351,7 +348,7 @@ def get_all_prompts_compact() -> Dict[str, Any]:
             }
             for p in prompts
         ]
-    
+
     return {
         "total_prompts": len(PROMPT_DESCRIPTIONS),
         "categories": list(PROMPT_CATEGORIES.keys()),
@@ -379,22 +376,22 @@ def discover_prompts(
     """
     # Start with all prompts
     all_prompts = set(PROMPT_DESCRIPTIONS.keys())
-    
+
     # Filter by mode
     if mode:
         mode_prompts = set(PROMPT_MODE_MAPPING.get(mode, []))
         all_prompts = all_prompts.intersection(mode_prompts) if mode_prompts else all_prompts
-    
+
     # Filter by persona
     if persona:
         persona_prompts = set(PROMPT_PERSONA_MAPPING.get(persona, []))
         all_prompts = all_prompts.intersection(persona_prompts) if persona_prompts else all_prompts
-    
+
     # Filter by category
     if category:
         category_prompts = set(PROMPT_CATEGORIES.get(category, []))
         all_prompts = all_prompts.intersection(category_prompts) if category_prompts else all_prompts
-    
+
     # Filter by keywords
     if keywords:
         keyword_matches = set()
@@ -403,7 +400,7 @@ def discover_prompts(
             if any(kw.lower() in desc for kw in keywords):
                 keyword_matches.add(p)
         all_prompts = keyword_matches if keyword_matches else all_prompts
-    
+
     return {
         "prompts": [
             {
@@ -433,24 +430,24 @@ def register_prompt_discovery_resources(mcp) -> None:
         def all_prompts_resource() -> str:
             """Get all prompts in compact format."""
             return json.dumps(get_all_prompts_compact(), indent=2)
-        
+
         @mcp.resource("automation://prompts/mode/{mode}")
         def prompts_by_mode_resource(mode: str) -> str:
             """Get prompts for a workflow mode."""
             return json.dumps(get_prompts_for_mode(mode), indent=2)
-        
+
         @mcp.resource("automation://prompts/persona/{persona}")
         def prompts_by_persona_resource(persona: str) -> str:
             """Get prompts for a persona."""
             return json.dumps(get_prompts_for_persona(persona), indent=2)
-        
+
         @mcp.resource("automation://prompts/category/{category}")
         def prompts_by_category_resource(category: str) -> str:
             """Get prompts in a category."""
             return json.dumps(get_prompts_for_category(category), indent=2)
-        
+
         logger.info("✅ Registered 4 prompt discovery resources")
-        
+
     except Exception as e:
         logger.warning(f"Could not register prompt discovery resources: {e}")
 
@@ -502,9 +499,9 @@ def register_prompt_discovery_tools(mcp) -> None:
             Discover relevant prompts based on filters.
             """
             return discover_prompts_tool(mode, persona, category, keywords)
-        
+
         logger.info("✅ Registered 1 prompt discovery tool")
-        
+
     except Exception as e:
         logger.warning(f"Could not register prompt discovery tools: {e}")
 

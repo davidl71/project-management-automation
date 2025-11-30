@@ -16,7 +16,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
     from mcp.server.fastmcp import Context

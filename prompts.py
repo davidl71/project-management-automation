@@ -103,20 +103,6 @@ AUTOMATION_HIGH_VALUE = """Find only high-value automation opportunities (score 
 Use: run_automation(action="discover", min_value_score=0.8)"""
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PWA CONFIGURATION PROMPTS
-# ═══════════════════════════════════════════════════════════════════════════════
-
-PWA_REVIEW = """Review PWA configuration and generate improvement recommendations.
-
-This prompt will:
-1. Analyze PWA manifest and service worker configuration
-2. Check for best practices compliance
-3. Identify missing features or optimizations
-4. Provide actionable improvement recommendations
-
-Use: review_pwa_config()"""
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # WORKFLOW PROMPTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -350,6 +336,50 @@ Task: "Explain how the auth module works"
 
 **Note:** MCP cannot programmatically change your mode - this is advisory only."""
 
+MODE_SELECT = """Mode-aware workflow selection guide for Cursor IDE sessions.
+
+This prompt helps users select the appropriate workflow mode based on their task type
+and current session context. It references the session mode inference system (MODE-002)
+and provides decision guidance.
+
+**When to use this prompt:**
+- At the start of a new session to choose workflow mode
+- When transitioning between different types of work
+- To understand mode differences and best practices
+- To align with inferred session mode from tool patterns
+
+**Usage:**
+1. Check current inferred mode: automation://session/mode resource
+2. Use recommend_workflow_mode(task_description="...") for task-specific guidance
+3. Reference this prompt in daily_checkin, sprint_start, and planning workflows
+
+**Mode Decision Tree:**
+
+**Task Type → Mode Selection:**
+- Multi-file refactoring → AGENT mode
+- Feature implementation → AGENT mode  
+- Code generation/scaffolding → AGENT mode
+- Questions and explanations → ASK mode
+- Quick fixes/single file → ASK mode
+- Code review → ASK mode
+- Manual editing → MANUAL mode (no AI assistance)
+
+**Session Patterns → Mode Inference:**
+- High tool frequency (>5/min) + multi-file → AGENT
+- Moderate frequency (1-3/min) + single file → ASK
+- Low frequency (<1/min) + direct edits → MANUAL
+
+**Integration Points:**
+- daily_checkin: Include mode selection guidance
+- sprint_start: Recommend mode for sprint tasks
+- planning: Suggest mode based on task breakdown
+- advisor consultations: Mode-aware advisor selection (MODE-003)
+
+**References:**
+- MODE-002: Session mode inference from tool patterns
+- MODE-003: Mode-aware advisor guidance
+- recommend_workflow_mode(): Task-based mode recommendation"""
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # CONTEXT MANAGEMENT PROMPT
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -358,9 +388,9 @@ CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
 
 **Tools Available:**
 
-1. **summarize()** - Compress verbose outputs
+1. **context(action="summarize")** - Compress verbose outputs
    ```
-   summarize(data=json_output, level="brief")
+   context(action="summarize", data=json_output, level="brief")
    → "Health: 85/100, 3 issues, 2 actions"
    
    Levels:
@@ -370,13 +400,19 @@ CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
    - actionable: Recommendations/tasks only
    ```
 
-2. **context_budget()** - Analyze token usage
+2. **context(action="budget")** - Analyze token usage
    ```
-   context_budget(items=json_array, budget_tokens=4000)
+   context(action="budget", items=json_array, budget_tokens=4000)
    → Shows which items to summarize to fit budget
    ```
 
-3. **focus_mode()** - Reduce visible tools
+3. **context(action="batch")** - Summarize multiple items
+   ```
+   context(action="batch", items=json_array, level="brief")
+   → Combined summaries of multiple items
+   ```
+
+4. **focus_mode()** - Reduce visible tools
    ```
    focus_mode(mode="security_review")
    → 74% fewer tools shown = less context
@@ -387,15 +423,15 @@ CONTEXT_MANAGEMENT = """Strategically manage LLM context to reduce token usage.
 | Method | Reduction | Best For |
 |--------|-----------|----------|
 | focus_mode() | 50-80% tools | Start of task |
-| summarize(level="brief") | 70-90% data | Tool results |
-| summarize(level="key_metrics") | 80-95% data | Numeric data |
-| context_budget() | Planning | Multiple results |
+| context(action="summarize", level="brief") | 70-90% data | Tool results |
+| context(action="summarize", level="key_metrics") | 80-95% data | Numeric data |
+| context(action="budget") | Planning | Multiple results |
 
 **Example Workflow:**
 
 1. Start task → `focus_mode(mode="security_review")`
 2. Run tool → Get large JSON output
-3. Compress → `summarize(data=output, level="brief")`
+3. Compress → `context(action="summarize", data=output, level="brief")`
 4. Continue → Reduced context, same key info
 
 **Token Estimation:**
@@ -845,13 +881,6 @@ PROMPTS = {
         "category": "automation",
         "arguments": []
     },
-    # PWA
-    "pwa_review": {
-        "name": "PWA Configuration Review",
-        "description": PWA_REVIEW,
-        "category": "config",
-        "arguments": []
-    },
     # Workflows - Sprint
     "pre_sprint_cleanup": {
         "name": "Pre-Sprint Cleanup Workflow",
@@ -957,6 +986,12 @@ PROMPTS = {
     "mode_suggestion": {
         "name": "Mode Suggestion (Agent vs Ask)",
         "description": MODE_SUGGESTION,
+        "category": "workflow",
+        "arguments": []
+    },
+    "mode_select": {
+        "name": "Mode-Aware Workflow Selection",
+        "description": MODE_SELECT,
         "category": "workflow",
         "arguments": []
     },

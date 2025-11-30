@@ -5,11 +5,10 @@ Tests end-to-end MCP server functionality with real tool execution.
 """
 
 import json
-import pytest
-import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Any
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent.parent
@@ -143,23 +142,23 @@ class TestMCPConfiguration:
             Path(__file__).parent.parent,  # project-management-automation
             # Additional project roots can be added here if needed
         ]
-        
+
         mcp_config = None
         for root in possible_roots:
             config_path = root / '.cursor' / 'mcp.json'
             if config_path.exists():
                 mcp_config = config_path
                 break
-        
+
         # Skip test if no MCP config found (it's project-specific)
         if mcp_config is None:
             pytest.skip(".cursor/mcp.json not found (project-specific config)")
 
-        with open(mcp_config, 'r') as f:
+        with open(mcp_config) as f:
             config = json.load(f)
 
         assert 'mcpServers' in config, "mcpServers key should exist"
-        
+
         # Check for any of the valid exarp server names
         server_key = None
         valid_names = ['exarp', 'exarp_pma', 'project-management-automation']
@@ -167,7 +166,7 @@ class TestMCPConfiguration:
             if name in config['mcpServers']:
                 server_key = name
                 break
-        
+
         assert server_key is not None, \
             f"One of {valid_names} server should be configured"
 
@@ -184,19 +183,19 @@ class TestMCPConfiguration:
             Path(__file__).parent.parent,  # project-management-automation
             # Additional project roots can be added here if needed
         ]
-        
+
         mcp_config = None
         for root in possible_roots:
             config_path = root / '.cursor' / 'mcp.json'
             if config_path.exists():
                 mcp_config = config_path
                 break
-        
+
         # Skip test if no MCP config found (it's project-specific)
         if mcp_config is None:
             pytest.skip(".cursor/mcp.json not found (project-specific config)")
 
-        with open(mcp_config, 'r') as f:
+        with open(mcp_config) as f:
             config = json.load(f)
 
         # Check if exarp or project-management-automation server exists
@@ -205,10 +204,10 @@ class TestMCPConfiguration:
             server_key = 'exarp'
         elif 'project-management-automation' in config.get('mcpServers', {}):
             server_key = 'project-management-automation'
-        
+
         if server_key is None:
             pytest.skip("Exarp server not configured in this project")
-        
+
         description = config['mcpServers'][server_key].get('description', '')
         assert 'NOTE' in description or 'prefer' in description.lower() or len(description) > 0, \
             "Server description should exist and include deprecation/preference hint or description"

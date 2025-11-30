@@ -11,12 +11,16 @@ Analyzes Todo2 tasks to identify:
 """
 
 import json
+import logging
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from ..utils import find_project_root
+from ..utils.todo2_utils import filter_tasks_by_project, get_repo_project_id, is_pending_status, is_completed_status
+
+logger = logging.getLogger(__name__)
 
 # Component detection patterns
 COMPONENT_PATTERNS = {
@@ -110,6 +114,8 @@ def analyze_task_hierarchy(
         data = json.load(f)
 
     todos = data.get('todos', [])
+    project_id = get_repo_project_id(project_root)
+    todos = filter_tasks_by_project(todos, project_id, logger=logger)
 
     # ═══════════════════════════════════════════════════════════════
     # 1. TAG ANALYSIS
@@ -141,9 +147,9 @@ def analyze_task_hierarchy(
             if any(kw in task_text for kw in keywords):
                 matching_tasks.append(t)
 
-        # Categorize by status
-        pending = [t for t in matching_tasks if t.get('status') in ['pending', 'in_progress', 'in-progress']]
-        completed = [t for t in matching_tasks if t.get('status') in ['completed', 'done']]
+        # Categorize by status (normalized)
+        pending = [t for t in matching_tasks if is_pending_status(t.get('status', ''))]
+        completed = [t for t in matching_tasks if is_completed_status(t.get('status', ''))]
 
         # Check for existing hierarchy
         has_hierarchy = any(

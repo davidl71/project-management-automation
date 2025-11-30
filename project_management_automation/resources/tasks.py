@@ -7,9 +7,14 @@ Provides resource access to cached Todo2 task lists, filtered by agent, status, 
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
-from ..utils import find_project_root
+from ..utils import (
+    find_project_root,
+    filter_tasks_by_project,
+    get_current_project_id,
+    task_belongs_to_project,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +92,25 @@ def get_tasks_resource(agent: Optional[str] = None, status: Optional[str] = None
     """
     try:
         state = _load_todo2_state()
-        tasks = state.get('todos', [])
+        all_tasks = state.get('todos', [])
+        
+        # Get current project ID and filter tasks
+        project_id = get_current_project_id()
+        cross_project_tasks = []
+        
+        # Filter by project ownership (include unassigned tasks)
+        tasks = filter_tasks_by_project(all_tasks, project_id, include_unassigned=True, logger=logger)
+        
+        # Identify cross-project tasks for warnings
+        if project_id:
+            for task in all_tasks:
+                task_project = task.get('project_id')
+                if task_project and task_project != project_id:
+                    cross_project_tasks.append({
+                        'id': task.get('id'),
+                        'name': task.get('name', '')[:50],
+                        'project_id': task_project
+                    })
 
         # Apply filters
         if agent:
@@ -99,16 +122,19 @@ def get_tasks_resource(agent: Optional[str] = None, status: Optional[str] = None
         # Limit results
         tasks = tasks[:limit]
 
-        # Count by status
+        # Count by status (only current project tasks)
         status_counts = {}
-        for task in state.get('todos', []):
+        for task in tasks:
             task_status = task.get('status', 'Unknown')
             status_counts[task_status] = status_counts.get(task_status, 0) + 1
 
         result = {
             "tasks": tasks,
             "total_tasks": len(tasks),
-            "total_in_state": len(state.get('todos', [])),
+            "total_in_state": len(all_tasks),
+            "project_id": project_id,
+            "cross_project_tasks_count": len(cross_project_tasks),
+            "cross_project_tasks": cross_project_tasks[:5] if cross_project_tasks else [],  # Show first 5
             "filters": {
                 "agent": agent,
                 "status": status,
@@ -117,6 +143,13 @@ def get_tasks_resource(agent: Optional[str] = None, status: Optional[str] = None
             "status_counts": status_counts,
             "timestamp": datetime.now().isoformat()
         }
+        
+        # Add warning if cross-project tasks found
+        if cross_project_tasks:
+            result["warnings"] = [
+                f"Found {len(cross_project_tasks)} task(s) from other projects. "
+                f"These are excluded from results but shown in cross_project_tasks."
+            ]
 
         return json.dumps(result, indent=2)
 

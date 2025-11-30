@@ -25,7 +25,9 @@ import socket
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Literal
+from typing import Any, Literal, Optional
+
+from ..utils.todo2_utils import normalize_status, is_pending_status, is_review_status
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +127,7 @@ def _detect_agents_from_project() -> list[str]:
     """Detect available agents from project structure."""
     project_root = _find_project_root()
     agents_dir = project_root / "agents"
-    
+
     agents = []
     if agents_dir.exists():
         for agent_dir in agents_dir.iterdir():
@@ -137,7 +139,7 @@ def _detect_agents_from_project() -> list[str]:
                         agents.append(config.get("name", f"{agent_dir.name}-agent"))
                     except Exception:
                         agents.append(f"{agent_dir.name}-agent")
-    
+
     return agents
 
 
@@ -366,7 +368,7 @@ def list_tasks_by_assignee(
                 continue
 
             assignee = task.get("assignee")
-            
+
             if assignee is None:
                 if include_unassigned:
                     unassigned.append({
@@ -458,9 +460,10 @@ def get_workload_summary() -> str:
 
             if assignee is None:
                 unassigned["total"] += 1
-                if status == "In Progress":
+                normalized_status = normalize_status(status)
+                if normalized_status == "in_progress":
                     unassigned["in_progress"] += 1
-                elif status == "Todo":
+                elif normalized_status == "todo":
                     unassigned["todo"] += 1
                 continue
 
@@ -486,13 +489,14 @@ def get_workload_summary() -> str:
                 }
 
             bucket[aname]["total"] += 1
-            if status == "In Progress":
+            normalized_status = normalize_status(status)
+            if normalized_status == "in_progress":
                 bucket[aname]["in_progress"] += 1
-            elif status == "Todo":
+            elif normalized_status == "todo":
                 bucket[aname]["todo"] += 1
-            elif status == "Done":
+            elif normalized_status == "completed":
                 bucket[aname]["done"] += 1
-            elif status == "Review":
+            elif normalized_status == "review":
                 bucket[aname]["review"] += 1
 
         # Get available agents from project
@@ -631,8 +635,8 @@ def auto_assign_background_tasks(
             if task.get("assignee"):
                 continue
 
-            # Skip if not in Todo status
-            if task.get("status") not in ["Todo", "todo"]:
+            # Skip if not in Todo status (normalized)
+            if not is_pending_status(task.get("status", "")):
                 continue
 
             # Apply priority filter
@@ -666,7 +670,7 @@ def auto_assign_background_tasks(
 
         # Round-robin assignment
         assignments = []
-        agent_task_counts = {agent: 0 for agent in agents}
+        agent_task_counts = dict.fromkeys(agents, 0)
         agent_index = 0
 
         for task in unassigned_tasks:

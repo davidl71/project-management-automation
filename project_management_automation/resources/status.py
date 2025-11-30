@@ -31,7 +31,6 @@ def get_status_resource() -> str:
             'dependency_security.py',
             'automation_opportunities.py',
             'todo_sync.py',
-            'pwa_review.py'
         ]
 
         tools_available = all((tools_dir / tool_file).exists() for tool_file in tool_files)
@@ -58,7 +57,6 @@ def get_status_resource() -> str:
                     "scan_dependency_security",
                     "find_automation_opportunities",
                     "sync_todo_tasks",
-                    "review_pwa_config",
                     "add_external_tool_hints",
                     "run_daily_automation",
                     "validate_ci_cd_workflow",

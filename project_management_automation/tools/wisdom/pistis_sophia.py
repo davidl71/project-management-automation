@@ -13,7 +13,7 @@ import os
 import random
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 # Quotes organized by project "Aeon" (health level)
 PISTIS_SOPHIA_QUOTES = {
