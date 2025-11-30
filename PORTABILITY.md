@@ -155,10 +155,27 @@ After setup, verify portability:
 ## Summary
 
 - ✅ **Python code**: Fully portable, no hardcoded paths
-- ✅ **Shell script**: Portable, uses script-relative paths
-- ⚠️ **MCP config**: Requires absolute paths (use sync script)
-- ✅ **Solution**: Run `scripts/sync_mcp_config_agents.py` on each agent
+- ✅ **Shell scripts**: Portable, use script-relative paths
+- ✅ **Cross-platform temp dirs**: Uses `tempfile.gettempdir()` instead of hardcoded `/tmp`
+- ⚠️ **MCP config**: Requires absolute paths (use setup script)
+- ✅ **Solution**: Run `scripts/setup_mcp_config.sh` on each machine
+
+## Quick Setup
+
+After cloning the repository on a new machine:
+
+```bash
+# Generate MCP configuration with correct paths
+./scripts/setup_mcp_config.sh
+
+# Restart Cursor completely
+```
+
+The setup script automatically:
+1. Detects the project root dynamically
+2. Generates `.cursor/mcp.json` from `.cursor/mcp.json.template`
+3. Replaces `{{PROJECT_ROOT}}` placeholders with actual absolute paths
 
 ---
 
-**Last Updated**: 2025-11-24
+**Last Updated**: 2025-11-30

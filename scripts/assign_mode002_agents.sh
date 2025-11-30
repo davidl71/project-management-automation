@@ -4,7 +4,9 @@
 
 set -e
 
-PROJECT_ROOT="/home/david/project-management-automation"
+# Detect project root dynamically (portable across machines)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 echo "🤖 Assigning MODE-002 subtasks to background agents..."

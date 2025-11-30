@@ -89,8 +89,10 @@ sys.path.insert(0, str(project_root))
 
 # Initialize security controls
 # Path boundary: only allow access within project root and common temp dirs
+import tempfile
+_temp_dir = Path(tempfile.gettempdir())  # Cross-platform temp directory
 _path_validator = PathValidator(
-    allowed_roots=[project_root, Path("/tmp"), Path("/var/tmp")],
+    allowed_roots=[project_root, _temp_dir],
     allow_symlinks=False,
     blocked_patterns=[
         r"\.git(?:/|$)",  # .git directory
@@ -268,7 +270,7 @@ if MCP_AVAILABLE:
 
             # Add security middleware (rate limiting + path validation + access control)
             mcp.add_middleware(SecurityMiddleware(
-                allowed_roots=[project_root, Path("/tmp"), Path("/var/tmp")],
+                allowed_roots=[project_root, _temp_dir],
                 calls_per_minute=120,  # 2 calls/sec sustained
                 burst_size=20,         # Allow bursts
             ))
