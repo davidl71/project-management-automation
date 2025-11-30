@@ -1,0 +1,51 @@
+{
+  "name": "exarp-cursor-extension",
+  "displayName": "Exarp Task Management",
+  "description": "Cursor extension for Exarp task management integration",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "exarp.createTask",
+        "title": "Exarp: Create Task"
+      },
+      {
+        "command": "exarp.listTasks",
+        "title": "Exarp: List Tasks"
+      },
+      {
+        "command": "exarp.completeTask",
+        "title": "Exarp: Complete Task"
+      }
+    ],
+    "statusBar": {
+      "items": [
+        {
+          "id": "exarp.taskCount",
+          "command": "exarp.listTasks",
+          "alignment": "right",
+          "priority": 100
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

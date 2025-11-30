@@ -889,6 +889,7 @@ if mcp:
             tag_filter: Optional[list[str]] = None,
             dry_run: bool = False,
             output_path: Optional[str] = None,
+            notify: bool = False,
         ) -> str:
             """[HINT: Automation runner. action: discover|daily|nightly|sprint. Unified automation control.]
 
@@ -909,13 +910,14 @@ if mcp:
                     priority_filter=priority_filter,
                     tag_filter=tag_filter,
                     dry_run=dry_run,
+                    notify=notify,
                 )
                 return json.dumps(result, separators=(",", ":"))
             elif action == "sprint":
                 return _sprint_automation_impl(
                     max_iterations, auto_approve, extract_subtasks,
                     run_analysis_tools, run_testing_tools,
-                    priority_filter, tag_filter, dry_run, output_path,
+                    priority_filter, tag_filter, dry_run, output_path, notify,
                 )
             else:
                 return json.dumps({"status": "error", "error": f"Unknown action: {action}. Use discover, daily, nightly, or sprint"}, separators=(",", ":"))
@@ -940,6 +942,7 @@ if mcp:
             tag_filter,
             dry_run,
             output_path,
+            notify,
         ) -> str:
             return _sprint_automation(
                 max_iterations,
@@ -951,6 +954,7 @@ if mcp:
                 tag_filter,
                 dry_run,
                 output_path,
+                notify,
             )
 
         # NOTE: run_sprint_automation removed - use run_automation(mode="sprint")
@@ -1229,6 +1233,7 @@ if mcp:
 
             Consult a trusted advisor assigned to a metric, tool, or workflow stage.
             Advisors provide wisdom matched to project health and context.
+            Automatically uses inferred session mode for mode-aware guidance (MODE-003).
 
             Args:
                 metric: Scorecard metric (security, testing, documentation, etc.)
@@ -1241,8 +1246,28 @@ if mcp:
                 Advisor wisdom with quote, encouragement, and rationale
             """
             from .tools.wisdom.advisors import consult_advisor as _consult_advisor
+            from .tools.dynamic_tools import get_tool_manager
+            from .resources.session import get_session_mode_resource
+            import json as json_module
 
-            result = _consult_advisor(metric=metric, tool=tool, stage=stage, score=score, context=context, log=True)
+            # Get inferred session mode for mode-aware guidance
+            session_mode = None
+            try:
+                mode_resource_json = get_session_mode_resource()
+                mode_data = json_module.loads(mode_resource_json)
+                session_mode = mode_data.get("mode") or mode_data.get("inferred_mode")
+            except Exception:
+                pass  # Fallback gracefully if mode inference unavailable
+
+            result = _consult_advisor(
+                metric=metric,
+                tool=tool,
+                stage=stage,
+                score=score,
+                context=context,
+                log=True,
+                session_mode=session_mode
+            )
             return json.dumps(result, separators=(",", ":"))
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
@@ -1342,6 +1367,7 @@ if mcp:
             config_path: Optional[str] = None,
             state: str = "open",
             include_dismissed: bool = False,
+            alert_critical: bool = False,
         ) -> str:
             """
             [HINT: Security. action=scan|alerts|report. Vulnerabilities, remediation.]
@@ -1354,7 +1380,7 @@ if mcp:
             📊 Output: Vulnerabilities by severity, remediation recommendations
             🔧 Side Effects: None (read-only)
             """
-            result = _security(action, repo, languages, config_path, state, include_dismissed)
+            result = _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
             return json.dumps(result, separators=(",", ":"))
 
         @mcp.tool()

@@ -17,7 +17,8 @@ def batch_approve_tasks(
     clarification_none: bool = True,
     filter_tag: Optional[str] = None,
     task_ids: Optional[list[str]] = None,
-    dry_run: bool = False
+    dry_run: bool = False,
+    confirm: bool = False
 ) -> dict[str, Any]:
     """
     Batch approve TODO2 tasks using the batch update script.
@@ -29,6 +30,7 @@ def batch_approve_tasks(
         filter_tag: Filter by tag (optional)
         task_ids: List of specific task IDs to approve (optional)
         dry_run: If True, don't actually approve, just report (default: False)
+        confirm: If True, request user confirmation via interactive-mcp (default: False)
 
     Returns:
         Dictionary with approval results including count, task IDs, and status
@@ -62,6 +64,74 @@ def batch_approve_tasks(
     if task_ids:
         cmd.extend(['--task-ids', ','.join(task_ids)])
 
+    # Request user confirmation if requested
+    if confirm and not dry_run:
+        try:
+            from ..interactive import request_user_input, is_available
+            
+            if is_available():
+                # Count tasks that would be approved (quick preview)
+                preview_cmd = [
+                    sys.executable,
+                    str(batch_script),
+                    'list',
+                    '--status', status
+                ]
+                if clarification_none:
+                    preview_cmd.append('--clarification-none')
+                if filter_tag:
+                    preview_cmd.extend(['--filter-tag', filter_tag])
+                if task_ids:
+                    preview_cmd.extend(['--task-ids', ','.join(task_ids)])
+                
+                preview_result = subprocess.run(
+                    preview_cmd,
+                    cwd=str(project_root),
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
+                
+                # Count tasks from preview
+                preview_count = 0
+                if preview_result.returncode == 0:
+                    preview_lines = preview_result.stdout.split('\n')
+                    preview_count = sum(1 for line in preview_lines if line.strip().startswith('•'))
+                
+                # Request confirmation
+                response = request_user_input(
+                    project_name="Exarp",
+                    message=f"About to approve {preview_count} tasks from '{status}' to '{new_status}'. Proceed?",
+                    predefined_options=["yes", "no", "review"]
+                )
+                
+                if response == "no":
+                    return {
+                        "success": False,
+                        "error": "User cancelled approval",
+                        "approved_count": 0,
+                        "task_ids": [],
+                        "cancelled": True
+                    }
+                elif response == "review":
+                    # Return preview for review
+                    return {
+                        "success": False,
+                        "error": "User requested review",
+                        "approved_count": preview_count,
+                        "task_ids": [],
+                        "preview": preview_result.stdout,
+                        "requires_review": True
+                    }
+                # "yes" continues to approval
+        except ImportError:
+            pass  # interactive-mcp not available, skip confirmation
+        except Exception as e:
+            # Log but don't fail
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.debug(f"Confirmation request failed: {e}")
+    
     if dry_run:
         # For dry run, use list command instead
         cmd = [

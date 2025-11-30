@@ -336,6 +336,50 @@ Task: "Explain how the auth module works"
 
 **Note:** MCP cannot programmatically change your mode - this is advisory only."""
 
+MODE_SELECT = """Mode-aware workflow selection guide for Cursor IDE sessions.
+
+This prompt helps users select the appropriate workflow mode based on their task type
+and current session context. It references the session mode inference system (MODE-002)
+and provides decision guidance.
+
+**When to use this prompt:**
+- At the start of a new session to choose workflow mode
+- When transitioning between different types of work
+- To understand mode differences and best practices
+- To align with inferred session mode from tool patterns
+
+**Usage:**
+1. Check current inferred mode: automation://session/mode resource
+2. Use recommend_workflow_mode(task_description="...") for task-specific guidance
+3. Reference this prompt in daily_checkin, sprint_start, and planning workflows
+
+**Mode Decision Tree:**
+
+**Task Type → Mode Selection:**
+- Multi-file refactoring → AGENT mode
+- Feature implementation → AGENT mode  
+- Code generation/scaffolding → AGENT mode
+- Questions and explanations → ASK mode
+- Quick fixes/single file → ASK mode
+- Code review → ASK mode
+- Manual editing → MANUAL mode (no AI assistance)
+
+**Session Patterns → Mode Inference:**
+- High tool frequency (>5/min) + multi-file → AGENT
+- Moderate frequency (1-3/min) + single file → ASK
+- Low frequency (<1/min) + direct edits → MANUAL
+
+**Integration Points:**
+- daily_checkin: Include mode selection guidance
+- sprint_start: Recommend mode for sprint tasks
+- planning: Suggest mode based on task breakdown
+- advisor consultations: Mode-aware advisor selection (MODE-003)
+
+**References:**
+- MODE-002: Session mode inference from tool patterns
+- MODE-003: Mode-aware advisor guidance
+- recommend_workflow_mode(): Task-based mode recommendation"""
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # CONTEXT MANAGEMENT PROMPT
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -936,6 +980,12 @@ PROMPTS = {
     "mode_suggestion": {
         "name": "Mode Suggestion (Agent vs Ask)",
         "description": MODE_SUGGESTION,
+        "category": "workflow",
+        "arguments": []
+    },
+    "mode_select": {
+        "name": "Mode-Aware Workflow Selection",
+        "description": MODE_SELECT,
         "category": "workflow",
         "arguments": []
     },

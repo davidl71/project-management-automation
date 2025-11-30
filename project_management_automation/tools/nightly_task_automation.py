@@ -416,7 +416,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         max_parallel_tasks: int = 10,
         priority_filter: Optional[str] = None,
         tag_filter: Optional[list[str]] = None,
-        dry_run: bool = False
+        dry_run: bool = False,
+        notify: bool = False
     ) -> dict[str, Any]:
         """
         Run nightly automation across parallel hosts.
@@ -609,6 +610,30 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         # ═══ MEMORY INTEGRATION: Save overall nightly results ═══
         if not dry_run:
             self._save_nightly_summary(results)
+        
+        # Send notification if requested
+        if notify and not dry_run:
+            try:
+                from ..interactive import message_complete_notification, is_available
+                
+                if is_available():
+                    moved_count = len(moved_to_review)
+                    assigned_count = len(assigned_tasks)
+                    approved_count = batch_approved_count
+                    
+                    message = (
+                        f"Nightly automation complete: "
+                        f"{assigned_count} tasks assigned, "
+                        f"{moved_count} moved to Review, "
+                        f"{approved_count} batch approved"
+                    )
+                    message_complete_notification("Exarp", message)
+            except ImportError:
+                pass  # interactive-mcp not available
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.debug(f"Notification failed: {e}")
 
         return results
 
@@ -650,7 +675,8 @@ def run_nightly_task_automation(
     max_parallel_tasks: int = 10,
     priority_filter: Optional[str] = None,
     tag_filter: Optional[list[str]] = None,
-    dry_run: bool = False
+    dry_run: bool = False,
+    notify: bool = False
 ) -> dict[str, Any]:
     """
     MCP Tool: Run nightly task automation across parallel hosts.
@@ -674,5 +700,6 @@ def run_nightly_task_automation(
         max_parallel_tasks=max_parallel_tasks,
         priority_filter=priority_filter,
         tag_filter=tag_filter,
-        dry_run=dry_run
+        dry_run=dry_run,
+        notify=notify
     )

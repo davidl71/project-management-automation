@@ -69,6 +69,7 @@ async def security_async(
     state: str = "open",
     include_dismissed: bool = False,
     ctx: Optional[Any] = None,
+    alert_critical: bool = False,
 ) -> dict[str, Any]:
     """
     Unified security analysis tool (async with progress).
@@ -87,7 +88,7 @@ async def security_async(
     """
     if action == "scan":
         from .dependency_security import scan_dependency_security_async
-        result = await scan_dependency_security_async(languages, config_path, ctx)
+        result = await scan_dependency_security_async(languages, config_path, ctx, alert_critical)
         return json.loads(result) if isinstance(result, str) else result
     elif action == "alerts":
         from .dependabot_integration import fetch_dependabot_alerts
@@ -110,6 +111,7 @@ def security(
     state: str = "open",
     include_dismissed: bool = False,
     ctx: Optional[Any] = None,
+    alert_critical: bool = False,
 ) -> dict[str, Any]:
     """
     Unified security analysis tool (sync wrapper).
@@ -136,7 +138,7 @@ def security(
 
     if in_async:
         raise RuntimeError("Use security_async() in async context, or call from sync code")
-    return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx))
+    return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
 
 
 def generate_config(
@@ -933,6 +935,7 @@ def task_workflow(
             filter_tag=filter_tag,
             task_ids=ids,
             dry_run=dry_run,
+            confirm=False,  # Can be added as parameter if needed
         )
         return json.loads(result) if isinstance(result, str) else result
 

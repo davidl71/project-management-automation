@@ -361,6 +361,7 @@ def consult_advisor(
     score: float = 50.0,
     context: str = "",
     log: bool = True,
+    session_mode: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     Consult an advisor and get wisdom.
@@ -372,6 +373,7 @@ def consult_advisor(
         score: Current score (affects wisdom selection)
         context: What you're working on
         log: Whether to log this consultation
+        session_mode: Inferred session mode (AGENT/ASK/MANUAL/UNKNOWN) for mode-aware guidance
 
     Returns:
         Consultation result with wisdom and advice
@@ -398,6 +400,37 @@ def consult_advisor(
         consultation_type = "random"
 
     advisor = advisor_info["advisor"]
+
+    # Mode-aware advisor selection and tone adjustment
+    if session_mode:
+        # Adjust advisor selection based on mode
+        mode_adjustments = {
+            "AGENT": {
+                "preferred_advisors": ["art_of_war", "tao_of_programming", "kybalion"],
+                "tone": "strategic",
+                "focus": "progress tracking and checkpoints",
+            },
+            "ASK": {
+                "preferred_advisors": ["confucius", "gracian", "stoic"],
+                "tone": "direct",
+                "focus": "quick answers and focused explanations",
+            },
+            "MANUAL": {
+                "preferred_advisors": ["tao_of_programming", "bible", "pistis_sophia"],
+                "tone": "observational",
+                "focus": "encouragement and reflection",
+            },
+        }
+        
+        mode_config = mode_adjustments.get(session_mode, {})
+        if mode_config and consultation_type == "random":
+            # Prefer mode-appropriate advisors for random consultations
+            preferred = mode_config.get("preferred_advisors", [])
+            available_preferred = [a for a in preferred if a in WISDOM_SOURCES]
+            if available_preferred:
+                import random
+                advisor = random.choice(available_preferred)
+                advisor_info = {"advisor": advisor, "rationale": f"Mode-aware selection for {session_mode}"}
 
     # Get wisdom from the advisor
     wisdom = get_wisdom(score, source=advisor, seed_date=False)
@@ -431,7 +464,17 @@ def consult_advisor(
         "quote_source": wisdom.get("source", ""),
         "encouragement": wisdom.get("encouragement", ""),
         "context": context,
+        "session_mode": session_mode,  # Include session mode in result
     }
+    
+    # Add mode-specific guidance hints
+    if session_mode:
+        mode_hints = {
+            "AGENT": "Focus on strategic checkpoints and progress tracking",
+            "ASK": "Provide direct answers and focused explanations",
+            "MANUAL": "Offer encouragement and observational wisdom",
+        }
+        result["mode_guidance"] = mode_hints.get(session_mode, "")
 
     # Log consultation
     if log:

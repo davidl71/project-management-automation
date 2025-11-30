@@ -91,7 +91,8 @@ def sprint_automation(
     priority_filter: Optional[str] = None,
     tag_filter: Optional[list[str]] = None,
     dry_run: bool = False,
-    output_path: Optional[str] = None
+    output_path: Optional[str] = None,
+    notify: bool = False
 ) -> str:
     """
     Systematically sprint through project processing all background-capable tasks.
@@ -183,6 +184,24 @@ def sprint_automation(
                 'memories_recalled': sprint_context.get('total_memories', 0),
                 'blockers_from_memory': sprint_context.get('blockers_mentioned', 0),
             }
+        
+        # Send notification if requested
+        if notify and not dry_run:
+            try:
+                from ..interactive import message_complete_notification, is_available
+                
+                if is_available():
+                    message = (
+                        f"Sprint automation complete: "
+                        f"{response_data.get('subtasks_extracted', 0)} subtasks extracted, "
+                        f"{response_data.get('tasks_processed', 0)} tasks processed, "
+                        f"{response_data.get('blockers_count', 0)} blockers identified"
+                    )
+                    message_complete_notification("Exarp", message)
+            except ImportError:
+                pass  # interactive-mcp not available
+            except Exception as e:
+                logger.debug(f"Notification failed: {e}")
 
         return json.dumps(format_success_response(response_data), indent=2)
 

@@ -528,7 +528,14 @@
       ],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2.0,
-      "lastModified": "2025-11-30T00:17:31.852500"
+      "lastModified": "2025-11-30T00:17:31.852500",
+      "dependencies": [
+        "RESEARCH-c162d40f-A1",
+        "RESEARCH-c162d40f-A2",
+        "RESEARCH-c162d40f-A3",
+        "RESEARCH-c162d40f-A4",
+        "RESEARCH-c162d40f-A5"
+      ]
     },
     {
       "id": "RESEARCH-ca28a3e8",
@@ -1031,7 +1038,7 @@
       "id": "MODE-003",
       "name": "Implement: Mode-aware advisor guidance",
       "long_description": "Modify advisor consultations to provide mode-specific guidance.\n\nMode-specific advice:\n- AGENT mode: Strategic guidance, checkpoint reminders, progress tracking\n- ASK mode: Direct answers, focused explanations, quick references\n- MANUAL mode: Observational wisdom, encouragement\n\nChanges needed:\n1. Pass inferred mode to consult_advisor()\n2. Select different quote pools per mode\n3. Adjust encouragement tone per mode\n4. Add mode-specific prompts to advisors\n\nDependencies: MODE-002 mode inference",
-      "status": "todo",
+      "status": "completed",
       "priority": "low",
       "tags": [
         "implementation",
@@ -1040,17 +1047,25 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132886+00:00",
-      "lastModified": "2025-11-30T00:17:31.852533",
+      "lastModified": "2025-11-30T06:58:08.925614Z",
       "dependencies": [
         "MODE-002"
       ],
-      "estimatedHours": 2.0
+      "estimatedHours": 2.0,
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent B for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T06:58:08.925614Z"
     },
     {
       "id": "MODE-004",
       "name": "Implement: Session mode resource (automation://session/mode)",
       "long_description": "Create MCP resource to expose current inferred session mode.\n\nResource: automation://session/mode\n\nReturns:\n{\n  \"inferred_mode\": \"AGENT|ASK|MANUAL|UNKNOWN\",\n  \"confidence\": 0.0-1.0,\n  \"signals\": {\n    \"tool_calls\": 15,\n    \"files_edited\": 3,\n    \"session_duration_sec\": 300,\n    \"multi_file_edits\": true\n  },\n  \"last_updated\": \"ISO timestamp\"\n}\n\nDependencies: MODE-002 mode inference",
-      "status": "todo",
+      "status": "completed",
       "priority": "low",
       "tags": [
         "implementation",
@@ -1059,11 +1074,19 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132891+00:00",
-      "lastModified": "2025-11-30T00:17:31.852535",
+      "lastModified": "2025-11-30T07:00:28.959536Z",
       "dependencies": [
         "MODE-002"
       ],
-      "estimatedHours": 2.0
+      "estimatedHours": 2.0,
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent B for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
     },
     {
       "id": "MODE-005",
@@ -1089,7 +1112,7 @@
       "id": "MODE-006",
       "name": "Add prompt template: mode-aware workflow selection",
       "long_description": "Create prompt template that helps users select appropriate mode.\n\nPrompt: mode_select\n\nContent:\n- Explains AGENT/ASK/Manual modes\n- Provides decision tree based on task type\n- References recommend_workflow_mode() logic\n- Includes examples for each mode\n\nIntegration with existing prompts:\n- Reference from persona workflows\n- Include in daily_checkin prompt\n- Add to sprint_start prompt",
-      "status": "todo",
+      "status": "completed",
       "priority": "low",
       "tags": [
         "implementation",
@@ -1098,9 +1121,17 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132901+00:00",
-      "lastModified": "2025-11-30T00:17:31.852538",
+      "lastModified": "2025-11-30T06:58:08.925614Z",
       "dependencies": [],
-      "estimatedHours": 2.0
+      "estimatedHours": 2.0,
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent B for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T06:58:08.925614Z"
     },
     {
       "id": "AUTO-20251127013512-665919",
@@ -2214,7 +2245,12 @@
       "updated_at": "2025-11-29T23:49:22.972062",
       "comments": [],
       "estimatedHours": 2.0,
-      "lastModified": "2025-11-30T00:17:31.852541"
+      "lastModified": "2025-11-30T00:17:31.852541",
+      "dependencies": [
+        "EXT-01-A1",
+        "EXT-01-A2",
+        "EXT-01-A3"
+      ]
     },
     {
       "id": "T-20251129-EXT-02",
@@ -2234,7 +2270,13 @@
       "updated_at": "2025-11-29T23:49:22.972079",
       "comments": [],
       "estimatedHours": 2.0,
-      "lastModified": "2025-11-30T00:17:31.852543"
+      "lastModified": "2025-11-30T00:17:31.852543",
+      "dependencies": [
+        "EXT-02-A1",
+        "EXT-02-A2",
+        "EXT-02-A3",
+        "EXT-02-A4"
+      ]
     },
     {
       "id": "T-20251129-EXT-03",
@@ -2254,7 +2296,11 @@
       "updated_at": "2025-11-29T23:49:22.972091",
       "comments": [],
       "estimatedHours": 2.0,
-      "lastModified": "2025-11-30T00:17:31.852545"
+      "lastModified": "2025-11-30T00:17:31.852545",
+      "dependencies": [
+        "EXT-03-A1",
+        "EXT-03-A2"
+      ]
     },
     {
       "id": "T-20251129-PROJ-01",
@@ -2615,6 +2661,457 @@
         "MODE-002-C1"
       ],
       "estimatedHours": 0.25
+    },
+    {
+      "id": "AUTO-20251130085545",
+      "name": "Automation: Automation Opportunity Finder",
+      "content": "Automated Automation Opportunity Finder execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "automation-opportunity-finder"
+      ],
+      "created": "2025-11-30T08:55:45.711216",
+      "lastModified": "2025-11-30T08:55:45.734999",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "AUTO-20251130085545-C-1",
+          "todoId": "AUTO-20251130085545",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Found 0 automation opportunities:**\n- 0 high-priority (score \u2265 8)\n- 0 medium-priority (score 5-7)\n- 0 low-priority (score < 5)\n\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.\n\n**Key Findings:**\n{\"existing_automations\":0,\"opportunities_found\":0,\"opportunities\":[],\"high_priority\":[],\"medium_priority\":[],\"low_priority\":[]}",
+          "created": "2025-11-30T08:55:45.729326",
+          "lastModified": "2025-11-30T08:55:45.729336"
+        }
+      ]
+    },
+    {
+      "id": "EXT-01-A1",
+      "name": "EXT-01-A1: Set up TypeScript extension project structure",
+      "long_description": "Create package.json, tsconfig.json, and basic extension structure for Cursor extension.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "setup"
+      ],
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T06:58:08.925614Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T06:58:08.925614Z"
+    },
+    {
+      "id": "EXT-01-A2",
+      "name": "EXT-01-A2: Implement status bar item registration",
+      "long_description": "Register status bar item in extension activation, connect to Todo2 state reader.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "status-bar"
+      ],
+      "dependencies": [
+        "EXT-01-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 1.0,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-01-A3",
+      "name": "EXT-01-A3: Implement Todo2 state reader utility",
+      "long_description": "Create utility function to read and parse .todo2/state.todo2.json, count pending tasks.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "todo2"
+      ],
+      "dependencies": [
+        "EXT-01-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-02-A1",
+      "name": "EXT-02-A1: Define command registration structure",
+      "long_description": "Set up command registration in package.json and extension.ts for exarp.createTask, exarp.listTasks, exarp.completeTask.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "commands"
+      ],
+      "dependencies": [
+        "EXT-01-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-02-A2",
+      "name": "EXT-02-A2: Implement exarp.createTask command",
+      "long_description": "Create command handler that calls MCP server to create new task, updates UI.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "commands",
+        "mcp"
+      ],
+      "dependencies": [
+        "EXT-02-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 1.0,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-02-A3",
+      "name": "EXT-02-A3: Implement exarp.listTasks command",
+      "long_description": "Create command handler that displays task list in quick pick or output channel.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "commands",
+        "mcp"
+      ],
+      "dependencies": [
+        "EXT-02-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 1.0,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-02-A4",
+      "name": "EXT-02-A4: Implement exarp.completeTask command",
+      "long_description": "Create command handler that marks task as completed via MCP, updates UI.",
+      "status": "completed",
+      "priority": "high",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "commands",
+        "mcp"
+      ],
+      "dependencies": [
+        "EXT-02-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 1.0,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-03-A1",
+      "name": "EXT-03-A1: Set up file system watcher for .todo2 directory",
+      "long_description": "Use vscode.workspace.createFileSystemWatcher to watch .todo2/state.todo2.json changes.",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "file-watcher"
+      ],
+      "dependencies": [
+        "EXT-01-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "EXT-03-A2",
+      "name": "EXT-03-A2: Implement state change handler",
+      "long_description": "Create handler that refreshes status bar and UI when Todo2 state file changes.",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "extension",
+        "typescript",
+        "cursor",
+        "phase1",
+        "file-watcher"
+      ],
+      "dependencies": [
+        "EXT-03-A1",
+        "EXT-01-A2",
+        "EXT-01-A3"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 1.0,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent A for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "RESEARCH-c162d40f-A1",
+      "name": "RESEARCH-A1: Create exarp.interactive module with helper functions",
+      "long_description": "Create project_management_automation/interactive.py module with wrapper functions for interactive-mcp tools (request_user_input, message_complete_notification, start_intensive_chat). Include optional dependency detection.",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "research",
+        "mcp",
+        "interactive",
+        "enhancement",
+        "ux"
+      ],
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 1.0,
+      "lastModified": "2025-11-30T06:58:08.925614Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent C for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T06:58:08.925614Z"
+    },
+    {
+      "id": "RESEARCH-c162d40f-A2",
+      "name": "RESEARCH-A2: Add confirm parameter to batch_approve_tasks",
+      "long_description": "Modify batch_approve_tasks tool to use interactive.request_user_input when confirm=True. Show task count and get user confirmation before proceeding.",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "research",
+        "mcp",
+        "interactive",
+        "enhancement",
+        "ux",
+        "batch"
+      ],
+      "dependencies": [
+        "RESEARCH-c162d40f-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent C for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "RESEARCH-c162d40f-A3",
+      "name": "RESEARCH-A3: Add notify parameter to automation tools",
+      "long_description": "Add notify parameter to nightly_task_automation and sprint_automation. Send OS notifications when notify=True using interactive.message_complete_notification.",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "research",
+        "mcp",
+        "interactive",
+        "enhancement",
+        "ux",
+        "automation"
+      ],
+      "dependencies": [
+        "RESEARCH-c162d40f-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent C for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "RESEARCH-c162d40f-A4",
+      "name": "RESEARCH-A4: Add alert_critical parameter to security scan",
+      "long_description": "Modify scan_dependency_security to send critical alerts via interactive.message_complete_notification when alert_critical=True and critical vulnerabilities found.",
+      "status": "completed",
+      "priority": "medium",
+      "tags": [
+        "research",
+        "mcp",
+        "interactive",
+        "enhancement",
+        "ux",
+        "security"
+      ],
+      "dependencies": [
+        "RESEARCH-c162d40f-A1"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent C for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
+    },
+    {
+      "id": "RESEARCH-c162d40f-A5",
+      "name": "RESEARCH-A5: Document interactive-mcp integration",
+      "long_description": "Update MCP_SERVERS.md with interactive-mcp integration details, usage examples, and fallback behavior when unavailable.",
+      "status": "completed",
+      "priority": "low",
+      "tags": [
+        "research",
+        "mcp",
+        "interactive",
+        "enhancement",
+        "ux",
+        "documentation"
+      ],
+      "dependencies": [
+        "RESEARCH-c162d40f-A2",
+        "RESEARCH-c162d40f-A3",
+        "RESEARCH-c162d40f-A4"
+      ],
+      "project_id": "davidl71/project-management-automation",
+      "created_at": "2025-11-30T06:56:27.642156Z",
+      "updated_at": "2025-11-30T06:56:27.642156Z",
+      "estimatedHours": 0.5,
+      "lastModified": "2025-11-30T07:00:28.959536Z",
+      "comments": [
+        {
+          "type": "note",
+          "content": "Assigned to Agent C for parallel execution",
+          "created_at": "2025-11-30T06:56:30.822051Z"
+        }
+      ],
+      "completedAt": "2025-11-30T07:00:28.959536Z"
     }
   ],
   "lastModified": "2025-11-29T23:50:58.118162",
