@@ -4,14 +4,14 @@
       "id": "AUTO-20251126050522",
       "name": "Automation: Sprint Automation",
       "content": "Automated Sprint Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "sprint-automation"
       ],
       "created": "2025-11-26T05:05:22.158567",
-      "lastModified": "2025-11-26T05:05:28.867113",
+      "lastModified": "2025-11-30T22:43:04.717270+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -29,14 +29,14 @@
       "id": "AUTO-20251126230758",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-26T23:07:58.460278",
-      "lastModified": "2025-11-26T23:07:59.831067",
+      "lastModified": "2025-11-30T22:43:04.717695+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -138,14 +138,14 @@
       "id": "AUTO-20251126230757",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-alignment-analysis"
       ],
       "created": "2025-11-26T23:07:57.600384",
-      "lastModified": "2025-11-26T23:07:57.766047",
+      "lastModified": "2025-11-30T22:43:04.717705+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -162,14 +162,14 @@
       "id": "AUTO-20251126230744",
       "name": "Automation: Todo2 Duplicate Detection",
       "content": "Automated Todo2 Duplicate Detection execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-duplicate-detection"
       ],
       "created": "2025-11-26T23:07:44.375161",
-      "lastModified": "2025-11-26T23:07:55.902911",
+      "lastModified": "2025-11-30T22:43:04.717711+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -186,7 +186,7 @@
       "id": "AUTO-20251126032540",
       "name": "Automation: Automation Opportunity Finder",
       "content": "Automated Automation Opportunity Finder execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
@@ -195,7 +195,7 @@
         "automation-finder"
       ],
       "created": "2025-11-26T03:25:40.179056",
-      "lastModified": "2025-11-26T03:49:23.485417",
+      "lastModified": "2025-11-30T22:43:04.717715+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -281,14 +281,14 @@
       "id": "AUTO-20251126110118",
       "name": "Automation: Test Runner",
       "content": "Automated Test Runner execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "test-runner"
       ],
       "created": "2025-11-26T11:01:18.383265",
-      "lastModified": "2025-11-26T11:01:18.630571",
+      "lastModified": "2025-11-30T22:43:04.717720+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -306,14 +306,14 @@
       "id": "AUTO-20251126032540-2",
       "name": "Automation: Test Coverage Analyzer",
       "content": "Automated Test Coverage Analyzer execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "coverage-analyzer"
       ],
       "created": "2025-11-26T03:25:40.938139",
-      "lastModified": "2025-11-30T18:46:55.354751+00:00",
+      "lastModified": "2025-11-30T22:43:04.717724+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -335,7 +335,7 @@
       "id": "T-20251126034108-60",
       "name": "Update stale documentation",
       "content": "Update 15 stale documents (>90 days old)",
-      "status": "todo",
+      "status": "Todo",
       "priority": "medium",
       "tags": [
         "update",
@@ -345,7 +345,7 @@
         "AUTO-20251126032538"
       ],
       "created": "2025-11-26T03:41:08.033223",
-      "lastModified": "2025-11-26T03:49:23.485707",
+      "lastModified": "2025-11-30T22:43:04.717728+00:00",
       "comments": [
         {
           "type": "note",
@@ -478,14 +478,14 @@
       "id": "AUTO-20251126143529",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "dependency-security-scan"
       ],
       "created": "2025-11-26T14:35:29.783173",
-      "lastModified": "2025-11-26T14:35:29.985016",
+      "lastModified": "2025-11-30T22:43:04.717731+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -503,14 +503,14 @@
       "id": "AUTO-20251126035818",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "tool-hints"
       ],
       "created": "2025-11-26T03:58:18.778058",
-      "lastModified": "2025-11-26T03:58:18.848258",
+      "lastModified": "2025-11-30T22:43:04.717735+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -528,7 +528,7 @@
       "id": "T-20251126035735-50",
       "name": "Review skipped files for manual hint addition",
       "content": "17 files were skipped - review for manual hint addition if needed",
-      "status": "todo",
+      "status": "Todo",
       "priority": "low",
       "tags": [
         "docs",
@@ -538,14 +538,14 @@
         "AUTO-20251126035735"
       ],
       "created": "2025-11-26T03:57:35.910168",
-      "lastModified": "2025-11-26T03:57:35.910172",
+      "lastModified": "2025-11-30T22:43:04.717739+00:00",
       "project_id": "davidl71/project-management-automation"
     },
     {
       "id": "T-20251126040001-58",
       "name": "Review Todo2 tasks not in shared TODO",
       "content": "Review 58 Todo2 tasks that are not in shared TODO table",
-      "status": "todo",
+      "status": "Todo",
       "priority": "low",
       "tags": [
         "todo-sync",
@@ -555,21 +555,21 @@
         "AUTO-20251126040001"
       ],
       "created": "2025-11-26T04:00:01.413812",
-      "lastModified": "2025-11-26T04:00:01.413816",
+      "lastModified": "2025-11-30T22:43:04.717742+00:00",
       "project_id": "davidl71/project-management-automation"
     },
     {
       "id": "AUTO-20251126230004",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-26T23:00:04.276792",
-      "lastModified": "2025-11-26T23:00:04.400906",
+      "lastModified": "2025-11-30T22:43:04.717746+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -867,14 +867,14 @@
       "id": "AUTO-20251126231235-891865",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-26T23:12:35.891906",
-      "lastModified": "2025-11-26T23:12:38.150523",
+      "lastModified": "2025-11-30T22:43:04.717757+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -891,14 +891,14 @@
       "id": "AUTO-20251126231440-138792",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-26T23:14:40.138778",
-      "lastModified": "2025-11-26T23:14:41.198532",
+      "lastModified": "2025-11-30T22:43:04.717761+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -915,14 +915,14 @@
       "id": "AUTO-20251126232018",
       "name": "Automation: Test Runner",
       "content": "Automated Test Runner execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "test-runner"
       ],
       "created": "2025-11-26T23:20:18.095065",
-      "lastModified": "2025-11-26T23:20:18.384190",
+      "lastModified": "2025-11-30T22:43:04.717765+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -939,14 +939,14 @@
       "id": "AUTO-20251126232340-628552",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "dependency-security-scan"
       ],
       "created": "2025-11-26T23:23:40.628629",
-      "lastModified": "2025-11-26T23:23:40.833289",
+      "lastModified": "2025-11-30T22:43:04.717768+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -963,14 +963,14 @@
       "id": "AUTO-20251126232340-851211",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "external-tool-hints-automation"
       ],
       "created": "2025-11-26T23:23:40.851404",
-      "lastModified": "2025-11-26T23:23:41.410342",
+      "lastModified": "2025-11-30T22:43:04.717772+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -987,14 +987,14 @@
       "id": "AUTO-20251126232524-582483",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "dependency-security-scan"
       ],
       "created": "2025-11-26T23:25:24.582507",
-      "lastModified": "2025-11-26T23:25:24.679970",
+      "lastModified": "2025-11-30T22:43:04.717776+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1011,14 +1011,14 @@
       "id": "AUTO-20251126232524-697580",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "external-tool-hints-automation"
       ],
       "created": "2025-11-26T23:25:24.697648",
-      "lastModified": "2025-11-26T23:25:24.997461",
+      "lastModified": "2025-11-30T22:43:04.717779+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1035,14 +1035,14 @@
       "id": "AUTO-20251126232550-782561",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-26T23:25:50.782571",
-      "lastModified": "2025-11-26T23:25:52.901024",
+      "lastModified": "2025-11-30T22:43:04.717783+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1059,14 +1059,14 @@
       "id": "AUTO-20251126232739",
       "name": "Automation: Todo2 Duplicate Detection",
       "content": "Automated Todo2 Duplicate Detection execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-duplicate-detection"
       ],
       "created": "2025-11-26T23:27:39.654866",
-      "lastModified": "2025-11-26T23:27:40.422831",
+      "lastModified": "2025-11-30T22:43:04.717787+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1083,14 +1083,14 @@
       "id": "AUTO-20251127000005-270015",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-27T00:00:05.270128",
-      "lastModified": "2025-11-27T00:00:05.286549",
+      "lastModified": "2025-11-30T22:43:04.717790+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1107,14 +1107,14 @@
       "id": "AUTO-20251127003154-301126",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-alignment-analysis"
       ],
       "created": "2025-11-27T00:31:54.301184",
-      "lastModified": "2025-11-27T00:31:55.182788",
+      "lastModified": "2025-11-30T22:43:04.717794+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1131,14 +1131,14 @@
       "id": "AUTO-20251127010009-744822",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-27T01:00:09.744871",
-      "lastModified": "2025-11-27T01:00:09.764744",
+      "lastModified": "2025-11-30T22:43:04.717797+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1259,14 +1259,14 @@
       "id": "AUTO-20251127013512-665919",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:35:12.665964",
-      "lastModified": "2025-11-27T01:35:14.555919",
+      "lastModified": "2025-11-30T22:43:04.717808+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1283,14 +1283,14 @@
       "id": "AUTO-20251127013531-404869",
       "name": "Automation: Todo2 Duplicate Detection",
       "content": "Automated Todo2 Duplicate Detection execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-duplicate-detection"
       ],
       "created": "2025-11-27T01:35:31.404888",
-      "lastModified": "2025-11-27T01:35:32.338621",
+      "lastModified": "2025-11-30T22:43:04.717812+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1307,14 +1307,14 @@
       "id": "AUTO-20251127013640-494757",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:36:40.494776",
-      "lastModified": "2025-11-27T01:36:41.188692",
+      "lastModified": "2025-11-30T22:43:04.717816+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1331,14 +1331,14 @@
       "id": "AUTO-20251127013906-061556",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:39:06.061575",
-      "lastModified": "2025-11-27T01:39:07.201562",
+      "lastModified": "2025-11-30T22:43:04.717819+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1355,14 +1355,14 @@
       "id": "AUTO-20251127013908-579024",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:39:08.579120",
-      "lastModified": "2025-11-27T01:39:08.666555",
+      "lastModified": "2025-11-30T22:43:04.717823+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1379,14 +1379,14 @@
       "id": "AUTO-20251127013959-472479",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:39:59.472537",
-      "lastModified": "2025-11-27T01:40:02.397784",
+      "lastModified": "2025-11-30T22:43:04.717826+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1403,14 +1403,14 @@
       "id": "AUTO-20251127014242-435884",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:42:42.435906",
-      "lastModified": "2025-11-27T01:42:42.512520",
+      "lastModified": "2025-11-30T22:43:04.717830+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1461,14 +1461,14 @@
       "id": "AUTO-20251127015017-769047",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T01:50:17.769104",
-      "lastModified": "2025-11-27T01:50:17.842043",
+      "lastModified": "2025-11-30T22:43:04.717835+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1485,14 +1485,14 @@
       "id": "AUTO-20251127015719-113742",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "dependency-security-scan"
       ],
       "created": "2025-11-27T01:57:19.113851",
-      "lastModified": "2025-11-27T01:57:19.242676",
+      "lastModified": "2025-11-30T22:43:04.717839+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1509,14 +1509,14 @@
       "id": "AUTO-20251127015719-639027",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "external-tool-hints-automation"
       ],
       "created": "2025-11-27T01:57:19.639143",
-      "lastModified": "2025-11-27T01:57:20.336654",
+      "lastModified": "2025-11-30T22:43:04.717843+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1533,14 +1533,14 @@
       "id": "AUTO-20251127015956-796457",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "dependency-security-scan"
       ],
       "created": "2025-11-27T01:59:56.796583",
-      "lastModified": "2025-11-27T01:59:56.883100",
+      "lastModified": "2025-11-30T22:43:04.717847+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1557,14 +1557,14 @@
       "id": "AUTO-20251127015956-911469",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "external-tool-hints-automation"
       ],
       "created": "2025-11-27T01:59:56.911466",
-      "lastModified": "2025-11-27T01:59:57.165246",
+      "lastModified": "2025-11-30T22:43:04.717851+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1581,14 +1581,14 @@
       "id": "AUTO-20251127020005-427583",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-27T02:00:05.427583",
-      "lastModified": "2025-11-27T02:00:05.440370",
+      "lastModified": "2025-11-30T22:43:04.717854+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1605,14 +1605,14 @@
       "id": "AUTO-20251127020021-260190",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:00:21.260159",
-      "lastModified": "2025-11-27T02:00:21.337933",
+      "lastModified": "2025-11-30T22:43:04.717858+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1629,14 +1629,14 @@
       "id": "AUTO-20251127020935-464188",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "dependency-security-scan"
       ],
       "created": "2025-11-27T02:09:35.464170",
-      "lastModified": "2025-11-27T02:09:35.544264",
+      "lastModified": "2025-11-30T22:43:04.717862+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1653,14 +1653,14 @@
       "id": "AUTO-20251127020935-564980",
       "name": "Automation: External Tool Hints Automation",
       "content": "Automated External Tool Hints Automation execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "external-tool-hints-automation"
       ],
       "created": "2025-11-27T02:09:35.565017",
-      "lastModified": "2025-11-27T02:09:35.803559",
+      "lastModified": "2025-11-30T22:43:04.717866+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1677,14 +1677,14 @@
       "id": "AUTO-20251127020958-922948",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:09:58.923186",
-      "lastModified": "2025-11-27T02:09:59.004922",
+      "lastModified": "2025-11-30T22:43:04.717870+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1701,14 +1701,14 @@
       "id": "AUTO-20251127023639-230031",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:36:39.230085",
-      "lastModified": "2025-11-27T02:36:41.087423",
+      "lastModified": "2025-11-30T22:43:04.717873+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1725,14 +1725,14 @@
       "id": "AUTO-20251127024131-851991",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:41:31.851943",
-      "lastModified": "2025-11-27T02:41:32.486523",
+      "lastModified": "2025-11-30T22:43:04.717877+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1749,14 +1749,14 @@
       "id": "AUTO-20251127024525-189029",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:45:25.189086",
-      "lastModified": "2025-11-27T02:45:27.966231",
+      "lastModified": "2025-11-30T22:43:04.717880+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1773,14 +1773,14 @@
       "id": "AUTO-20251127025105-348290",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:51:05.348328",
-      "lastModified": "2025-11-27T02:51:05.910341",
+      "lastModified": "2025-11-30T22:43:04.717884+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1797,14 +1797,14 @@
       "id": "AUTO-20251127025425-799468",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-alignment-analysis"
       ],
       "created": "2025-11-27T02:54:25.799514",
-      "lastModified": "2025-11-27T02:54:26.141424",
+      "lastModified": "2025-11-30T22:43:04.717887+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1821,14 +1821,14 @@
       "id": "AUTO-20251127025436-577552",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-alignment-analysis"
       ],
       "created": "2025-11-27T02:54:36.577590",
-      "lastModified": "2025-11-27T02:54:36.867260",
+      "lastModified": "2025-11-30T22:43:04.717891+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1845,14 +1845,14 @@
       "id": "AUTO-20251127025848-779244",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T02:58:48.779316",
-      "lastModified": "2025-11-27T02:58:50.241005",
+      "lastModified": "2025-11-30T22:43:04.717898+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1869,14 +1869,14 @@
       "id": "AUTO-20251127030006-855363",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-27T03:00:06.855434",
-      "lastModified": "2025-11-27T03:00:06.872874",
+      "lastModified": "2025-11-30T22:43:04.717902+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1893,14 +1893,14 @@
       "id": "AUTO-20251127030116-424167",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T03:01:16.424196",
-      "lastModified": "2025-11-27T03:01:17.487079",
+      "lastModified": "2025-11-30T22:43:04.717906+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1917,14 +1917,14 @@
       "id": "AUTO-20251127030759-433391",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T03:07:59.433424",
-      "lastModified": "2025-11-27T03:08:00.299744",
+      "lastModified": "2025-11-30T22:43:04.717910+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1941,14 +1941,14 @@
       "id": "AUTO-20251127032123-173978",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T03:21:23.174037",
-      "lastModified": "2025-11-27T03:21:23.812252",
+      "lastModified": "2025-11-30T22:43:04.717913+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1965,14 +1965,14 @@
       "id": "AUTO-20251127032821-956425",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T03:28:21.956485",
-      "lastModified": "2025-11-27T03:28:23.032962",
+      "lastModified": "2025-11-30T22:43:04.717917+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -1989,14 +1989,14 @@
       "id": "AUTO-20251127032859-872081",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-27T03:28:59.872112",
-      "lastModified": "2025-11-27T03:29:02.409782",
+      "lastModified": "2025-11-30T22:43:04.717920+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -2096,14 +2096,14 @@
       "id": "AUTO-20251130094704-741558",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T09:47:04.741634",
-      "lastModified": "2025-11-30T09:47:05.441565",
+      "lastModified": "2025-11-30T22:43:04.717927+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2121,14 +2121,14 @@
       "id": "AUTO-20251130094921-641349",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T09:49:21.641374",
-      "lastModified": "2025-11-30T09:49:22.335112",
+      "lastModified": "2025-11-30T22:43:04.717930+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2146,14 +2146,14 @@
       "id": "AUTO-20251130095124-440419",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "todo2-alignment-analysis"
       ],
       "created": "2025-11-30T09:51:24.440568",
-      "lastModified": "2025-11-30T09:51:25.188705",
+      "lastModified": "2025-11-30T22:43:04.717934+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2171,14 +2171,14 @@
       "id": "AUTO-20251130095145-015511",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T09:51:45.015586",
-      "lastModified": "2025-11-30T09:51:45.715126",
+      "lastModified": "2025-11-30T22:43:04.717938+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2196,14 +2196,14 @@
       "id": "AUTO-20251130100005-080437",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T10:00:05.080553",
-      "lastModified": "2025-11-30T10:00:05.113631",
+      "lastModified": "2025-11-30T22:43:04.717942+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2221,14 +2221,14 @@
       "id": "AUTO-20251130100517-919991",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T10:05:17.919980",
-      "lastModified": "2025-11-30T10:05:18.958406",
+      "lastModified": "2025-11-30T22:43:04.717945+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2246,14 +2246,14 @@
       "id": "AUTO-20251130103433-514031",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T10:34:33.514356",
-      "lastModified": "2025-11-30T10:34:34.303609",
+      "lastModified": "2025-11-30T22:43:04.717951+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2271,14 +2271,14 @@
       "id": "AUTO-20251130103611",
       "name": "Automation: Test Runner",
       "content": "Automated Test Runner execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "test-runner"
       ],
       "created": "2025-11-30T10:36:11.172552",
-      "lastModified": "2025-11-30T10:36:11.414965",
+      "lastModified": "2025-11-30T22:43:04.717955+00:00",
       "dependencies": [],
       "comments": [
         {
@@ -2295,14 +2295,14 @@
       "id": "AUTO-20251130110042-206630",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T11:00:42.366768",
-      "lastModified": "2025-11-30T11:00:42.413589",
+      "lastModified": "2025-11-30T22:43:04.717959+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2320,14 +2320,14 @@
       "id": "AUTO-20251130120109-763782",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T12:01:09.764458",
-      "lastModified": "2025-11-30T12:01:09.822953",
+      "lastModified": "2025-11-30T22:43:04.717963+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2345,14 +2345,14 @@
       "id": "AUTO-20251130130200-146151",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T13:02:00.367835",
-      "lastModified": "2025-11-30T13:02:00.397015",
+      "lastModified": "2025-11-30T22:43:04.717967+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2370,14 +2370,14 @@
       "id": "AUTO-20251130140143-205810",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T14:01:43.400380",
-      "lastModified": "2025-11-30T14:01:43.425938",
+      "lastModified": "2025-11-30T22:43:04.717971+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2395,14 +2395,14 @@
       "id": "AUTO-20251130180259-405027",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T18:02:59.405105",
-      "lastModified": "2025-11-30T18:02:59.428209",
+      "lastModified": "2025-11-30T22:43:04.717974+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2420,14 +2420,14 @@
       "id": "AUTO-20251130190005-902083",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T19:00:05.902180",
-      "lastModified": "2025-11-30T19:00:05.926143",
+      "lastModified": "2025-11-30T22:43:04.717978+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2445,14 +2445,14 @@
       "id": "AUTO-20251130200005-689431",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T20:00:05.689516",
-      "lastModified": "2025-11-30T20:00:05.712131",
+      "lastModified": "2025-11-30T22:43:04.717981+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2470,14 +2470,14 @@
       "id": "AUTO-20251130210005-607370",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T21:00:05.607373",
-      "lastModified": "2025-11-30T21:00:05.629949",
+      "lastModified": "2025-11-30T22:43:04.717985+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2495,14 +2495,14 @@
       "id": "AUTO-20251130220005-127132",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T22:00:05.127209",
-      "lastModified": "2025-11-30T22:00:05.150428",
+      "lastModified": "2025-11-30T22:43:04.717988+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2520,14 +2520,14 @@
       "id": "AUTO-20251130230005-051458",
       "name": "Automation: Shared TODO Table Synchronization",
       "content": "Automated Shared TODO Table Synchronization execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "shared-todo-table-synchronization"
       ],
       "created": "2025-11-30T23:00:05.051501",
-      "lastModified": "2025-11-30T23:00:05.074800",
+      "lastModified": "2025-11-30T22:43:04.717992+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2545,14 +2545,14 @@
       "id": "AUTO-20251130234501-299425",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T23:45:01.299495",
-      "lastModified": "2025-11-30T23:45:02.669540",
+      "lastModified": "2025-11-30T22:43:04.717995+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2570,14 +2570,14 @@
       "id": "AUTO-20251130234543-897437",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T23:45:43.897493",
-      "lastModified": "2025-11-30T23:45:44.651136",
+      "lastModified": "2025-11-30T22:43:04.717999+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2595,14 +2595,14 @@
       "id": "AUTO-20251130234611-089754",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-11-30T23:46:11.089789",
-      "lastModified": "2025-11-30T23:46:11.889362",
+      "lastModified": "2025-11-30T22:43:04.718002+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2620,7 +2620,7 @@
       "id": "GIT-20251130235805-001",
       "name": "Create unit tests for Git-inspired features",
       "content": "Create comprehensive unit tests for all Git-inspired task management features including commit tracking, branch utilities, task diff, git graph visualization, and branch merging.",
-      "status": "todo",
+      "status": "Todo",
       "priority": "high",
       "tags": [
         "testing",
@@ -2629,7 +2629,7 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T23:58:05.086304",
-      "lastModified": "2025-11-30T23:58:05.086309",
+      "lastModified": "2025-11-30T22:43:04.718006+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation"
     },
@@ -2637,7 +2637,7 @@
       "id": "GIT-20251130235805-002",
       "name": "Integrate Git-inspired tools into MCP server",
       "content": "Add Git-inspired task management tools to the MCP server (server.py) so they can be used by AI assistants. Register tools for commit tracking, branch management, task diff, visualization, and merging.",
-      "status": "todo",
+      "status": "Todo",
       "priority": "high",
       "tags": [
         "integration",
@@ -2646,7 +2646,7 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T23:58:05.086320",
-      "lastModified": "2025-11-30T23:58:05.086322",
+      "lastModified": "2025-11-30T22:43:04.718009+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation"
     },
@@ -2654,7 +2654,7 @@
       "id": "GIT-20251130235805-003",
       "name": "Add examples and documentation for Git-inspired features",
       "content": "Create additional usage examples, integration guides, and comprehensive documentation for Git-inspired features. Include code examples, workflow diagrams, and best practices.",
-      "status": "todo",
+      "status": "Todo",
       "priority": "medium",
       "tags": [
         "documentation",
@@ -2663,7 +2663,7 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T23:58:05.086330",
-      "lastModified": "2025-11-30T23:58:05.086331",
+      "lastModified": "2025-11-30T22:43:04.718013+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation"
     },
@@ -2671,14 +2671,14 @@
       "id": "AUTO-20251201001427-132964",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-12-01T00:14:27.133038",
-      "lastModified": "2025-12-01T00:14:28.631021",
+      "lastModified": "2025-11-30T22:43:04.718017+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2696,14 +2696,14 @@
       "id": "AUTO-20251201001535-964270",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-12-01T00:15:35.964342",
-      "lastModified": "2025-12-01T00:15:36.551229",
+      "lastModified": "2025-11-30T22:43:04.718020+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2721,14 +2721,14 @@
       "id": "AUTO-20251201001634-913786",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-12-01T00:16:34.913776",
-      "lastModified": "2025-12-01T00:16:35.815980",
+      "lastModified": "2025-11-30T22:43:04.718024+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2746,14 +2746,14 @@
       "id": "AUTO-20251201001647-163816",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
-      "status": "done",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
         "documentation-health-analysis"
       ],
       "created": "2025-12-01T00:16:47.163947",
-      "lastModified": "2025-12-01T00:16:48.239853",
+      "lastModified": "2025-11-30T22:43:04.718027+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -2771,7 +2771,7 @@
       "id": "DOC-20251201001656-001",
       "name": "Fix broken documentation links",
       "content": "All 3 broken internal links have been fixed: removed EXARP_PWA_ENHANCEMENT_STRATEGY.md reference, removed COORDINATION.md reference, updated SESSION_HANDOFF.md reference.",
-      "status": "completed",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "documentation",
@@ -2780,7 +2780,7 @@
         "completed"
       ],
       "created": "2025-12-01T00:16:56.001414",
-      "lastModified": "2025-12-01T00:16:56.001418",
+      "lastModified": "2025-11-30T22:43:04.718031+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation"
     },
@@ -2788,7 +2788,7 @@
       "id": "DOC-20251201001656-002",
       "name": "Improve documentation health score (currently 36%)",
       "content": "Documentation health score is 36%. Need to address stale documents, cross-reference issues, and orphaned documents to reach target of 80%+. Review DOCUMENTATION_HEALTH_REPORT.md for details.",
-      "status": "todo",
+      "status": "Todo",
       "priority": "medium",
       "tags": [
         "documentation",
@@ -2796,7 +2796,7 @@
         "improvement"
       ],
       "created": "2025-12-01T00:16:56.001429",
-      "lastModified": "2025-12-01T00:16:56.001431",
+      "lastModified": "2025-11-30T22:43:04.718035+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation"
     },
@@ -2804,7 +2804,7 @@
       "id": "DOC-20251201001656-003",
       "name": "Update stale documentation files",
       "content": "Review and update stale documentation files (>90 days old) identified in documentation health report. Update dates and content as needed.",
-      "status": "todo",
+      "status": "Todo",
       "priority": "medium",
       "tags": [
         "documentation",
@@ -2812,9 +2812,34 @@
         "stale"
       ],
       "created": "2025-12-01T00:16:56.001439",
-      "lastModified": "2025-12-01T00:16:56.001440",
+      "lastModified": "2025-11-30T22:43:04.718038+00:00",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "AUTO-20251201004020-351533",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-01T00:40:20.351605",
+      "lastModified": "2025-11-30T22:43:04.718042+00:00",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201004020-351533-C-1",
+          "todoId": "AUTO-20251201004020-351533",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 35.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":333,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"},{\"source\":\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"target\":\"./DESIGN_DECISIONS.md#hot-reload-dev_reload-tool\"}],\"orphaned_files\":[\"MCP_DUPLICATE_FIX_APPLIED.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"MODE-002_SETUP_COMPLETE.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"SESSION_HANDOFF_MCP_ERROR_ANALYSIS.md\",\"CONTEXT_BUDGET_ANALYSIS_EXAMPLE.md\",\"GIT_INSPIRED_FEATURES.md\",\"PWA_CLEANUP.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"PROJECT_SCORECARD.md\",\"MCP_DUPLICATE_FIX_GUIDE.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"SPRINT_AUTOMATION_REPORT.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"EXARP_VERSION_UPDATE.md\",\"TOOL_CONSOLIDATION_PLAN.md\",\"FASTMCP_DEEP_INVESTIGATION.md\",\"design/EXTENSION_COMPILATION_SUCCESS.md\",\"GIT_FEATURES_COMPLETE.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"IN_PROGRESS_TASKS_REVIEW.md\",\"GIT_ATTRIBUTION_COMPLETE.md\",\"MCP_FRAMEWORK_ERROR_SYSTEM_WIDE.md\",\"GIT_INSPIRED_IMPLEMENTATION.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"MCP_DUPLICATE_SERVERS_REPORT.md\",\"ATTRIBUTION_CHECK_FEATURE.md\",\"PORTABILITY_ANALYSIS.md\",\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"ATTRIBUTION_REVIEW.md\",\"EXARP_VERSION_RESOLVED.md\",\"EXARP_MCP_CONFIG_FIX.md\",\"CONTEXT7_TROUBLESHOOTING.md\",\"GITTASK_ANALYSIS.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"PARALLELIZATION_SETUP.md\",\"FASTMCP_ERROR_INVESTIGATION_COMPLETE.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\",\"STALE_TASKS_REPORT.md\",\"UVX_LOCATION_GUIDE.md\",\"design/EXARP_EXTENSION_ARCHITECTURE_RESEARCH.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"EXARP_QUICK_REFERENCE.md\",\"TOOL_CONSOLIDATION_COMPLETE.md\"]},\"health_score\":35.0}",
+          "created": "2025-12-01T00:40:21.788789",
+          "lastModified": "2025-12-01T00:40:21.788798"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",
