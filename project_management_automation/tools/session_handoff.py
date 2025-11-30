@@ -21,7 +21,7 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -420,7 +420,7 @@ def get_latest_handoff() -> str:
                 "Review blockers noted",
                 "Check suggested next steps",
                 "Pick up unassigned tasks if needed",
-                f"Pull latest changes if behind remote" if latest.get("git_status", {}).get("needs_push") else None,
+                "Pull latest changes if behind remote" if latest.get("git_status", {}).get("needs_push") else None,
             ],
         }, indent=2)
 
@@ -562,7 +562,7 @@ def resume_session() -> str:
                 recommendations.append(f"Consider {len(high_priority)} high-priority unassigned task(s)")
 
         context["recommendations"] = recommendations
-        
+
         # Check for handoff-related memories
         try:
             from .session_memory import search_session_memories
@@ -574,7 +574,7 @@ def resume_session() -> str:
                 ]
         except Exception as e:
             logger.debug(f"Could not search handoff memories: {e}")
-        
+
         context["message"] = "Session resumed. Review handoff and pick up tasks to continue."
 
         return json.dumps(context, indent=2)

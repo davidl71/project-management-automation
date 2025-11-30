@@ -25,7 +25,7 @@ import socket
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Literal
+from typing import Any, Literal, Optional
 
 from ..utils.todo2_utils import normalize_status, is_pending_status, is_review_status
 
@@ -127,7 +127,7 @@ def _detect_agents_from_project() -> list[str]:
     """Detect available agents from project structure."""
     project_root = _find_project_root()
     agents_dir = project_root / "agents"
-    
+
     agents = []
     if agents_dir.exists():
         for agent_dir in agents_dir.iterdir():
@@ -139,7 +139,7 @@ def _detect_agents_from_project() -> list[str]:
                         agents.append(config.get("name", f"{agent_dir.name}-agent"))
                     except Exception:
                         agents.append(f"{agent_dir.name}-agent")
-    
+
     return agents
 
 
@@ -368,7 +368,7 @@ def list_tasks_by_assignee(
                 continue
 
             assignee = task.get("assignee")
-            
+
             if assignee is None:
                 if include_unassigned:
                     unassigned.append({
@@ -670,7 +670,7 @@ def auto_assign_background_tasks(
 
         # Round-robin assignment
         assignments = []
-        agent_task_counts = {agent: 0 for agent in agents}
+        agent_task_counts = dict.fromkeys(agents, 0)
         agent_index = 0
 
         for task in unassigned_tasks:

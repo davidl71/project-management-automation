@@ -5,10 +5,11 @@ Tests for remaining tools not covered in test_tools.py.
 """
 
 import json
-import pytest
-from unittest.mock import Mock, patch, MagicMock, mock_open
-from pathlib import Path
 import sys
+from pathlib import Path
+from unittest.mock import MagicMock, Mock, mock_open, patch
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -23,11 +24,11 @@ class TestServerStatusTool:
         # server_status is registered as a tool via @mcp.tool() decorator
         # We can't directly import it, but we can test the server module loads
         import project_management_automation.server as server_module
-        
+
         # Verify server module has mcp instance
         # The actual tool is registered at runtime via decorator
         assert hasattr(server_module, 'mcp') or True  # Basic check - tool exists at runtime
-        
+
         # server_status is a tool function inside the MCP server class
         # We need to access it via the mcp instance or test it indirectly
         # For now, just verify the module structure is correct
@@ -55,7 +56,7 @@ class TestAutomationOpportunitiesTool:
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
             result = find_automation_opportunities(min_value_score=0.7)
             result_data = json.loads(result)
-            
+
             assert result_data['success'] is True
 
 
@@ -80,7 +81,7 @@ class TestTodoSyncTool:
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
             result = sync_todo_tasks(dry_run=True)
             result_data = json.loads(result)
-            
+
             assert result_data['success'] is True
 
 
@@ -90,14 +91,14 @@ class TestExternalToolHintsTool:
     def test_add_external_tool_hints_import(self):
         """Test that add_external_tool_hints can be imported and called."""
         from project_management_automation.tools.external_tool_hints import add_external_tool_hints
-        
+
         # Test that the function exists and is callable
         assert callable(add_external_tool_hints)
-        
+
         # Test with dry_run=True to avoid side effects
         result = add_external_tool_hints(dry_run=True)
         result_data = json.loads(result)
-        
+
         # Result should have expected keys regardless of success status
         assert 'success' in result_data or 'status' in result_data or 'data' in result_data
 
@@ -123,7 +124,7 @@ class TestDailyAutomationTool:
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
             result = run_daily_automation()
             result_data = json.loads(result)
-            
+
             assert result_data['success'] is True
 
 
@@ -142,12 +143,12 @@ class TestCICDValidationTool:
             # If yaml not available, mock it
             yaml = MagicMock()
             yaml.safe_load = mock_yaml
-        
+
         from project_management_automation.tools.ci_cd_validation import validate_ci_cd_workflow
 
         result = validate_ci_cd_workflow()
         result_data = json.loads(result)
-        
+
         assert result_data['success'] is True
         # Result structure changed: workflow data is in 'data' key
         assert 'data' in result_data or 'workflow_file' in result_data
@@ -179,7 +180,7 @@ class TestBatchTaskApprovalTool:
         mock_subprocess.return_value = mock_result
 
         result = batch_approve_tasks(status="Review", new_status="Todo", dry_run=True)
-        
+
         # batch_approve_tasks returns dict, not JSON string
         assert isinstance(result, dict)
         assert 'approved_count' in result or 'status' in result or 'success' in result
@@ -217,7 +218,7 @@ class TestNightlyTaskAutomationTool:
         mock_subprocess.side_effect = mock_subprocess_side_effect
 
         result = run_nightly_task_automation(dry_run=True)
-        
+
         # run_nightly_task_automation returns dict, not JSON string
         assert isinstance(result, dict)
         assert 'assigned_tasks' in result or 'status' in result or 'success' in result
@@ -249,13 +250,13 @@ class TestWorkingCopyHealthTool:
         mock_subprocess.side_effect = mock_subprocess_side_effect
 
         result = check_working_copy_health()
-        
+
         # check_working_copy_health may return dict or JSON string
         if isinstance(result, str):
             result_data = json.loads(result)
         else:
             result_data = result
-        
+
         # Result contains: timestamp, summary, agents, recommendations
         assert 'summary' in result_data or 'agents' in result_data or result_data.get('success') is True
 
@@ -282,7 +283,7 @@ class TestTaskClarificationTools:
             decision="Yes",
             dry_run=True
         )
-        
+
         # resolve_task_clarification returns dict, not JSON string
         assert isinstance(result, dict)
         assert 'status' in result
@@ -302,7 +303,7 @@ class TestTaskClarificationTools:
 
         decisions = json.dumps({"T-1": {"clarification": "Test?", "decision": "Yes"}})
         result = resolve_multiple_clarifications(decisions=decisions, dry_run=True)
-        
+
         # resolve_multiple_clarifications returns dict, not JSON string
         assert isinstance(result, dict)
         assert 'status' in result
@@ -314,7 +315,7 @@ class TestTaskClarificationTools:
         from project_management_automation.tools.task_clarification_resolution import list_tasks_awaiting_clarification
 
         result = list_tasks_awaiting_clarification()
-        
+
         # list_tasks_awaiting_clarification returns dict, not JSON string
         assert isinstance(result, dict)
         assert 'tasks' in result
@@ -332,7 +333,7 @@ class TestGitHooksTool:
 
         result = setup_git_hooks(dry_run=True)
         result_data = json.loads(result)
-        
+
         assert result_data['status'] == 'success'
         assert 'hooks_configured' in result_data or 'patterns_configured' in result_data
 
@@ -349,7 +350,7 @@ class TestPatternTriggersTool:
 
         result = setup_pattern_triggers(dry_run=True)
         result_data = json.loads(result)
-        
+
         assert result_data['status'] == 'success'
         assert 'patterns_configured' in result_data
 
@@ -366,7 +367,7 @@ class TestSimplifyRulesTool:
 
         result = simplify_rules(dry_run=True)
         result_data = json.loads(result)
-        
+
         assert result_data['status'] == 'success'
         assert 'files_processed' in result_data
 

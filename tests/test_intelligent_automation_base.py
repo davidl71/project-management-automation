@@ -4,12 +4,11 @@ Unit Tests for IntelligentAutomationBase Class
 Tests base class functionality for automation scripts.
 """
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
 import sys
-from abc import ABC
-import json
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -35,22 +34,22 @@ class TestIntelligentAutomationBase:
         class TestAutomation(IntelligentAutomationBase):
             def _execute_analysis(self) -> dict:
                 return {'status': 'success', 'results': {}}
-            
+
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
-            
+
             def _get_sequential_problem(self) -> str:
                 return "Test problem"
-            
+
             def _generate_insights(self, analysis_results: dict) -> str:
                 return "Test insights"
-            
+
             def _generate_report(self, analysis_results: dict, insights: str) -> str:
                 return "Test report"
 
         config = {'test': 'value'}
         project_root = Path("/test/project")
-        
+
         automation = TestAutomation(config, "Test Automation", project_root)
 
         # Assertions
@@ -78,16 +77,16 @@ class TestIntelligentAutomationBase:
         class TestAutomation(IntelligentAutomationBase):
             def _execute_analysis(self) -> dict:
                 return {'status': 'success', 'results': {}}
-            
+
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
-            
+
             def _get_sequential_problem(self) -> str:
                 return "Test problem"
-            
+
             def _generate_insights(self, analysis_results: dict) -> str:
                 return "Test insights"
-            
+
             def _generate_report(self, analysis_results: dict, insights: str) -> str:
                 return "Test report"
 
@@ -115,16 +114,16 @@ class TestIntelligentAutomationBase:
         class TestAutomation(IntelligentAutomationBase):
             def _execute_analysis(self) -> dict:
                 return {'status': 'success', 'results': {}}
-            
+
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
-            
+
             def _get_sequential_problem(self) -> str:
                 return "How do we test this?"
-            
+
             def _generate_insights(self, analysis_results: dict) -> str:
                 return "Test insights"
-            
+
             def _generate_report(self, analysis_results: dict, insights: str) -> str:
                 return "Test report"
 
@@ -147,16 +146,16 @@ class TestIntelligentAutomationBase:
                     'findings': ['finding1'],
                     'recommendations': ['recommendation1']
                 }
-            
+
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
-            
+
             def _get_sequential_problem(self) -> str:
                 return "Test problem"
-            
+
             def _generate_insights(self, analysis_results: dict) -> str:
                 return "Test insights"
-            
+
             def _generate_report(self, analysis_results: dict, insights: str) -> str:
                 return "Test report"
 
@@ -179,21 +178,21 @@ class TestIntelligentAutomationBase:
         class TestAutomation(IntelligentAutomationBase):
             def _execute_analysis(self) -> dict:
                 raise Exception("Test error")
-            
+
             def _get_tractatus_concept(self) -> str:
                 return "Test concept"
-            
+
             def _get_sequential_problem(self) -> str:
                 return "Test problem"
-            
+
             def _generate_insights(self, analysis_results: dict) -> str:
                 return "Test insights"
-            
+
             def _generate_report(self, analysis_results: dict, insights: str) -> str:
                 return "Test report"
 
         automation = TestAutomation({}, "Test", Path("/test"))
-        
+
         # Should raise exception (or handle gracefully)
         with pytest.raises(Exception):
             result = automation.run()

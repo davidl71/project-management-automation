@@ -5,10 +5,11 @@ Tests each tool wrapper to ensure proper error handling and response formatting.
 """
 
 import json
-import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
 import sys
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent.parent

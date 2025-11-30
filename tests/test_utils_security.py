@@ -4,38 +4,36 @@ Unit Tests for Security Utilities
 Tests for path validation, input sanitization, rate limiting, and access control.
 """
 
-import pytest
-import time
-from pathlib import Path
-from unittest.mock import patch, MagicMock
-import tempfile
-import os
 
 # Add project root to path
 import sys
+import tempfile
+import time
+from pathlib import Path
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from project_management_automation.utils.security import (
+    AccessController,
+    AccessLevel,
+    # Input validation
+    InputValidationError,
     # Path validation
     PathBoundaryError,
     PathValidator,
-    set_default_path_validator,
-    get_default_path_validator,
-    validate_path,
-    # Input validation
-    InputValidationError,
-    sanitize_string,
-    validate_identifier,
-    validate_enum,
-    validate_range,
     # Rate limiting
     RateLimiter,
-    get_rate_limiter,
-    # Access control
-    AccessLevel,
-    AccessController,
     get_access_controller,
+    get_default_path_validator,
+    sanitize_string,
     set_access_controller,
+    set_default_path_validator,
+    validate_enum,
+    validate_identifier,
+    validate_path,
+    validate_range,
 )
 
 
@@ -99,7 +97,7 @@ class TestPathValidator:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
             test_file = Path(tmpdir) / "test.txt"
             test_file.touch()
-            
+
             result = validator.validate(str(test_file))
             assert result == test_file.resolve()
 
@@ -107,11 +105,11 @@ class TestPathValidator:
         """Test validate blocks path traversal attempts."""
         with tempfile.TemporaryDirectory() as tmpdir:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
-            
+
             # Attempt path traversal
             with pytest.raises(PathBoundaryError) as exc_info:
                 validator.validate(f"{tmpdir}/../../../etc/passwd")
-            
+
             assert "outside allowed boundaries" in str(exc_info.value)
 
     def test_validate_blocked_pattern(self):
@@ -120,20 +118,20 @@ class TestPathValidator:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
             git_dir = Path(tmpdir) / ".git"
             git_dir.mkdir()
-            
+
             with pytest.raises(PathBoundaryError) as exc_info:
                 validator.validate(str(git_dir))
-            
+
             assert "blocked pattern" in str(exc_info.value)
 
     def test_validate_must_exist_missing(self):
         """Test validate raises when must_exist=True and path missing."""
         with tempfile.TemporaryDirectory() as tmpdir:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
-            
+
             with pytest.raises(PathBoundaryError) as exc_info:
                 validator.validate(f"{tmpdir}/nonexistent.txt", must_exist=True)
-            
+
             assert "does not exist" in str(exc_info.value)
 
     def test_validate_output_path_creates_parents(self):
@@ -141,9 +139,9 @@ class TestPathValidator:
         with tempfile.TemporaryDirectory() as tmpdir:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
             output_path = Path(tmpdir) / "subdir" / "nested" / "output.txt"
-            
+
             result = validator.validate_output_path(str(output_path))
-            
+
             assert result.parent.exists()
 
 
@@ -155,7 +153,7 @@ class TestGlobalPathValidator:
         with tempfile.TemporaryDirectory() as tmpdir:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
             set_default_path_validator(validator)
-            
+
             retrieved = get_default_path_validator()
             assert retrieved is validator
 
@@ -164,10 +162,10 @@ class TestGlobalPathValidator:
         with tempfile.TemporaryDirectory() as tmpdir:
             validator = PathValidator(allowed_roots=[Path(tmpdir)])
             set_default_path_validator(validator)
-            
+
             test_file = Path(tmpdir) / "test.txt"
             test_file.touch()
-            
+
             result = validate_path(str(test_file))
             assert result == test_file.resolve()
 
@@ -184,7 +182,7 @@ class TestInputValidation:
         """Test sanitize_string enforces max length."""
         with pytest.raises(InputValidationError) as exc_info:
             sanitize_string("x" * 100, max_length=50)
-        
+
         assert "maximum length" in str(exc_info.value)
 
     def test_sanitize_string_strips_control_chars(self):
@@ -207,7 +205,7 @@ class TestInputValidation:
         """Test sanitize_string rejects non-string input."""
         with pytest.raises(InputValidationError) as exc_info:
             sanitize_string(123)
-        
+
         assert "Expected string" in str(exc_info.value)
 
     def test_validate_identifier_valid(self):
@@ -221,10 +219,10 @@ class TestInputValidation:
         """Test validate_identifier rejects invalid identifiers."""
         with pytest.raises(InputValidationError):
             validate_identifier("123invalid")  # Starts with number
-        
+
         with pytest.raises(InputValidationError):
             validate_identifier("has space")  # Contains space
-        
+
         with pytest.raises(InputValidationError):
             validate_identifier("has.dot")  # Contains dot
 
@@ -237,10 +235,10 @@ class TestInputValidation:
     def test_validate_enum_invalid(self):
         """Test validate_enum rejects invalid values."""
         allowed = {"red", "green", "blue"}
-        
+
         with pytest.raises(InputValidationError) as exc_info:
             validate_enum("yellow", allowed, param_name="color")
-        
+
         assert "Invalid color" in str(exc_info.value)
         assert "yellow" in str(exc_info.value)
 
@@ -254,14 +252,14 @@ class TestInputValidation:
         """Test validate_range rejects values below minimum."""
         with pytest.raises(InputValidationError) as exc_info:
             validate_range(-1, min_val=0, param_name="count")
-        
+
         assert "must be >= 0" in str(exc_info.value)
 
     def test_validate_range_above_max(self):
         """Test validate_range rejects values above maximum."""
         with pytest.raises(InputValidationError) as exc_info:
             validate_range(101, max_val=100, param_name="percentage")
-        
+
         assert "must be <= 100" in str(exc_info.value)
 
 
@@ -271,7 +269,7 @@ class TestRateLimiter:
     def test_allow_within_limit(self):
         """Test allow returns True within rate limit."""
         limiter = RateLimiter(calls_per_minute=60, burst_size=10)
-        
+
         # First 10 calls should be allowed (burst)
         for _ in range(10):
             assert limiter.allow("test") is True
@@ -279,50 +277,50 @@ class TestRateLimiter:
     def test_allow_exceeds_burst(self):
         """Test allow returns False when exceeding burst."""
         limiter = RateLimiter(calls_per_minute=60, burst_size=5)
-        
+
         # Use up burst
         for _ in range(5):
             limiter.allow("test")
-        
+
         # Next call should be rate limited
         assert limiter.allow("test") is False
 
     def test_tokens_refill_over_time(self):
         """Test tokens refill over time."""
         limiter = RateLimiter(calls_per_minute=600, burst_size=1)  # 10/sec
-        
+
         # Use the token
         assert limiter.allow("test") is True
         assert limiter.allow("test") is False
-        
+
         # Wait for refill (0.1 sec = 1 token at 10/sec)
         time.sleep(0.15)
-        
+
         # Should have token again
         assert limiter.allow("test") is True
 
     def test_separate_keys(self):
         """Test different keys have separate rate limits."""
         limiter = RateLimiter(calls_per_minute=60, burst_size=2)
-        
+
         # Use up key1
         limiter.allow("key1")
         limiter.allow("key1")
         assert limiter.allow("key1") is False
-        
+
         # key2 should still have tokens
         assert limiter.allow("key2") is True
 
     def test_get_wait_time(self):
         """Test get_wait_time returns correct wait time."""
         limiter = RateLimiter(calls_per_minute=60, burst_size=1)
-        
+
         # Initially no wait
         assert limiter.get_wait_time("test") == 0.0
-        
+
         # Use token
         limiter.allow("test")
-        
+
         # Should have wait time > 0
         wait = limiter.get_wait_time("test")
         assert wait > 0
@@ -345,11 +343,11 @@ class TestAccessController:
     def test_deny_and_allow_tool(self):
         """Test deny_tool and allow_tool methods."""
         controller = AccessController()
-        
+
         # Deny a tool
         controller.deny_tool("my_tool")
         assert controller.can_execute("my_tool") is False
-        
+
         # Allow it again
         controller.allow_tool("my_tool")
         assert controller.can_execute("my_tool") is True
@@ -357,11 +355,11 @@ class TestAccessController:
     def test_read_only_mode(self):
         """Test read_only mode only allows read operations."""
         controller = AccessController(read_only=True)
-        
+
         # Read operations allowed
         assert controller.can_execute("check_documentation_health") is True
         assert controller.can_execute("project_scorecard") is True
-        
+
         # Write operations denied
         assert controller.can_execute("sync_todo_tasks") is False
         assert controller.can_execute("batch_approve_tasks") is False
@@ -369,19 +367,19 @@ class TestAccessController:
     def test_check_access_raises(self):
         """Test check_access raises InputValidationError when denied."""
         controller = AccessController(denied_tools={"blocked_tool"})
-        
+
         with pytest.raises(InputValidationError) as exc_info:
             controller.check_access("blocked_tool")
-        
+
         assert "Access denied" in str(exc_info.value)
 
     def test_set_tool_level(self):
         """Test set_tool_level configures tool access level."""
         controller = AccessController(read_only=True)
-        
+
         # Custom tool defaults to write level, so denied in read_only
         assert controller.can_execute("custom_tool") is False
-        
+
         # Set to read level
         controller.set_tool_level("custom_tool", AccessLevel.READ)
         assert controller.can_execute("custom_tool") is True
@@ -394,7 +392,7 @@ class TestGlobalAccessController:
         """Test setting and getting the global access controller."""
         controller = AccessController(read_only=True)
         set_access_controller(controller)
-        
+
         retrieved = get_access_controller()
         assert retrieved is controller
         assert retrieved.read_only is True

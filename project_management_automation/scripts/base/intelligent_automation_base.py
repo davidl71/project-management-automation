@@ -16,7 +16,7 @@ import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from project_management_automation.utils.logging_config import configure_logging
 from project_management_automation.utils.todo2_utils import (

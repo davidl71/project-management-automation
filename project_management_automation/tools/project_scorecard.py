@@ -13,7 +13,7 @@ import logging
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from ..utils import find_project_root
 from ..utils.todo2_utils import is_pending_status, is_completed_status

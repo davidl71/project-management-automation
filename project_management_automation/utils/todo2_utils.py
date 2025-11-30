@@ -11,6 +11,7 @@ Encapsulates helpers that:
 import json
 import logging
 import subprocess
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Iterable, List, Optional, Tuple
 

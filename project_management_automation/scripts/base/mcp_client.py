@@ -191,13 +191,13 @@ class MCPClient:
                         agentic_config = self.mcp_config.get('agentic-tools', {})
                         command = agentic_config.get('command', 'npx')
                         args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-                        
+
                         # Create stdio client connection
                         server_params = StdioServerParameters(
                             command=command,
                             args=args
                         )
-                        
+
                         # Create session (will be managed by context manager in methods)
                         # Note: We'll create a new session for each operation to avoid connection issues
                         # In production, you might want to implement connection pooling
@@ -229,23 +229,23 @@ class MCPClient:
             agentic_config = self.mcp_config.get('agentic-tools', {})
             command = agentic_config.get('command', 'npx')
             args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-            
+
             # Create stdio client connection
             server_params = StdioServerParameters(
                 command=command,
                 args=args
             )
-            
+
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
-                    
+
                     # Call list_todos tool
                     result = await session.call_tool("list_todos", {
                         "workingDirectory": working_directory,
                         "projectId": project_id
                     })
-                    
+
                     # Parse JSON response
                     if result.content and len(result.content) > 0:
                         response_text = result.content[0].text
@@ -297,13 +297,13 @@ class MCPClient:
             agentic_config = self.mcp_config.get('agentic-tools', {})
             command = agentic_config.get('command', 'npx')
             args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-            
+
             # Create stdio client connection
             server_params = StdioServerParameters(
                 command=command,
                 args=args
             )
-            
+
             # Prepare task data
             task_data = {
                 "workingDirectory": working_directory,
@@ -312,14 +312,14 @@ class MCPClient:
                 "details": details,
                 **kwargs
             }
-            
+
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
-                    
+
                     # Call create_task tool
                     result = await session.call_tool("create_task", task_data)
-                    
+
                     # Parse JSON response
                     if result.content and len(result.content) > 0:
                         response_text = result.content[0].text
@@ -359,27 +359,27 @@ class MCPClient:
             agentic_config = self.mcp_config.get('agentic-tools', {})
             command = agentic_config.get('command', 'npx')
             args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-            
+
             # Create stdio client connection
             server_params = StdioServerParameters(
                 command=command,
                 args=args
             )
-            
+
             # Prepare update data
             update_data = {
                 "workingDirectory": working_directory,
                 "id": task_id,
                 **updates
             }
-            
+
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
-                    
+
                     # Call update_task tool
                     result = await session.call_tool("update_task", update_data)
-                    
+
                     # Parse JSON response
                     if result.content and len(result.content) > 0:
                         response_text = result.content[0].text
@@ -413,23 +413,23 @@ class MCPClient:
             agentic_config = self.mcp_config.get('agentic-tools', {})
             command = agentic_config.get('command', 'npx')
             args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-            
+
             # Create stdio client connection
             server_params = StdioServerParameters(
                 command=command,
                 args=args
             )
-            
+
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
-                    
+
                     # Call get_task tool
                     result = await session.call_tool("get_task", {
                         "workingDirectory": working_directory,
                         "id": task_id
                     })
-                    
+
                     # Parse JSON response
                     if result.content and len(result.content) > 0:
                         response_text = result.content[0].text
@@ -463,23 +463,23 @@ class MCPClient:
             agentic_config = self.mcp_config.get('agentic-tools', {})
             command = agentic_config.get('command', 'npx')
             args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-            
+
             # Create stdio client connection
             server_params = StdioServerParameters(
                 command=command,
                 args=args
             )
-            
+
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:
                     await session.initialize()
-                    
+
                     # Call delete_task tool
                     result = await session.call_tool("delete_task", {
                         "workingDirectory": working_directory,
                         "id": task_id
                     })
-                    
+
                     # Check if successful (response format may vary)
                     return result.content is not None and len(result.content) > 0
         except Exception as e:

@@ -17,7 +17,7 @@ import logging
 import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from ..utils import find_project_root
 
@@ -492,9 +492,9 @@ def get_memories_health_resource() -> str:
     try:
         # Import maintenance functions
         from ..tools.memory_maintenance import memory_health_check
-        
+
         health = memory_health_check()
-        
+
         result = {
             "total_memories": health.get("total_memories", 0),
             "health_score": health.get("health_score", 0),
@@ -504,9 +504,9 @@ def get_memories_health_resource() -> str:
             "recommendations": health.get("recommendations", []),
             "timestamp": datetime.now().isoformat(),
         }
-        
+
         return json.dumps(result, indent=2)
-    
+
     except Exception as e:
         logger.error(f"Error getting memories health: {e}")
         return json.dumps({

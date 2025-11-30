@@ -13,7 +13,7 @@ import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 # Import base class
 from project_management_automation.scripts.base.intelligent_automation_base import IntelligentAutomationBase

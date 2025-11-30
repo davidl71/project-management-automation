@@ -7,7 +7,6 @@ Run manually or via cron job.
 """
 
 import json
-import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -19,7 +18,7 @@ def load_patterns() -> Dict:
     if not CONFIG_FILE.exists():
         return {}
 
-    with open(CONFIG_FILE, 'r') as f:
+    with open(CONFIG_FILE) as f:
         config = json.load(f)
         return config.get("file_patterns", {})
 

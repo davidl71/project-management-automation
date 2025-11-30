@@ -5,7 +5,7 @@ Combines rate limiting, path validation, and access control into a single middle
 """
 
 from pathlib import Path
-from typing import Callable, Dict, List, Optional, Set
+from typing import Callable, Optional
 
 try:
     from fastmcp.server.middleware import Middleware, MiddlewareContext
@@ -20,6 +20,11 @@ except ImportError:
 from .access_control import AccessControlMiddleware, AccessLevel
 from .path_validation import PathValidationMiddleware
 from .rate_limit import RateLimitMiddleware
+
+
+async def _dummy_continue(ctx):
+    """Async dummy call_next that signals to continue processing."""
+    return {"_continue": True}
 
 
 class SecurityMiddleware(Middleware):

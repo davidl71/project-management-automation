@@ -38,7 +38,7 @@
       "args": [
         "mcpower-proxy==0.0.87",
         "--wrapped-config",
-        "{\"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/home/david/project-management-automation\"]}",
+        "{\"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/Volumes/SSD1_APFS/project-management-automation\"]}",
         "--name",
         "filesystem"
       ],
@@ -56,13 +56,13 @@
       "description": "Task management and agent memories with JSON file storage for Todo2 integration"
     },
     "exarp_pma": {
-      "command": "/home/david/project-management-automation/exarp-uvx-wrapper.sh",
+      "command": "/Volumes/SSD1_APFS/project-management-automation/exarp-uvx-wrapper.sh",
       "args": [
         "--mcp"
       ],
       "env": {
         "EXARP_DEV_MODE": "1",
-        "PROJECT_ROOT": "/home/david/project-management-automation"
+        "PROJECT_ROOT": "/Volumes/SSD1_APFS/project-management-automation"
       },
       "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms"
     },

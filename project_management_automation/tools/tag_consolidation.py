@@ -9,7 +9,7 @@ import logging
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 from ..utils.todo2_utils import (
     filter_tasks_by_project,

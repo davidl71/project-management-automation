@@ -13,7 +13,7 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Optional
 
 # Add project root to path
 # Project root will be passed to __init__

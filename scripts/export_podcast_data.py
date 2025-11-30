@@ -18,23 +18,20 @@ AI podcast-style discussions about your project progress.
 import argparse
 import json
 import sys
-from datetime import datetime
 from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from project_management_automation.tools.wisdom.advisors import (
-    export_for_podcast,
-    get_consultation_log,
     METRIC_ADVISORS,
-    STAGE_ADVISORS,
+    export_for_podcast,
 )
 
 
 def generate_markdown_script(podcast_data: dict) -> str:
     """Generate a markdown document optimized for NotebookLM."""
-    
+
     lines = [
         f"# {podcast_data['title']}",
         "",
@@ -51,25 +48,25 @@ def generate_markdown_script(podcast_data: dict) -> str:
         "| Metric | Advisor | Philosophy |",
         "|--------|---------|------------|",
     ]
-    
+
     for metric, info in METRIC_ADVISORS.items():
         icon = info.get("icon", "📜")
         advisor = info.get("advisor", "unknown").replace("_", " ").title()
         rationale = info.get("rationale", "")[:50]
         lines.append(f"| {metric.title()} | {icon} {advisor} | {rationale}... |")
-    
+
     lines.extend([
         "",
         "## Daily Progress Episodes",
         "",
     ])
-    
+
     for episode in podcast_data.get("episodes", []):
         date = episode.get("date", "Unknown")
         advisors = episode.get("advisors", [])
         metrics = episode.get("metrics", [])
         quotes = episode.get("notable_quotes", [])
-        
+
         lines.extend([
             f"### Episode: {date}",
             "",
@@ -78,7 +75,7 @@ def generate_markdown_script(podcast_data: dict) -> str:
             f"**Metrics Reviewed:** {', '.join(metrics) if metrics else 'None'}",
             "",
         ])
-        
+
         if quotes:
             lines.append("**Key Wisdom Received:**")
             lines.append("")
@@ -92,7 +89,7 @@ def generate_markdown_script(podcast_data: dict) -> str:
                     f"> 💡 *{encouragement}*",
                     "",
                 ])
-        
+
         narrative = episode.get("narrative_prompt", "")
         if narrative:
             lines.extend([
@@ -101,10 +98,10 @@ def generate_markdown_script(podcast_data: dict) -> str:
                 narrative,
                 "",
             ])
-        
+
         lines.append("---")
         lines.append("")
-    
+
     # Add summary section for NotebookLM to focus on
     lines.extend([
         "## Key Themes This Week",
@@ -124,7 +121,7 @@ def generate_markdown_script(podcast_data: dict) -> str:
         "- End with actionable takeaways",
         "",
     ])
-    
+
     return "\n".join(lines)
 
 
@@ -154,18 +151,18 @@ def main():
         type=str,
         help="Output file path (default: stdout)"
     )
-    
+
     args = parser.parse_args()
-    
+
     # Export podcast data
     podcast_data = export_for_podcast(days=args.days)
-    
+
     # Generate output
     if args.format == "markdown":
         output = generate_markdown_script(podcast_data)
     else:
         output = generate_json_export(podcast_data)
-    
+
     # Write output
     if args.output:
         output_path = Path(args.output)
@@ -173,13 +170,13 @@ def main():
         print(f"✅ Exported to {output_path}", file=sys.stderr)
     else:
         print(output)
-    
+
     # Print summary
-    print(f"\n📻 Podcast Export Summary:", file=sys.stderr)
+    print("\n📻 Podcast Export Summary:", file=sys.stderr)
     print(f"   Days covered: {args.days}", file=sys.stderr)
     print(f"   Total consultations: {podcast_data['total_consultations']}", file=sys.stderr)
     print(f"   Episodes: {len(podcast_data.get('episodes', []))}", file=sys.stderr)
-    print(f"\n💡 Upload the output to NotebookLM and click 'Audio Overview' to generate podcast!", file=sys.stderr)
+    print("\n💡 Upload the output to NotebookLM and click 'Audio Overview' to generate podcast!", file=sys.stderr)
 
 
 if __name__ == "__main__":

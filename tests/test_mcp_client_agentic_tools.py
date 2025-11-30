@@ -5,11 +5,11 @@ Unit tests for MCPClient agentic-tools MCP support.
 Tests the async methods for list_todos, create_task, update_task, get_task, delete_task.
 """
 
-import asyncio
 import json
-import pytest
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
+
+import pytest
 
 
 class TestMCPClientAgenticTools:
@@ -20,7 +20,7 @@ class TestMCPClientAgenticTools:
         """Create a mock project root with .cursor/mcp.json config."""
         cursor_dir = tmp_path / '.cursor'
         cursor_dir.mkdir()
-        
+
         mcp_config = {
             "mcpServers": {
                 "agentic-tools": {
@@ -29,7 +29,7 @@ class TestMCPClientAgenticTools:
                 }
             }
         }
-        
+
         (cursor_dir / 'mcp.json').write_text(json.dumps(mcp_config))
         return tmp_path
 
@@ -55,7 +55,7 @@ class TestMCPClientAgenticTools:
     async def test_list_todos_no_mcp_available(self, tmp_path):
         """Test list_todos returns empty list when MCP unavailable."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        
+
         with patch('project_management_automation.scripts.base.mcp_client.MCP_CLIENT_AVAILABLE', False):
             client = MCPClient(tmp_path)
             result = await client.list_todos("test-project", str(tmp_path))
@@ -65,7 +65,7 @@ class TestMCPClientAgenticTools:
     async def test_create_task_no_mcp_available(self, tmp_path):
         """Test create_task returns None when MCP unavailable."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        
+
         with patch('project_management_automation.scripts.base.mcp_client.MCP_CLIENT_AVAILABLE', False):
             client = MCPClient(tmp_path)
             result = await client.create_task(
@@ -80,7 +80,7 @@ class TestMCPClientAgenticTools:
     async def test_update_task_no_mcp_available(self, tmp_path):
         """Test update_task returns None when MCP unavailable."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        
+
         with patch('project_management_automation.scripts.base.mcp_client.MCP_CLIENT_AVAILABLE', False):
             client = MCPClient(tmp_path)
             result = await client.update_task(
@@ -94,7 +94,7 @@ class TestMCPClientAgenticTools:
     async def test_get_task_no_mcp_available(self, tmp_path):
         """Test get_task returns None when MCP unavailable."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        
+
         with patch('project_management_automation.scripts.base.mcp_client.MCP_CLIENT_AVAILABLE', False):
             client = MCPClient(tmp_path)
             result = await client.get_task("test-task-id", str(tmp_path))
@@ -104,7 +104,7 @@ class TestMCPClientAgenticTools:
     async def test_delete_task_no_mcp_available(self, tmp_path):
         """Test delete_task returns False when MCP unavailable."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        
+
         with patch('project_management_automation.scripts.base.mcp_client.MCP_CLIENT_AVAILABLE', False):
             client = MCPClient(tmp_path)
             result = await client.delete_task("test-task-id", str(tmp_path))
@@ -124,7 +124,7 @@ class TestMCPClientAgenticToolsIntegration:
     async def test_list_todos_integration(self, real_project_root):
         """Test list_todos against real agentic-tools MCP server."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
-        
+
         client = MCPClient(real_project_root)
         # This would require a valid project ID
         result = await client.list_todos(

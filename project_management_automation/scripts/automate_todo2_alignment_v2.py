@@ -17,7 +17,7 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Add project root to path
 # Project root will be passed to __init__

@@ -4,21 +4,23 @@ Unit Tests for Todo2 Utilities
 Tests for git project ID detection, task filtering, and task annotation.
 """
 
-import pytest
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 import subprocess
 
 # Add project root to path
 import sys
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from project_management_automation.utils.todo2_utils import (
     _normalize_git_remote,
+    annotate_task_project,
+    filter_tasks_by_project,
     get_repo_project_id,
     task_belongs_to_project,
-    filter_tasks_by_project,
-    annotate_task_project,
 )
 
 
@@ -80,9 +82,9 @@ class TestGetRepoProjectId:
             stdout="https://github.com/owner/repo.git\n",
             returncode=0
         )
-        
+
         result = get_repo_project_id()
-        
+
         assert result == "owner/repo"
         mock_run.assert_called_once()
 
@@ -92,9 +94,9 @@ class TestGetRepoProjectId:
         """Test handling when git command fails."""
         mock_find_root.return_value = Path("/project")
         mock_run.side_effect = subprocess.CalledProcessError(1, "git")
-        
+
         result = get_repo_project_id()
-        
+
         assert result is None
 
     @patch('project_management_automation.utils.todo2_utils.subprocess.run')
@@ -103,9 +105,9 @@ class TestGetRepoProjectId:
         """Test handling when git executable not found."""
         mock_find_root.return_value = Path("/project")
         mock_run.side_effect = FileNotFoundError("git not found")
-        
+
         result = get_repo_project_id()
-        
+
         assert result is None
 
     @patch('project_management_automation.utils.todo2_utils.subprocess.run')
@@ -118,9 +120,9 @@ class TestGetRepoProjectId:
             stdout="git@github.com:org/project.git\n",
             returncode=0
         )
-        
+
         result = get_repo_project_id(custom_root)
-        
+
         assert result == "org/project"
         mock_find_root.assert_called_once_with(custom_root)
 
@@ -164,9 +166,9 @@ class TestFilterTasksByProject:
             {"id": "T-2", "project_id": "other/project"},
             {"id": "T-3", "project_id": "owner/repo"},
         ]
-        
+
         result = filter_tasks_by_project(tasks, "owner/repo")
-        
+
         assert len(result) == 2
         assert result[0]["id"] == "T-1"
         assert result[1]["id"] == "T-3"
@@ -178,9 +180,9 @@ class TestFilterTasksByProject:
             {"id": "T-2"},  # No project_id
             {"id": "T-3", "project_id": "other/project"},
         ]
-        
+
         result = filter_tasks_by_project(tasks, "owner/repo", include_unassigned=True)
-        
+
         assert len(result) == 2
         assert result[0]["id"] == "T-1"
         assert result[1]["id"] == "T-2"
@@ -192,9 +194,9 @@ class TestFilterTasksByProject:
             {"id": "T-2"},  # No project_id
             {"id": "T-3", "project_id": "owner/repo"},
         ]
-        
+
         result = filter_tasks_by_project(tasks, "owner/repo", include_unassigned=False)
-        
+
         assert len(result) == 2
         assert result[0]["id"] == "T-1"
         assert result[1]["id"] == "T-3"
@@ -206,9 +208,9 @@ class TestFilterTasksByProject:
             {"id": "T-2", "project_id": "other/project"},
             {"id": "T-3"},
         ]
-        
+
         result = filter_tasks_by_project(tasks, None)
-        
+
         assert len(result) == 3
 
     def test_empty_task_list(self):
@@ -220,13 +222,13 @@ class TestFilterTasksByProject:
         """Test filtering with logger for debug messages."""
         import logging
         logger = logging.getLogger("test")
-        
+
         tasks = [
             {"id": "T-1", "project_id": "other/project"},
         ]
-        
+
         result = filter_tasks_by_project(tasks, "owner/repo", logger=logger)
-        
+
         assert len(result) == 0
 
 
@@ -236,35 +238,35 @@ class TestAnnotateTaskProject:
     def test_annotate_new_task(self):
         """Test annotating task without existing project ID."""
         task = {"id": "T-1", "name": "Test task"}
-        
+
         result = annotate_task_project(task, "owner/repo")
-        
+
         assert result["project_id"] == "owner/repo"
         assert result["id"] == "T-1"
 
     def test_annotate_overwrites_existing(self):
         """Test annotating overwrites existing project ID."""
         task = {"id": "T-1", "project_id": "old/project"}
-        
+
         result = annotate_task_project(task, "new/project")
-        
+
         assert result["project_id"] == "new/project"
 
     def test_annotate_with_none(self):
         """Test annotating with None project ID."""
         task = {"id": "T-1", "project_id": "existing/project"}
-        
+
         result = annotate_task_project(task, None)
-        
+
         # Should not change existing project_id
         assert result["project_id"] == "existing/project"
 
     def test_returns_same_dict(self):
         """Test that annotate modifies and returns the same dict."""
         task = {"id": "T-1"}
-        
+
         result = annotate_task_project(task, "owner/repo")
-        
+
         assert result is task
 
 

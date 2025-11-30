@@ -15,7 +15,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 # Ensure repo root is on sys.path even when running script directly
 script_dir = Path(__file__).resolve().parent

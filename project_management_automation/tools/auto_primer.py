@@ -65,7 +65,7 @@ def detect_agent_type() -> Dict[str, Any]:
             "source": "environment",
             "config": {},
         }
-    
+
     # 2. cursor-agent.json
     project_root = _find_project_root()
     agent_config = project_root / "cursor-agent.json"
@@ -79,7 +79,7 @@ def detect_agent_type() -> Dict[str, Any]:
             }
         except Exception as e:
             logger.debug(f"Error reading cursor-agent.json: {e}")
-    
+
     # 3. Check agents directory structure
     cwd = Path.cwd()
     if "agents" in str(cwd):
@@ -95,7 +95,7 @@ def detect_agent_type() -> Dict[str, Any]:
                 }
         except ValueError:
             pass
-    
+
     # 4. Default
     return {
         "agent": "general",
@@ -121,7 +121,7 @@ def suggest_mode_by_time() -> Dict[str, Any]:
     - After 6pm: development (evening work)
     """
     hour = datetime.now().hour
-    
+
     if 6 <= hour < 9:
         return {
             "mode": "daily_checkin",
@@ -212,10 +212,10 @@ def get_agent_context(agent: str) -> Dict[str, Any]:
     """Get context specific to an agent type."""
     # Normalize agent name
     agent_lower = agent.lower().replace("-agent", "")
-    
+
     context = AGENT_CONTEXT.get(agent_lower, AGENT_CONTEXT["general"])
     mode = AGENT_MODE_MAPPING.get(agent_lower, AGENT_MODE_MAPPING.get(agent, "development"))
-    
+
     return {
         "agent": agent,
         "normalized": agent_lower,
@@ -291,7 +291,7 @@ def detect_companion_mcps(available_tools: Optional[List[str]] = None) -> Dict[s
     detected = []
     missing = []
     suggestions = []
-    
+
     for mcp_name, mcp_info in RECOMMENDED_COMPANIONS.items():
         # Check if any detection tool is available
         is_detected = False
@@ -300,7 +300,7 @@ def detect_companion_mcps(available_tools: Optional[List[str]] = None) -> Dict[s
                 if tool in available_tools or any(tool in t for t in available_tools):
                     is_detected = True
                     break
-        
+
         if is_detected:
             detected.append({
                 "name": mcp_name,
@@ -314,13 +314,13 @@ def detect_companion_mcps(available_tools: Optional[List[str]] = None) -> Dict[s
                 "install": mcp_info["install"],
                 "priority": mcp_info["priority"],
             })
-            
+
             if mcp_info["priority"] == "recommended":
                 suggestions.append(
                     f"💡 Recommended MCP '{mcp_name}' not detected. "
                     f"{mcp_info['benefit']}. Install: {mcp_info['install']}"
                 )
-    
+
     return {
         "detected": detected,
         "missing": missing,
@@ -379,12 +379,12 @@ def auto_prime(
         auto_prime(override_mode="security_review")
     """
     start_time = time.time()
-    
+
     try:
         # 1. Detect agent type
         agent_info = detect_agent_type()
         agent_context = get_agent_context(agent_info["agent"])
-        
+
         # 2. Determine mode
         if override_mode:
             mode = override_mode
@@ -393,7 +393,7 @@ def auto_prime(
             # Combine agent and time suggestions
             time_suggestion = suggest_mode_by_time()
             agent_mode = agent_context["recommended_mode"]
-            
+
             # Prefer agent-specific mode in working hours, time-based otherwise
             if time_suggestion["mode"] == "daily_checkin":
                 mode = time_suggestion["mode"]
@@ -401,10 +401,10 @@ def auto_prime(
             else:
                 mode = agent_mode
                 mode_source = "agent_type"
-        
+
         # 3. Get context primer with detected mode
-        from ..resources.context_primer import get_context_primer, WORKFLOW_MODE_CONTEXT
-        
+        from ..resources.context_primer import WORKFLOW_MODE_CONTEXT, get_context_primer
+
         primer_json = get_context_primer(
             mode=mode,
             include_hints=include_hints,
@@ -413,7 +413,7 @@ def auto_prime(
             include_prompts=include_prompts,
         )
         primer = json.loads(primer_json)
-        
+
         # 4. Add auto-prime specific info
         result = {
             "auto_primed": True,
@@ -432,25 +432,26 @@ def auto_prime(
                 "relevant_prompts": agent_context["relevant_prompts"][:3] if compact else agent_context["relevant_prompts"],
             },
         }
-        
+
         # 5. Check for companion MCPs (suggest if missing)
         companion_status = detect_companion_mcps()
         if companion_status["suggestions"]:
             result["companion_suggestions"] = companion_status["suggestions"][:2]  # Top 2
-        
+
         # 6. Check for handoff notes from other developers (multi-dev coordination)
         if include_handoff:
             try:
-                from .session_handoff import get_latest_handoff
                 import socket
-                
+
+                from .session_handoff import get_latest_handoff
+
                 handoff_json = get_latest_handoff()
                 handoff_data = json.loads(handoff_json)
-                
+
                 if handoff_data.get("has_handoff"):
                     handoff = handoff_data.get("handoff", {})
                     current_host = socket.gethostname()
-                    
+
                     # Only show if from a different host (not our own handoff)
                     if handoff.get("host") != current_host:
                         result["handoff_alert"] = {
@@ -469,7 +470,7 @@ def auto_prime(
                         }
             except Exception as e:
                 logger.debug(f"Could not check handoff: {e}")
-        
+
         # 7. Merge with primer (compact or full)
         if compact:
             result["workflow"] = {
@@ -487,9 +488,9 @@ def auto_prime(
                 result["prompts"] = primer.get("prompts", {}).get("recommended", [])[:3]
         else:
             result.update(primer)
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         logger.error(f"Auto-prime error: {e}")
         return json.dumps({
@@ -514,12 +515,12 @@ def get_session_context(task_id: Optional[str] = None) -> str:
     try:
         # Get base auto-prime context
         base = json.loads(auto_prime(compact=True))
-        
+
         if task_id:
             # Add task-specific context
             from ..resources.templates import get_task_by_id
             task_data = get_task_by_id(task_id)
-            
+
             if task_data.get("found"):
                 task = task_data.get("task", {})
                 base["task_context"] = {
@@ -529,7 +530,7 @@ def get_session_context(task_id: Optional[str] = None) -> str:
                     "tags": task.get("tags", []),
                     "description": task.get("description", "")[:200],  # Truncate
                 }
-                
+
                 # Try to recall relevant memories
                 try:
                     from ..resources.templates import get_memories_by_category
@@ -538,9 +539,9 @@ def get_session_context(task_id: Optional[str] = None) -> str:
                         base["related_memories"] = memories.get("memories", [])[:3]
                 except Exception:
                     pass
-        
+
         return json.dumps(base, indent=2)
-        
+
     except Exception as e:
         logger.error(f"Session context error: {e}")
         return json.dumps({"error": str(e)}, indent=2)
@@ -582,7 +583,7 @@ def register_auto_primer_tools(mcp) -> None:
                 include_tasks=include_tasks,
                 override_mode=override_mode,
             )
-        
+
         @mcp.tool()
         def get_task_context(task_id: Optional[str] = None) -> str:
             """
@@ -591,9 +592,9 @@ def register_auto_primer_tools(mcp) -> None:
             Get context optimized for a specific task.
             """
             return get_session_context(task_id=task_id)
-        
+
         logger.info("✅ Registered 2 auto-primer tools")
-        
+
     except Exception as e:
         logger.warning(f"Could not register auto-primer tools: {e}")
 

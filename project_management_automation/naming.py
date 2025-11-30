@@ -41,7 +41,6 @@ This module documents and enforces consistent naming across tools, prompts, and 
 - `automation://memories`
 """
 
-from typing import Dict, List, Tuple
 
 # Tool name mapping: new_name -> old_name (for backward compatibility)
 TOOL_RENAMES: dict[str, str] = {

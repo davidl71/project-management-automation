@@ -6,7 +6,7 @@ MCP Tool wrapper for batch approving TODO2 tasks using the batch update script.
 
 import subprocess
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from ..utils import find_project_root
 

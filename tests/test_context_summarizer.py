@@ -4,20 +4,22 @@ Unit Tests for Context Summarizer Tool
 Tests for context summarization, batch processing, and token budget estimation.
 """
 
-import pytest
 import json
-from pathlib import Path
 
 # Add project root to path
 import sys
+from pathlib import Path
+
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from project_management_automation.tools.context_summarizer import (
-    summarize_context,
+    TOKENS_PER_CHAR,
+    TOOL_PATTERNS,
     batch_summarize,
     estimate_context_budget,
-    TOOL_PATTERNS,
-    TOKENS_PER_CHAR,
+    summarize_context,
 )
 
 
@@ -32,9 +34,9 @@ class TestSummarizeContext:
             "stale_files": 2,
             "recommendations": ["Fix broken links", "Update stale docs"],
         }
-        
+
         result = json.loads(summarize_context(health_data, level="brief"))
-        
+
         assert "summary" in result
         assert result["level"] == "brief"
         assert result["tool_type"] == "health"
@@ -49,9 +51,9 @@ class TestSummarizeContext:
             "completed": 35,
             "blocked": 5,
         }
-        
+
         result = json.loads(summarize_context(data, level="detailed"))
-        
+
         assert result["level"] == "detailed"
         assert "summary" in result
 
@@ -65,9 +67,9 @@ class TestSummarizeContext:
             "low": 10,
             "total_vulnerabilities": 17,
         }
-        
+
         result = json.loads(summarize_context(security_data, level="key_metrics"))
-        
+
         assert result["level"] == "key_metrics"
         assert "summary" in result
 
@@ -78,17 +80,17 @@ class TestSummarizeContext:
             "recommendations": ["Update dependencies", "Add tests"],
             "tasks_created": 3,
         }
-        
+
         result = json.loads(summarize_context(data, level="actionable"))
-        
+
         assert result["level"] == "actionable"
 
     def test_explicit_tool_type(self):
         """Test with explicit tool_type parameter."""
         data = {"score": 75, "issues": 5}
-        
+
         result = json.loads(summarize_context(data, tool_type="scorecard"))
-        
+
         assert result["tool_type"] == "scorecard"
 
     def test_auto_detect_security_type(self):
@@ -98,9 +100,9 @@ class TestSummarizeContext:
             "critical": 1,
             "high": 2,
         }
-        
+
         result = json.loads(summarize_context(data))
-        
+
         assert result["tool_type"] == "security"
 
     def test_auto_detect_task_type(self):
@@ -110,33 +112,33 @@ class TestSummarizeContext:
             "pending": 5,
             "completed": 10,
         }
-        
+
         result = json.loads(summarize_context(data))
-        
+
         assert result["tool_type"] == "task"
 
     def test_json_string_input(self):
         """Test with JSON string input."""
         data = json.dumps({"status": "ok", "count": 5})
-        
+
         result = json.loads(summarize_context(data))
-        
+
         assert "summary" in result
 
     def test_plain_text_input(self):
         """Test with plain text (non-JSON) input."""
         data = "This is plain text, not JSON"
-        
+
         result = json.loads(summarize_context(data))
-        
+
         assert "summary" in result
 
     def test_token_estimation(self):
         """Test token estimation is included."""
         data = {"status": "ok", "items": list(range(100))}
-        
+
         result = json.loads(summarize_context(data))
-        
+
         assert "token_estimate" in result
         assert "original" in result["token_estimate"]
         assert "summarized" in result["token_estimate"]
@@ -145,27 +147,27 @@ class TestSummarizeContext:
     def test_include_raw(self):
         """Test include_raw parameter."""
         data = {"status": "success"}
-        
+
         result = json.loads(summarize_context(data, include_raw=True))
-        
+
         assert "raw_data" in result
         assert result["raw_data"] == data
 
     def test_max_tokens_truncation(self):
         """Test max_tokens truncation."""
         data = {"items": list(range(1000))}
-        
+
         result = json.loads(summarize_context(data, max_tokens=50))
-        
+
         # Should have truncated
         assert result["token_estimate"]["summarized"] <= 50
 
     def test_duration_included(self):
         """Test duration_ms is included in result."""
         data = {"status": "ok"}
-        
+
         result = json.loads(summarize_context(data))
-        
+
         assert "duration_ms" in result
         assert result["duration_ms"] >= 0
 
@@ -180,9 +182,9 @@ class TestBatchSummarize:
             {"data": {"critical": 0, "high": 1}, "tool_type": "security"},
             {"data": {"pending": 5, "completed": 10}, "tool_type": "task"},
         ]
-        
+
         result = json.loads(batch_summarize(items))
-        
+
         assert "combined_summary" in result
         assert result["total_items"] == 3
         assert "token_estimate" in result
@@ -193,9 +195,9 @@ class TestBatchSummarize:
             {"data": {"status": "ok"}},
             {"data": {"status": "error"}},
         ]
-        
+
         result = json.loads(batch_summarize(items, combine=False))
-        
+
         assert "summaries" in result
         assert len(result["summaries"]) == 2
 
@@ -205,9 +207,9 @@ class TestBatchSummarize:
             {"data": {"score": 80}},
             {"data": {"score": 90}},
         ]
-        
+
         result = json.loads(batch_summarize(items, level="key_metrics"))
-        
+
         assert "combined_summary" in result
 
     def test_batch_token_totals(self):
@@ -216,9 +218,9 @@ class TestBatchSummarize:
             {"data": {"items": list(range(50))}},
             {"data": {"items": list(range(100))}},
         ]
-        
+
         result = json.loads(batch_summarize(items))
-        
+
         assert result["token_estimate"]["original"] > 0
         assert "reduction_percent" in result["token_estimate"]
 
@@ -232,9 +234,9 @@ class TestEstimateContextBudget:
             {"status": "ok"},
             {"count": 5},
         ]
-        
+
         result = json.loads(estimate_context_budget(items, budget_tokens=1000))
-        
+
         assert result["over_budget"] is False
         assert result["reduction_needed"] == 0
         assert "items" in result
@@ -245,9 +247,9 @@ class TestEstimateContextBudget:
             {"items": list(range(500))},
             {"items": list(range(500))},
         ]
-        
+
         result = json.loads(estimate_context_budget(items, budget_tokens=100))
-        
+
         assert result["over_budget"] is True
         assert result["reduction_needed"] > 0
 
@@ -258,9 +260,9 @@ class TestEstimateContextBudget:
             {"large": list(range(100))},
             {"medium": list(range(10))},
         ]
-        
+
         result = json.loads(estimate_context_budget(items))
-        
+
         # Should be sorted descending by tokens
         tokens = [item["tokens"] for item in result["items"]]
         assert tokens == sorted(tokens, reverse=True)
@@ -268,9 +270,9 @@ class TestEstimateContextBudget:
     def test_percent_of_budget(self):
         """Test percent_of_budget is calculated."""
         items = [{"data": list(range(100))}]
-        
+
         result = json.loads(estimate_context_budget(items, budget_tokens=1000))
-        
+
         assert "percent_of_budget" in result["items"][0]
 
     def test_strategy_included(self):
@@ -278,9 +280,9 @@ class TestEstimateContextBudget:
         items = [
             {"items": list(range(500))},
         ]
-        
+
         result = json.loads(estimate_context_budget(items, budget_tokens=100))
-        
+
         assert "strategy" in result
 
 
@@ -313,7 +315,7 @@ class TestToolPatterns:
     def test_all_patterns_have_required_fields(self):
         """Test all patterns have required fields."""
         required_fields = ["key_fields", "count_fields", "action_fields", "brief_template"]
-        
+
         for tool_type, pattern in TOOL_PATTERNS.items():
             for field in required_fields:
                 assert field in pattern, f"Pattern '{tool_type}' missing '{field}'"

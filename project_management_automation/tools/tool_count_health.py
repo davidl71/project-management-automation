@@ -11,7 +11,7 @@ import json
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ def _count_registered_tools() -> Dict[str, Any]:
     try:
         # Try to import from server to get actual count
         from project_management_automation.server import mcp
-        
+
         # Get tool count from MCP instance
         if hasattr(mcp, '_tools'):
             tools = list(mcp._tools.keys())
@@ -62,7 +62,7 @@ def _count_registered_tools() -> Dict[str, Any]:
             }
     except Exception as e:
         logger.debug(f"Could not get tools from MCP instance: {e}")
-    
+
     # Fallback: estimate from known registrations
     estimated_count = 25 + 6 + 2 + 2  # server.py + assignee + auto_primer + prompt_discovery
     return {
@@ -98,7 +98,7 @@ def check_tool_count_health(
     try:
         tool_info = _count_registered_tools()
         count = tool_info["count"]
-        
+
         # Determine status
         if count <= MAX_TOOL_COUNT:
             status = "healthy"
@@ -130,24 +130,24 @@ def check_tool_count_health(
                         "suggestion": f"Consolidate {len(tools)} {category} tools into 1 tool with action= parameter",
                         "savings": len(tools) - 1,
                     })
-            
+
             result["consolidation_suggestions"] = suggestions
             result["potential_savings"] = sum(s["savings"] for s in suggestions)
 
         # Create task if requested and over limit
         if create_task and status in ["warning", "over_limit"]:
             try:
-                from project_management_automation.utils import find_project_root
                 import json as json_mod
-                from pathlib import Path
-                
+
+                from project_management_automation.utils import find_project_root
+
                 project_root = find_project_root()
                 todo2_file = project_root / ".todo2" / "state.todo2.json"
-                
+
                 if todo2_file.exists():
                     state = json_mod.loads(todo2_file.read_text())
                     todos = state.get("todos", [])
-                    
+
                     # Check if task already exists
                     existing = [t for t in todos if "tool count" in t.get("name", "").lower()]
                     if not existing:
@@ -192,7 +192,7 @@ def get_tool_count_for_context_primer() -> Dict[str, Any]:
     """
     tool_info = _count_registered_tools()
     count = tool_info["count"]
-    
+
     return {
         "tool_count": count,
         "limit": MAX_TOOL_COUNT,

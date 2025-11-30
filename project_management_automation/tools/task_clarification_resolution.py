@@ -14,7 +14,7 @@ import logging
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from ..utils import find_project_root
 from ..utils.todo2_utils import is_review_status

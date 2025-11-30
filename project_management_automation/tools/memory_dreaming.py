@@ -9,7 +9,6 @@ Trusted Advisor: 📜 Chacham (Wisdom)
 "In dreams, we process the day's learning." - Reflection deepens understanding.
 """
 
-import json
 import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -21,9 +20,8 @@ from ..resources.memories import (
     create_memory,
 )
 from .wisdom.advisors import (
-    consult_advisor,
     METRIC_ADVISORS,
-    STAGE_ADVISORS,
+    consult_advisor,
 )
 
 logger = logging.getLogger(__name__)
@@ -90,20 +88,20 @@ def _detect_patterns(memories: list[dict[str, Any]]) -> dict[str, Any]:
         "architecture_insights": [],
         "preferences_learned": [],
     }
-    
+
     # Common blocker words
     blocker_words = ["block", "stuck", "fail", "error", "broken", "cannot", "unable"]
-    
+
     for memory in memories:
         title = memory.get("title", "").lower()
         content = memory.get("content", "").lower()
         category = memory.get("category", "")
-        
+
         # Extract topics (words from title)
         for word in title.split():
             if len(word) > 3 and word.isalpha():
                 patterns["recurring_topics"][word] += 1
-        
+
         # Detect blockers
         for word in blocker_words:
             if word in content or word in title:
@@ -113,7 +111,7 @@ def _detect_patterns(memories: list[dict[str, Any]]) -> dict[str, Any]:
                     "keyword": word,
                 })
                 break
-        
+
         # Categorize by type
         if category == "debug":
             patterns["solutions"].append({
@@ -131,12 +129,12 @@ def _detect_patterns(memories: list[dict[str, Any]]) -> dict[str, Any]:
                 "title": memory.get("title", ""),
                 "id": memory.get("id", ""),
             })
-    
+
     # Filter to truly recurring topics (3+ occurrences)
     patterns["recurring_topics"] = {
         k: v for k, v in patterns["recurring_topics"].items() if v >= 3
     }
-    
+
     return patterns
 
 
@@ -147,34 +145,34 @@ def _generate_dream_narrative(
 ) -> str:
     """Generate a narrative summary of the dream."""
     parts = []
-    
+
     # Opening
     parts.append("🌙 **Memory Dream Summary**\n")
     parts.append(f"Reflecting on {len(memories)} memories...\n")
-    
+
     # Recurring themes
     if patterns["recurring_topics"]:
         topics = sorted(patterns["recurring_topics"].items(), key=lambda x: -x[1])[:5]
         parts.append("\n📌 **Recurring Themes:**")
         for topic, count in topics:
             parts.append(f"  - {topic}: mentioned {count} times")
-    
+
     # Blockers encountered
     if patterns["blockers"]:
         parts.append(f"\n🚧 **Blockers Encountered:** {len(patterns['blockers'])}")
         for blocker in patterns["blockers"][:3]:
             parts.append(f"  - {blocker['title']}")
-    
+
     # Solutions found
     if patterns["solutions"]:
         parts.append(f"\n✅ **Solutions Discovered:** {len(patterns['solutions'])}")
         for solution in patterns["solutions"][:3]:
             parts.append(f"  - {solution['title']}")
-    
+
     # Architecture insights
     if patterns["architecture_insights"]:
         parts.append(f"\n🏗️ **Architecture Insights:** {len(patterns['architecture_insights'])}")
-    
+
     # Advisor wisdom
     if advisor_reflections:
         parts.append("\n\n🧙‍♂️ **Advisor Wisdom:**")
@@ -182,7 +180,7 @@ def _generate_dream_narrative(
             parts.append(f"\n  {reflection.get('advisor_icon', '📜')} **{reflection.get('advisor_name', 'Advisor')}:**")
             parts.append(f"  \"{reflection.get('quote', '')}\"")
             parts.append(f"  — {reflection.get('quote_source', '')}")
-    
+
     return "\n".join(parts)
 
 
@@ -218,19 +216,19 @@ def memory_dream(
     """
     # Load memories based on scope
     all_memories = _load_all_memories()
-    
+
     scope_days = {
         "day": 1,
         "week": 7,
         "month": 30,
         "all": 365 * 10,  # Effectively all
     }
-    
+
     days = scope_days.get(scope, 7)
     cutoff = (datetime.now() - timedelta(days=days)).isoformat()
-    
+
     memories = [m for m in all_memories if m.get("created_at", "") >= cutoff]
-    
+
     if not memories:
         return {
             "status": "no_memories",
@@ -240,23 +238,23 @@ def memory_dream(
             "reflections": [],
             "insights": [],
         }
-    
+
     # Detect patterns
     patterns = _detect_patterns(memories)
-    
+
     # Group memories by category for analysis
     by_category: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for m in memories:
         by_category[m.get("category", "unknown")].append(m)
-    
+
     # Select advisors
     if advisors is None:
         # Auto-select based on memory categories present
         selected_advisors = []
-        
+
         # Always include Chacham for wisdom
         selected_advisors.append("chacham")
-        
+
         # Add category-specific advisors
         if by_category.get("debug"):
             selected_advisors.append("stoic")
@@ -266,26 +264,26 @@ def memory_dream(
             selected_advisors.append("confucius")
         if by_category.get("insight") or by_category.get("preference"):
             selected_advisors.append("tao")
-        
+
         advisors = list(set(selected_advisors))[:4]  # Max 4 advisors
-    
+
     # Consult advisors
     reflections = []
     for advisor_key in advisors:
         advisor_info = DREAM_ADVISORS.get(advisor_key)
         if not advisor_info:
             continue
-        
+
         # Find a relevant metric for this advisor
         metric = None
         for m, info in METRIC_ADVISORS.items():
             if info.get("advisor") == advisor_key:
                 metric = m
                 break
-        
+
         # Calculate a "score" based on memory health
         score = min(100, len(memories) * 5)  # More memories = higher score
-        
+
         consultation = consult_advisor(
             metric=metric,
             stage="retrospective",  # Dreaming is like a retrospective
@@ -293,13 +291,13 @@ def memory_dream(
             context=f"Dreaming on {len(memories)} memories from last {days} days",
             log=True,
         )
-        
+
         reflections.append({
             **consultation,
             "dream_focus": advisor_info.get("focus", ""),
             "categories_analyzed": advisor_info.get("analyzes", []),
         })
-    
+
     # Generate insights
     insights = []
     if generate_insights:
@@ -311,7 +309,7 @@ def memory_dream(
                 "content": f"Focus areas: {', '.join(t[0] for t in top_topics)}",
                 "evidence_count": sum(t[1] for t in top_topics),
             })
-        
+
         # Insight from blockers
         if patterns["blockers"]:
             insights.append({
@@ -319,7 +317,7 @@ def memory_dream(
                 "content": f"Encountered {len(patterns['blockers'])} blockers - consider preventive measures",
                 "evidence_count": len(patterns["blockers"]),
             })
-        
+
         # Insight from solutions
         if len(patterns["solutions"]) >= 3:
             insights.append({
@@ -327,7 +325,7 @@ def memory_dream(
                 "content": f"Built up {len(patterns['solutions'])} debug solutions - valuable knowledge base",
                 "evidence_count": len(patterns["solutions"]),
             })
-        
+
         # Insight from architecture
         if patterns["architecture_insights"]:
             insights.append({
@@ -335,10 +333,10 @@ def memory_dream(
                 "content": f"Documented {len(patterns['architecture_insights'])} architecture insights",
                 "evidence_count": len(patterns["architecture_insights"]),
             })
-    
+
     # Generate narrative
     narrative = _generate_dream_narrative(patterns, memories, reflections)
-    
+
     # Save dream as memory
     dream_memory_id = None
     if save_dream:
@@ -359,7 +357,7 @@ def memory_dream(
             },
         )
         dream_memory_id = dream_memory["id"]
-    
+
     return {
         "status": "success",
         "scope": scope,
@@ -412,7 +410,7 @@ def dream_with_focus(
             "status": "error",
             "error": f"Invalid category: {focus_category}. Use one of: {', '.join(MEMORY_CATEGORIES)}",
         }
-    
+
     # Select advisor based on category
     category_advisors = {
         "debug": ["stoic", "enochian"],
@@ -421,7 +419,7 @@ def dream_with_focus(
         "preference": ["chacham", "tao"],
         "insight": ["chacham", "confucius"],
     }
-    
+
     return memory_dream(
         scope=scope,
         advisors=category_advisors.get(focus_category, ["chacham"]),
@@ -435,4 +433,8 @@ __all__ = [
     "dream_with_focus",
     "DREAM_ADVISORS",
 ]
+
+
+
+
 

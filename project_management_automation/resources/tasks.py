@@ -7,7 +7,7 @@ Provides resource access to cached Todo2 task lists, filtered by agent, status, 
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from ..utils import (
     find_project_root,

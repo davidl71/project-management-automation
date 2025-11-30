@@ -12,7 +12,7 @@ Philosophy: Reduce context pollution by showing only relevant tools.
 """
 
 import logging
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 logger = logging.getLogger("exarp.middleware.tool_filter")
 

@@ -76,7 +76,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "health",
         "outputs": ["agents_status", "uncommitted_files", "recommendations"],
     },
-    
+
     # Task Management
     "analyze_todo2_alignment": {
         "hint": "Task alignment. Misaligned count, avg score, follow-up tasks.",
@@ -108,7 +108,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "tasks",
         "outputs": ["total_tasks", "tasks_list"],
     },
-    
+
     # Security
     "scan_dependency_security": {
         "hint": "Security scan. Vuln count by severity, language breakdown, remediation.",
@@ -125,7 +125,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "security",
         "outputs": ["total_issues", "critical_count", "recommendations"],
     },
-    
+
     # Automation
     "run_daily_automation": {
         "hint": "Daily automation. Docs, alignment, duplicates, security checks.",
@@ -152,7 +152,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "automation",
         "outputs": ["patterns_configured", "actions_defined"],
     },
-    
+
     # Testing
     "run_tests": {
         "hint": "Test runner. pytest/unittest, pass/fail counts, coverage.",
@@ -169,7 +169,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "testing",
         "outputs": ["checklist_status", "pass_fail_counts", "ready_for_review"],
     },
-    
+
     # Configuration
     "generate_cursor_rules": {
         "hint": "Cursor rules. Generates .mdc rules from project analysis.",
@@ -186,7 +186,6 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "config",
         "outputs": ["files_simplified", "reduction_percent"],
     },
-    
     # PRD & Planning
     "generate_prd": {
         "hint": "PRD generation. Creates Product Requirements Document from codebase.",
@@ -198,7 +197,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "planning",
         "outputs": ["persona_coverage", "unaligned_tasks", "recommendations"],
     },
-    
+
     # Workflow
     "focus_mode": {
         "hint": "Focus mode. Switch workflow modes, reduce visible tools 50-80%.",
@@ -220,7 +219,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "workflow",
         "outputs": ["recommended_model", "confidence", "alternatives"],
     },
-    
+
     # Advisors
     "consult_advisor": {
         "hint": "Advisor consultation. Wisdom from trusted advisors by metric/stage.",
@@ -237,7 +236,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "advisors",
         "outputs": ["advisors", "by_metric", "by_stage"],
     },
-    
+
     # Memory
     "save_memory": {
         "hint": "Save memory. Persist insight to AI session memory.",
@@ -254,7 +253,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "memory",
         "outputs": ["results", "match_count"],
     },
-    
+
     # Session Handoff (Multi-Dev Coordination)
     "session_handoff": {
         "hint": "Session handoff. End/resume sessions for multi-dev coordination. Actions: end, resume, latest, list.",
@@ -266,7 +265,7 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "coordination",
         "outputs": ["assignee", "workload_summary", "unassigned_count"],
     },
-    
+
     # Context Management
     "summarize_context": {
         "hint": "Context summarizer. Compresses verbose outputs to key metrics.",
@@ -342,21 +341,21 @@ def _load_project_goals() -> Dict[str, Any]:
     """Load project goals keywords for alignment context."""
     project_root = _find_project_root()
     goals_file = project_root / "PROJECT_GOALS.md"
-    
+
     if not goals_file.exists():
         return {"phases": [], "keywords": [], "error": "PROJECT_GOALS.md not found"}
-    
+
     try:
         content = goals_file.read_text()
-        
+
         # Extract phases and keywords
         phases = []
         all_keywords = []
-        
+
         import re
         phase_pattern = r"### Phase \d+: (.+?)\n.*?\*\*Keywords\*\*: (.+?)(?:\n|$)"
         matches = re.findall(phase_pattern, content, re.DOTALL)
-        
+
         for name, keywords in matches:
             phase_keywords = [k.strip() for k in keywords.split(",")]
             phases.append({
@@ -364,7 +363,7 @@ def _load_project_goals() -> Dict[str, Any]:
                 "keywords": phase_keywords[:10],  # Limit for context efficiency
             })
             all_keywords.extend(phase_keywords)
-        
+
         return {
             "phases": phases,
             "keywords": list(set(all_keywords))[:30],  # Deduplicated, limited
@@ -378,27 +377,27 @@ def _load_recent_tasks(limit: int = 10) -> Dict[str, Any]:
     """Load recent task summary for context."""
     project_root = _find_project_root()
     todo2_file = project_root / ".todo2" / "state.todo2.json"
-    
+
     if not todo2_file.exists():
         return {"summary": {}, "recent": [], "error": "Todo2 state not found"}
-    
+
     try:
         state = json.loads(todo2_file.read_text())
         todos = state.get("todos", [])
-        
+
         # Count by status
         status_counts = {}
         for todo in todos:
             status = todo.get("status", "Unknown")
             status_counts[status] = status_counts.get(status, 0) + 1
-        
+
         # Get recent (by modified date, limited)
         sorted_todos = sorted(
             todos,
             key=lambda t: t.get("lastModified", ""),
             reverse=True
         )[:limit]
-        
+
         recent = [
             {
                 "id": t.get("id"),
@@ -408,7 +407,7 @@ def _load_recent_tasks(limit: int = 10) -> Dict[str, Any]:
             }
             for t in sorted_todos
         ]
-        
+
         return {
             "summary": status_counts,
             "total": len(todos),
@@ -424,12 +423,12 @@ def _get_current_workflow_mode() -> Dict[str, Any]:
     try:
         from ..tools.dynamic_tools import get_dynamic_tool_manager
         manager = get_dynamic_tool_manager()
-        
+
         mode = manager.current_mode.value
         visible_tools = manager.get_visible_tool_count()
         total_tools = manager.get_total_tool_count()
         reduction = round((1 - visible_tools / max(total_tools, 1)) * 100, 1)
-        
+
         return {
             "mode": mode,
             "visible_tools": visible_tools,
@@ -477,19 +476,19 @@ def get_context_primer(
         "timestamp": datetime.now().isoformat(),
         "description": "Unified context primer for AI assistance",
     }
-    
+
     # 1. Current workflow mode
     workflow = _get_current_workflow_mode()
     if mode:
         workflow["mode"] = mode
         workflow["mode_context"] = WORKFLOW_MODE_CONTEXT.get(mode, {})
     result["workflow"] = workflow
-    
+
     # 2. Tool hints (filtered by mode if applicable)
     if include_hints:
         mode_context = workflow.get("mode_context", {})
         tool_groups = mode_context.get("tool_groups", [])
-        
+
         if tool_groups:
             # Filter hints by category
             filtered_hints = {
@@ -498,13 +497,13 @@ def get_context_primer(
             }
         else:
             filtered_hints = TOOL_HINTS_REGISTRY
-        
+
         # Return compact hint format
         result["hints"] = {
             name: data["hint"] for name, data in filtered_hints.items()
         }
         result["hints_count"] = len(filtered_hints)
-    
+
     # 3. Project goals keywords
     if include_goals:
         goals = _load_project_goals()
@@ -512,7 +511,7 @@ def get_context_primer(
             "phases": [p["name"] for p in goals.get("phases", [])],
             "keywords": goals.get("keywords", [])[:20],  # Top 20 keywords
         }
-    
+
     # 4. Recent task summary
     if include_tasks:
         tasks = _load_recent_tasks(limit=5)
@@ -521,7 +520,7 @@ def get_context_primer(
             "total": tasks.get("total", 0),
             "recent_ids": [t["id"] for t in tasks.get("recent", [])],
         }
-    
+
     # 5. Relevant prompts for mode
     if include_prompts:
         mode_context = workflow.get("mode_context", {})
@@ -530,13 +529,13 @@ def get_context_primer(
             "recommended": relevant_prompts[:5],
             "all_modes": list(WORKFLOW_MODE_CONTEXT.keys()),
         }
-    
+
     # 6. Tool count health (design constraint: ≤30 tools)
     try:
         from ..tools.tool_count_health import get_tool_count_for_context_primer
         tool_health = get_tool_count_for_context_primer()
         result["tool_health"] = tool_health
-        
+
         # Add warning if over limit
         if tool_health.get("status") == "over_limit":
             result["warnings"] = result.get("warnings", [])
@@ -546,7 +545,7 @@ def get_context_primer(
             )
     except Exception as e:
         logger.debug(f"Could not get tool count health: {e}")
-    
+
     return json.dumps(result, indent=2)
 
 
@@ -564,7 +563,7 @@ def get_hints_for_mode(mode: str) -> str:
     """
     mode_context = WORKFLOW_MODE_CONTEXT.get(mode, WORKFLOW_MODE_CONTEXT["development"])
     tool_groups = mode_context.get("tool_groups", [])
-    
+
     filtered_hints = {}
     for name, data in TOOL_HINTS_REGISTRY.items():
         if data.get("category") in tool_groups or not tool_groups:
@@ -573,7 +572,7 @@ def get_hints_for_mode(mode: str) -> str:
                 "category": data["category"],
                 "outputs": data.get("outputs", []),
             }
-    
+
     return json.dumps({
         "mode": mode,
         "description": mode_context.get("description", ""),
@@ -604,7 +603,7 @@ def get_all_hints() -> str:
             "hint": data["hint"],
             "outputs": data.get("outputs", []),
         })
-    
+
     return json.dumps({
         "description": "Centralized tool hint registry",
         "total_tools": len(TOOL_HINTS_REGISTRY),
@@ -626,19 +625,19 @@ def register_context_primer_resources(mcp) -> None:
         def context_primer_resource() -> str:
             """Get unified context primer for AI."""
             return get_context_primer()
-        
+
         @mcp.resource("automation://hints")
         def all_hints_resource() -> str:
             """Get all tool hints."""
             return get_all_hints()
-        
+
         @mcp.resource("automation://hints/{mode}")
         def hints_by_mode_resource(mode: str) -> str:
             """Get hints filtered by workflow mode."""
             return get_hints_for_mode(mode)
-        
+
         logger.info("✅ Registered 3 context primer resources")
-        
+
     except Exception as e:
         logger.warning(f"Could not register context primer resources: {e}")
 

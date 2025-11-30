@@ -12,10 +12,9 @@ Tests cover:
 
 import json
 import tempfile
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-from unittest.mock import patch, MagicMock
-import pytest
+from unittest.mock import patch
 
 
 class TestMemoryCategories:
@@ -375,7 +374,7 @@ class TestSessionMemoryTools:
                 "project_management_automation.resources.memories.find_project_root",
                 return_value=Path(tmpdir),
             ):
-                from project_management_automation.tools.session_memory import save_session_insight, recall_task_context
+                from project_management_automation.tools.session_memory import recall_task_context, save_session_insight
 
                 # Create memories linked to task
                 save_session_insight(title="Debug 1", content="Fix", category="debug", task_id="task-recall")
@@ -413,8 +412,8 @@ class TestSessionMemoryTools:
                 return_value=Path(tmpdir),
             ):
                 from project_management_automation.tools.session_memory import (
-                    save_session_insight,
                     generate_session_summary,
+                    save_session_insight,
                 )
 
                 save_session_insight(title="Summary Test", content="Content", category="insight")
@@ -490,8 +489,8 @@ class TestSprintMemories:
                 return_value=Path(tmpdir),
             ):
                 from project_management_automation.tools.session_memory import (
-                    save_session_insight,
                     get_memories_for_sprint,
+                    save_session_insight,
                 )
 
                 # Create various memories

@@ -12,7 +12,7 @@ Usage:
 
 import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger("exarp.resources.capabilities")
 
@@ -142,7 +142,7 @@ def get_capabilities(domain: Optional[str] = None, compact: bool = True) -> str:
         data = {domain: CAPABILITIES[domain]}
     else:
         data = CAPABILITIES
-    
+
     if compact:
         # Ultra-compact format for priming
         compact_data = {}
@@ -172,7 +172,7 @@ def get_capabilities_summary() -> str:
     summary = {}
     for domain, info in CAPABILITIES.items():
         summary[domain] = info["description"]
-    
+
     return json.dumps({
         "exarp": summary,
         "hint": "Use automation://capabilities/{domain} for details",
@@ -197,19 +197,19 @@ def register_capabilities_resources(mcp) -> None:
         def capabilities_resource() -> str:
             """Get concise exarp capabilities for agent priming."""
             return get_capabilities()
-        
+
         @mcp.resource("automation://capabilities/summary")
         def capabilities_summary_resource() -> str:
             """Get one-liner summary of exarp capabilities."""
             return get_capabilities_summary()
-        
+
         @mcp.resource("automation://capabilities/{domain}")
         def domain_capabilities_resource(domain: str) -> str:
             """Get capabilities for a specific domain."""
             return get_domain_capabilities(domain)
-        
+
         logger.info("✅ Registered 3 capabilities resources")
-        
+
     except Exception as e:
         logger.warning(f"Could not register capabilities resources: {e}")
 
