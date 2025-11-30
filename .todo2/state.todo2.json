@@ -3058,6 +3058,31 @@
           "lastModified": "2025-11-30T23:45:02.652949"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251130234543-897437",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-30T23:45:43.897493",
+      "lastModified": "2025-11-30T23:45:44.651136",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251130234543-897437-C-1",
+          "todoId": "AUTO-20251130234543-897437",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 49.0%**\n\u26a0\ufe0f 3 broken links need attention\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":317,\"broken_internal\":[{\"url\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"source\":\"docs/INDEX.md\"},{\"url\":\"../../agents/shared/COORDINATION.md\",\"source\":\"docs/TASK_ASSIGNEE_GUIDE.md\"},{\"url\":\"./SESSION_HANDOFF.md\",\"source\":\"docs/SESSION_HANDOFF_SYNC.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"},{\"source\":\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"target\":\"./DESIGN_DECISIONS.md#hot-reload-dev_reload-tool\"},{\"source\":\"SESSION_HANDOFF_SYNC.md\",\"target\":\"./SESSION_HANDOFF.md\"}],\"orphaned_files\":[\"PROJECT_SCORECARD.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"EXARP_QUICK_REFERENCE.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"RECOMMENDED_MCP_COMPANIONS.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"FASTMCP_DEEP_INVESTIGATION.md\",\"MODE-002_SETUP_COMPLETE.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"UVX_LOCATION_GUIDE.md\",\"TOOL_CONSOLIDATION_COMPLETE.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"PARALLELIZATION_SETUP.md\",\"FASTMCP_ERROR_INVESTIGATION_COMPLETE.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"MCP_FRAMEWORK_ERROR_SYSTEM_WIDE.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"PORTABILITY_ANALYSIS.md\",\"SESSION_HANDOFF_MCP_ERROR_ANALYSIS.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"TOOL_CONSOLIDATION_PLAN.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"SPRINT_AUTOMATION_REPORT.md\"]},\"health_score\":49.0}",
+          "created": "2025-11-30T23:45:44.635212",
+          "lastModified": "2025-11-30T23:45:44.635221"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-30T07:35:18.121292Z",
