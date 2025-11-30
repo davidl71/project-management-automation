@@ -50,5 +50,7 @@ if [ -z "$UVX_PATH" ]; then
     exit 1
 fi
 
-# Execute uvx with exarp and pass through all arguments
-exec "$UVX_PATH" exarp "$@"
+# Execute uvx with exarp in editable mode (uses local code)
+# This ensures the latest local version is used instead of cached/remote version
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$UVX_PATH" --with-editable "$SCRIPT_DIR" exarp "$@"

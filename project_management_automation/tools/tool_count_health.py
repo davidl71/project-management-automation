@@ -47,29 +47,63 @@ CONSOLIDATION_CANDIDATES = {
 
 
 def _count_registered_tools() -> Dict[str, Any]:
-    """Count tools registered in the MCP server."""
+    """Count tools registered in the MCP server (tools only, not resources or prompts)."""
     try:
         # Try to import from server to get actual count
         from project_management_automation.server import mcp
 
-        # Get tool count from MCP instance
+        # Try to access _tool_manager which FastMCP uses internally
+        # This gives us the actual registered tools (not resources or prompts)
+        if hasattr(mcp, '_tool_manager'):
+            tool_manager = mcp._tool_manager
+            if hasattr(tool_manager, '_tools'):
+                tools = tool_manager._tools
+                if isinstance(tools, dict):
+                    tool_names = list(tools.keys())
+                    return {
+                        "count": len(tool_names),
+                        "tools": tool_names,
+                        "source": "tool_manager",
+                        "note": "Counts only callable tools, not resources or prompts",
+                    }
+        
+        # Fallback: try _tools attribute
         if hasattr(mcp, '_tools'):
-            tools = list(mcp._tools.keys())
-            return {
-                "count": len(tools),
-                "tools": tools,
-                "source": "mcp_instance",
-            }
+            tools = mcp._tools
+            if isinstance(tools, dict):
+                tool_names = list(tools.keys())
+                return {
+                    "count": len(tool_names),
+                    "tools": tool_names,
+                    "source": "mcp_tools_attr",
+                }
     except Exception as e:
         logger.debug(f"Could not get tools from MCP instance: {e}")
 
-    # Fallback: estimate from known registrations
-    estimated_count = 25 + 6 + 2 + 2  # server.py + assignee + auto_primer + prompt_discovery
+    # Fallback: count @mcp.tool() decorators in server.py
+    try:
+        import re
+        from pathlib import Path
+        server_file = Path(__file__).parent.parent / "server.py"
+        if server_file.exists():
+            content = server_file.read_text()
+            tool_decorators = len(re.findall(r'@mcp\.tool\(\)', content))
+            return {
+                "count": tool_decorators,
+                "tools": [],
+                "source": "decorator_count",
+                "note": "Counted @mcp.tool() decorators in server.py",
+            }
+    except Exception as e:
+        logger.debug(f"Could not count decorators: {e}")
+
+    # Final fallback: estimate
+    estimated_count = 22  # Updated after consolidation
     return {
         "count": estimated_count,
         "tools": [],
         "source": "estimated",
-        "note": "Could not access MCP instance, using estimate",
+        "note": "Using fallback estimate (22 tools after consolidation)",
     }
 
 
