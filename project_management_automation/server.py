@@ -1066,25 +1066,34 @@ if mcp:
             """
             return _discovery(action, category, persona, include_examples, tool_name)
 
+        # NOTE: focus_mode, suggest_mode, tool_usage_stats removed - use workflow_mode(action=focus|suggest|stats)
+
         @mcp.tool()
-        async def focus_mode(
+        async def workflow_mode(
+            action: str = "focus",
             mode: Optional[str] = None,
             enable_group: Optional[str] = None,
             disable_group: Optional[str] = None,
             status: bool = False,
+            text: Optional[str] = None,
+            auto_switch: bool = False,
             ctx: Any = None,
         ) -> str:
             """
-            [HINT: Tool curation. Dynamic tool visibility based on workflow mode.]
+            [HINT: Workflow mode management. action=focus|suggest|stats. Unified workflow operations.]
 
-            🎯 Output: Mode status, visible tools, context reduction metrics
-            🔧 Side Effects: Updates tool visibility, sends list_changed notification
+            Unified workflow mode management tool consolidating focus, suggestions, and usage statistics.
+
+            Actions:
+            - action="focus": Manage workflow modes and tool groups
+            - action="suggest": Get mode suggestions based on context/usage
+            - action="stats": View tool usage analytics and patterns
+
+            📊 Output: Mode status, suggestions, or usage statistics
+            🔧 Side Effects: May update tool visibility and send notifications
             ⏱️ Typical Runtime: <100ms
 
-            Philosophy: "An API built for humans will poison your AI agent."
-            Instead of 40+ tools polluting context, focus on what's relevant NOW.
-
-            Modes:
+            Modes (focus action):
             - daily_checkin: Health + overview (9 tools, 82% reduction)
             - security_review: Security-focused (12 tools, 77% reduction)
             - task_management: Task tools only (10 tools, 81% reduction)
@@ -1094,95 +1103,49 @@ if mcp:
             - debugging: Memory + testing (17 tools, 67% reduction)
             - all: Full tool access (52 tools)
 
-            Groups (enable/disable individually):
-            - health, tasks, security, automation, config, testing, advisors, memory, workflow, prd
-
-            Example Prompts:
-            "Switch to security review mode"
-            "Focus on task management"
-            "Enable the advisors tools"
-            "Show current tool focus status"
-
             Args:
-                mode: Workflow mode to switch to (see modes above)
-                enable_group: Specific group to enable
-                disable_group: Specific group to disable
-                status: If True, return current status without changes
+                action: "focus" to manage modes/groups, "suggest" for suggestions, "stats" for analytics
+                mode: Workflow mode to switch to (focus action)
+                enable_group: Specific group to enable (focus action)
+                disable_group: Specific group to disable (focus action)
+                status: If True, return current status without changes (focus action)
+                text: Optional text to analyze for mode suggestion (suggest action)
+                auto_switch: If True, automatically switch to suggested mode (suggest action)
 
-            Returns:
-                JSON with mode info, visible tools, and context reduction metrics
+            Examples:
+                workflow_mode(action="focus", mode="security_review")
+                → Switch to security review mode
+
+                workflow_mode(action="suggest", text="vulnerability scanning")
+                → Get mode suggestion for security work
+
+                workflow_mode(action="stats")
+                → View usage analytics
             """
-            result = _focus_mode(mode, enable_group, disable_group, status)
+            result = _workflow_mode(action, mode, enable_group, disable_group, status, text, auto_switch)
 
-            # Send notification if mode changed
-            if ctx and (mode or enable_group or disable_group):
-                try:
-                    from .context_helpers import notify_tools_changed
-                    await notify_tools_changed(ctx)
-                except Exception as e:
-                    logger.debug(f"Could not notify tools changed: {e}")
+            # Send notification if mode changed (for focus or auto-switched suggest)
+            if ctx:
+                should_notify = False
+                if action == "focus" and (mode or enable_group or disable_group):
+                    should_notify = True
+                elif action == "suggest" and auto_switch:
+                    try:
+                        import json
+                        parsed = json.loads(result)
+                        if parsed.get("auto_switched"):
+                            should_notify = True
+                    except Exception:
+                        pass
 
-            return result
-
-        @mcp.tool()
-        async def suggest_mode(
-            text: Optional[str] = None,
-            auto_switch: bool = False,
-            ctx: Any = None,
-        ) -> str:
-            """
-            [HINT: Adaptive mode suggestion. Infers best mode from context/usage patterns.]
-
-            🎯 Output: Suggested mode, confidence score, rationale
-            🔧 Side Effects: If auto_switch=True, changes mode and notifies client
-            ⏱️ Typical Runtime: <50ms
-
-            Uses keyword analysis and usage patterns to suggest the best workflow mode.
-            Call without arguments to get suggestion based on your usage history.
-
-            Example Prompts:
-            "What mode should I use for security work?"
-            "Suggest a mode based on my recent activity"
-            "Auto-switch to the best mode for vulnerability scanning"
-
-            Args:
-                text: Optional text to analyze for mode suggestion
-                auto_switch: If True, automatically switch to suggested mode
-
-            Returns:
-                JSON with suggested mode, confidence, and rationale
-            """
-            result = _suggest_mode(text, auto_switch)
-
-            # Send notification if mode was auto-switched
-            if ctx and auto_switch:
-                try:
-                    import json
-                    parsed = json.loads(result)
-                    if parsed.get("auto_switched"):
+                if should_notify:
+                    try:
                         from .context_helpers import notify_tools_changed
                         await notify_tools_changed(ctx)
-                except Exception as e:
-                    logger.debug(f"Could not notify tools changed: {e}")
+                    except Exception as e:
+                        logger.debug(f"Could not notify tools changed: {e}")
 
             return result
-
-        @mcp.tool()
-        def tool_usage_stats() -> str:
-            """
-            [HINT: Tool usage analytics. Shows usage patterns and co-occurrence data.]
-
-            🎯 Output: Usage statistics, tool relationships, mode history
-            🔧 Side Effects: None
-            ⏱️ Typical Runtime: <10ms
-
-            Shows which tools you use most, which tools are commonly used together,
-            and your workflow mode history. Useful for understanding your patterns.
-
-            Returns:
-                JSON with comprehensive usage analytics
-            """
-            return _get_tool_usage_stats()
 
         # ═══════════════════════════════════════════════════════════════════
         # CONTEXT MANAGEMENT TOOL (CONSOLIDATED)
@@ -1362,6 +1325,9 @@ if mcp:
         )
         from .tools.consolidated import (
             discovery as _discovery,
+        )
+        from .tools.consolidated import (
+            workflow_mode as _workflow_mode,
         )
         CONSOLIDATED_AVAILABLE = True
     except ImportError:

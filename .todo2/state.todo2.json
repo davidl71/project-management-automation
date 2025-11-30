@@ -2485,7 +2485,7 @@
       "id": "232f24f7-ffdd-4fa0-9018-6d92b4a93142",
       "name": "Phase 2B: Consolidate Context Tools (3\u21921)",
       "content": "Create context() function in consolidated.py to combine summarize_context, get_context_summary, and refresh_context_summary into single tool with action parameter",
-      "status": "completed",
+      "status": "Todo",
       "priority": "high",
       "tags": [
         "consolidation",
@@ -2494,43 +2494,23 @@
         "parallel"
       ],
       "created": "2025-11-30T07:35:18.120724Z",
-      "lastModified": "2025-11-30T07:39:24.733286Z",
+      "lastModified": "2025-11-30T07:35:18.121164Z",
       "dependencies": [],
       "long_description": "**Objective:** Consolidate context tools (3\u21921) to reduce tool count.\n\n**Tasks:**\n1. Create `context()` function in `consolidated.py` (45 min)\n2. Update `server.py` registration (20 min)\n3. Update tests (15 min)\n4. Verify tool count (10 min)\n\n**Files:**\n- `project_management_automation/tools/consolidated.py` (MODIFY)\n- `project_management_automation/tools/context_summarizer.py` (REFERENCE)\n- `project_management_automation/server.py` (MODIFY)\n\n**Deliverables:**\n- Single `context()` tool with action parameter\n- Consolidate: `summarize_context`, `get_context_summary`, `refresh_context_summary`\n- Remove individual tool registrations\n- Update tests\n\n**Reference:** `docs/TOOL_CONSOLIDATION_PLAN.md` and `docs/TOOL_CONSOLIDATION_PARALLELIZATION.md`\n",
       "project_id": "davidl71/project-management-automation",
       "assignee": {
         "type": "host",
-        "name": "dlowes-dell",
-        "hostname": "dlowes-dell",
-        "assigned_at": "2025-11-30T07:39:24.733261Z",
+        "name": "remote-agent-196.57",
+        "hostname": "192.168.196.57",
+        "assigned_at": "2025-11-30T07:35:18.121186Z",
         "assigned_by": "manual"
-      },
-      "changes": [
-        {
-          "field": "assignee",
-          "oldValue": {
-            "type": "host",
-            "name": "remote-agent-196.57",
-            "hostname": "192.168.196.57",
-            "assigned_at": "2025-11-30T07:35:18.121186Z",
-            "assigned_by": "manual"
-          },
-          "newValue": {
-            "type": "host",
-            "name": "dlowes-dell",
-            "hostname": "dlowes-dell",
-            "assigned_at": "2025-11-30T07:39:24.733261Z",
-            "assigned_by": "manual"
-          },
-          "timestamp": "2025-11-30T07:39:24.733292Z"
-        }
-      ]
+      }
     },
     {
       "id": "615e8748-7cf0-43d7-9ba5-8c25a50a9170",
       "name": "Phase 2C: Consolidate Discovery Tools (2\u21921)",
       "content": "Create discovery() function in consolidated.py to combine find_tasks_in_comments and find_tasks_in_markdown into single tool with action parameter",
-      "status": "completed",
+      "status": "Todo",
       "priority": "high",
       "tags": [
         "consolidation",
@@ -2539,35 +2519,65 @@
         "parallel"
       ],
       "created": "2025-11-30T07:35:18.121233Z",
-      "lastModified": "2025-11-30T07:39:24.741090Z",
+      "lastModified": "2025-11-30T07:35:18.121248Z",
       "dependencies": [],
       "long_description": "**Objective:** Consolidate discovery tools (2\u21921) to reduce tool count.\n\n**Tasks:**\n1. Create `discovery()` function in `consolidated.py` (30 min)\n2. Update `server.py` registration (15 min)\n3. Update tests (10 min)\n4. Verify tool count (5 min)\n\n**Files:**\n- `project_management_automation/tools/consolidated.py` (MODIFY)\n- `project_management_automation/tools/task_discovery.py` (REFERENCE)\n- `project_management_automation/server.py` (MODIFY)\n\n**Deliverables:**\n- Single `discovery()` tool with action parameter\n- Consolidate: `find_tasks_in_comments`, `find_tasks_in_markdown`\n- Remove individual tool registrations\n- Update tests\n\n**Reference:** `docs/TOOL_CONSOLIDATION_PLAN.md` and `docs/TOOL_CONSOLIDATION_PARALLELIZATION.md`\n",
       "project_id": "davidl71/project-management-automation",
       "assignee": {
         "type": "host",
-        "name": "dlowes-dell",
-        "hostname": "dlowes-dell",
-        "assigned_at": "2025-11-30T07:39:24.741073Z",
+        "name": "remote-agent-196.57",
+        "hostname": "192.168.196.57",
+        "assigned_at": "2025-11-30T07:35:18.121261Z",
         "assigned_by": "manual"
-      },
-      "changes": [
+      }
+    },
+    {
+      "id": "AUTO-20251130093619-765697",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-30T09:36:19.765716",
+      "lastModified": "2025-11-30T09:36:20.452676",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
         {
-          "field": "assignee",
-          "oldValue": {
-            "type": "host",
-            "name": "remote-agent-196.57",
-            "hostname": "192.168.196.57",
-            "assigned_at": "2025-11-30T07:35:18.121261Z",
-            "assigned_by": "manual"
-          },
-          "newValue": {
-            "type": "host",
-            "name": "dlowes-dell",
-            "hostname": "dlowes-dell",
-            "assigned_at": "2025-11-30T07:39:24.741073Z",
-            "assigned_by": "manual"
-          },
-          "timestamp": "2025-11-30T07:39:24.741096Z"
+          "id": "AUTO-20251130093619-765697-C-1",
+          "todoId": "AUTO-20251130093619-765697",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 57.0%**\n\u26a0\ufe0f 2 broken links need attention\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":301,\"broken_internal\":[{\"url\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"source\":\"docs/INDEX.md\"},{\"url\":\"../../agents/shared/COORDINATION.md\",\"source\":\"docs/TASK_ASSIGNEE_GUIDE.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"EXARP_WRAPPER_EXAMPLES.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"EXARP_QUICK_REFERENCE.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"SPRINT_AUTOMATION_REPORT.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"TASK_ASSIGNEE_GUIDE.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"RECOMMENDED_MCP_COMPANIONS.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"PORTABILITY_ANALYSIS.md\",\"UVX_LOCATION_GUIDE.md\",\"MODE-002_SETUP_COMPLETE.md\",\"PROJECT_SCORECARD.md\",\"PARALLELIZATION_SETUP.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\",\"TOOL_CONSOLIDATION_PLAN.md\"]},\"health_score\":57.0}",
+          "created": "2025-11-30T09:36:20.437956",
+          "lastModified": "2025-11-30T09:36:20.437962"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251130094209-431865",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-11-30T09:42:09.431914",
+      "lastModified": "2025-11-30T09:42:13.219383",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251130094209-431865-C-1",
+          "todoId": "AUTO-20251130094209-431865",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 57.0%**\n\u26a0\ufe0f 2 broken links need attention\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":301,\"broken_internal\":[{\"url\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\",\"source\":\"docs/INDEX.md\"},{\"url\":\"../../agents/shared/COORDINATION.md\",\"source\":\"docs/TASK_ASSIGNEE_GUIDE.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":307}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"EXARP_PWA_ENHANCEMENT_STRATEGY.md\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"}],\"orphaned_files\":[\"PORTABILITY_ANALYSIS.md\",\"MODE-002_SETUP_COMPLETE.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"UVX_LOCATION_GUIDE.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"RECOMMENDED_MCP_COMPANIONS.md\",\"EXARP_QUICK_REFERENCE.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"TASK_ASSIGNEE_GUIDE.md\",\"PARALLELIZATION_SETUP.md\",\"PROJECT_SCORECARD.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"SPRINT_AUTOMATION_REPORT.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"TOOL_CONSOLIDATION_PLAN.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\"]},\"health_score\":57.0}",
+          "created": "2025-11-30T09:42:13.205180",
+          "lastModified": "2025-11-30T09:42:13.205189"
         }
       ]
     }

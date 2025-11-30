@@ -22,6 +22,9 @@ Consolidated tools:
 - memory_maint(action=health|gc|prune|consolidate|dream) ← memory lifecycle management and advisor dreaming
 - task_discovery(action=comments|markdown|orphans|all) ← NEW: find tasks from various sources
 - task_workflow(action=sync|approve|clarify, sub_action for clarify) ← sync_todo_tasks, batch_approve_tasks, clarification
+- context(action=summarize|budget|batch) ← summarize_context, estimate_context_budget, batch_summarize
+- discovery(action=list|help) ← list_tools, get_tool_help
+- workflow_mode(action=focus|suggest|stats) ← focus_mode, suggest_mode, get_tool_usage_stats
 """
 
 import asyncio
@@ -874,6 +877,53 @@ def discovery(
         return json.dumps({
             "status": "error",
             "error": f"Unknown discovery action: {action}. Use 'list' or 'help'.",
+        }, indent=2)
+
+
+def workflow_mode(
+    action: str = "focus",
+    # focus action params
+    mode: Optional[str] = None,
+    enable_group: Optional[str] = None,
+    disable_group: Optional[str] = None,
+    status: bool = False,
+    # suggest action params
+    text: Optional[str] = None,
+    auto_switch: bool = False,
+) -> str:
+    """
+    Unified workflow mode management tool.
+
+    Consolidates workflow mode operations: focus, suggestions, and usage statistics.
+
+    Args:
+        action: "focus" to manage modes/groups, "suggest" to get mode suggestions, "stats" for usage analytics
+        mode: Workflow mode to switch to (focus action)
+        enable_group: Specific group to enable (focus action)
+        disable_group: Specific group to disable (focus action)
+        status: If True, return current status without changes (focus action)
+        text: Optional text to analyze for mode suggestion (suggest action)
+        auto_switch: If True, automatically switch to suggested mode (suggest action)
+
+    Returns:
+        JSON with workflow mode operation results
+    """
+    if action == "focus":
+        from .dynamic_tools import focus_mode
+        return focus_mode(mode, enable_group, disable_group, status)
+    
+    elif action == "suggest":
+        from .dynamic_tools import suggest_mode
+        return suggest_mode(text, auto_switch)
+    
+    elif action == "stats":
+        from .dynamic_tools import get_tool_usage_stats
+        return get_tool_usage_stats()
+    
+    else:
+        return json.dumps({
+            "status": "error",
+            "error": f"Unknown workflow_mode action: {action}. Use 'focus', 'suggest', or 'stats'.",
         }, indent=2)
 
 
