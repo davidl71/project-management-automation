@@ -2,6 +2,8 @@
 
 > **Sync Todo2 state across agents without manual git commits**
 
+> ⚠️ **Note:** If you're experiencing MCP framework errors (`object dict can't be used in 'await' expression`), see [Session Handoff Workaround Guide](./SESSION_HANDOFF_WORKAROUND_GUIDE.md) for direct Python access.
+
 ## Overview
 
 The `session_handoff` tool now includes a `sync` action that enables automatic synchronization of Todo2 state across multiple agents/machines without requiring manual git commits.
@@ -240,5 +242,6 @@ Potential improvements:
 ## Related Documentation
 
 - [Session Handoff Guide](./SESSION_HANDOFF.md) - General session handoff usage
+- [Session Handoff Tool Fix](./SESSION_HANDOFF_TOOL_FIX.md) - Error fix documentation (2025-11-30)
 - [Agentic-Tools Integration](./AGENTIC_TOOLS_INTEGRATION_PLAN.md) - MCP integration details
 - [Task Assignee Guide](./TASK_ASSIGNEE_GUIDE.md) - Cross-host task coordination

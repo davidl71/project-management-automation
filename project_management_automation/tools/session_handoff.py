@@ -14,17 +14,55 @@ The handoff is stored in .todo2/ so it's visible to all machines via git sync.
 """
 
 import asyncio
+import concurrent.futures
 import json
 import logging
 import os
 import socket
 import subprocess
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
+
+
+def _run_async_safe(coro):
+    """
+    Safely run an async coroutine, handling cases where an event loop may already be running.
+    
+    Based on FastMCP best practices: avoid asyncio.run() in running event loops.
+    Uses asyncio.ensure_future() when loop exists, asyncio.run() when it doesn't.
+    
+    Args:
+        coro: The coroutine to run
+        
+    Returns:
+        The result of the coroutine
+    """
+    try:
+        # Check if there's already a running event loop
+        loop = asyncio.get_running_loop()
+        # If we get here, there's already a loop - use ensure_future to schedule
+        # Then run in a separate thread to avoid blocking
+        import concurrent.futures
+        
+        def run_in_thread():
+            """Run the coroutine in a new event loop in a separate thread"""
+            new_loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(new_loop)
+            try:
+                return new_loop.run_until_complete(coro)
+            finally:
+                new_loop.close()
+        
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(run_in_thread)
+            return future.result()
+    except RuntimeError:
+        # No running loop, safe to use asyncio.run()
+        return asyncio.run(coro)
 
 
 def _find_project_root() -> Path:
@@ -210,7 +248,7 @@ def end_session(
     """
     start_time = time.time()
     current_host = _get_current_hostname()
-    timestamp = datetime.utcnow().isoformat() + "Z"
+    timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
     try:
         # Load state
@@ -514,7 +552,7 @@ def _try_agentic_tools_sync(direction: str = "pull") -> dict[str, Any]:
         if direction in ("pull", "both"):
             # List todos to ensure we have latest state
             try:
-                tasks = asyncio.run(mcp_client.list_todos(project_id, working_dir))
+                tasks = _run_async_safe(mcp_client.list_todos(project_id, working_dir))
                 return {
                     "success": True,
                     "method": "agentic-tools",
@@ -688,7 +726,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                         
                         # Auto-commit with descriptive message
                         current_host = _get_current_hostname()
-                        commit_msg = f"Auto-sync Todo2 state from {current_host} [{datetime.utcnow().isoformat()}Z]"
+                        commit_msg = f"Auto-sync Todo2 state from {current_host} [{datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}]"
                         
                         commit_result = subprocess.run(
                             ["git", "commit", "-m", commit_msg],
@@ -804,7 +842,7 @@ def sync_todo2_state(
     results = {
         "success": False,
         "host": current_host,
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "direction": direction,
         "methods_tried": [],
         "final_method": None,
@@ -897,7 +935,7 @@ def resume_session() -> str:
         context = {
             "success": True,
             "current_host": current_host,
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         }
 
         # Add handoff info
