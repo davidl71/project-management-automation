@@ -40,7 +40,7 @@ def analyze_alignment(
     action: str = "todo2",
     create_followup_tasks: bool = True,
     output_path: Optional[str] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified alignment analysis tool.
 
@@ -50,19 +50,28 @@ def analyze_alignment(
         output_path: Optional file to save results
 
     Returns:
-        Alignment analysis results
+        JSON string with alignment analysis results (FastMCP requires strings)
     """
     if action == "todo2":
         from .todo2_alignment import analyze_todo2_alignment
-        return analyze_todo2_alignment(create_followup_tasks, output_path)
+        # analyze_todo2_alignment already returns a JSON string
+        result = analyze_todo2_alignment(create_followup_tasks, output_path)
+        # Ensure it's a string (it should already be)
+        return result if isinstance(result, str) else json.dumps(result, separators=(",", ":"))
     elif action == "prd":
         from .prd_generator import analyze_prd_alignment
-        return analyze_prd_alignment(output_path)
+        result = analyze_prd_alignment(output_path)
+        # Ensure we return a JSON string
+        if isinstance(result, str):
+            return result
+        else:
+            return json.dumps(result, separators=(",", ":"))
     else:
-        return {
+        error_result = {
             "status": "error",
             "error": f"Unknown alignment action: {action}. Use 'todo2' or 'prd'.",
         }
+        return json.dumps(error_result, separators=(",", ":"))
 
 
 async def security_async(

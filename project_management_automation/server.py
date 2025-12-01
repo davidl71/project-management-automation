@@ -1397,14 +1397,10 @@ if mcp:
             📊 Output: Alignment scores, misaligned items, recommendations
             🔧 Side Effects: Creates tasks (todo2 action with create_followup_tasks=True)
             """
+            # _analyze_alignment now returns a JSON string directly (FastMCP requirement)
             result = _analyze_alignment(action, create_followup_tasks, output_path)
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
+            # Ensure we always return a string (should already be a string, but double-check)
+            return str(result) if not isinstance(result, str) else result
 
         @mcp.tool()
         def security(
