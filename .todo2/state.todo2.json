@@ -2840,6 +2840,216 @@
           "lastModified": "2025-12-01T00:40:21.788798"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251201004320-425740",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-01T00:43:20.425811",
+      "lastModified": "2025-12-01T00:43:21.807967",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201004320-425740-C-1",
+          "todoId": "AUTO-20251201004320-425740",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 35.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":333,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"},{\"source\":\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"target\":\"./DESIGN_DECISIONS.md#hot-reload-dev_reload-tool\"}],\"orphaned_files\":[\"GIT_ATTRIBUTION_COMPLETE.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"MCP_DUPLICATE_SERVERS_REPORT.md\",\"EXARP_VERSION_RESOLVED.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"MCP_DUPLICATE_FIX_APPLIED.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"GIT_INSPIRED_IMPLEMENTATION.md\",\"design/EXARP_EXTENSION_ARCHITECTURE_RESEARCH.md\",\"MCP_FRAMEWORK_ERROR_SYSTEM_WIDE.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\",\"GIT_INSPIRED_FEATURES.md\",\"SESSION_HANDOFF_MCP_ERROR_ANALYSIS.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"TOOL_CONSOLIDATION_COMPLETE.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"IN_PROGRESS_TASKS_REVIEW.md\",\"UVX_LOCATION_GUIDE.md\",\"FASTMCP_DEEP_INVESTIGATION.md\",\"GITTASK_ANALYSIS.md\",\"CONTEXT7_TROUBLESHOOTING.md\",\"SPRINT_AUTOMATION_REPORT.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"CONTEXT_BUDGET_ANALYSIS_EXAMPLE.md\",\"MCP_DUPLICATE_FIX_GUIDE.md\",\"STALE_TASKS_REPORT.md\",\"FASTMCP_ERROR_INVESTIGATION_COMPLETE.md\",\"design/EXTENSION_COMPILATION_SUCCESS.md\",\"EXARP_MCP_CONFIG_FIX.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"ATTRIBUTION_REVIEW.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"PARALLELIZATION_SETUP.md\",\"TOOL_CONSOLIDATION_PLAN.md\",\"EXARP_QUICK_REFERENCE.md\",\"ATTRIBUTION_CHECK_FEATURE.md\",\"MODE-002_SETUP_COMPLETE.md\",\"PROJECT_SCORECARD.md\",\"GIT_FEATURES_COMPLETE.md\",\"PORTABILITY_ANALYSIS.md\",\"EXARP_VERSION_UPDATE.md\",\"PWA_CLEANUP.md\"]},\"health_score\":35.0}",
+          "created": "2025-12-01T00:43:21.792228",
+          "lastModified": "2025-12-01T00:43:21.792237"
+        }
+      ]
+    },
+    {
+      "id": "FIX-20251201005122",
+      "name": "Fix FastMCP return type issues (dict vs string)",
+      "content": "Fixed auto_prime_session and checked all tools/resources/prompts for dict return type issues. All now return JSON strings to prevent await expression errors.",
+      "status": "Done",
+      "priority": "high",
+      "tags": [
+        "bugfix",
+        "fastmcp",
+        "tools",
+        "resources"
+      ],
+      "created": "2025-11-30T22:51:22.422002+00:00",
+      "lastModified": "2025-12-01T23:25:36.746392",
+      "dependencies": [],
+      "comments": [
+        {
+          "id": "FIX-20251201005122-C-1",
+          "todoId": "FIX-20251201005122",
+          "type": "result",
+          "content": "**Fixed Issues:**\n\n1. **Tools Fixed:**\n   - auto_prime_session (auto_primer.py)\n   - get_task_context (auto_primer.py)\n   - recommend (consolidated.py)\n   - task_discovery (consolidated.py)\n\n2. **Resources Fixed:**\n   - 8 resources in templates.py\n\n3. **Prompts:** No issues found\n\n**Files Modified:**\n- project_management_automation/tools/auto_primer.py\n- project_management_automation/tools/consolidated.py\n- project_management_automation/server.py\n- project_management_automation/resources/templates.py",
+          "created": "2025-11-30T22:51:22.422757+00:00",
+          "lastModified": "2025-11-30T22:51:22.422760+00:00"
+        },
+        {
+          "id": "FIX-20251201005122-C-2",
+          "todoId": "FIX-20251201005122",
+          "type": "result",
+          "content": "**Completed:** Fixed all FastMCP return type issues and added automation to prevent future issues.\n\n**Changes Made:**\n1. Fixed `memory` function in consolidated.py to return JSON string\n2. Added defensive type checking to 12+ wrapper functions in server.py\n3. Created automated test suite (`tests/test_fastmcp_return_types.py`)\n4. Added cursor rule (`.cursor/rules/fastmcp-return-types.mdc`)\n5. Updated project development rules with FastMCP requirements\n\n**Test Results:**\n- All tests passing: 4 passed, 1 skipped\n- No double-encoding issues found\n- Defensive patterns in place for all MCP tools/resources\n\n**Prevention:**\n- Automated test catches violations before commit\n- Cursor rule documents pattern for future developers\n- Defensive checks prevent double-encoding",
+          "created": "2025-12-01T23:25:36.746367",
+          "lastModified": "2025-12-01T23:25:36.746387"
+        }
+      ],
+      "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "AUTO-20251201005445-645076",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-01T00:54:45.645118",
+      "lastModified": "2025-12-01T00:54:47.431423",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201005445-645076-C-1",
+          "todoId": "AUTO-20251201005445-645076",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 33.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":333,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"},{\"source\":\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"target\":\"./DESIGN_DECISIONS.md#hot-reload-dev_reload-tool\"}],\"orphaned_files\":[\"ATTRIBUTION_CHECK_FEATURE.md\",\"FASTMCP_DEEP_INVESTIGATION.md\",\"EXARP_VERSION_UPDATE.md\",\"design/EXARP_EXTENSION_ARCHITECTURE_RESEARCH.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"CONTEXT7_TROUBLESHOOTING.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"design/EXTENSION_COMPILATION_SUCCESS.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"GITTASK_ANALYSIS.md\",\"SPRINT_AUTOMATION_REPORT.md\",\"PROJECT_SCORECARD.md\",\"DAILY_CHECKIN_REPORT.md\",\"ATTRIBUTION_REVIEW.md\",\"EXARP_MCP_CONFIG_FIX.md\",\"GIT_FEATURES_COMPLETE.md\",\"UVX_LOCATION_GUIDE.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"MODE-002_SETUP_COMPLETE.md\",\"GIT_INSPIRED_FEATURES.md\",\"TOOL_CONSOLIDATION_PLAN.md\",\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"MCP_DUPLICATE_SERVERS_REPORT.md\",\"SESSION_HANDOFF_MCP_ERROR_ANALYSIS.md\",\"PORTABILITY_ANALYSIS.md\",\"MCP_DUPLICATE_FIX_APPLIED.md\",\"GIT_INSPIRED_IMPLEMENTATION.md\",\"CONTEXT_BUDGET_ANALYSIS_EXAMPLE.md\",\"MODE-002_IMPLEMENTATION_PLAN.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"PWA_CLEANUP.md\",\"FASTMCP_RETURN_TYPE_REQUIREMENTS.md\",\"PARALLELIZATION_SETUP.md\",\"MCP_DUPLICATE_FIX_GUIDE.md\",\"MCP_FRAMEWORK_ERROR_SYSTEM_WIDE.md\",\"IN_PROGRESS_TASKS_REVIEW.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"GIT_ATTRIBUTION_COMPLETE.md\",\"TOOL_CONSOLIDATION_COMPLETE.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"EXARP_QUICK_REFERENCE.md\",\"STALE_TASKS_REPORT.md\",\"FASTMCP_ERROR_INVESTIGATION_COMPLETE.md\",\"EXARP_VERSION_RESOLVED.md\"]},\"health_score\":33.0}",
+          "created": "2025-12-01T00:54:47.413941",
+          "lastModified": "2025-12-01T00:54:47.413950"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251201005934-449738",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-01T00:59:34.449850",
+      "lastModified": "2025-12-01T00:59:34.608031",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201005934-449738-C-1",
+          "todoId": "AUTO-20251201005934-449738",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 85.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":333,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":85.0}",
+          "created": "2025-12-01T00:59:34.592521",
+          "lastModified": "2025-12-01T00:59:34.592531"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251201010005-004438",
+      "name": "Automation: Test Coverage Analyzer",
+      "content": "Automated Test Coverage Analyzer execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "test-coverage-analyzer"
+      ],
+      "created": "2025-12-01T01:00:05.004482",
+      "lastModified": "2025-12-01T01:00:05.242164",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201010005-004438-C-1",
+          "todoId": "AUTO-20251201010005-004438",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
+          "created": "2025-12-01T01:00:05.234444",
+          "lastModified": "2025-12-01T01:00:05.234455"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251201010032-256730",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-12-01T01:00:32.256901",
+      "lastModified": "2025-12-01T01:00:32.293363",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201010032-256730-C-1",
+          "todoId": "AUTO-20251201010032-256730",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 119 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[119 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[119 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-12-01T01:00:32.276083",
+          "lastModified": "2025-12-01T01:00:32.276095"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251201230056-862613",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-12-01T23:00:56.862742",
+      "lastModified": "2025-12-01T23:00:56.890246",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201230056-862613-C-1",
+          "todoId": "AUTO-20251201230056-862613",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 120 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[120 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[120 items - see logs for details]\",\"updates\":[],\"dry_run\":false}",
+          "created": "2025-12-01T23:00:56.872845",
+          "lastModified": "2025-12-01T23:00:56.872854"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251201232555-994129",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-01T23:25:55.994226",
+      "lastModified": "2025-12-01T23:25:57.665465",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251201232555-994129-C-1",
+          "todoId": "AUTO-20251201232555-994129",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 31.0%**\n\u26a0\ufe0f 15 documents are stale (>90 days)\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":333,\"broken_internal\":[],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/EXARP_MCP_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_SPECIFICATION_COMPLIANCE.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_DEPLOYMENT_OPTIONS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_LICENSING_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_TODO2_TASKS_SUMMARY.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_FASTMCP_CONFIGURATION.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/PRIVATE_REPOSITORY_SETUP.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_AND_SPLIT_PLAN.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_IMPROVEMENTS_PROGRESS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_TODO2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE1_FOLLOWUP_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PACKAGING_DEPENDENCIES.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_MCP_INTEGRATION_ANALYSIS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308},{\"file\":\"docs/EXARP_PHASE2_TASKS.md\",\"last_updated\":\"2025-01-27\",\"days_old\":308}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[{\"source\":\"EXARP_LICENSING_ANALYSIS.md\",\"target\":\"../LICENSE\"},{\"source\":\"INDEX.md\",\"target\":\"exarp.1\"},{\"source\":\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"target\":\"./DESIGN_DECISIONS.md#hot-reload-dev_reload-tool\"}],\"orphaned_files\":[\"MODE-002_IMPLEMENTATION_PLAN.md\",\"IN_PROGRESS_TASKS_REVIEW.md\",\"UVX_LOCATION_GUIDE.md\",\"SESSION_HANDOFF_RELOAD_GUIDE.md\",\"PWA_CLEANUP.md\",\"TAG_CONSOLIDATION_APPLIED.md\",\"GIT_FEATURES_COMPLETE.md\",\"MEMORY_SYSTEM_USAGE_GUIDE.md\",\"MCP_DUPLICATE_SERVERS_REPORT.md\",\"MODE-002_IMPLEMENTATION_COMPLETE.md\",\"design/EXARP_EXTENSION_ARCHITECTURE.md\",\"TASK_STATUS_STANDARDIZATION.md\",\"ATTRIBUTION_REVIEW.md\",\"FASTMCP_ERROR_INVESTIGATION_COMPLETE.md\",\"EXARP_WRAPPER_SCRIPT_USAGE.md\",\"SESSION_HANDOFF_MCP_ERROR_ANALYSIS.md\",\"PARALLELIZATION_SETUP.md\",\"EXARP_WRAPPER_EXAMPLES.md\",\"FASTMCP_DEEP_INVESTIGATION.md\",\"EXARP_MCP_CONFIG_FIX.md\",\"MCP_DUPLICATE_FIX_APPLIED.md\",\"DAILY_CHECKIN_REPORT.md\",\"PROJECT_SCORECARD.md\",\"EXARP_QUICK_REFERENCE.md\",\"TOOL_CONSOLIDATION_PLAN.md\",\"TOOL_CONSOLIDATION_PARALLELIZATION.md\",\"GITTASK_ANALYSIS.md\",\"design/EXARP_EXTENSION_ARCHITECTURE_RESEARCH.md\",\"PORTABILITY_ANALYSIS.md\",\"SPRINT_AUTOMATION_REPORT.md\",\"EXARP_VERSION_UPDATE.md\",\"EXARP_VERSION_RESOLVED.md\",\"ATTRIBUTION_CHECK_FEATURE.md\",\"STALE_TASKS_REPORT.md\",\"TOOL_CONSOLIDATION_COMPLETE.md\",\"CONTEXT_BUDGET_ANALYSIS_EXAMPLE.md\",\"INTERACTIVE_MCP_INTEGRATION.md\",\"GIT_INSPIRED_IMPLEMENTATION.md\",\"CONTEXT7_TROUBLESHOOTING.md\",\"MCP_DUPLICATE_FIX_GUIDE.md\",\"design/EXTENSION_COMPILATION_SUCCESS.md\",\"MODE-002_PARALLELIZATION_ANALYSIS.md\",\"FASTMCP_RETURN_TYPE_REQUIREMENTS.md\",\"GIT_ATTRIBUTION_COMPLETE.md\",\"research/CURSOR_EXTENSION_RESEARCH.md\",\"TAG_CONSOLIDATION_ANALYSIS.md\",\"GIT_INSPIRED_FEATURES.md\",\"MCP_FRAMEWORK_ERROR_SYSTEM_WIDE.md\",\"EXARP_IMPROVEMENTS_FROM_IB_BOX_SPREAD.md\",\"MCP_SERVER_DUPLICATE_ANALYSIS.md\",\"MODE-002_SETUP_COMPLETE.md\"]},\"health_score\":31.0}",
+          "created": "2025-12-01T23:25:57.649111",
+          "lastModified": "2025-12-01T23:25:57.649120"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",
