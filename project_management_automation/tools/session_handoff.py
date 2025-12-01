@@ -1081,7 +1081,7 @@ def register_handoff_tools(mcp) -> None:
     """Register session handoff tool with MCP server."""
     try:
         @mcp.tool()
-        def session_handoff_tool(
+        def exarp_session_handoff(
             action: str,
             summary: Optional[str] = None,
             blockers: Optional[list[str]] = None,
@@ -1095,9 +1095,15 @@ def register_handoff_tools(mcp) -> None:
             auto_commit: bool = True,
         ) -> str:
             """
-            [HINT: Session handoff. End/resume sessions for multi-dev coordination. Actions: end, resume, latest, list, sync.]
+            [HINT: Exarp session handoff. End/resume sessions for multi-dev coordination with git sync. Actions: end, resume, latest, list, sync.]
 
-            Manage work sessions for multi-developer coordination across machines.
+            Enhanced session handoff tool that wraps agentic-tools with additional features:
+            - Git sync integration (prefers agentic-tools MCP, falls back to git)
+            - Multi-device coordination
+            - Auto-commit functionality
+            - Todo2 state synchronization
+            
+            This is an enhanced wrapper around agentic-tools' session_handoff_tool with exarp-specific features.
             """
             return session_handoff(
                 action=action,
@@ -1113,7 +1119,7 @@ def register_handoff_tools(mcp) -> None:
                 auto_commit=auto_commit,
             )
 
-        logger.info("✅ Registered 1 session handoff tool")
+        logger.info("✅ Registered exarp_session_handoff tool (enhanced wrapper around agentic-tools)")
 
     except Exception as e:
         logger.warning(f"Could not register handoff tools: {e}")

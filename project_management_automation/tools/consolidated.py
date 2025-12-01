@@ -711,7 +711,7 @@ def memory(
     # search params
     query: Optional[str] = None,
     limit: int = 10,
-) -> dict:
+) -> str:
     """
     Unified memory management tool.
 
@@ -727,43 +727,64 @@ def memory(
         limit: Maximum results (search action)
 
     Returns:
-        Memory operation results
+        JSON string with memory operation results
     """
     if action == "save":
         if not title or not content:
-            return {
+            return json.dumps({
                 "success": False,
                 "error": "title and content are required for save action",
-            }
+            }, indent=2)
         from .session_memory import save_session_insight
         meta = None
         if metadata:
             try:
                 meta = json.loads(metadata)
             except json.JSONDecodeError:
-                return {"success": False, "error": "Invalid metadata JSON"}
-        return save_session_insight(title, content, category, task_id, meta)
+                return json.dumps({"success": False, "error": "Invalid metadata JSON"}, indent=2)
+        result = save_session_insight(title, content, category, task_id, meta)
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
     elif action == "recall":
         if not task_id:
-            return {
+            return json.dumps({
                 "success": False,
                 "error": "task_id is required for recall action",
-            }
+            }, indent=2)
         from .session_memory import recall_task_context
-        return recall_task_context(task_id, include_related)
+        result = recall_task_context(task_id, include_related)
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
     elif action == "search":
         if not query:
-            return {
+            return json.dumps({
                 "success": False,
                 "error": "query is required for search action",
-            }
+            }, indent=2)
         from .session_memory import search_session_memories
-        return search_session_memories(query, category if category != "insight" else None, limit)
+        result = search_session_memories(query, category if category != "insight" else None, limit)
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
     else:
-        return {
+        return json.dumps({
             "success": False,
             "error": f"Unknown memory action: {action}. Use 'save', 'recall', or 'search'.",
-        }
+        }, indent=2)
 
 
 def context(

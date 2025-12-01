@@ -1,0 +1,122 @@
+# FastMCP Return Type Requirements
+
+## 🚨 CRITICAL: ALL MCP Tools and Resources MUST Return JSON Strings
+
+**FastMCP expects strings, not dicts. Returning dicts causes "object dict can't be used in 'await' expression" errors.**
+
+## Required Pattern
+
+### For MCP Tools (`@mcp.tool()`)
+
+**ALL tool functions MUST return `str` (JSON string), NEVER `dict`:**
+
+```python
+@mcp.tool()
+def my_tool(...) -> str:
+    """Tool description."""
+    try:
+        result = some_function()
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2)
+```
+
+### For MCP Resources (`@mcp.resource()`)
+
+**ALL resource functions MUST return `str` (JSON string), NEVER `dict`:**
+
+```python
+@mcp.resource("automation://my-resource")
+def my_resource() -> str:
+    """Resource description."""
+    result = get_data()
+    # Ensure we always return a JSON string
+    if isinstance(result, dict):
+        return json.dumps(result, indent=2)
+    return json.dumps({"result": str(result)}, indent=2)
+```
+
+## Defensive Pattern (Recommended)
+
+**Always use defensive type checking before encoding:**
+
+```python
+# ✅ CORRECT: Defensive pattern
+result = underlying_function()
+if isinstance(result, str):
+    return result  # Already JSON string
+elif isinstance(result, dict):
+    return json.dumps(result, indent=2)  # Convert dict to JSON
+else:
+    return json.dumps({"result": str(result)}, indent=2)  # Fallback
+```
+
+## Common Mistakes to Avoid
+
+### ❌ WRONG: Returning dict directly
+```python
+@mcp.tool()
+def my_tool() -> dict:  # ❌ WRONG return type
+    return {"status": "ok"}  # ❌ Will cause FastMCP error
+```
+
+### ❌ WRONG: Double-encoding (encoding already-encoded JSON)
+```python
+@mcp.tool()
+def my_tool() -> str:
+    result = get_json_string()  # Returns JSON string
+    return json.dumps(result)  # ❌ Double-encodes!
+```
+
+### ✅ CORRECT: Defensive pattern prevents double-encoding
+```python
+@mcp.tool()
+def my_tool() -> str:
+    result = get_json_string()  # Returns JSON string
+    if isinstance(result, str):
+        return result  # ✅ Return directly if already string
+    elif isinstance(result, dict):
+        return json.dumps(result, indent=2)  # ✅ Encode if dict
+    else:
+        return json.dumps({"result": str(result)}, indent=2)  # ✅ Fallback
+```
+
+## Files to Check
+
+When adding or modifying MCP tools/resources, check:
+
+1. **All `@mcp.tool()` decorated functions** → Must return `str`
+2. **All `@mcp.resource()` decorated functions** → Must return `str`
+3. **All wrapper functions in `server.py`** → Must have defensive checks
+4. **All consolidated functions in `consolidated.py`** → Must return `str` if used as MCP tools
+
+## Testing
+
+Run the double-encoding test before committing:
+
+```bash
+uv run pytest tests/test_fastmcp_return_types.py -v
+```
+
+## Quick Checklist
+
+Before committing MCP tool/resource changes:
+
+- [ ] Function signature shows `-> str` (not `-> dict`)
+- [ ] All return paths return JSON strings
+- [ ] Defensive type checking is used (`isinstance(result, str)`)
+- [ ] No direct `return dict` statements
+- [ ] Test passes: `uv run pytest tests/test_fastmcp_return_types.py`
+
+## Related Files
+
+- `project_management_automation/server.py` - MCP tool/resource registrations
+- `project_management_automation/tools/consolidated.py` - Consolidated tool implementations
+- `project_management_automation/resources/templates.py` - Resource templates
+- `tests/test_fastmcp_return_types.py` - Automated tests

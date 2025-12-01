@@ -641,7 +641,13 @@ def register_tools():
             else:
                 result = reload_all_modules()
 
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         # Continue with more tool registrations below...
 
@@ -935,7 +941,13 @@ if mcp:
                     dry_run=dry_run,
                     notify=notify,
                 )
-                return json.dumps(result, separators=(",", ":"))
+                # Ensure we always return a JSON string
+                if isinstance(result, str):
+                    return result
+                elif isinstance(result, dict):
+                    return json.dumps(result, separators=(",", ":"))
+                else:
+                    return json.dumps({"result": str(result)}, separators=(",", ":"))
             elif action == "sprint":
                 return _sprint_automation_impl(
                     max_iterations, auto_approve, extract_subtasks,
@@ -1386,7 +1398,13 @@ if mcp:
             🔧 Side Effects: Creates tasks (todo2 action with create_followup_tasks=True)
             """
             result = _analyze_alignment(action, create_followup_tasks, output_path)
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def security(
@@ -1410,7 +1428,13 @@ if mcp:
             🔧 Side Effects: None (read-only)
             """
             result = _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def generate_config(
@@ -1440,7 +1464,13 @@ if mcp:
                 include_indexing, analyze_project,
                 rule_files, output_dir, dry_run
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def setup_hooks(
@@ -1462,7 +1492,13 @@ if mcp:
             🔧 Side Effects: Installs hooks (unless dry_run=True)
             """
             result = _setup_hooks(action, hooks, patterns, config_path, install, dry_run)
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def prompt_tracking(
@@ -1485,7 +1521,13 @@ if mcp:
             🔧 Side Effects: Writes to .cursor/prompt_history/ (log action)
             """
             result = _prompt_tracking(action, prompt, task_id, mode, outcome, iteration, days)
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def health(
@@ -1517,7 +1559,13 @@ if mcp:
                 action, agent_name, check_remote, output_path, create_tasks,
                 task_id, changed_files, auto_check, workflow_path, check_runners
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def check_attribution(
@@ -1593,7 +1641,13 @@ if mcp:
                 documentation_score, completion_score, alignment_score,
                 project_name, include_architecture, include_metrics, include_tasks
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def advisor_audio(
@@ -1616,7 +1670,13 @@ if mcp:
             🔧 Side Effects: Creates audio files (quote/podcast actions)
             """
             result = _advisor_audio(action, text, advisor, days, output_path, backend)
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def task_analysis(
@@ -1646,9 +1706,15 @@ if mcp:
                 custom_rules, remove_tags, output_format,
                 include_recommendations, output_path
             )
-            if action == "hierarchy" and output_format != "json":
-                return result.get("formatted_output", json.dumps(result, separators=(",", ":")))
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                if action == "hierarchy" and output_format != "json":
+                    return result.get("formatted_output", json.dumps(result, separators=(",", ":")))
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def testing(
@@ -1682,7 +1748,13 @@ if mcp:
                 coverage_file, min_coverage, format, target_file, min_confidence,
                 framework, output_path
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def lint(
@@ -1741,7 +1813,15 @@ if mcp:
                 action, title, content, category, task_id, metadata,
                 include_related, query, limit
             )
-            return json.dumps(result, separators=(",", ":"))
+            # _memory now returns a JSON string, so just return it directly
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                # Defensive: if somehow a dict is returned, convert to JSON
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                # Fallback: convert to JSON string
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def task_discovery(
@@ -1815,7 +1895,13 @@ if mcp:
                 filter_tag, task_ids, sub_action, task_id,
                 clarification_text, decision, decisions_json, move_to_todo, output_path
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def memory_maint(
@@ -1854,7 +1940,13 @@ if mcp:
                 similarity_threshold, merge_strategy, scope, advisors,
                 generate_insights, save_dream, dry_run, interactive
             )
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS
@@ -2322,7 +2414,13 @@ if mcp:
         def get_project_scorecard() -> str:
             """Get current project scorecard with all health metrics."""
             result = _generate_project_scorecard("json", True, None)
-            return json.dumps(result, separators=(",", ":"))
+            # Ensure we always return a JSON string
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, separators=(",", ":"))
+            else:
+                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         # Memory resources (AI Session Memory System)
         if MEMORIES_AVAILABLE:
