@@ -677,6 +677,8 @@ def register_tools():
         # NOTE: server_status removed - use health(type="server")
 
         @mcp.tool()
+        @ensure_json_string
+        @mcp.tool()
         def dev_reload(modules: Optional[list[str]] = None) -> str:
             """
             [HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.]
@@ -1173,27 +1175,60 @@ def register_tools():
                         },
                     ),
                     Tool(
-                        name="run_automation",
-                        description="[HINT: Automation runner. action: discover|daily|nightly|sprint. Unified automation control.]",
+                        name="run_daily_automation",
+                        description="[HINT: Daily automation. Run daily checks (docs_health, alignment, duplicates, security).]",
                         inputSchema={
                             "type": "object",
                             "properties": {
-                                "action": {"type": "string", "enum": ["discover", "daily", "nightly", "sprint"], "default": "daily"},
                                 "tasks": {"type": "array", "items": {"type": "string"}},
                                 "include_slow": {"type": "boolean", "default": False},
+                                "dry_run": {"type": "boolean", "default": False},
+                                "output_path": {"type": "string"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="run_nightly_automation",
+                        description="[HINT: Nightly automation. Process tasks automatically with host limits.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
                                 "max_tasks_per_host": {"type": "integer", "default": 5},
                                 "max_parallel_tasks": {"type": "integer", "default": 10},
+                                "priority_filter": {"type": "string"},
+                                "tag_filter": {"type": "array", "items": {"type": "string"}},
+                                "dry_run": {"type": "boolean", "default": False},
+                                "notify": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="run_sprint_automation",
+                        description="[HINT: Sprint automation. Full sprint automation with subtask extraction.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
                                 "max_iterations": {"type": "integer", "default": 10},
                                 "auto_approve": {"type": "boolean", "default": True},
                                 "extract_subtasks": {"type": "boolean", "default": True},
                                 "run_analysis_tools": {"type": "boolean", "default": True},
                                 "run_testing_tools": {"type": "boolean", "default": True},
-                                "min_value_score": {"type": "number", "default": 0.7},
                                 "priority_filter": {"type": "string"},
                                 "tag_filter": {"type": "array", "items": {"type": "string"}},
                                 "dry_run": {"type": "boolean", "default": False},
                                 "output_path": {"type": "string"},
                                 "notify": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="run_discover_automation",
+                        description="[HINT: Discover automation. Find automation opportunities in codebase.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "min_value_score": {"type": "number", "default": 0.7},
+                                "output_path": {"type": "string"},
                             },
                         },
                     ),
@@ -1524,49 +1559,42 @@ def register_tools():
                             arguments.get("dry_run", True),
                             arguments.get("interactive", True),
                         )
-                    elif name == "run_automation":
-                        action = arguments.get("action", "daily")
-                        if action == "discover":
-                            result = _find_automation_opportunities(
-                                arguments.get("min_value_score", 0.7),
-                                arguments.get("output_path"),
-                            )
-                        elif action == "daily":
-                            result = _run_daily_automation(
-                                arguments.get("tasks"),
-                                arguments.get("include_slow", False),
-                                arguments.get("dry_run", False),
-                                arguments.get("output_path"),
-                            )
-                        elif action == "nightly":
-                            from .tools.nightly_task_automation import run_nightly_task_automation
-                            result = run_nightly_task_automation(
-                                max_tasks_per_host=arguments.get("max_tasks_per_host", 5),
-                                max_parallel_tasks=arguments.get("max_parallel_tasks", 10),
-                                priority_filter=arguments.get("priority_filter"),
-                                tag_filter=arguments.get("tag_filter"),
-                                dry_run=arguments.get("dry_run", False),
-                                notify=arguments.get("notify", False),
-                            )
-                        elif action == "sprint":
-                            from .tools.sprint_automation import sprint_automation
-                            result = sprint_automation(
-                                max_iterations=arguments.get("max_iterations", 10),
-                                auto_approve=arguments.get("auto_approve", True),
-                                extract_subtasks=arguments.get("extract_subtasks", True),
-                                run_analysis_tools=arguments.get("run_analysis_tools", True),
-                                run_testing_tools=arguments.get("run_testing_tools", True),
-                                priority_filter=arguments.get("priority_filter"),
-                                tag_filter=arguments.get("tag_filter"),
-                                dry_run=arguments.get("dry_run", False),
-                                output_path=arguments.get("output_path"),
-                                notify=arguments.get("notify", False),
-                            )
-                        else:
-                            result = json.dumps({
-                                "status": "error",
-                                "error": f"Unknown action: {action}. Use discover, daily, nightly, or sprint.",
-                            }, indent=2)
+                    elif name == "run_daily_automation":
+                        result = _run_daily_automation(
+                            arguments.get("tasks"),
+                            arguments.get("include_slow", False),
+                            arguments.get("dry_run", False),
+                            arguments.get("output_path"),
+                        )
+                    elif name == "run_nightly_automation":
+                        from .tools.nightly_task_automation import run_nightly_task_automation
+                        result = run_nightly_task_automation(
+                            max_tasks_per_host=arguments.get("max_tasks_per_host", 5),
+                            max_parallel_tasks=arguments.get("max_parallel_tasks", 10),
+                            priority_filter=arguments.get("priority_filter"),
+                            tag_filter=arguments.get("tag_filter"),
+                            dry_run=arguments.get("dry_run", False),
+                            notify=arguments.get("notify", False),
+                        )
+                    elif name == "run_sprint_automation":
+                        from .tools.sprint_automation import sprint_automation
+                        result = sprint_automation(
+                            max_iterations=arguments.get("max_iterations", 10),
+                            auto_approve=arguments.get("auto_approve", True),
+                            extract_subtasks=arguments.get("extract_subtasks", True),
+                            run_analysis_tools=arguments.get("run_analysis_tools", True),
+                            run_testing_tools=arguments.get("run_testing_tools", True),
+                            priority_filter=arguments.get("priority_filter"),
+                            tag_filter=arguments.get("tag_filter"),
+                            dry_run=arguments.get("dry_run", False),
+                            output_path=arguments.get("output_path"),
+                            notify=arguments.get("notify", False),
+                        )
+                    elif name == "run_discover_automation":
+                        result = _find_automation_opportunities(
+                            arguments.get("min_value_score", 0.7),
+                            arguments.get("output_path"),
+                        )
                     elif name == "discovery":
                         result = _discovery(
                             arguments.get("action", "list"),
@@ -1645,6 +1673,7 @@ if mcp:
         # NOTE: find_automation_opportunities removed - use run_automation(mode="discover")
         # NOTE: sync_todo_tasks removed - use task_workflow(action="sync")
 
+        @ensure_json_string
         @mcp.tool()
         def add_external_tool_hints(
             dry_run: bool = False, output_path: Optional[str] = None, min_file_size: int = 50
@@ -1656,89 +1685,83 @@ if mcp:
         # NOTE: list_problem_categories removed - use resource automation://problem-categories
         # NOTE: get_linter_status removed - use resource automation://linters
 
+        # Split run_automation into separate tools to eliminate conditional logic (matches working tools pattern)
+        @ensure_json_string
         @mcp.tool()
-        def run_automation(
-            action: str = "daily",
-            # Daily action params
+        def run_daily_automation(
             tasks: Optional[list[str]] = None,
             include_slow: bool = False,
-            # Nightly action params
+            dry_run: bool = False,
+            output_path: Optional[str] = None,
+        ) -> str:
+            """
+            [HINT: Daily automation. Run daily checks (docs_health, alignment, duplicates, security).]
+
+            Run daily automation checks including documentation health, task alignment,
+            duplicate detection, and security scanning.
+
+            📊 Output: Daily automation results
+            🔧 Side Effects: Creates tasks and reports
+            """
+            return _run_daily_automation(tasks, include_slow, dry_run, output_path)
+
+        @ensure_json_string
+        @mcp.tool()
+        def run_nightly_automation(
             max_tasks_per_host: int = 5,
             max_parallel_tasks: int = 10,
-            # Sprint action params
+            priority_filter: Optional[str] = None,
+            tag_filter: Optional[list[str]] = None,
+            dry_run: bool = False,
+            notify: bool = False,
+        ) -> str:
+            """
+            [HINT: Nightly automation. Process tasks automatically with host limits.]
+
+            Process background-capable tasks automatically with host and parallel limits.
+
+            📊 Output: Nightly automation results
+            🔧 Side Effects: Processes tasks, sends notifications
+            """
+            result = _run_nightly_task_automation(
+                max_tasks_per_host=max_tasks_per_host,
+                max_parallel_tasks=max_parallel_tasks,
+                priority_filter=priority_filter,
+                tag_filter=tag_filter,
+                dry_run=dry_run,
+                notify=notify,
+            )
+            # Ensure JSON string return
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, dict):
+                return json.dumps(result, indent=2)
+            else:
+                return json.dumps({"result": str(result)}, indent=2)
+
+        @ensure_json_string
+        @mcp.tool()
+        def run_sprint_automation(
             max_iterations: int = 10,
             auto_approve: bool = True,
             extract_subtasks: bool = True,
             run_analysis_tools: bool = True,
             run_testing_tools: bool = True,
-            # Discover action params
-            min_value_score: float = 0.7,
-            # Shared params
             priority_filter: Optional[str] = None,
             tag_filter: Optional[list[str]] = None,
             dry_run: bool = False,
             output_path: Optional[str] = None,
             notify: bool = False,
         ) -> str:
-            """[HINT: Automation runner. action: discover|daily|nightly|sprint. Unified automation control.]
-
-            Actions:
-            - discover: Find automation opportunities in codebase
-            - daily: Run daily checks (docs_health, alignment, duplicates, security)
-            - nightly: Process tasks automatically with host limits
-            - sprint: Full sprint automation with subtask extraction
             """
-            if action == "discover":
-                return _find_automation_opportunities(min_value_score, output_path)
-            elif action == "daily":
-                return _run_daily_automation(tasks, include_slow, dry_run, output_path)
-            elif action == "nightly":
-                result = _run_nightly_task_automation(
-                    max_tasks_per_host=max_tasks_per_host,
-                    max_parallel_tasks=max_parallel_tasks,
-                    priority_filter=priority_filter,
-                    tag_filter=tag_filter,
-                    dry_run=dry_run,
-                    notify=notify,
-                )
-                # Ensure we always return a JSON string
-                if isinstance(result, str):
-                    return result
-                elif isinstance(result, dict):
-                    return json.dumps(result, separators=(",", ":"))
-                else:
-                    return json.dumps({"result": str(result)}, separators=(",", ":"))
-            elif action == "sprint":
-                return _sprint_automation_impl(
-                    max_iterations, auto_approve, extract_subtasks,
-                    run_analysis_tools, run_testing_tools,
-                    priority_filter, tag_filter, dry_run, output_path, notify,
-                )
-            else:
-                return json.dumps({"status": "error", "error": f"Unknown action: {action}. Use discover, daily, nightly, or sprint"}, separators=(",", ":"))
+            [HINT: Sprint automation. Full sprint automation with subtask extraction.]
 
-        # NOTE: validate_ci_cd_workflow removed - use health(action="cicd")
-        # NOTE: batch_approve_tasks removed - use task_workflow(action="approve")
-        # NOTE: run_nightly_task_automation removed - use run_automation(action="nightly")
-        # NOTE: check_working_copy_health removed - use health(action="git")
-        # NOTE: clarification removed - use task_workflow(action="clarify")
-        # NOTE: setup_git_hooks removed - use setup_hooks(type="git")
-        # NOTE: setup_pattern_triggers removed - use setup_hooks(type="patterns")
-        # NOTE: run_tests, analyze_test_coverage removed - use testing(action=run|coverage|suggest|validate)
+            Systematically process all background-capable tasks with minimal prompts.
+            Extracts subtasks, auto-approves safe tasks, runs analysis/testing tools.
 
-        # Helper for sprint automation (shared implementation)
-        def _sprint_automation_impl(
-            max_iterations,
-            auto_approve,
-            extract_subtasks,
-            run_analysis_tools,
-            run_testing_tools,
-            priority_filter,
-            tag_filter,
-            dry_run,
-            output_path,
-            notify,
-        ) -> str:
+            📊 Output: Sprint automation results
+            🔧 Side Effects: Creates tasks, extracts subtasks, runs tools
+            """
             return _sprint_automation(
                 max_iterations,
                 auto_approve,
@@ -1752,7 +1775,31 @@ if mcp:
                 notify,
             )
 
-        # NOTE: run_sprint_automation removed - use run_automation(mode="sprint")
+        @ensure_json_string
+        @mcp.tool()
+        def run_discover_automation(
+            min_value_score: float = 0.7,
+            output_path: Optional[str] = None,
+        ) -> str:
+            """
+            [HINT: Discover automation. Find automation opportunities in codebase.]
+
+            Discover automation opportunities in the codebase based on value score.
+
+            📊 Output: Automation opportunities
+            🔧 Side Effects: Creates discovery report
+            """
+            return _find_automation_opportunities(min_value_score, output_path)
+
+        # NOTE: validate_ci_cd_workflow removed - use health(action="cicd")
+        # NOTE: batch_approve_tasks removed - use task_workflow(action="approve")
+        # NOTE: run_nightly_task_automation removed - use run_nightly_automation()
+        # NOTE: check_working_copy_health removed - use health(action="git")
+        # NOTE: clarification removed - use task_workflow(action="clarify")
+        # NOTE: setup_git_hooks removed - use setup_hooks(type="git")
+        # NOTE: setup_pattern_triggers removed - use setup_hooks(type="patterns")
+        # NOTE: run_tests, analyze_test_coverage removed - use testing(action=run|coverage|suggest|validate)
+        # NOTE: run_automation removed - use run_daily_automation, run_nightly_automation, run_sprint_automation, or run_discover_automation
 
         # NOTE: simplify_rules removed - use generate_config(action="simplify")
 
@@ -1806,6 +1853,7 @@ if mcp:
         # DISCOVERY TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
+        @ensure_json_string
         @mcp.tool()
         def discovery(
             action: str = "list",
@@ -1924,6 +1972,7 @@ if mcp:
         # CONTEXT MANAGEMENT TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
+        @ensure_json_string
         @mcp.tool()
         def context(
             action: str = "summarize",
@@ -1978,6 +2027,7 @@ if mcp:
         # RECOMMENDATION TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
+        @ensure_json_string
         @mcp.tool()
         def recommend(
             action: str = "model",
@@ -2033,7 +2083,7 @@ if mcp:
                 recommend(action="advisor", metric="security", score=75.0)
                 → Advisor wisdom for security metric
             """
-            result = _recommend(
+            return _recommend(
                 action=action,
                 task_description=task_description,
                 task_type=task_type,
@@ -2049,15 +2099,6 @@ if mcp:
                 log=log,
                 session_mode=None  # Will be auto-detected in consolidated function
             )
-            # Ensure we always return a string (JSON)
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                # Defensive: if somehow a dict is returned, convert to JSON
-                return json.dumps(result, indent=2)
-            else:
-                # Fallback: convert to JSON string
-                return json.dumps({"result": str(result)}, indent=2)
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
 
@@ -2247,6 +2288,7 @@ if mcp:
                 task_id, changed_files, auto_check, workflow_path, check_runners
             )
 
+        @ensure_json_string
         @mcp.tool()
         def check_attribution(
             output_path: Optional[str] = None,
@@ -2410,6 +2452,7 @@ if mcp:
                 framework, output_path
             )
 
+        @ensure_json_string
         @mcp.tool()
         def lint(
             action: str = "run",

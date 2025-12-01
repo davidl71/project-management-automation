@@ -136,6 +136,11 @@ jobs:
           print(f'::notice::Project Health Score: {overall}%')
           "
         continue-on-error: true
+          
+      - name: Validate MCP Tools
+        run: |
+          python -m project_management_automation.utils.tool_validator
+        continue-on-error: true
 
   build:
     name: Build
