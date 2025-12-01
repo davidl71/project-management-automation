@@ -249,8 +249,8 @@ def update_base_version(new_version: str) -> bool:
     version_file = Path(__file__)
     content = version_file.read_text()
 
-    # Replace BASE_VERSION
-    new_content = re.sub(r'BASE_VERSION = "0.1.18"]+"', 'BASE_VERSION = "0.1.18"', content)
+    # Replace BASE_VERSION with new version
+    new_content = re.sub(r'BASE_VERSION = "0.1.18"]*"', f'BASE_VERSION = "0.1.18"', content)
 
     if new_content != content:
         version_file.write_text(new_content)
