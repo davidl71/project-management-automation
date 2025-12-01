@@ -156,7 +156,27 @@ except ImportError as e:
     ERROR_HANDLING_AVAILABLE = False
     logger.warning(f"Error handling module not available - using basic error handling: {e}")
 
+# Import tool wrapper utility (ensures all tools return JSON strings per FastMCP requirements)
+try:
+    from .utils.tool_wrapper import ensure_json_string, wrap_tool_result
+    TOOL_WRAPPER_AVAILABLE = True
+except ImportError:
+    try:
+        from utils.tool_wrapper import ensure_json_string, wrap_tool_result
+        TOOL_WRAPPER_AVAILABLE = True
+    except ImportError:
+        TOOL_WRAPPER_AVAILABLE = False
+        logger.warning("Tool wrapper utility not available - tools may have return type issues")
+        # Fallback implementation
+        def ensure_json_string(func):
+            return func
+        def wrap_tool_result(result):
+            if isinstance(result, str):
+                return result
+            return json.dumps(result, indent=2) if isinstance(result, (dict, list)) else json.dumps({"result": str(result)}, indent=2)
+
 # Try to import MCP - Phase 2 tools complete, MCP installation needed for runtime
+# Try FastMCP first, fall back to stdio if FastMCP is not available
 MCP_AVAILABLE = False
 USE_STDIO = False
 FastMCP = None
@@ -191,7 +211,7 @@ except ImportError:
             MCP_AVAILABLE = True
             USE_STDIO = True
             FastMCP = None
-            logger.info("MCP stdio server available - using stdio server")
+            logger.info("MCP stdio server available - using stdio server (FastMCP not available)")
         except ImportError:
             logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
             MCP_AVAILABLE = False
@@ -600,10 +620,58 @@ except ImportError as e:
     TOOLS_AVAILABLE = False
     logger.warning(f"Some tools not available: {e}")
 
+# Module-level variable for consolidated tools availability (needed for stdio server)
+CONSOLIDATED_AVAILABLE = False
 
 # Tool registration - support both FastMCP and stdio Server
 def register_tools():
     """Register tools with the appropriate MCP server instance."""
+    # Import consolidated tools early (needed for stdio server)
+    global CONSOLIDATED_AVAILABLE
+    try:
+        from .tools.consolidated import (
+            advisor_audio as _advisor_audio,
+            generate_config as _generate_config,
+            health as _health,
+            lint as _lint,
+            memory as _memory,
+            memory_maint as _memory_maint,
+            prompt_tracking as _prompt_tracking,
+            report as _report,
+            security as _security,
+            setup_hooks as _setup_hooks,
+            task_analysis as _task_analysis,
+            task_discovery as _task_discovery,
+            task_workflow as _task_workflow,
+            testing as _testing,
+            context as _context,
+            discovery as _discovery,
+            workflow_mode as _workflow_mode,
+            recommend as _recommend,
+        )
+        CONSOLIDATED_AVAILABLE = True
+    except ImportError:
+        CONSOLIDATED_AVAILABLE = False
+        # Set dummy functions to avoid NameError
+        _advisor_audio = None
+        _generate_config = None
+        _health = None
+        _lint = None
+        _memory = None
+        _memory_maint = None
+        _prompt_tracking = None
+        _report = None
+        _security = None
+        _setup_hooks = None
+        _task_analysis = None
+        _task_discovery = None
+        _task_workflow = None
+        _testing = None
+        _context = None
+        _discovery = None
+        _workflow_mode = None
+        _recommend = None
+    
     if mcp:
         # FastMCP registration (decorator-based)
         # NOTE: server_status removed - use health(type="server")
@@ -694,6 +762,27 @@ def register_tools():
                                     "create_followup_tasks": {
                                         "type": "boolean",
                                         "description": "Create follow-up tasks",
+                                        "default": True,
+                                    },
+                                    "output_path": {"type": "string", "description": "Output file path"},
+                                },
+                            },
+                        ),
+                        Tool(
+                            name="analyze_alignment",
+                            description="[HINT: Alignment analysis. action=todo2|prd. Scores, misaligned items, recommendations.] Unified alignment analysis: action='todo2' for task-to-goals alignment, action='prd' for PRD persona mapping.",
+                            inputSchema={
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "description": "Alignment action: 'todo2' or 'prd'",
+                                        "default": "todo2",
+                                        "enum": ["todo2", "prd"],
+                                    },
+                                    "create_followup_tasks": {
+                                        "type": "boolean",
+                                        "description": "Create follow-up tasks for misaligned items (todo2 only)",
                                         "default": True,
                                     },
                                     "output_path": {"type": "string", "description": "Output file path"},
@@ -808,6 +897,378 @@ def register_tools():
                         ),
                     ]
                 )
+            
+            # Add consolidated tools if available
+            if CONSOLIDATED_AVAILABLE:
+                tools.extend([
+                    Tool(
+                        name="security",
+                        description="[HINT: Security. action=scan|alerts|report. Vulnerabilities, remediation.] Unified security analysis.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["scan", "alerts", "report"], "default": "report"},
+                                "repo": {"type": "string", "default": "davidl71/project-management-automation"},
+                                "languages": {"type": "array", "items": {"type": "string"}},
+                                "config_path": {"type": "string"},
+                                "state": {"type": "string", "default": "open"},
+                                "include_dismissed": {"type": "boolean", "default": False},
+                                "alert_critical": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="generate_config",
+                        description="[HINT: Config generation. action=rules|ignore|simplify. Creates IDE config files.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["rules", "ignore", "simplify"], "default": "rules"},
+                                "rules": {"type": "string"},
+                                "overwrite": {"type": "boolean", "default": False},
+                                "analyze_only": {"type": "boolean", "default": False},
+                                "include_indexing": {"type": "boolean", "default": True},
+                                "analyze_project": {"type": "boolean", "default": True},
+                                "rule_files": {"type": "string"},
+                                "output_dir": {"type": "string"},
+                                "dry_run": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="setup_hooks",
+                        description="[HINT: Hooks setup. action=git|patterns. Install automation hooks.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["git", "patterns"], "default": "git"},
+                                "hooks": {"type": "array", "items": {"type": "string"}},
+                                "patterns": {"type": "string"},
+                                "config_path": {"type": "string"},
+                                "install": {"type": "boolean", "default": True},
+                                "dry_run": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="prompt_tracking",
+                        description="[HINT: Prompt tracking. action=log|analyze. Track and analyze prompts.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["log", "analyze"], "default": "analyze"},
+                                "prompt": {"type": "string"},
+                                "task_id": {"type": "string"},
+                                "mode": {"type": "string"},
+                                "outcome": {"type": "string"},
+                                "iteration": {"type": "integer", "default": 1},
+                                "days": {"type": "integer", "default": 7},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="health",
+                        description="[HINT: Health check. action=server|git|docs|dod|cicd. Status and health metrics.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["server", "git", "docs", "dod", "cicd"], "default": "server"},
+                                "agent_name": {"type": "string"},
+                                "check_remote": {"type": "boolean", "default": True},
+                                "output_path": {"type": "string"},
+                                "create_tasks": {"type": "boolean", "default": True},
+                                "task_id": {"type": "string"},
+                                "changed_files": {"type": "string"},
+                                "auto_check": {"type": "boolean", "default": True},
+                                "workflow_path": {"type": "string"},
+                                "check_runners": {"type": "boolean", "default": True},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="check_attribution",
+                        description="Check attribution compliance for AI-generated code.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "output_path": {"type": "string"},
+                                "create_tasks": {"type": "boolean", "default": True},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="report",
+                        description="[HINT: Report generation. action=overview|scorecard|briefing|prd. Project reports.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["overview", "scorecard", "briefing", "prd"], "default": "overview"},
+                                "output_format": {"type": "string", "default": "text"},
+                                "output_path": {"type": "string"},
+                                "include_recommendations": {"type": "boolean", "default": True},
+                                "overall_score": {"type": "number", "default": 50.0},
+                                "security_score": {"type": "number", "default": 50.0},
+                                "testing_score": {"type": "number", "default": 50.0},
+                                "documentation_score": {"type": "number", "default": 50.0},
+                                "completion_score": {"type": "number", "default": 50.0},
+                                "alignment_score": {"type": "number", "default": 50.0},
+                                "project_name": {"type": "string"},
+                                "include_architecture": {"type": "boolean", "default": True},
+                                "include_metrics": {"type": "boolean", "default": True},
+                                "include_tasks": {"type": "boolean", "default": True},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="advisor_audio",
+                        description="[HINT: Advisor audio. action=quote|podcast|export. Voice synthesis and podcast generation.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["quote", "podcast", "export"], "default": "podcast"},
+                                "text": {"type": "string"},
+                                "advisor": {"type": "string", "default": "default"},
+                                "days": {"type": "integer", "default": 7},
+                                "output_path": {"type": "string"},
+                                "backend": {"type": "string", "default": "auto"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="task_analysis",
+                        description="[HINT: Task analysis. action=duplicates|tags|hierarchy. Task quality and structure.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["duplicates", "tags", "hierarchy"], "default": "duplicates"},
+                                "similarity_threshold": {"type": "number", "default": 0.85},
+                                "auto_fix": {"type": "boolean", "default": False},
+                                "dry_run": {"type": "boolean", "default": True},
+                                "custom_rules": {"type": "string"},
+                                "remove_tags": {"type": "string"},
+                                "output_format": {"type": "string", "default": "text"},
+                                "include_recommendations": {"type": "boolean", "default": True},
+                                "output_path": {"type": "string"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="testing",
+                        description="[HINT: Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest test cases, or validate test structure.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["run", "coverage", "suggest", "validate"], "default": "run"},
+                                "test_path": {"type": "string"},
+                                "test_framework": {"type": "string", "default": "auto"},
+                                "verbose": {"type": "boolean", "default": True},
+                                "coverage": {"type": "boolean", "default": False},
+                                "coverage_file": {"type": "string"},
+                                "min_coverage": {"type": "integer", "default": 80},
+                                "format": {"type": "string", "default": "html"},
+                                "target_file": {"type": "string"},
+                                "min_confidence": {"type": "number", "default": 0.7},
+                                "framework": {"type": "string"},
+                                "output_path": {"type": "string"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="lint",
+                        description="[HINT: Linting tool. action=run|analyze. Run linter or analyze problems.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["run", "analyze"], "default": "run"},
+                                "path": {"type": "string"},
+                                "linter": {"type": "string", "default": "ruff"},
+                                "fix": {"type": "boolean", "default": False},
+                                "analyze": {"type": "boolean", "default": True},
+                                "select": {"type": "string"},
+                                "ignore": {"type": "string"},
+                                "problems_json": {"type": "string"},
+                                "include_hints": {"type": "boolean", "default": True},
+                                "output_path": {"type": "string"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="memory",
+                        description="[HINT: Memory tool. action=save|recall|search. Persist and retrieve AI discoveries.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["save", "recall", "search"], "default": "search"},
+                                "title": {"type": "string"},
+                                "content": {"type": "string"},
+                                "category": {"type": "string", "default": "insight"},
+                                "task_id": {"type": "string"},
+                                "metadata": {"type": "string"},
+                                "include_related": {"type": "boolean", "default": True},
+                                "query": {"type": "string"},
+                                "limit": {"type": "integer", "default": 10},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="task_discovery",
+                        description="[HINT: Task discovery. action=comments|markdown|orphans|all. Find tasks from various sources.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["comments", "markdown", "orphans", "all"], "default": "all"},
+                                "file_patterns": {"type": "string"},
+                                "include_fixme": {"type": "boolean", "default": True},
+                                "doc_path": {"type": "string"},
+                                "output_path": {"type": "string"},
+                                "create_tasks": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="task_workflow",
+                        description="[HINT: Task workflow. action=sync|approve|clarify. Manage task lifecycle.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["sync", "approve", "clarify"], "default": "sync"},
+                                "dry_run": {"type": "boolean", "default": False},
+                                "status": {"type": "string", "default": "Review"},
+                                "new_status": {"type": "string", "default": "Todo"},
+                                "clarification_none": {"type": "boolean", "default": True},
+                                "filter_tag": {"type": "string"},
+                                "task_ids": {"type": "string"},
+                                "sub_action": {"type": "string", "default": "list"},
+                                "task_id": {"type": "string"},
+                                "clarification_text": {"type": "string"},
+                                "decision": {"type": "string"},
+                                "decisions_json": {"type": "string"},
+                                "move_to_todo": {"type": "boolean", "default": True},
+                                "output_path": {"type": "string"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="memory_maint",
+                        description="[HINT: Memory maintenance. action=health|gc|prune|consolidate|dream. Lifecycle management.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["health", "gc", "prune", "consolidate", "dream"], "default": "health"},
+                                "max_age_days": {"type": "integer", "default": 90},
+                                "delete_orphaned": {"type": "boolean", "default": True},
+                                "delete_duplicates": {"type": "boolean", "default": True},
+                                "scorecard_max_age_days": {"type": "integer", "default": 7},
+                                "value_threshold": {"type": "number", "default": 0.3},
+                                "keep_minimum": {"type": "integer", "default": 50},
+                                "similarity_threshold": {"type": "number", "default": 0.85},
+                                "merge_strategy": {"type": "string", "default": "newest"},
+                                "scope": {"type": "string", "default": "week"},
+                                "advisors": {"type": "string"},
+                                "generate_insights": {"type": "boolean", "default": True},
+                                "save_dream": {"type": "boolean", "default": True},
+                                "dry_run": {"type": "boolean", "default": True},
+                                "interactive": {"type": "boolean", "default": True},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="run_automation",
+                        description="[HINT: Automation runner. action: discover|daily|nightly|sprint. Unified automation control.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["discover", "daily", "nightly", "sprint"], "default": "daily"},
+                                "tasks": {"type": "array", "items": {"type": "string"}},
+                                "include_slow": {"type": "boolean", "default": False},
+                                "max_tasks_per_host": {"type": "integer", "default": 5},
+                                "max_parallel_tasks": {"type": "integer", "default": 10},
+                                "max_iterations": {"type": "integer", "default": 10},
+                                "auto_approve": {"type": "boolean", "default": True},
+                                "extract_subtasks": {"type": "boolean", "default": True},
+                                "run_analysis_tools": {"type": "boolean", "default": True},
+                                "run_testing_tools": {"type": "boolean", "default": True},
+                                "min_value_score": {"type": "number", "default": 0.7},
+                                "priority_filter": {"type": "string"},
+                                "tag_filter": {"type": "array", "items": {"type": "string"}},
+                                "dry_run": {"type": "boolean", "default": False},
+                                "output_path": {"type": "string"},
+                                "notify": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="discovery",
+                        description="[HINT: Discovery tool. action=list|help. Unified tool discovery and help.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["list", "help"], "default": "list"},
+                                "category": {"type": "string"},
+                                "persona": {"type": "string"},
+                                "include_examples": {"type": "boolean", "default": True},
+                                "tool_name": {"type": "string"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="workflow_mode",
+                        description="[HINT: Workflow mode management. action=focus|suggest|stats. Unified workflow operations.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["focus", "suggest", "stats"], "default": "focus"},
+                                "mode": {"type": "string"},
+                                "enable_group": {"type": "string"},
+                                "disable_group": {"type": "string"},
+                                "status": {"type": "boolean", "default": False},
+                                "text": {"type": "string"},
+                                "auto_switch": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="context",
+                        description="[HINT: Context management. action=summarize|budget|batch. Unified context operations.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["summarize", "budget", "batch"], "default": "summarize"},
+                                "data": {"type": "string"},
+                                "level": {"type": "string", "default": "brief"},
+                                "tool_type": {"type": "string"},
+                                "max_tokens": {"type": "integer"},
+                                "include_raw": {"type": "boolean", "default": False},
+                                "items": {"type": "string"},
+                                "budget_tokens": {"type": "integer", "default": 4000},
+                                "combine": {"type": "boolean", "default": True},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="recommend",
+                        description="[HINT: Recommendations. action=model|workflow|advisor. Unified recommendation system.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["model", "workflow", "advisor"], "default": "model"},
+                                "task_description": {"type": "string"},
+                                "task_type": {"type": "string"},
+                                "optimize_for": {"type": "string", "default": "quality"},
+                                "include_alternatives": {"type": "boolean", "default": True},
+                                "task_id": {"type": "string"},
+                                "include_rationale": {"type": "boolean", "default": True},
+                                "metric": {"type": "string"},
+                                "tool": {"type": "string"},
+                                "stage": {"type": "string"},
+                                "score": {"type": "number", "default": 50.0},
+                                "context": {"type": "string", "default": ""},
+                                "log": {"type": "boolean", "default": True},
+                            },
+                        },
+                    ),
+                ])
+            
             return tools
 
         @stdio_server_instance.call_tool()
@@ -833,6 +1294,26 @@ def register_tools():
                     result = _analyze_todo2_alignment(
                         arguments.get("create_followup_tasks", True), arguments.get("output_path")
                     )
+                elif name == "analyze_alignment":
+                    # Unified alignment analysis tool (stdio server version)
+                    action = arguments.get("action", "todo2")
+                    create_followup_tasks = arguments.get("create_followup_tasks", True)
+                    output_path = arguments.get("output_path")
+                    
+                    if action == "todo2":
+                        result = _analyze_todo2_alignment(create_followup_tasks, output_path)
+                    elif action == "prd":
+                        from .tools.prd_alignment import analyze_prd_alignment
+                        result = analyze_prd_alignment(output_path)
+                    else:
+                        result = json.dumps({
+                            "success": False,
+                            "error": f"Unknown alignment action: {action}. Use 'todo2' or 'prd'.",
+                        }, indent=2)
+                    
+                    # Ensure JSON string (stdio server expects strings)
+                    if not isinstance(result, str):
+                        result = json.dumps(result, indent=2)
                 elif name == "detect_duplicate_tasks":
                     result = _detect_duplicate_tasks(
                         arguments.get("similarity_threshold", 0.85),
@@ -860,10 +1341,289 @@ def register_tools():
                         arguments.get("dry_run", False),
                         arguments.get("output_path"),
                     )
+                elif CONSOLIDATED_AVAILABLE:
+                    # Consolidated tools
+                    if name == "security":
+                        result = _security(
+                            arguments.get("action", "report"),
+                            arguments.get("repo", "davidl71/project-management-automation"),
+                            arguments.get("languages"),
+                            arguments.get("config_path"),
+                            arguments.get("state", "open"),
+                            arguments.get("include_dismissed", False),
+                            alert_critical=arguments.get("alert_critical", False),
+                        )
+                    elif name == "generate_config":
+                        result = _generate_config(
+                            arguments.get("action", "rules"),
+                            arguments.get("rules"),
+                            arguments.get("overwrite", False),
+                            arguments.get("analyze_only", False),
+                            arguments.get("include_indexing", True),
+                            arguments.get("analyze_project", True),
+                            arguments.get("rule_files"),
+                            arguments.get("output_dir"),
+                            arguments.get("dry_run", False),
+                        )
+                    elif name == "setup_hooks":
+                        result = _setup_hooks(
+                            arguments.get("action", "git"),
+                            arguments.get("hooks"),
+                            arguments.get("patterns"),
+                            arguments.get("config_path"),
+                            arguments.get("install", True),
+                            arguments.get("dry_run", False),
+                        )
+                    elif name == "prompt_tracking":
+                        result = _prompt_tracking(
+                            arguments.get("action", "analyze"),
+                            arguments.get("prompt"),
+                            arguments.get("task_id"),
+                            arguments.get("mode"),
+                            arguments.get("outcome"),
+                            arguments.get("iteration", 1),
+                            arguments.get("days", 7),
+                        )
+                    elif name == "health":
+                        result = _health(
+                            arguments.get("action", "server"),
+                            arguments.get("agent_name"),
+                            arguments.get("check_remote", True),
+                            arguments.get("output_path"),
+                            arguments.get("create_tasks", True),
+                            arguments.get("task_id"),
+                            arguments.get("changed_files"),
+                            arguments.get("auto_check", True),
+                            arguments.get("workflow_path"),
+                            arguments.get("check_runners", True),
+                        )
+                    elif name == "check_attribution":
+                        result = _check_attribution_compliance(
+                            arguments.get("output_path"),
+                            arguments.get("create_tasks", True),
+                        )
+                    elif name == "report":
+                        result = _report(
+                            arguments.get("action", "overview"),
+                            arguments.get("output_format", "text"),
+                            arguments.get("output_path"),
+                            arguments.get("include_recommendations", True),
+                            arguments.get("overall_score", 50.0),
+                            arguments.get("security_score", 50.0),
+                            arguments.get("testing_score", 50.0),
+                            arguments.get("documentation_score", 50.0),
+                            arguments.get("completion_score", 50.0),
+                            arguments.get("alignment_score", 50.0),
+                            arguments.get("project_name"),
+                            arguments.get("include_architecture", True),
+                            arguments.get("include_metrics", True),
+                            arguments.get("include_tasks", True),
+                        )
+                    elif name == "advisor_audio":
+                        result = _advisor_audio(
+                            arguments.get("action", "podcast"),
+                            arguments.get("text"),
+                            arguments.get("advisor", "default"),
+                            arguments.get("days", 7),
+                            arguments.get("output_path"),
+                            arguments.get("backend", "auto"),
+                        )
+                    elif name == "task_analysis":
+                        result = _task_analysis(
+                            arguments.get("action", "duplicates"),
+                            arguments.get("similarity_threshold", 0.85),
+                            arguments.get("auto_fix", False),
+                            arguments.get("dry_run", True),
+                            arguments.get("custom_rules"),
+                            arguments.get("remove_tags"),
+                            arguments.get("output_format", "text"),
+                            arguments.get("include_recommendations", True),
+                            arguments.get("output_path"),
+                        )
+                    elif name == "testing":
+                        result = _testing(
+                            arguments.get("action", "run"),
+                            arguments.get("test_path"),
+                            arguments.get("test_framework", "auto"),
+                            arguments.get("verbose", True),
+                            arguments.get("coverage", False),
+                            arguments.get("coverage_file"),
+                            arguments.get("min_coverage", 80),
+                            arguments.get("format", "html"),
+                            arguments.get("target_file"),
+                            arguments.get("min_confidence", 0.7),
+                            arguments.get("framework"),
+                            arguments.get("output_path"),
+                        )
+                    elif name == "lint":
+                        result = _lint(
+                            arguments.get("action", "run"),
+                            arguments.get("path"),
+                            arguments.get("linter", "ruff"),
+                            arguments.get("fix", False),
+                            arguments.get("analyze", True),
+                            arguments.get("select"),
+                            arguments.get("ignore"),
+                            arguments.get("problems_json"),
+                            arguments.get("include_hints", True),
+                            arguments.get("output_path"),
+                        )
+                    elif name == "memory":
+                        result = _memory(
+                            arguments.get("action", "search"),
+                            arguments.get("title"),
+                            arguments.get("content"),
+                            arguments.get("category", "insight"),
+                            arguments.get("task_id"),
+                            arguments.get("metadata"),
+                            arguments.get("include_related", True),
+                            arguments.get("query"),
+                            arguments.get("limit", 10),
+                        )
+                    elif name == "task_discovery":
+                        result = _task_discovery(
+                            arguments.get("action", "all"),
+                            arguments.get("file_patterns"),
+                            arguments.get("include_fixme", True),
+                            arguments.get("doc_path"),
+                            arguments.get("output_path"),
+                            arguments.get("create_tasks", False),
+                        )
+                    elif name == "task_workflow":
+                        result = _task_workflow(
+                            arguments.get("action", "sync"),
+                            arguments.get("dry_run", False),
+                            arguments.get("status", "Review"),
+                            arguments.get("new_status", "Todo"),
+                            arguments.get("clarification_none", True),
+                            arguments.get("filter_tag"),
+                            arguments.get("task_ids"),
+                            arguments.get("sub_action", "list"),
+                            arguments.get("task_id"),
+                            arguments.get("clarification_text"),
+                            arguments.get("decision"),
+                            arguments.get("decisions_json"),
+                            arguments.get("move_to_todo", True),
+                            arguments.get("output_path"),
+                        )
+                    elif name == "memory_maint":
+                        result = _memory_maint(
+                            arguments.get("action", "health"),
+                            arguments.get("max_age_days", 90),
+                            arguments.get("delete_orphaned", True),
+                            arguments.get("delete_duplicates", True),
+                            arguments.get("scorecard_max_age_days", 7),
+                            arguments.get("value_threshold", 0.3),
+                            arguments.get("keep_minimum", 50),
+                            arguments.get("similarity_threshold", 0.85),
+                            arguments.get("merge_strategy", "newest"),
+                            arguments.get("scope", "week"),
+                            arguments.get("advisors"),
+                            arguments.get("generate_insights", True),
+                            arguments.get("save_dream", True),
+                            arguments.get("dry_run", True),
+                            arguments.get("interactive", True),
+                        )
+                    elif name == "run_automation":
+                        action = arguments.get("action", "daily")
+                        if action == "discover":
+                            result = _find_automation_opportunities(
+                                arguments.get("min_value_score", 0.7),
+                                arguments.get("output_path"),
+                            )
+                        elif action == "daily":
+                            result = _run_daily_automation(
+                                arguments.get("tasks"),
+                                arguments.get("include_slow", False),
+                                arguments.get("dry_run", False),
+                                arguments.get("output_path"),
+                            )
+                        elif action == "nightly":
+                            from .tools.nightly_task_automation import run_nightly_task_automation
+                            result = run_nightly_task_automation(
+                                max_tasks_per_host=arguments.get("max_tasks_per_host", 5),
+                                max_parallel_tasks=arguments.get("max_parallel_tasks", 10),
+                                priority_filter=arguments.get("priority_filter"),
+                                tag_filter=arguments.get("tag_filter"),
+                                dry_run=arguments.get("dry_run", False),
+                                notify=arguments.get("notify", False),
+                            )
+                        elif action == "sprint":
+                            from .tools.sprint_automation import sprint_automation
+                            result = sprint_automation(
+                                max_iterations=arguments.get("max_iterations", 10),
+                                auto_approve=arguments.get("auto_approve", True),
+                                extract_subtasks=arguments.get("extract_subtasks", True),
+                                run_analysis_tools=arguments.get("run_analysis_tools", True),
+                                run_testing_tools=arguments.get("run_testing_tools", True),
+                                priority_filter=arguments.get("priority_filter"),
+                                tag_filter=arguments.get("tag_filter"),
+                                dry_run=arguments.get("dry_run", False),
+                                output_path=arguments.get("output_path"),
+                                notify=arguments.get("notify", False),
+                            )
+                        else:
+                            result = json.dumps({
+                                "status": "error",
+                                "error": f"Unknown action: {action}. Use discover, daily, nightly, or sprint.",
+                            }, indent=2)
+                    elif name == "discovery":
+                        result = _discovery(
+                            arguments.get("action", "list"),
+                            arguments.get("category"),
+                            arguments.get("persona"),
+                            arguments.get("include_examples", True),
+                            arguments.get("tool_name"),
+                        )
+                    elif name == "workflow_mode":
+                        result = _workflow_mode(
+                            arguments.get("action", "focus"),
+                            arguments.get("mode"),
+                            arguments.get("enable_group"),
+                            arguments.get("disable_group"),
+                            arguments.get("status", False),
+                            arguments.get("text"),
+                            arguments.get("auto_switch", False),
+                        )
+                    elif name == "context":
+                        result = _context(
+                            arguments.get("action", "summarize"),
+                            arguments.get("data"),
+                            arguments.get("level", "brief"),
+                            arguments.get("tool_type"),
+                            arguments.get("max_tokens"),
+                            arguments.get("include_raw", False),
+                            arguments.get("items"),
+                            arguments.get("budget_tokens", 4000),
+                            arguments.get("combine", True),
+                        )
+                    elif name == "recommend":
+                        result = _recommend(
+                            action=arguments.get("action", "model"),
+                            task_description=arguments.get("task_description"),
+                            task_type=arguments.get("task_type"),
+                            optimize_for=arguments.get("optimize_for", "quality"),
+                            include_alternatives=arguments.get("include_alternatives", True),
+                            task_id=arguments.get("task_id"),
+                            include_rationale=arguments.get("include_rationale", True),
+                            metric=arguments.get("metric"),
+                            tool=arguments.get("tool"),
+                            stage=arguments.get("stage"),
+                            score=arguments.get("score", 50.0),
+                            context=arguments.get("context", ""),
+                            log=arguments.get("log", True),
+                            session_mode=None,
+                        )
+                    else:
+                        result = json.dumps({"error": f"Unknown tool: {name}"})
                 else:
                     result = json.dumps({"error": f"Unknown tool: {name}"})
             else:
                 result = json.dumps({"error": "Tools not available"})
+            
+            # Ensure result is always a JSON string
+            if not isinstance(result, str):
+                result = json.dumps(result, indent=2)
 
             return [TextContent(type="text", text=result)]
 
@@ -1317,91 +2077,46 @@ if mcp:
     # ═══════════════════════════════════════════════════════════════════════════════
     # CONSOLIDATED TOOLS (Phase 3 consolidation)
     # ═══════════════════════════════════════════════════════════════════════════════
-
-    try:
-        from .tools.consolidated import (
-            advisor_audio as _advisor_audio,
-        )
-        from .tools.consolidated import (
-            analyze_alignment as _analyze_alignment,
-        )
-        from .tools.consolidated import (
-            generate_config as _generate_config,
-        )
-        from .tools.consolidated import (
-            health as _health,
-        )
-        from .tools.consolidated import (
-            lint as _lint,
-        )
-        from .tools.consolidated import (
-            memory as _memory,
-        )
-        from .tools.consolidated import (
-            memory_maint as _memory_maint,
-        )
-        from .tools.consolidated import (
-            prompt_tracking as _prompt_tracking,
-        )
-        from .tools.consolidated import (
-            report as _report,
-        )
-        from .tools.consolidated import (
-            security as _security,
-        )
-        from .tools.consolidated import (
-            setup_hooks as _setup_hooks,
-        )
-        from .tools.consolidated import (
-            task_analysis as _task_analysis,
-        )
-        from .tools.consolidated import (
-            task_discovery as _task_discovery,
-        )
-        from .tools.consolidated import (
-            task_workflow as _task_workflow,
-        )
-        from .tools.consolidated import (
-            testing as _testing,
-        )
-        from .tools.consolidated import (
-            context as _context,
-        )
-        from .tools.consolidated import (
-            discovery as _discovery,
-        )
-        from .tools.consolidated import (
-            workflow_mode as _workflow_mode,
-        )
-        from .tools.consolidated import (
-            recommend as _recommend,
-        )
-        CONSOLIDATED_AVAILABLE = True
-    except ImportError:
-        CONSOLIDATED_AVAILABLE = False
+    # Note: CONSOLIDATED_AVAILABLE is now defined in register_tools() to be available
+    # to stdio server's list_tools() function. This section is for FastMCP only.
+    # The imports are duplicated in register_tools() for stdio server access.
 
     if CONSOLIDATED_AVAILABLE:
+        # Register analyze_alignment - unified alignment analysis tool
+        # Simplified: Underlying functions already return JSON strings, just pass through
+        # Split into two separate tools to eliminate conditional logic (matches working tools pattern)
+        @ensure_json_string
         @mcp.tool()
-        def analyze_alignment(
-            action: str = "todo2",
+        def analyze_todo2_alignment(
             create_followup_tasks: bool = True,
             output_path: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Alignment analysis. action=todo2|prd. Scores, misaligned items, recommendations.]
+            [HINT: Todo2 alignment. Task-to-goals alignment, creates follow-up tasks.]
 
-            Unified alignment analysis:
-            - action="todo2": Task-to-goals alignment, creates follow-up tasks
-            - action="prd": PRD persona mapping, advisor assignments
+            Analyze task alignment with project goals, find misaligned tasks.
 
             📊 Output: Alignment scores, misaligned items, recommendations
-            🔧 Side Effects: Creates tasks (todo2 action with create_followup_tasks=True)
+            🔧 Side Effects: Creates tasks (if create_followup_tasks=True)
             """
-            # _analyze_alignment now returns a JSON string directly (FastMCP requirement)
-            result = _analyze_alignment(action, create_followup_tasks, output_path)
-            # Ensure we always return a string (should already be a string, but double-check)
-            return str(result) if not isinstance(result, str) else result
+            return _analyze_todo2_alignment(create_followup_tasks, output_path)
 
+        @ensure_json_string
+        @mcp.tool()
+        def analyze_prd_alignment(
+            output_path: Optional[str] = None,
+        ) -> str:
+            """
+            [HINT: PRD alignment. PRD persona mapping, advisor assignments.]
+
+            Analyze PRD alignment with persona mapping and advisor assignments.
+
+            📊 Output: PRD alignment scores, persona mappings, advisor assignments
+            🔧 Side Effects: Creates alignment reports
+            """
+            return _analyze_prd_alignment(output_path)
+
+        @ensure_json_string
         @mcp.tool()
         def security(
             action: str = "report",
@@ -1423,15 +2138,9 @@ if mcp:
             📊 Output: Vulnerabilities by severity, remediation recommendations
             🔧 Side Effects: None (read-only)
             """
-            result = _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
+            return _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
 
+        @ensure_json_string
         @mcp.tool()
         def generate_config(
             action: str = "rules",
@@ -1455,19 +2164,13 @@ if mcp:
             📊 Output: Generated files, changes made
             🔧 Side Effects: Creates/updates config files (unless dry_run=True)
             """
-            result = _generate_config(
+            return _generate_config(
                 action, rules, overwrite, analyze_only,
                 include_indexing, analyze_project,
                 rule_files, output_dir, dry_run
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
+        @ensure_json_string
         @mcp.tool()
         def setup_hooks(
             action: str = "git",
@@ -1487,15 +2190,9 @@ if mcp:
             📊 Output: Installation status, hooks configured
             🔧 Side Effects: Installs hooks (unless dry_run=True)
             """
-            result = _setup_hooks(action, hooks, patterns, config_path, install, dry_run)
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
+            return _setup_hooks(action, hooks, patterns, config_path, install, dry_run)
 
+        @ensure_json_string
         @mcp.tool()
         def prompt_tracking(
             action: str = "analyze",
@@ -1516,15 +2213,9 @@ if mcp:
             📊 Output: Log confirmation or iteration statistics
             🔧 Side Effects: Writes to .cursor/prompt_history/ (log action)
             """
-            result = _prompt_tracking(action, prompt, task_id, mode, outcome, iteration, days)
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
+            return _prompt_tracking(action, prompt, task_id, mode, outcome, iteration, days)
 
+        @ensure_json_string
         @mcp.tool()
         def health(
             action: str = "server",
@@ -1551,17 +2242,10 @@ if mcp:
             📊 Output: Health status and metrics
             🔧 Side Effects: Creates tasks (docs action with create_tasks=True)
             """
-            result = _health(
+            return _health(
                 action, agent_name, check_remote, output_path, create_tasks,
                 task_id, changed_files, auto_check, workflow_path, check_runners
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def check_attribution(
@@ -1602,6 +2286,7 @@ if mcp:
             # Result is already JSON string from tool wrapper
             return result
 
+        @ensure_json_string
         @mcp.tool()
         def report(
             action: str = "overview",
@@ -1631,20 +2316,14 @@ if mcp:
             📊 Output: Generated report in specified format
             🔧 Side Effects: Creates file (if output_path specified)
             """
-            result = _report(
+            return _report(
                 action, output_format, output_path, include_recommendations,
                 overall_score, security_score, testing_score,
                 documentation_score, completion_score, alignment_score,
                 project_name, include_architecture, include_metrics, include_tasks
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
+        @ensure_json_string
         @mcp.tool()
         def advisor_audio(
             action: str = "podcast",
@@ -1665,15 +2344,9 @@ if mcp:
             📊 Output: Audio file path or export data
             🔧 Side Effects: Creates audio files (quote/podcast actions)
             """
-            result = _advisor_audio(action, text, advisor, days, output_path, backend)
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
+            return _advisor_audio(action, text, advisor, days, output_path, backend)
 
+        @ensure_json_string
         @mcp.tool()
         def task_analysis(
             action: str = "duplicates",
@@ -1697,21 +2370,13 @@ if mcp:
             📊 Output: Analysis results with recommendations
             🔧 Side Effects: Modifies tasks (duplicates with auto_fix, tags without dry_run)
             """
-            result = _task_analysis(
+            return _task_analysis(
                 action, similarity_threshold, auto_fix, dry_run,
                 custom_rules, remove_tags, output_format,
                 include_recommendations, output_path
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                if action == "hierarchy" and output_format != "json":
-                    return result.get("formatted_output", json.dumps(result, separators=(",", ":")))
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
+        @ensure_json_string
         @mcp.tool()
         def testing(
             action: str = "run",
@@ -1739,18 +2404,11 @@ if mcp:
             📊 Output: Test results, coverage analysis, test suggestions, or validation report
             🔧 Side Effects: May generate coverage reports, suggestion files, or validation reports
             """
-            result = _testing(
+            return _testing(
                 action, test_path, test_framework, verbose, coverage,
                 coverage_file, min_coverage, format, target_file, min_confidence,
                 framework, output_path
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
         @mcp.tool()
         def lint(
@@ -1780,6 +2438,7 @@ if mcp:
                 problems_json, include_hints, output_path
             )
 
+        @ensure_json_string
         @mcp.tool()
         def memory(
             action: str = "search",
@@ -1805,20 +2464,12 @@ if mcp:
             📊 Output: Memory operation results
             🔧 Side Effects: Creates/retrieves memory files
             """
-            result = _memory(
+            return _memory(
                 action, title, content, category, task_id, metadata,
                 include_related, query, limit
             )
-            # _memory now returns a JSON string, so just return it directly
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                # Defensive: if somehow a dict is returned, convert to JSON
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                # Fallback: convert to JSON string
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
+        @ensure_json_string
         @mcp.tool()
         def task_discovery(
             action: str = "all",
@@ -1840,24 +2491,11 @@ if mcp:
             📊 Output: Discovered tasks with locations
             🔧 Side Effects: Can create Todo2 tasks (create_tasks=true)
             """
-            try:
-                result = _task_discovery(
-                    action, file_patterns, include_fixme, doc_path, output_path, create_tasks
-                )
-                # Ensure we always return a string (JSON)
-                if isinstance(result, str):
-                    return result
-                elif isinstance(result, dict):
-                    return json.dumps(result, indent=2)
-                else:
-                    return json.dumps({"result": str(result)}, indent=2)
-            except Exception as e:
-                logger.error(f"Error in task_discovery tool: {e}", exc_info=True)
-                return json.dumps({
-                    "status": "error",
-                    "error": str(e),
-                }, indent=2)
+            return _task_discovery(
+                action, file_patterns, include_fixme, doc_path, output_path, create_tasks
+            )
 
+        @ensure_json_string
         @mcp.tool()
         def task_workflow(
             action: str = "sync",
@@ -1886,19 +2524,13 @@ if mcp:
             📊 Output: Workflow operation results
             🔧 Side Effects: Modifies task states
             """
-            result = _task_workflow(
+            return _task_workflow(
                 action, dry_run, status, new_status, clarification_none,
                 filter_tag, task_ids, sub_action, task_id,
                 clarification_text, decision, decisions_json, move_to_todo, output_path
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
+        @ensure_json_string
         @mcp.tool()
         def memory_maint(
             action: str = "health",
@@ -1930,19 +2562,12 @@ if mcp:
             📊 Output: Maintenance results with recommendations
             🔧 Side Effects: Modifies memories (gc/prune/consolidate with dry_run=False)
             """
-            result = _memory_maint(
+            return _memory_maint(
                 action, max_age_days, delete_orphaned, delete_duplicates,
                 scorecard_max_age_days, value_threshold, keep_minimum,
                 similarity_threshold, merge_strategy, scope, advisors,
                 generate_insights, save_dream, dry_run, interactive
             )
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS
@@ -3198,15 +3823,46 @@ if stdio_server_instance:
             from resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
 
         @stdio_server_instance.list_resources()
-        async def list_resources() -> list[str]:
+        async def list_resources():
             """List all available resources."""
+            from mcp.types import Resource
             return [
-                "automation://status",
-                "automation://history",
-                "automation://tools",
-                "automation://tasks",
-                "automation://agents",
-                "automation://cache",
+                Resource(
+                    uri="automation://status",
+                    name="Server Status",
+                    description="Current server status and version information",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://history",
+                    name="Execution History",
+                    description="Recent tool execution history",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://tools",
+                    name="Tools Catalog",
+                    description="Complete catalog of available tools",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://tasks",
+                    name="Task List",
+                    description="Current task list from Todo2",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://agents",
+                    name="Agents",
+                    description="Available AI agents and advisors",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://cache",
+                    name="Cache",
+                    description="Cached data and results",
+                    mimeType="application/json",
+                ),
             ]
 
         @stdio_server_instance.read_resource()
