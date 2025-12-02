@@ -250,7 +250,7 @@ def update_base_version(new_version: str) -> bool:
     content = version_file.read_text()
 
     # Replace BASE_VERSION with new version
-    new_content = re.sub(r'BASE_VERSION = "0.2.0"]*"', f'BASE_VERSION = "0.2.0"', content)
+    new_content = re.sub(r'BASE_VERSION = "[^"]*"', f'BASE_VERSION = "{new_version}"', content)
 
     if new_content != content:
         version_file.write_text(new_content)
