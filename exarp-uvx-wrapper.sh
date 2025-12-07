@@ -1,6 +1,9 @@
 #!/bin/bash
 # Exarp uvx wrapper - automatically finds uvx across platforms
 # Handles Ubuntu/Linux and macOS (Homebrew Intel/Apple Silicon)
+#
+# Force stdio server mode (bypass FastMCP) to avoid static analysis issues
+export EXARP_FORCE_STDIO=1
 
 # Try to find uvx in common locations
 find_uvx() {

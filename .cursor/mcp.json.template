@@ -62,9 +62,10 @@
       ],
       "env": {
         "EXARP_DEV_MODE": "1",
+        "EXARP_FORCE_STDIO": "1",
         "PROJECT_ROOT": "{{PROJECT_ROOT}}"
       },
-      "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms"
+      "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms (stdio mode)"
     },
     "interactive": {
       "command": "npx",
