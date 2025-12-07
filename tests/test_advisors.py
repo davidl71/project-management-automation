@@ -85,8 +85,10 @@ class TestConsultationFrequency:
         """Scores < 30 should trigger chaos mode."""
         from project_management_automation.tools.wisdom.advisors import get_consultation_mode
 
+        import json
         for score in [0, 10, 20, 29]:
-            mode = get_consultation_mode(score)
+            mode_json = get_consultation_mode(score)
+            mode = json.loads(mode_json)
             assert mode["name"] == "chaos", f"Score {score} should be chaos mode"
             assert mode["frequency"] == "every_action"
 
@@ -94,24 +96,30 @@ class TestConsultationFrequency:
         """Scores 30-60 should trigger building mode."""
         from project_management_automation.tools.wisdom.advisors import get_consultation_mode
 
+        import json
         for score in [30, 40, 50, 59]:
-            mode = get_consultation_mode(score)
+            mode_json = get_consultation_mode(score)
+            mode = json.loads(mode_json)
             assert mode["name"] == "building", f"Score {score} should be building mode"
 
     def test_maturing_mode(self):
         """Scores 60-80 should trigger maturing mode."""
         from project_management_automation.tools.wisdom.advisors import get_consultation_mode
 
+        import json
         for score in [60, 70, 79]:
-            mode = get_consultation_mode(score)
+            mode_json = get_consultation_mode(score)
+            mode = json.loads(mode_json)
             assert mode["name"] == "maturing", f"Score {score} should be maturing mode"
 
     def test_mastery_mode(self):
         """Scores >= 80 should trigger mastery mode."""
         from project_management_automation.tools.wisdom.advisors import get_consultation_mode
 
+        import json
         for score in [80, 90, 100]:
-            mode = get_consultation_mode(score)
+            mode_json = get_consultation_mode(score)
+            mode = json.loads(mode_json)
             assert mode["name"] == "mastery", f"Score {score} should be mastery mode"
 
 
@@ -121,8 +129,10 @@ class TestConsultAdvisor:
     def test_consult_metric_advisor(self):
         """Consulting a metric advisor should return wisdom."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
-        result = consult_advisor(metric="security", score=80.0, context="Test", log=False)
+        result_json = consult_advisor(metric="security", score=80.0, context="Test", log=False)
+        result = json.loads(result_json)
 
         assert "advisor" in result
         assert "quote" in result
@@ -133,8 +143,10 @@ class TestConsultAdvisor:
     def test_consult_stage_advisor(self):
         """Consulting a stage advisor should return wisdom."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
-        result = consult_advisor(stage="daily_checkin", score=70.0, context="Morning", log=False)
+        result_json = consult_advisor(stage="daily_checkin", score=70.0, context="Morning", log=False)
+        result = json.loads(result_json)
 
         assert "advisor" in result
         assert result["stage"] == "daily_checkin"
@@ -143,8 +155,10 @@ class TestConsultAdvisor:
     def test_consult_tool_advisor(self):
         """Consulting a tool advisor should return wisdom."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
-        result = consult_advisor(tool="project_scorecard", score=75.0, context="Review", log=False)
+        result_json = consult_advisor(tool="project_scorecard", score=75.0, context="Review", log=False)
+        result = json.loads(result_json)
 
         assert "advisor" in result
         assert result["tool"] == "project_scorecard"
@@ -153,8 +167,10 @@ class TestConsultAdvisor:
     def test_consult_with_no_params_uses_random(self):
         """Consulting without params should use random advisor."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
-        result = consult_advisor(score=50.0, log=False)
+        result_json = consult_advisor(score=50.0, log=False)
+        result = json.loads(result_json)
 
         assert "advisor" in result
         assert result["consultation_type"] == "random"
@@ -162,20 +178,25 @@ class TestConsultAdvisor:
     def test_consultation_includes_mode(self):
         """Consultation result should include mode based on score."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
         # Low score = chaos
-        result_chaos = consult_advisor(metric="testing", score=20.0, log=False)
+        result_chaos_json = consult_advisor(metric="testing", score=20.0, log=False)
+        result_chaos = json.loads(result_chaos_json)
         assert result_chaos["consultation_mode"] == "chaos"
 
         # High score = mastery
-        result_mastery = consult_advisor(metric="testing", score=90.0, log=False)
+        result_mastery_json = consult_advisor(metric="testing", score=90.0, log=False)
+        result_mastery = json.loads(result_mastery_json)
         assert result_mastery["consultation_mode"] == "mastery"
 
     def test_consultation_includes_timestamp(self):
         """Consultation result should include timestamp."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
-        result = consult_advisor(metric="security", score=80.0, log=False)
+        result_json = consult_advisor(metric="security", score=80.0, log=False)
+        result = json.loads(result_json)
 
         assert "timestamp" in result
         # Should be ISO format
@@ -357,8 +378,10 @@ class TestFormatConsultation:
     def test_format_consultation_returns_string(self):
         """format_consultation should return formatted string."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor, format_consultation
+        import json
 
-        consultation = consult_advisor(metric="security", score=80.0, log=False)
+        consultation_json = consult_advisor(metric="security", score=80.0, log=False)
+        consultation = json.loads(consultation_json)
         formatted = format_consultation(consultation)
 
         assert isinstance(formatted, str)
@@ -367,8 +390,10 @@ class TestFormatConsultation:
     def test_format_consultation_includes_quote(self):
         """Formatted consultation should include the quote."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor, format_consultation
+        import json
 
-        consultation = consult_advisor(metric="security", score=80.0, log=False)
+        consultation_json = consult_advisor(metric="security", score=80.0, log=False)
+        consultation = json.loads(consultation_json)
         formatted = format_consultation(consultation)
 
         # Quote should be in the output
@@ -431,8 +456,10 @@ class TestIntegrationWithWisdomSources:
     def test_consultation_returns_valid_wisdom(self):
         """Consultation should return valid wisdom from the source."""
         from project_management_automation.tools.wisdom.advisors import consult_advisor
+        import json
 
-        result = consult_advisor(metric="security", score=80.0, log=False)
+        result_json = consult_advisor(metric="security", score=80.0, log=False)
+        result = json.loads(result_json)
 
         # Should have actual quote content
         assert len(result.get("quote", "")) > 0
