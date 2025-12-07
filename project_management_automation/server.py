@@ -43,8 +43,19 @@ from .utils.logging_config import configure_logging, suppress_noisy_loggers
 from .version import __version__
 
 # Configure logging (quiet in MCP mode, verbose in CLI)
-logger = configure_logging("exarp", level=logging.INFO)
+# Enable file logging for debugging MCP errors
+log_file = Path(__file__).parent.parent / "mcp_server_debug.log"
+logger = configure_logging("exarp", level=logging.DEBUG, log_file=log_file)
 suppress_noisy_loggers()
+# Re-enable our logger at DEBUG level to capture errors
+logger.setLevel(logging.DEBUG)
+# Also enable FastMCP error logging to file
+fastmcp_logger = logging.getLogger("fastmcp")
+fastmcp_logger.setLevel(logging.DEBUG)
+if log_file:
+    fastmcp_handler = logging.FileHandler(log_file)
+    fastmcp_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    fastmcp_logger.addHandler(fastmcp_handler)
 
 # Import security utilities
 from .utils.security import (
@@ -168,32 +179,71 @@ except ImportError:
         TOOL_WRAPPER_AVAILABLE = False
         logger.warning("Tool wrapper utility not available - tools may have return type issues")
         # Fallback implementation
-        def ensure_json_string(func):
-            return func
         def wrap_tool_result(result):
             if isinstance(result, str):
                 return result
             return json.dumps(result, indent=2) if isinstance(result, (dict, list)) else json.dumps({"result": str(result)}, indent=2)
+        
+        def ensure_json_string(func):
+            """Decorator to ensure function returns JSON string."""
+            import functools
+            import asyncio
+            import inspect
+            
+            if inspect.iscoroutinefunction(func):
+                @functools.wraps(func)
+                async def async_wrapper(*args, **kwargs):
+                    try:
+                        result = await func(*args, **kwargs)
+                        return wrap_tool_result(result)
+                    except Exception as e:
+                        return json.dumps({"error": str(e)}, indent=2)
+                return async_wrapper
+            else:
+                @functools.wraps(func)
+                def wrapper(*args, **kwargs):
+                    try:
+                        result = func(*args, **kwargs)
+                        return wrap_tool_result(result)
+                    except Exception as e:
+                        return json.dumps({"error": str(e)}, indent=2)
+                return wrapper
 
 # Try to import MCP - Phase 2 tools complete, MCP installation needed for runtime
-# Try FastMCP first, fall back to stdio if FastMCP is not available
+# Check for environment variable to force stdio mode (bypass FastMCP)
+FORCE_STDIO = os.environ.get("EXARP_FORCE_STDIO", "").lower() in ("1", "true", "yes")
+
+# Try FastMCP first, fall back to stdio if FastMCP is not available or forced
 MCP_AVAILABLE = False
 USE_STDIO = False
 FastMCP = None
 
-try:
-    # Try FastMCP from mcp package (may be available in newer versions)
-    from mcp import FastMCP
-    from mcp.types import TextContent, Tool
-
-    MCP_AVAILABLE = True
-    USE_STDIO = False
-    Server = None
-    stdio_server = None
-except ImportError:
+if FORCE_STDIO:
+    # Force stdio mode - skip FastMCP entirely
+    logger.info("EXARP_FORCE_STDIO=1 - forcing stdio server mode (bypassing FastMCP)")
     try:
-        # Try FastMCP from separate fastmcp package
-        from fastmcp import FastMCP
+        from mcp.server import Server
+        from mcp.server.stdio import stdio_server
+        from mcp.types import TextContent, Tool, Prompt, PromptArgument
+
+        MCP_AVAILABLE = True
+        USE_STDIO = True
+        FastMCP = None
+        Server = Server
+        stdio_server = stdio_server
+        logger.info("MCP stdio server initialized (forced mode)")
+    except ImportError:
+        logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
+        MCP_AVAILABLE = False
+        Server = None
+        stdio_server = None
+        Tool = None
+        TextContent = None
+else:
+    # Normal mode: Try FastMCP first, fall back to stdio
+    try:
+        # Try FastMCP from mcp package (may be available in newer versions)
+        from mcp import FastMCP
         from mcp.types import TextContent, Tool
 
         MCP_AVAILABLE = True
@@ -202,23 +252,33 @@ except ImportError:
         stdio_server = None
     except ImportError:
         try:
-            from mcp.server import Server
-            from mcp.server.stdio import stdio_server
-
-            # For stdio server, we'll construct Tool objects manually
+            # Try FastMCP from separate fastmcp package
+            from fastmcp import FastMCP
             from mcp.types import TextContent, Tool
 
             MCP_AVAILABLE = True
-            USE_STDIO = True
-            FastMCP = None
-            logger.info("MCP stdio server available - using stdio server (FastMCP not available)")
-        except ImportError:
-            logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
-            MCP_AVAILABLE = False
+            USE_STDIO = False
             Server = None
             stdio_server = None
-            Tool = None
-            TextContent = None
+        except ImportError:
+            try:
+                from mcp.server import Server
+                from mcp.server.stdio import stdio_server
+
+                # For stdio server, we'll construct Tool objects manually
+                from mcp.types import TextContent, Tool, Prompt, PromptArgument
+
+                MCP_AVAILABLE = True
+                USE_STDIO = True
+                FastMCP = None
+                logger.info("MCP stdio server available - using stdio server (FastMCP not available)")
+            except ImportError:
+                logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
+                MCP_AVAILABLE = False
+                Server = None
+                stdio_server = None
+                Tool = None
+                TextContent = None
 
 # Logging already configured above
 
@@ -678,7 +738,6 @@ def register_tools():
 
         @mcp.tool()
         @ensure_json_string
-        @mcp.tool()
         def dev_reload(modules: Optional[list[str]] = None) -> str:
             """
             [HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.]
@@ -1379,15 +1438,21 @@ def register_tools():
                 elif CONSOLIDATED_AVAILABLE:
                     # Consolidated tools
                     if name == "security":
-                        result = _security(
+                        # Stdio server is async, so call async version directly
+                        from .tools.consolidated import security_async
+                        result = await security_async(
                             arguments.get("action", "report"),
                             arguments.get("repo", "davidl71/project-management-automation"),
                             arguments.get("languages"),
                             arguments.get("config_path"),
                             arguments.get("state", "open"),
                             arguments.get("include_dismissed", False),
+                            ctx=None,  # No progress context in stdio mode
                             alert_critical=arguments.get("alert_critical", False),
                         )
+                        # Ensure it's a string
+                        if not isinstance(result, str):
+                            result = json.dumps(result, indent=2)
                     elif name == "generate_config":
                         result = _generate_config(
                             arguments.get("action", "rules"),
@@ -1476,7 +1541,9 @@ def register_tools():
                             arguments.get("output_path"),
                         )
                     elif name == "testing":
-                        result = _testing(
+                        # Stdio server is async, so call async version directly
+                        from .tools.consolidated import testing_async
+                        result = await testing_async(
                             arguments.get("action", "run"),
                             arguments.get("test_path"),
                             arguments.get("test_framework", "auto"),
@@ -2328,8 +2395,8 @@ if mcp:
             # Result is already JSON string from tool wrapper
             return result
 
-        @ensure_json_string
         @mcp.tool()
+        @ensure_json_string
         def report(
             action: str = "overview",
             output_format: str = "text",
@@ -2358,12 +2425,22 @@ if mcp:
             📊 Output: Generated report in specified format
             🔧 Side Effects: Creates file (if output_path specified)
             """
-            return _report(
+            # Explicitly ensure string return to avoid FastMCP async issues
+            # Call the underlying function and ensure it's a string
+            result = _report(
                 action, output_format, output_path, include_recommendations,
                 overall_score, security_score, testing_score,
                 documentation_score, completion_score, alignment_score,
                 project_name, include_architecture, include_metrics, include_tasks
             )
+            # Force string conversion at this level - FastMCP requires strings
+            import json
+            if isinstance(result, str):
+                return result
+            elif isinstance(result, (dict, list)):
+                return json.dumps(result, indent=2)
+            else:
+                return json.dumps({"result": str(result)}, indent=2)
 
         @ensure_json_string
         @mcp.tool()
@@ -2637,7 +2714,8 @@ if mcp:
         # NOTE: get_sprint_memories removed - use memory(action=search) with category filter
         logger.info("Memory tools loaded successfully")
 
-    # Register prompts
+    # Register prompts - support both FastMCP and stdio Server
+    PROMPTS_AVAILABLE = False  # Initialize before try block
     try:
         # Try relative imports first (when run as module)
         try:
@@ -2744,209 +2822,332 @@ if mcp:
                 WEEKLY_MAINTENANCE,
             )
 
-        @mcp.prompt()
-        def doc_check() -> str:
-            """Analyze documentation health and create tasks for issues."""
-            return DOCUMENTATION_HEALTH_CHECK
+        # Register prompts for FastMCP
+        if mcp:
+            @mcp.prompt()
+            def doc_check() -> str:
+                """Analyze documentation health and create tasks for issues."""
+                return DOCUMENTATION_HEALTH_CHECK
 
-        @mcp.prompt()
-        def doc_quick() -> str:
-            """Quick documentation health check without creating tasks."""
-            return DOCUMENTATION_QUICK_CHECK
+            @mcp.prompt()
+            def doc_quick() -> str:
+                """Quick documentation health check without creating tasks."""
+                return DOCUMENTATION_QUICK_CHECK
 
-        @mcp.prompt()
-        def align() -> str:
-            """Analyze Todo2 task alignment with project goals."""
-            return TASK_ALIGNMENT_ANALYSIS
+            @mcp.prompt()
+            def align() -> str:
+                """Analyze Todo2 task alignment with project goals."""
+                return TASK_ALIGNMENT_ANALYSIS
 
-        @mcp.prompt()
-        def dups() -> str:
-            """Find and consolidate duplicate Todo2 tasks."""
-            return DUPLICATE_TASK_CLEANUP
+            @mcp.prompt()
+            def dups() -> str:
+                """Find and consolidate duplicate Todo2 tasks."""
+                return DUPLICATE_TASK_CLEANUP
 
-        @mcp.prompt()
-        def sync() -> str:
-            """Synchronize tasks between shared TODO table and Todo2."""
-            return TASK_SYNC
+            @mcp.prompt()
+            def sync() -> str:
+                """Synchronize tasks between shared TODO table and Todo2."""
+                return TASK_SYNC
 
-        @mcp.prompt()
-        def scan() -> str:
-            """Scan all project dependencies for security vulnerabilities."""
-            return SECURITY_SCAN_ALL
+            @mcp.prompt()
+            def scan() -> str:
+                """Scan all project dependencies for security vulnerabilities."""
+                return SECURITY_SCAN_ALL
 
-        @mcp.prompt()
-        def scan_py() -> str:
-            """Scan Python dependencies for security vulnerabilities."""
-            return SECURITY_SCAN_PYTHON
+            @mcp.prompt()
+            def scan_py() -> str:
+                """Scan Python dependencies for security vulnerabilities."""
+                return SECURITY_SCAN_PYTHON
 
-        @mcp.prompt()
-        def scan_rs() -> str:
-            """Scan Rust dependencies for security vulnerabilities."""
-            return SECURITY_SCAN_RUST
+            @mcp.prompt()
+            def scan_rs() -> str:
+                """Scan Rust dependencies for security vulnerabilities."""
+                return SECURITY_SCAN_RUST
 
-        @mcp.prompt()
-        def auto() -> str:
-            """Discover new automation opportunities in the codebase."""
-            return AUTOMATION_DISCOVERY
+            @mcp.prompt()
+            def auto() -> str:
+                """Discover new automation opportunities in the codebase."""
+                return AUTOMATION_DISCOVERY
 
-        @mcp.prompt()
-        def auto_high() -> str:
-            """Find only high-value automation opportunities."""
-            return AUTOMATION_HIGH_VALUE
+            @mcp.prompt()
+            def auto_high() -> str:
+                """Find only high-value automation opportunities."""
+                return AUTOMATION_HIGH_VALUE
 
-        @mcp.prompt()
-        def pre_sprint() -> str:
-            """Pre-sprint cleanup workflow: duplicates, alignment, documentation."""
-            return PRE_SPRINT_CLEANUP
+            @mcp.prompt()
+            def pre_sprint() -> str:
+                """Pre-sprint cleanup workflow: duplicates, alignment, documentation."""
+                return PRE_SPRINT_CLEANUP
 
-        @mcp.prompt()
-        def post_impl() -> str:
-            """Post-implementation review workflow: docs, security, automation."""
-            return POST_IMPLEMENTATION_REVIEW
+            @mcp.prompt()
+            def post_impl() -> str:
+                """Post-implementation review workflow: docs, security, automation."""
+                return POST_IMPLEMENTATION_REVIEW
 
-        @mcp.prompt()
-        def weekly() -> str:
-            """Weekly maintenance workflow: docs, duplicates, security, sync."""
-            return WEEKLY_MAINTENANCE
+            @mcp.prompt()
+            def weekly() -> str:
+                """Weekly maintenance workflow: docs, duplicates, security, sync."""
+                return WEEKLY_MAINTENANCE
 
-        # New workflow prompts
-        @mcp.prompt()
-        def daily_checkin() -> str:
-            """Daily check-in workflow: server status, blockers, git health."""
-            return DAILY_CHECKIN
+            # New workflow prompts
+            @mcp.prompt()
+            def daily_checkin() -> str:
+                """Daily check-in workflow: server status, blockers, git health."""
+                return DAILY_CHECKIN
 
-        @mcp.prompt()
-        def sprint_start() -> str:
-            """Sprint start workflow: clean backlog, align tasks, queue work."""
-            return SPRINT_START
+            @mcp.prompt()
+            def sprint_start() -> str:
+                """Sprint start workflow: clean backlog, align tasks, queue work."""
+                return SPRINT_START
 
-        @mcp.prompt()
-        def sprint_end() -> str:
-            """Sprint end workflow: test coverage, docs, security check."""
-            return SPRINT_END
+            @mcp.prompt()
+            def sprint_end() -> str:
+                """Sprint end workflow: test coverage, docs, security check."""
+                return SPRINT_END
 
-        @mcp.prompt()
-        def task_review() -> str:
-            """Comprehensive task review: duplicates, alignment, staleness."""
-            return TASK_REVIEW
+            @mcp.prompt()
+            def task_review() -> str:
+                """Comprehensive task review: duplicates, alignment, staleness."""
+                return TASK_REVIEW
 
-        @mcp.prompt()
-        def project_health() -> str:
-            """Full project health assessment: code, docs, security, CI/CD."""
-            return PROJECT_HEALTH
+            @mcp.prompt()
+            def project_health() -> str:
+                """Full project health assessment: code, docs, security, CI/CD."""
+                return PROJECT_HEALTH
 
-        @mcp.prompt()
-        def automation_setup() -> str:
-            """One-time automation setup: git hooks, triggers, cron."""
-            return AUTOMATION_SETUP
+            @mcp.prompt()
+            def automation_setup() -> str:
+                """One-time automation setup: git hooks, triggers, cron."""
+                return AUTOMATION_SETUP
 
-        @mcp.prompt()
-        def scorecard() -> str:
-            """Generate comprehensive project health scorecard with all metrics."""
-            return PROJECT_SCORECARD
+            @mcp.prompt()
+            def scorecard() -> str:
+                """Generate comprehensive project health scorecard with all metrics."""
+                return PROJECT_SCORECARD
 
-        @mcp.prompt()
-        def overview() -> str:
-            """Generate one-page project overview for stakeholders."""
-            return PROJECT_OVERVIEW
+            @mcp.prompt()
+            def overview() -> str:
+                """Generate one-page project overview for stakeholders."""
+                return PROJECT_OVERVIEW
 
-        # ═══════════════════════════════════════════════════════════════════════
-        # WISDOM ADVISOR PROMPTS
-        # ═══════════════════════════════════════════════════════════════════════
+            # ═══════════════════════════════════════════════════════════════════════
+            # WISDOM ADVISOR PROMPTS
+            # ═══════════════════════════════════════════════════════════════════════
 
-        @mcp.prompt()
-        def advisor() -> str:
-            """Consult a trusted advisor for wisdom on your current work."""
-            return ADVISOR_CONSULT
+            @mcp.prompt()
+            def advisor() -> str:
+                """Consult a trusted advisor for wisdom on your current work."""
+                return ADVISOR_CONSULT
 
-        @mcp.prompt()
-        def briefing() -> str:
-            """Get morning briefing from advisors based on project health."""
-            return ADVISOR_BRIEFING
+            @mcp.prompt()
+            def briefing() -> str:
+                """Get morning briefing from advisors based on project health."""
+                return ADVISOR_BRIEFING
 
-        @mcp.prompt()
-        def advisor_voice() -> str:
-            """Generate audio from advisor consultations."""
-            return ADVISOR_AUDIO
+            @mcp.prompt()
+            def advisor_voice() -> str:
+                """Generate audio from advisor consultations."""
+                return ADVISOR_AUDIO
 
-        # ═══════════════════════════════════════════════════════════════════════
-        # ADDITIONAL PROMPTS
-        # ═══════════════════════════════════════════════════════════════════════
+            # ═══════════════════════════════════════════════════════════════════════
+            # ADDITIONAL PROMPTS
+            # ═══════════════════════════════════════════════════════════════════════
 
-        @mcp.prompt()
-        def discover() -> str:
-            """Discover tasks from TODO comments, markdown, and orphaned tasks."""
-            return TASK_DISCOVERY
+            @mcp.prompt()
+            def discover() -> str:
+                """Discover tasks from TODO comments, markdown, and orphaned tasks."""
+                return TASK_DISCOVERY
 
-        @mcp.prompt()
-        def config() -> str:
-            """Generate IDE configuration files."""
-            return CONFIG_GENERATION
+            @mcp.prompt()
+            def config() -> str:
+                """Generate IDE configuration files."""
+                return CONFIG_GENERATION
 
-        @mcp.prompt()
-        def mode() -> str:
-            """Suggest optimal Cursor IDE mode (Agent vs Ask) for a task."""
-            return MODE_SUGGESTION
+            @mcp.prompt()
+            def mode() -> str:
+                """Suggest optimal Cursor IDE mode (Agent vs Ask) for a task."""
+                return MODE_SUGGESTION
 
-        @mcp.prompt()
-        def context() -> str:
-            """Manage LLM context with summarization and budget tools."""
-            return CONTEXT_MANAGEMENT
+            @mcp.prompt()
+            def context() -> str:
+                """Manage LLM context with summarization and budget tools."""
+                return CONTEXT_MANAGEMENT
 
-        @mcp.prompt()
-        def remember() -> str:
-            """Use AI session memory to persist insights."""
-            return MEMORY_SYSTEM
+            @mcp.prompt()
+            def remember() -> str:
+                """Use AI session memory to persist insights."""
+                return MEMORY_SYSTEM
 
-        # ═══════════════════════════════════════════════════════════════════════
-        # PERSONA WORKFLOW PROMPTS
-        # ═══════════════════════════════════════════════════════════════════════
+            # ═══════════════════════════════════════════════════════════════════════
+            # PERSONA WORKFLOW PROMPTS
+            # ═══════════════════════════════════════════════════════════════════════
 
-        @mcp.prompt()
-        def dev() -> str:
-            """Developer daily workflow for writing quality code."""
-            return PERSONA_DEVELOPER
+            @mcp.prompt()
+            def dev() -> str:
+                """Developer daily workflow for writing quality code."""
+                return PERSONA_DEVELOPER
 
-        @mcp.prompt()
-        def pm() -> str:
-            """Project Manager workflow for delivery tracking."""
-            return PERSONA_PROJECT_MANAGER
+            @mcp.prompt()
+            def pm() -> str:
+                """Project Manager workflow for delivery tracking."""
+                return PERSONA_PROJECT_MANAGER
 
-        @mcp.prompt()
-        def reviewer() -> str:
-            """Code Reviewer workflow for quality gates."""
-            return PERSONA_CODE_REVIEWER
+            @mcp.prompt()
+            def reviewer() -> str:
+                """Code Reviewer workflow for quality gates."""
+                return PERSONA_CODE_REVIEWER
 
-        @mcp.prompt()
-        def exec() -> str:
-            """Executive/Stakeholder workflow for strategic view."""
-            return PERSONA_EXECUTIVE
+            @mcp.prompt()
+            def exec() -> str:
+                """Executive/Stakeholder workflow for strategic view."""
+                return PERSONA_EXECUTIVE
 
-        @mcp.prompt()
-        def seceng() -> str:
-            """Security Engineer workflow for risk management."""
-            return PERSONA_SECURITY_ENGINEER
+            @mcp.prompt()
+            def seceng() -> str:
+                """Security Engineer workflow for risk management."""
+                return PERSONA_SECURITY_ENGINEER
 
-        @mcp.prompt()
-        def arch() -> str:
-            """Architect workflow for system design."""
-            return PERSONA_ARCHITECT
+            @mcp.prompt()
+            def arch() -> str:
+                """Architect workflow for system design."""
+                return PERSONA_ARCHITECT
 
-        @mcp.prompt()
-        def qa() -> str:
-            """QA Engineer workflow for quality assurance."""
-            return PERSONA_QA_ENGINEER
+            @mcp.prompt()
+            def qa() -> str:
+                """QA Engineer workflow for quality assurance."""
+                return PERSONA_QA_ENGINEER
 
-        @mcp.prompt()
-        def writer() -> str:
-            """Technical Writer workflow for documentation."""
-            return PERSONA_TECH_WRITER
+            @mcp.prompt()
+            def writer() -> str:
+                """Technical Writer workflow for documentation."""
+                return PERSONA_TECH_WRITER
 
-        PROMPTS_AVAILABLE = True
-        logger.info("Registered 38 prompts successfully")
+            PROMPTS_AVAILABLE = True
+            logger.info("Registered 38 prompts successfully (FastMCP)")
+        else:
+            PROMPTS_AVAILABLE = True
+            logger.info("Prompts imported (will register for stdio server below)")
     except ImportError as e:
         PROMPTS_AVAILABLE = False
         logger.warning(f"Prompts not available: {e}")
+
+    # Register prompts for stdio server
+    if stdio_server_instance and PROMPTS_AVAILABLE:
+        logger.info(f"Attempting to register prompts for stdio server (stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE})")
+        try:
+            from mcp.types import Prompt, PromptArgument
+            
+            @stdio_server_instance.list_prompts()
+            async def list_prompts() -> list[Prompt]:
+                """List all available prompts."""
+                return [
+                    Prompt(name="doc_check", description="Analyze documentation health and create tasks for issues.", arguments=[]),
+                    Prompt(name="doc_quick", description="Quick documentation health check without creating tasks.", arguments=[]),
+                    Prompt(name="align", description="Analyze Todo2 task alignment with project goals.", arguments=[]),
+                    Prompt(name="dups", description="Find and consolidate duplicate Todo2 tasks.", arguments=[]),
+                    Prompt(name="sync", description="Synchronize tasks between shared TODO table and Todo2.", arguments=[]),
+                    Prompt(name="scan", description="Scan all project dependencies for security vulnerabilities.", arguments=[]),
+                    Prompt(name="scan_py", description="Scan Python dependencies for security vulnerabilities.", arguments=[]),
+                    Prompt(name="scan_rs", description="Scan Rust dependencies for security vulnerabilities.", arguments=[]),
+                    Prompt(name="auto", description="Discover new automation opportunities in the codebase.", arguments=[]),
+                    Prompt(name="auto_high", description="Find only high-value automation opportunities.", arguments=[]),
+                    Prompt(name="pre_sprint", description="Pre-sprint cleanup workflow: duplicates, alignment, documentation.", arguments=[]),
+                    Prompt(name="post_impl", description="Post-implementation review workflow: docs, security, automation.", arguments=[]),
+                    Prompt(name="weekly", description="Weekly maintenance workflow: docs, duplicates, security, sync.", arguments=[]),
+                    Prompt(name="daily_checkin", description="Daily check-in workflow: server status, blockers, git health.", arguments=[]),
+                    Prompt(name="sprint_start", description="Sprint start workflow: clean backlog, align tasks, queue work.", arguments=[]),
+                    Prompt(name="sprint_end", description="Sprint end workflow: test coverage, docs, security check.", arguments=[]),
+                    Prompt(name="task_review", description="Comprehensive task review: duplicates, alignment, staleness.", arguments=[]),
+                    Prompt(name="project_health", description="Full project health assessment: code, docs, security, CI/CD.", arguments=[]),
+                    Prompt(name="automation_setup", description="One-time automation setup: git hooks, triggers, cron.", arguments=[]),
+                    Prompt(name="scorecard", description="Generate comprehensive project health scorecard with all metrics.", arguments=[]),
+                    Prompt(name="overview", description="Generate one-page project overview for stakeholders.", arguments=[]),
+                    Prompt(name="advisor", description="Consult a trusted advisor for wisdom on your current work.", arguments=[]),
+                    Prompt(name="briefing", description="Get morning briefing from advisors based on project health.", arguments=[]),
+                    Prompt(name="advisor_voice", description="Generate audio from advisor consultations.", arguments=[]),
+                    Prompt(name="discover", description="Discover tasks from TODO comments, markdown, and orphaned tasks.", arguments=[]),
+                    Prompt(name="config", description="Generate IDE configuration files.", arguments=[]),
+                    Prompt(name="mode", description="Suggest optimal Cursor IDE mode (Agent vs Ask) for a task.", arguments=[]),
+                    Prompt(name="context", description="Manage LLM context with summarization and budget tools.", arguments=[]),
+                    Prompt(name="remember", description="Use AI session memory to persist insights.", arguments=[]),
+                    Prompt(name="dev", description="Developer daily workflow for writing quality code.", arguments=[]),
+                    Prompt(name="pm", description="Project Manager workflow for delivery tracking.", arguments=[]),
+                    Prompt(name="reviewer", description="Code Reviewer workflow for quality gates.", arguments=[]),
+                    Prompt(name="exec", description="Executive/Stakeholder workflow for strategic view.", arguments=[]),
+                    Prompt(name="seceng", description="Security Engineer workflow for risk management.", arguments=[]),
+                    Prompt(name="arch", description="Architect workflow for system design.", arguments=[]),
+                    Prompt(name="qa", description="QA Engineer workflow for quality assurance.", arguments=[]),
+                    Prompt(name="writer", description="Technical Writer workflow for documentation.", arguments=[]),
+                ]
+            
+            @stdio_server_instance.get_prompt()
+            async def get_prompt(name: str, arguments: dict[str, Any] | None = None) -> "GetPromptResult":
+                """Get prompt template by name."""
+                from mcp.types import GetPromptResult, PromptMessage, TextContent
+                
+                prompt_map = {
+                    "doc_check": DOCUMENTATION_HEALTH_CHECK,
+                    "doc_quick": DOCUMENTATION_QUICK_CHECK,
+                    "align": TASK_ALIGNMENT_ANALYSIS,
+                    "dups": DUPLICATE_TASK_CLEANUP,
+                    "sync": TASK_SYNC,
+                    "scan": SECURITY_SCAN_ALL,
+                    "scan_py": SECURITY_SCAN_PYTHON,
+                    "scan_rs": SECURITY_SCAN_RUST,
+                    "auto": AUTOMATION_DISCOVERY,
+                    "auto_high": AUTOMATION_HIGH_VALUE,
+                    "pre_sprint": PRE_SPRINT_CLEANUP,
+                    "post_impl": POST_IMPLEMENTATION_REVIEW,
+                    "weekly": WEEKLY_MAINTENANCE,
+                    "daily_checkin": DAILY_CHECKIN,
+                    "sprint_start": SPRINT_START,
+                    "sprint_end": SPRINT_END,
+                    "task_review": TASK_REVIEW,
+                    "project_health": PROJECT_HEALTH,
+                    "automation_setup": AUTOMATION_SETUP,
+                    "scorecard": PROJECT_SCORECARD,
+                    "overview": PROJECT_OVERVIEW,
+                    "advisor": ADVISOR_CONSULT,
+                    "briefing": ADVISOR_BRIEFING,
+                    "advisor_voice": ADVISOR_AUDIO,
+                    "discover": TASK_DISCOVERY,
+                    "config": CONFIG_GENERATION,
+                    "mode": MODE_SUGGESTION,
+                    "context": CONTEXT_MANAGEMENT,
+                    "remember": MEMORY_SYSTEM,
+                    "dev": PERSONA_DEVELOPER,
+                    "pm": PERSONA_PROJECT_MANAGER,
+                    "reviewer": PERSONA_CODE_REVIEWER,
+                    "exec": PERSONA_EXECUTIVE,
+                    "seceng": PERSONA_SECURITY_ENGINEER,
+                    "arch": PERSONA_ARCHITECT,
+                    "qa": PERSONA_QA_ENGINEER,
+                    "writer": PERSONA_TECH_WRITER,
+                }
+                if name in prompt_map:
+                    # Return GetPromptResult with the prompt content
+                    return GetPromptResult(
+                        description=f"Prompt: {name}",
+                        messages=[
+                            PromptMessage(
+                                role="user",
+                                content=TextContent(
+                                    type="text",
+                                    text=prompt_map[name]
+                                )
+                            )
+                        ]
+                    )
+                else:
+                    raise ValueError(f"Unknown prompt: {name}")
+            
+            logger.info("Registered 38 prompts for stdio server successfully")
+        except Exception as e:
+            logger.error(f"Failed to register prompts for stdio server: {e}", exc_info=True)
+            import traceback
+            logger.debug(f"Full traceback for prompt registration:\n{traceback.format_exc()}")
+    else:
+        logger.warning(f"Prompt registration skipped: stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE}")
 
     # Resource handlers (Phase 3)
     try:
