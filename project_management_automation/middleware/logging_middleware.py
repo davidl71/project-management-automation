@@ -117,7 +117,9 @@ class LoggingMiddleware(Middleware):
 
         except Exception as e:
             elapsed_ms = (time.time() - start_time) * 1000
-            logger.error(f"Tool error: {tool_name} | elapsed={elapsed_ms:.1f}ms | error={e}")
+            import traceback
+            logger.error(f"Tool error: {tool_name} | elapsed={elapsed_ms:.1f}ms | error={e}", exc_info=True)
+            logger.debug(f"Full traceback for {tool_name}:\n{traceback.format_exc()}")
             raise
 
     async def on_request(self, context: MiddlewareContext, call_next: Callable):
