@@ -20,6 +20,13 @@
       "description": "Migration of ldoneit.com from Wix, revival of lindog1.com for personal blog/opensource portfolio, YouTube channel strategy, and consolidation of Google Drive assets to GitHub. Encompasses IT consulting site, personal blog, CV/resume, opensource contributions showcase, and content creation strategy for AI Adventures, Music/Counterpoint, and Synthetic Financing channels.",
       "createdAt": "2025-11-26T12:11:50.928Z",
       "updatedAt": "2025-11-26T12:11:50.928Z"
+    },
+    {
+      "id": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "name": "devwisdom-go - Wisdom Module Extraction (Go Proof of Concept)",
+      "description": "Extract the wisdom module from exarp into a standalone, compiled Go MCP server. This serves as a proof of concept for using compiled languages (Go) for exarp modules, demonstrating performance, deployment simplicity, and language diversity.\n\n**Language**: Go  \n**Status**: In Progress  \n**Type**: MCP Server / Developer Tools\n\n**Vision**: Standalone Go MCP server providing wisdom quotes, trusted advisors, and inspirational guidance for developers.\n\n**Key Phases**:\n- Phase 1: ✅ Core Structure (Complete)\n- Phase 2: Wisdom Data Porting (High Priority)\n- Phase 3: Advisor System (High Priority)\n- Phase 4: MCP Protocol Implementation (Critical)\n- Phase 5: Consultation Logging (Medium)\n- Phase 6: Daily Random Source Selection (Medium)\n- Phase 7: Optional Features (Low)\n- Phase 8: Testing (High Priority)\n- Phase 9: Documentation (Medium)\n- Phase 10: Polish & Deployment (Medium)\n\n**Goals**: Port 21+ wisdom sources, implement full MCP protocol, maintain Python API compatibility.",
+      "createdAt": "2025-12-07T22:04:48.112Z",
+      "updatedAt": "2025-12-07T22:04:48.112Z"
     }
   ],
   "tasks": [
@@ -1488,6 +1495,711 @@
         "webrix",
         "research",
         "premium"
+      ],
+      "level": 1
+    },
+    {
+      "id": "6435aeff-cde4-4fcb-b9b2-5322ad6fe09e",
+      "name": "Phase 3: Advisor System",
+      "details": "Complete metric → advisor mappings, tool → advisor mappings, stage → advisor mappings. Implement score-based consultation frequency and mode-aware advisor selection (AGENT/ASK/MANUAL).\n\n**Keywords**: advisors, mappings, consultation, mode-aware, logic",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:12.786Z",
+      "updatedAt": "2025-12-07T22:05:12.786Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "phase-3",
+        "advisors",
+        "mappings",
+        "consultation",
+        "high-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "name": "Phase 2: Wisdom Data Porting",
+      "details": "Port 21+ wisdom sources from Python to Go. Maintain Python API compatibility and preserve all wisdom quotes and metadata.\n\n**Sources to Port**:\n- pistis_sophia, stoic, tao, art_of_war, bible, confucius\n- bofh, tao_of_programming, murphy\n- shakespeare, kybalion, gracian, enochian\n- Hebrew sources: rebbe, tzaddik, chacham, pirkei_avot, proverbs, ecclesiastes, psalms\n- random source selector\n\n**Keywords**: porting, data-migration, wisdom-sources, quotes, python-to-go",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:13.423Z",
+      "updatedAt": "2025-12-07T22:05:13.423Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "phase-2",
+        "porting",
+        "data-migration",
+        "wisdom-sources",
+        "high-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "b5f6a967-4691-4e13-80c9-fccbd1e9ae60",
+      "name": "Phase 5: Consultation Logging",
+      "details": "Implement JSONL log file format, consultation tracking, log retrieval and filtering, date-based log rotation.\n\n**Keywords**: logging, persistence, jsonl, consultation-tracking",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:22.069Z",
+      "updatedAt": "2025-12-07T22:05:22.069Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "phase-5",
+        "logging",
+        "persistence",
+        "jsonl",
+        "medium-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "99919850-01e3-476d-8b4a-35af0bcfd201",
+      "name": "Phase 4: MCP Protocol Implementation",
+      "details": "Implement JSON-RPC 2.0 handler, register 5 tools (consult_advisor, get_wisdom, get_daily_briefing, get_consultation_log, export_for_podcast), register 4 resources (wisdom://sources, wisdom://advisors, wisdom://advisor/{id}, wisdom://consultations/{days}), handle stdio transport, error handling and logging.\n\n**Keywords**: mcp, json-rpc, tools, resources, stdio, transport, protocol",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:23.212Z",
+      "updatedAt": "2025-12-07T22:05:23.212Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "pending",
+      "tags": [
+        "phase-4",
+        "mcp",
+        "json-rpc",
+        "tools",
+        "resources",
+        "critical"
+      ],
+      "level": 0
+    },
+    {
+      "id": "5b2611d9-ecd0-4287-925a-6da3231bfd99",
+      "name": "Phase 6: Daily Random Source Selection",
+      "details": "Implement date-seeded random selection, consistent daily source (same date = same source), random source rotation.\n\n**Keywords**: random, daily-selection, date-seeding, consistency",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:25.852Z",
+      "updatedAt": "2025-12-07T22:05:25.852Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "phase-6",
+        "random",
+        "daily-selection",
+        "date-seeding",
+        "medium-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "25b320ba-725a-461f-aa8e-1c644efc6522",
+      "name": "Phase 7: Optional Features",
+      "details": "Sefaria API integration (Hebrew texts), Voice/TTS support (Go equivalent of edge-tts), Podcast export formatting.\n\n**Keywords**: optional, sefaria, voice, tts, podcast, hebrew",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:30.075Z",
+      "updatedAt": "2025-12-07T22:05:30.075Z",
+      "dependsOn": [],
+      "priority": 3,
+      "status": "pending",
+      "tags": [
+        "phase-7",
+        "optional",
+        "sefaria",
+        "voice",
+        "tts",
+        "low-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "ca2f4b89-8289-480c-83d6-7fd8a08fceef",
+      "name": "Phase 8: Testing",
+      "details": "Unit tests for wisdom engine, unit tests for advisors, integration tests for MCP server, test with Cursor MCP client.\n\n**Keywords**: testing, unit-tests, integration-tests, cursor, quality",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:39.621Z",
+      "updatedAt": "2025-12-07T22:05:39.621Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "phase-8",
+        "testing",
+        "unit-tests",
+        "integration-tests",
+        "high-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "711f493c-d674-4c22-b31a-eb3c34fb8e49",
+      "name": "Phase 9: Documentation",
+      "details": "API documentation (godoc), usage examples, migration guide from Python version, performance benchmarks (Go vs Python).\n\n**Keywords**: documentation, godoc, examples, migration-guide, benchmarks",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:42.580Z",
+      "updatedAt": "2025-12-07T22:05:42.580Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "phase-9",
+        "documentation",
+        "godoc",
+        "examples",
+        "medium-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "cbd38905-c0c3-4c0d-a30e-47e897a8fd6c",
+      "name": "Phase 10: Polish & Deployment",
+      "details": "Error message improvements, logging improvements, performance optimization, cross-compilation (Windows, Linux, macOS), CI/CD setup.\n\n**Keywords**: polish, deployment, cross-compilation, ci-cd, optimization",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "completed": false,
+      "createdAt": "2025-12-07T22:05:46.334Z",
+      "updatedAt": "2025-12-07T22:05:46.334Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "phase-10",
+        "polish",
+        "deployment",
+        "cross-compilation",
+        "medium-priority"
+      ],
+      "level": 0
+    },
+    {
+      "id": "066ac666-dbfd-40ec-a1c6-b32bc1d6cb64",
+      "name": "Port all 21+ wisdom sources from Python",
+      "details": "Port all wisdom sources maintaining API compatibility. Each source should preserve quotes and metadata structure.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:09.029Z",
+      "updatedAt": "2025-12-07T22:06:09.029Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "porting",
+        "wisdom-sources",
+        "data-migration"
+      ],
+      "level": 1
+    },
+    {
+      "id": "f5104167-90fd-4cdb-b03b-a5f7b9c52371",
+      "name": "Port core wisdom sources (pistis_sophia, stoic, tao, art_of_war, bible, confucius)",
+      "details": "Port the first 6 core wisdom sources: pistis_sophia, stoic, tao, art_of_war, bible, confucius. These are the most frequently used sources.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:10.776Z",
+      "updatedAt": "2025-12-07T22:06:10.776Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "porting",
+        "wisdom-sources",
+        "core-sources"
+      ],
+      "level": 1
+    },
+    {
+      "id": "08a7310d-b257-453e-aeb2-25c9fc925af9",
+      "name": "Port developer-focused sources (bofh, tao_of_programming, murphy)",
+      "details": "Port developer-focused wisdom sources: bofh, tao_of_programming, murphy. These are essential for developer personas.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:17.193Z",
+      "updatedAt": "2025-12-07T22:06:17.193Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "porting",
+        "wisdom-sources",
+        "developer-sources"
+      ],
+      "level": 1
+    },
+    {
+      "id": "da9e0a51-0847-4284-ba20-25608c6745ee",
+      "name": "Port classical sources (shakespeare, kybalion, gracian, enochian)",
+      "details": "Port classical wisdom sources: shakespeare, kybalion, gracian, enochian. These provide diverse philosophical perspectives.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:27.437Z",
+      "updatedAt": "2025-12-07T22:06:27.437Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "porting",
+        "wisdom-sources",
+        "classical-sources"
+      ],
+      "level": 1
+    },
+    {
+      "id": "9cd50ceb-a54a-4e04-9995-b05b6859ad95",
+      "name": "Implement random source selector",
+      "details": "Implement random source selection logic. This will be enhanced in Phase 6 with date-seeded selection for daily consistency.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:31.036Z",
+      "updatedAt": "2025-12-07T22:06:31.036Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "porting",
+        "random-selection",
+        "source-selector"
+      ],
+      "level": 1
+    },
+    {
+      "id": "d18d63fb-307c-4781-8cc0-cdac507f1d1a",
+      "name": "Port Hebrew sources (rebbe, tzaddik, chacham, pirkei_avot, proverbs, ecclesiastes, psalms)",
+      "details": "Port Hebrew wisdom sources: rebbe, tzaddik, chacham, pirkei_avot, proverbs, ecclesiastes, psalms. These may require Sefaria API integration later (Phase 7).",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "d7323b34-eace-4a74-adec-af04ee86b03b",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:32.526Z",
+      "updatedAt": "2025-12-07T22:06:32.526Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "porting",
+        "wisdom-sources",
+        "hebrew-sources"
+      ],
+      "level": 1
+    },
+    {
+      "id": "1183425c-fa59-473a-a7f8-8a2d4884856c",
+      "name": "Complete metric advisor mappings",
+      "details": "Implement complete metric → advisor mappings. Each metric (security, testing, documentation, completion, alignment) should map to appropriate advisors.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "6435aeff-cde4-4fcb-b9b2-5322ad6fe09e",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:51.253Z",
+      "updatedAt": "2025-12-07T22:06:51.253Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "advisors",
+        "mappings",
+        "metric-advisors"
+      ],
+      "level": 1
+    },
+    {
+      "id": "31a5941a-62da-4b51-90ba-edf2a8699e65",
+      "name": "Complete tool advisor mappings",
+      "details": "Implement complete tool → advisor mappings. Each tool should map to appropriate advisors for context-aware guidance.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "6435aeff-cde4-4fcb-b9b2-5322ad6fe09e",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:54.998Z",
+      "updatedAt": "2025-12-07T22:06:54.998Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "advisors",
+        "mappings",
+        "tool-advisors"
+      ],
+      "level": 1
+    },
+    {
+      "id": "1b6afb0b-ca0c-445b-91c7-424828a1a4ce",
+      "name": "Complete stage advisor mappings",
+      "details": "Implement complete stage → advisor mappings. Each workflow stage should map to appropriate advisors for stage-specific guidance.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "6435aeff-cde4-4fcb-b9b2-5322ad6fe09e",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:55.179Z",
+      "updatedAt": "2025-12-07T22:06:55.179Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "advisors",
+        "mappings",
+        "stage-advisors"
+      ],
+      "level": 1
+    },
+    {
+      "id": "458e892f-e071-4bcb-aa79-d9c8b1b89c19",
+      "name": "Implement score-based consultation frequency",
+      "details": "Implement logic to adjust consultation frequency based on score (lower scores = more frequent consultations, higher scores = less frequent).",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "6435aeff-cde4-4fcb-b9b2-5322ad6fe09e",
+      "completed": false,
+      "createdAt": "2025-12-07T22:06:59.214Z",
+      "updatedAt": "2025-12-07T22:06:59.214Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "advisors",
+        "consultation",
+        "score-based"
+      ],
+      "level": 1
+    },
+    {
+      "id": "02b8e0b5-2d6d-4b9e-b9cc-657c9a76abeb",
+      "name": "Implement mode-aware advisor selection (AGENT/ASK/MANUAL)",
+      "details": "Implement logic to select advisors based on workflow mode: AGENT (automatic), ASK (user-initiated), MANUAL (explicit user choice). Different modes may prefer different advisor types.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "6435aeff-cde4-4fcb-b9b2-5322ad6fe09e",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:08.100Z",
+      "updatedAt": "2025-12-07T22:07:08.100Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "advisors",
+        "mode-aware",
+        "workflow-mode"
+      ],
+      "level": 1
+    },
+    {
+      "id": "e43c6e8d-d45f-4e6a-9d2b-cf9e559b1ee7",
+      "name": "Implement JSON-RPC 2.0 handler",
+      "details": "Implement JSON-RPC 2.0 protocol handler for MCP communication. Handle request/response parsing, method dispatch, and error responses.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "99919850-01e3-476d-8b4a-35af0bcfd201",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:12.414Z",
+      "updatedAt": "2025-12-07T22:07:12.414Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "pending",
+      "tags": [
+        "mcp",
+        "json-rpc",
+        "protocol",
+        "handler",
+        "critical"
+      ],
+      "level": 1
+    },
+    {
+      "id": "344f7aef-1f04-4706-9fbe-d5fa58cbc2be",
+      "name": "Handle stdio transport",
+      "details": "Implement stdio transport for MCP communication. Read from stdin, write to stdout. Handle buffering and message boundaries correctly.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "99919850-01e3-476d-8b4a-35af0bcfd201",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:22.006Z",
+      "updatedAt": "2025-12-07T22:07:22.006Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "pending",
+      "tags": [
+        "mcp",
+        "stdio",
+        "transport",
+        "critical"
+      ],
+      "level": 1
+    },
+    {
+      "id": "b91b4c2a-85e0-4f67-aa49-d8ee884a2c0b",
+      "name": "Error handling and logging",
+      "details": "Implement comprehensive error handling and logging for MCP server. Log errors appropriately, handle edge cases, and provide meaningful error messages.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "99919850-01e3-476d-8b4a-35af0bcfd201",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:25.896Z",
+      "updatedAt": "2025-12-07T22:07:25.896Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "mcp",
+        "error-handling",
+        "logging"
+      ],
+      "level": 1
+    },
+    {
+      "id": "712cf0aa-ffe3-4d06-b8cd-4fda2a55c5b9",
+      "name": "Consultation tracking and log retrieval/filtering",
+      "details": "Implement consultation tracking (log each consultation) and log retrieval with filtering by date range, advisor, etc.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "b5f6a967-4691-4e13-80c9-fccbd1e9ae60",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:34.448Z",
+      "updatedAt": "2025-12-07T22:07:34.448Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "logging",
+        "consultation-tracking",
+        "filtering"
+      ],
+      "level": 1
+    },
+    {
+      "id": "447568c7-ede1-4e91-a8b5-481e78a93618",
+      "name": "Implement JSONL log file format",
+      "details": "Implement JSONL (JSON Lines) format for consultation logging. Each consultation should be a single JSON line in the log file.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "b5f6a967-4691-4e13-80c9-fccbd1e9ae60",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:35.507Z",
+      "updatedAt": "2025-12-07T22:07:35.507Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "logging",
+        "jsonl",
+        "persistence"
+      ],
+      "level": 1
+    },
+    {
+      "id": "fd49a056-f5f7-40bd-bfbf-f01fe4b53b03",
+      "name": "Date-seeded daily consistent random source selection",
+      "details": "Implement date-seeded random selection so the same date always selects the same source (consistent daily source), with random source rotation.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "5b2611d9-ecd0-4287-925a-6da3231bfd99",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:38.373Z",
+      "updatedAt": "2025-12-07T22:07:38.373Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "random",
+        "daily-selection",
+        "date-seeding"
+      ],
+      "level": 1
+    },
+    {
+      "id": "f3366b60-49a3-4b89-8e61-db363901af02",
+      "name": "Unit tests for wisdom engine and advisors",
+      "details": "Write comprehensive unit tests for wisdom engine (quote retrieval, source management) and advisor system (mappings, selection logic).",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "ca2f4b89-8289-480c-83d6-7fd8a08fceef",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:44.077Z",
+      "updatedAt": "2025-12-07T22:07:44.077Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "unit-tests",
+        "wisdom-engine",
+        "advisors"
+      ],
+      "level": 1
+    },
+    {
+      "id": "42f8bcf7-7ae2-4366-949f-a9ba15a247b9",
+      "name": "Integration tests for MCP server and Cursor MCP client testing",
+      "details": "Write integration tests for MCP server (end-to-end tool/resource calls) and test with actual Cursor MCP client to ensure compatibility.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "ca2f4b89-8289-480c-83d6-7fd8a08fceef",
+      "completed": false,
+      "createdAt": "2025-12-07T22:07:46.709Z",
+      "updatedAt": "2025-12-07T22:07:46.709Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "integration-tests",
+        "mcp-server",
+        "cursor"
+      ],
+      "level": 1
+    },
+    {
+      "id": "1a70b180-5d12-4a59-aae7-6af084f68017",
+      "name": "Register MCP tools (5 tools: consult_advisor, get_wisdom, etc.)",
+      "details": "Register all 5 MCP tools: consult_advisor, get_wisdom, get_daily_briefing, get_consultation_log, export_for_podcast. Each tool should have proper schemas and error handling.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "99919850-01e3-476d-8b4a-35af0bcfd201",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:00.762Z",
+      "updatedAt": "2025-12-07T22:08:00.762Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "pending",
+      "tags": [
+        "mcp",
+        "tools",
+        "registration",
+        "critical"
+      ],
+      "level": 1
+    },
+    {
+      "id": "a5f41b40-8c79-4751-97fe-e4f2b7b77a13",
+      "name": "Sefaria API integration for Hebrew texts",
+      "details": "Integrate Sefaria API for Hebrew wisdom sources. This provides access to authentic Hebrew texts and translations.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "25b320ba-725a-461f-aa8e-1c644efc6522",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:07.432Z",
+      "updatedAt": "2025-12-07T22:08:07.432Z",
+      "dependsOn": [],
+      "priority": 3,
+      "status": "pending",
+      "tags": [
+        "optional",
+        "sefaria",
+        "hebrew",
+        "api-integration"
+      ],
+      "level": 1
+    },
+    {
+      "id": "55293c73-6b35-49a6-aaa5-76ec059d6868",
+      "name": "Register MCP resources (4 resources: wisdom://sources, etc.)",
+      "details": "Register all 4 MCP resources: wisdom://sources, wisdom://advisors, wisdom://advisor/{id}, wisdom://consultations/{days}. Each resource should provide appropriate data format.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "99919850-01e3-476d-8b4a-35af0bcfd201",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:08.788Z",
+      "updatedAt": "2025-12-07T22:08:08.788Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "pending",
+      "tags": [
+        "mcp",
+        "resources",
+        "registration",
+        "critical"
+      ],
+      "level": 1
+    },
+    {
+      "id": "cddbffcb-7b0c-468a-aede-8527de7448a5",
+      "name": "Voice/TTS support (Go equivalent of edge-tts)",
+      "details": "Implement voice/TTS support using Go libraries (equivalent to Python edge-tts). Enable audio generation for wisdom quotes.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "25b320ba-725a-461f-aa8e-1c644efc6522",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:10.567Z",
+      "updatedAt": "2025-12-07T22:08:10.567Z",
+      "dependsOn": [],
+      "priority": 3,
+      "status": "pending",
+      "tags": [
+        "optional",
+        "voice",
+        "tts",
+        "audio"
+      ],
+      "level": 1
+    },
+    {
+      "id": "7fcddbdd-ca9c-45fb-9520-c6ac41f93678",
+      "name": "API documentation (godoc) and usage examples",
+      "details": "Generate API documentation using Go's godoc system and create comprehensive usage examples for all tools and resources.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "711f493c-d674-4c22-b31a-eb3c34fb8e49",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:13.407Z",
+      "updatedAt": "2025-12-07T22:08:13.407Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "documentation",
+        "godoc",
+        "examples"
+      ],
+      "level": 1
+    },
+    {
+      "id": "16a00d61-1bde-4f20-84f3-e70bf0d905ba",
+      "name": "Migration guide and performance benchmarks",
+      "details": "Create migration guide from Python version and performance benchmarks comparing Go vs Python (startup time, response time, binary size).",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "711f493c-d674-4c22-b31a-eb3c34fb8e49",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:22.105Z",
+      "updatedAt": "2025-12-07T22:08:22.105Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "documentation",
+        "migration-guide",
+        "benchmarks"
+      ],
+      "level": 1
+    },
+    {
+      "id": "0cc58dde-a622-40d0-b943-97580fc7a7ca",
+      "name": "Error messages, logging improvements, and performance optimization",
+      "details": "Improve error messages for better user experience, enhance logging for debugging, and optimize performance for startup time and response time.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "cbd38905-c0c3-4c0d-a30e-47e897a8fd6c",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:23.278Z",
+      "updatedAt": "2025-12-07T22:08:23.278Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "polish",
+        "error-messages",
+        "logging",
+        "optimization"
+      ],
+      "level": 1
+    },
+    {
+      "id": "96c94a2b-fa28-43fc-abf8-125c82b7fffb",
+      "name": "Cross-compilation (Windows, Linux, macOS) and CI/CD setup",
+      "details": "Set up cross-compilation for Windows, Linux, and macOS targets, and configure CI/CD pipeline for automated builds and testing.",
+      "projectId": "039bb05a-6f78-492b-88b5-28fdfa3ebce7",
+      "parentId": "cbd38905-c0c3-4c0d-a30e-47e897a8fd6c",
+      "completed": false,
+      "createdAt": "2025-12-07T22:08:26.962Z",
+      "updatedAt": "2025-12-07T22:08:26.962Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "pending",
+      "tags": [
+        "deployment",
+        "cross-compilation",
+        "ci-cd"
       ],
       "level": 1
     }
