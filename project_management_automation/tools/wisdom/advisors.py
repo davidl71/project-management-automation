@@ -331,12 +331,19 @@ def get_consultation_log(
 # ADVISOR CONSULTATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def get_consultation_mode(score: float) -> dict[str, Any]:
-    """Get consultation mode based on score."""
+def get_consultation_mode(score: float) -> str:
+    """Get consultation mode based on score.
+    
+    Returns:
+        JSON string with mode information
+    """
+    import json
     for mode_name, mode in SCORE_CONSULTATION_FREQUENCY.items():
         if mode["min_score"] <= score < mode["max_score"]:
-            return {"name": mode_name, **mode}
-    return {"name": "mastery", **SCORE_CONSULTATION_FREQUENCY["mastery"]}
+            result = {"name": mode_name, **mode}
+            return json.dumps(result, indent=2)
+    result = {"name": "mastery", **SCORE_CONSULTATION_FREQUENCY["mastery"]}
+    return json.dumps(result, indent=2)
 
 
 def get_advisor_for_metric(metric: str) -> Optional[dict[str, Any]]:
@@ -362,7 +369,7 @@ def consult_advisor(
     context: str = "",
     log: bool = True,
     session_mode: Optional[str] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Consult an advisor and get wisdom.
 
@@ -376,8 +383,9 @@ def consult_advisor(
         session_mode: Inferred session mode (AGENT/ASK/MANUAL/UNKNOWN) for mode-aware guidance
 
     Returns:
-        Consultation result with wisdom and advice
+        JSON string with consultation result and wisdom
     """
+    import json
     # Determine which advisor to consult
     advisor_info = None
     consultation_type = None
@@ -433,17 +441,28 @@ def consult_advisor(
                 advisor_info = {"advisor": advisor, "rationale": f"Mode-aware selection for {session_mode}"}
 
     # Get wisdom from the advisor
-    wisdom = get_wisdom(score, source=advisor, seed_date=False)
+    # Note: get_wisdom returns Optional[dict], but we immediately use it and convert to string
+    wisdom_dict = get_wisdom(score, source=advisor, seed_date=False)
 
-    if not wisdom:
-        wisdom = {
+    if not wisdom_dict:
+        wisdom_dict = {
             "quote": "Silence is also wisdom.",
             "source": "Unknown",
             "encouragement": "Sometimes reflection is the answer.",
         }
+    
+    # Immediately extract fields to avoid dict exposure to FastMCP static analysis
+    wisdom = {
+        "quote": wisdom_dict.get("quote", ""),
+        "source": wisdom_dict.get("source", ""),
+        "encouragement": wisdom_dict.get("encouragement", ""),
+        "wisdom_source": wisdom_dict.get("wisdom_source", ""),
+        "wisdom_icon": wisdom_dict.get("wisdom_icon", "📜"),
+    }
 
-    # Get consultation mode
-    mode = get_consultation_mode(score)
+    # Get consultation mode (returns JSON string, parse it)
+    mode_json = get_consultation_mode(score)
+    mode = json.loads(mode_json)
 
     # Build result
     result = {
@@ -476,11 +495,12 @@ def consult_advisor(
         }
         result["mode_guidance"] = mode_hints.get(session_mode, "")
 
-    # Log consultation
+    # Log consultation (need dict for logging)
     if log:
         log_consultation(result)
 
-    return result
+    # Return as JSON string
+    return json.dumps(result, indent=2)
 
 
 def format_consultation(consultation: dict[str, Any]) -> str:
@@ -523,7 +543,12 @@ def get_daily_briefing(overall_score: float, metric_scores: dict[str, float]) ->
     Returns:
         Formatted daily briefing with advisor wisdom
     """
-    mode = get_consultation_mode(overall_score)
+    # Get mode (returns JSON string, parse it)
+    import json
+    mode_json = get_consultation_mode(overall_score)
+    mode_dict = json.loads(mode_json)
+    mode_icon = mode_dict.get('icon', '📊')
+    mode_name = mode_dict.get('name', 'UNKNOWN')
 
     # Find lowest scoring metrics (need most advice)
     sorted_metrics = sorted(metric_scores.items(), key=lambda x: x[1])
@@ -531,23 +556,29 @@ def get_daily_briefing(overall_score: float, metric_scores: dict[str, float]) ->
     briefing = f"""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║  🌅 DAILY ADVISOR BRIEFING                                           ║
-║  Overall Score: {overall_score:.1f}% | Mode: {mode['icon']} {mode['name'].upper():<30} ║
+║  Overall Score: {overall_score:.1f}% | Mode: {mode_icon} {mode_name.upper():<30} ║
 ╠══════════════════════════════════════════════════════════════════════╣
 """
 
     # Consult advisor for lowest 3 metrics
+    # Immediately extract fields to avoid dict exposure to FastMCP static analysis
     for metric, score in sorted_metrics[:3]:
         advisor_info = METRIC_ADVISORS.get(metric, {})
         if not advisor_info:
             continue
 
-        consultation = consult_advisor(metric=metric, score=score, log=False)
+        # Get consultation (returns JSON string, parse it)
+        consultation_json = consult_advisor(metric=metric, score=score, log=False)
+        consultation_dict = json.loads(consultation_json)
+        advisor_name = consultation_dict.get('advisor_name', 'Unknown')
+        quote = consultation_dict.get('quote', '')
+        encouragement = consultation_dict.get('encouragement', '')
 
         briefing += f"""
 ║  {advisor_info.get('icon', '📜')} {metric.upper()}: {score:.0f}%
-║     Advisor: {consultation['advisor_name']}
-║     "{consultation['quote'][:55]}..."
-║     💡 {consultation['encouragement'][:55]}
+║     Advisor: {advisor_name}
+║     "{quote[:55]}..."
+║     💡 {encouragement[:55]}
 """
 
     briefing += """

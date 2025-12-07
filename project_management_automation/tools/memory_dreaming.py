@@ -284,13 +284,17 @@ def memory_dream(
         # Calculate a "score" based on memory health
         score = min(100, len(memories) * 5)  # More memories = higher score
 
-        consultation = consult_advisor(
+        consultation_json = consult_advisor(
             metric=metric,
             stage="retrospective",  # Dreaming is like a retrospective
             score=score,
             context=f"Dreaming on {len(memories)} memories from last {days} days",
             log=True,
         )
+        
+        # Parse JSON string to dict
+        import json
+        consultation = json.loads(consultation_json)
 
         reflections.append({
             **consultation,

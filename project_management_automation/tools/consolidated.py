@@ -83,7 +83,7 @@ async def security_async(
     include_dismissed: bool = False,
     ctx: Optional[Any] = None,
     alert_critical: bool = False,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified security analysis tool (async with progress).
 
@@ -97,23 +97,28 @@ async def security_async(
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Security scan/report results
+        JSON string with security scan/report results
     """
     if action == "scan":
         from .dependency_security import scan_dependency_security_async
         result = await scan_dependency_security_async(languages, config_path, ctx, alert_critical)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result should already be a string, but ensure it is
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     elif action == "alerts":
         from .dependabot_integration import fetch_dependabot_alerts
-        return fetch_dependabot_alerts(repo, state)
+        result = fetch_dependabot_alerts(repo, state)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "report":
         from .dependabot_integration import get_unified_security_report
-        return get_unified_security_report(repo, include_dismissed)
+        result = get_unified_security_report(repo, include_dismissed)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown security action: {action}. Use 'scan', 'alerts', or 'report'.",
-        }
+        }, indent=2)
 
 
 def security(
@@ -125,7 +130,7 @@ def security(
     include_dismissed: bool = False,
     ctx: Optional[Any] = None,
     alert_critical: bool = False,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified security analysis tool (sync wrapper).
 
@@ -139,9 +144,9 @@ def security(
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Security scan/report results
+        JSON string with security scan/report results
     """
-    # Toggle: check if we're in an async context
+    # Check if we're in an async context
     in_async = False
     try:
         asyncio.get_running_loop()
@@ -150,8 +155,18 @@ def security(
         pass
 
     if in_async:
-        raise RuntimeError("Use security_async() in async context, or call from sync code")
-    return asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
+        # In async context (e.g., stdio server), we need to await
+        # But this is a sync function, so we'll use asyncio.create_task or run_until_complete
+        # Actually, for stdio server, the handler should call security_async directly
+        # For now, use a workaround: create a new event loop in a thread
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(asyncio.run, security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
+            result = future.result()
+    else:
+        result = asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
+    # Convert dict to JSON string
+    return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
 
 def generate_config(
@@ -168,7 +183,7 @@ def generate_config(
     output_dir: Optional[str] = None,
     # common
     dry_run: bool = False,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified config generation tool.
 
@@ -184,14 +199,16 @@ def generate_config(
         dry_run: Preview changes without writing
 
     Returns:
-        Config generation results
+        JSON string with config generation results
     """
     if action == "rules":
         from .cursor_rules_generator import generate_cursor_rules
-        return generate_cursor_rules(rules, overwrite, analyze_only)
+        result = generate_cursor_rules(rules, overwrite, analyze_only)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "ignore":
         from .cursorignore_generator import generate_cursorignore
-        return generate_cursorignore(include_indexing, analyze_project, dry_run)
+        result = generate_cursorignore(include_indexing, analyze_project, dry_run)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "simplify":
         from .simplify_rules import simplify_rules
         parsed_files = None
@@ -199,13 +216,14 @@ def generate_config(
             try:
                 parsed_files = json.loads(rule_files)
             except json.JSONDecodeError:
-                return {"status": "error", "error": "Invalid JSON in rule_files parameter"}
-        return simplify_rules(parsed_files, dry_run, output_dir)
+                return json.dumps({"status": "error", "error": "Invalid JSON in rule_files parameter"}, indent=2)
+        result = simplify_rules(parsed_files, dry_run, output_dir)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown config action: {action}. Use 'rules', 'ignore', or 'simplify'.",
-        }
+        }, indent=2)
 
 
 def setup_hooks(
@@ -218,7 +236,7 @@ def setup_hooks(
     # common
     install: bool = True,
     dry_run: bool = False,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified hooks setup tool.
 
@@ -231,11 +249,12 @@ def setup_hooks(
         dry_run: Preview changes without writing
 
     Returns:
-        Hook setup results
+        JSON string with hook setup results
     """
     if action == "git":
         from .git_hooks import setup_git_hooks
-        return setup_git_hooks(hooks, install, dry_run)
+        result = setup_git_hooks(hooks, install, dry_run)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "patterns":
         from .pattern_triggers import setup_pattern_triggers
         parsed_patterns = None
@@ -243,13 +262,14 @@ def setup_hooks(
             try:
                 parsed_patterns = json.loads(patterns)
             except json.JSONDecodeError:
-                return {"status": "error", "error": "Invalid JSON in patterns parameter"}
-        return setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
+                return json.dumps({"status": "error", "error": "Invalid JSON in patterns parameter"}, indent=2)
+        result = setup_pattern_triggers(parsed_patterns, config_path, install, dry_run)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown hooks action: {action}. Use 'git' or 'patterns'.",
-        }
+        }, indent=2)
 
 
 def prompt_tracking(
@@ -262,7 +282,7 @@ def prompt_tracking(
     iteration: int = 1,
     # analyze params
     days: int = 7,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified prompt tracking tool.
 
@@ -276,21 +296,23 @@ def prompt_tracking(
         days: Days of history to analyze (analyze action)
 
     Returns:
-        Log confirmation or analysis results
+        JSON string with log confirmation or analysis results
     """
     if action == "log":
         if not prompt:
-            return {"status": "error", "error": "prompt parameter required for log action"}
+            return json.dumps({"status": "error", "error": "prompt parameter required for log action"}, indent=2)
         from .prompt_iteration_tracker import log_prompt_iteration
-        return log_prompt_iteration(prompt, task_id, mode, outcome, iteration)
+        result = log_prompt_iteration(prompt, task_id, mode, outcome, iteration)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "analyze":
         from .prompt_iteration_tracker import analyze_prompt_iterations
-        return analyze_prompt_iterations(days)
+        result = analyze_prompt_iterations(days)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown prompt tracking action: {action}. Use 'log' or 'analyze'.",
-        }
+        }, indent=2)
 
 
 def health(
@@ -308,7 +330,7 @@ def health(
     # cicd params
     workflow_path: Optional[str] = None,
     check_runners: bool = True,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified health check tool.
 
@@ -325,7 +347,7 @@ def health(
         check_runners: Validate runner configs (cicd action)
 
     Returns:
-        Health check results
+        JSON string with health check results
     """
     if action == "server":
         import time
@@ -343,33 +365,38 @@ def health(
             if match:
                 version = match.group(1)
 
-        return {
+        result = {
             "status": "operational",
             "version": version,
             "dev_mode": is_dev_mode(),
             "project_root": str(project_root),
             "timestamp": time.time(),
         }
+        return json.dumps(result, indent=2)
     elif action == "git":
         from .working_copy_health import check_working_copy_health
-        return check_working_copy_health(agent_name=agent_name, check_remote=check_remote)
+        result = check_working_copy_health(agent_name=agent_name, check_remote=check_remote)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "docs":
         from .docs_health import check_documentation_health
-        return check_documentation_health(output_path, create_tasks)
+        result = check_documentation_health(output_path, create_tasks)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "dod":
         from .definition_of_done import check_definition_of_done
-        return check_definition_of_done(task_id, changed_files, auto_check, output_path)
+        result = check_definition_of_done(task_id, changed_files, auto_check, output_path)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "cicd":
-        import json
-
         from .ci_cd_validation import validate_ci_cd_workflow
         result = validate_ci_cd_workflow(workflow_path, check_runners, output_path)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result might already be a string, or might be a dict
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown health action: {action}. Use 'server', 'git', 'docs', 'dod', or 'cicd'.",
-        }
+        }, indent=2)
 
 
 def report(
@@ -391,7 +418,7 @@ def report(
     include_architecture: bool = True,
     include_metrics: bool = True,
     include_tasks: bool = True,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified report generation tool.
 
@@ -414,30 +441,41 @@ def report(
     Returns:
         Generated report
     """
-    if action == "overview":
-        from .project_overview import generate_project_overview
-        return generate_project_overview(output_format, output_path)
-    elif action == "scorecard":
-        from .project_scorecard import generate_project_scorecard
-        return generate_project_scorecard(output_format, include_recommendations, output_path)
-    elif action == "briefing":
-        from .wisdom.advisors import get_daily_briefing
-        metric_scores = {
-            "security": security_score,
-            "testing": testing_score,
-            "documentation": documentation_score,
-            "completion": completion_score,
-            "alignment": alignment_score,
-        }
-        return get_daily_briefing(overall_score, metric_scores)
-    elif action == "prd":
-        from .prd_generator import generate_prd
-        return generate_prd(project_name, include_architecture, include_metrics, include_tasks, output_path)
-    else:
-        return {
-            "status": "error",
-            "error": f"Unknown report action: {action}. Use 'overview', 'scorecard', 'briefing', or 'prd'.",
-        }
+    try:
+        if action == "overview":
+            from .project_overview import generate_project_overview
+            result = generate_project_overview(output_format, output_path)
+        elif action == "scorecard":
+            from .project_scorecard import generate_project_scorecard
+            result = generate_project_scorecard(output_format, include_recommendations, output_path)
+        elif action == "briefing":
+            from .wisdom.advisors import get_daily_briefing
+            metric_scores = {
+                "security": security_score,
+                "testing": testing_score,
+                "documentation": documentation_score,
+                "completion": completion_score,
+                "alignment": alignment_score,
+            }
+            result = get_daily_briefing(overall_score, metric_scores)
+        elif action == "prd":
+            from .prd_generator import generate_prd
+            result = generate_prd(project_name, include_architecture, include_metrics, include_tasks, output_path)
+        else:
+            result = {
+                "status": "error",
+                "error": f"Unknown report action: {action}. Use 'overview', 'scorecard', 'briefing', or 'prd'.",
+            }
+        
+        # Ensure we always return a JSON string
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        else:
+            return json.dumps({"result": str(result)}, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2)
 
 
 def advisor_audio(
@@ -450,7 +488,7 @@ def advisor_audio(
     # common
     output_path: Optional[str] = None,
     backend: str = "auto",
-) -> dict[str, Any]:
+) -> str:
     """
     Unified advisor audio tool.
 
@@ -463,29 +501,32 @@ def advisor_audio(
         backend: TTS backend (auto, elevenlabs, edge-tts, pyttsx3)
 
     Returns:
-        Audio generation results or export data
+        JSON string with audio generation results or export data
     """
     if action == "quote":
         if not text:
-            return {"status": "error", "error": "text parameter required for quote action"}
+            return json.dumps({"status": "error", "error": "text parameter required for quote action"}, indent=2)
         from .wisdom.voice import synthesize_advisor_quote
-        return synthesize_advisor_quote(text, advisor, output_path, backend)
+        result = synthesize_advisor_quote(text, advisor, output_path, backend)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "podcast":
         from .wisdom.advisors import get_consultation_log
         from .wisdom.voice import generate_podcast_audio
         consultations = get_consultation_log(days=days)
-        return generate_podcast_audio(consultations, output_path, backend)
+        result = generate_podcast_audio(consultations, output_path, backend)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "export":
         from pathlib import Path
 
         from .wisdom.advisors import export_for_podcast
         path = Path(output_path) if output_path else None
-        return export_for_podcast(days=days, output_path=path)
+        result = export_for_podcast(days=days, output_path=path)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown advisor_audio action: {action}. Use 'quote', 'podcast', or 'export'.",
-        }
+        }, indent=2)
 
 
 def task_analysis(
@@ -502,7 +543,7 @@ def task_analysis(
     include_recommendations: bool = True,
     # common
     output_path: Optional[str] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified task analysis tool.
 
@@ -518,22 +559,25 @@ def task_analysis(
         output_path: Save results to file
 
     Returns:
-        Analysis results
+        JSON string with analysis results
     """
     if action == "duplicates":
         from .duplicate_detection import detect_duplicate_tasks
-        return detect_duplicate_tasks(similarity_threshold, auto_fix, output_path)
+        result = detect_duplicate_tasks(similarity_threshold, auto_fix, output_path)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "tags":
         from .tag_consolidation import consolidate_tags
-        return consolidate_tags(dry_run, custom_rules, remove_tags, output_path)
+        result = consolidate_tags(dry_run, custom_rules, remove_tags, output_path)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     elif action == "hierarchy":
         from .task_hierarchy_analyzer import analyze_task_hierarchy
-        return analyze_task_hierarchy(output_format, output_path, include_recommendations)
+        result = analyze_task_hierarchy(output_format, output_path, include_recommendations)
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown task_analysis action: {action}. Use 'duplicates', 'tags', or 'hierarchy'.",
-        }
+        }, indent=2)
 
 
 async def testing_async(
@@ -555,7 +599,7 @@ async def testing_async(
     # common
     output_path: Optional[str] = None,
     ctx: Optional[Any] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified testing tool (async with progress).
 
@@ -575,29 +619,41 @@ async def testing_async(
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Test, coverage, suggestion, or validation results as dict
+        JSON string with test, coverage, suggestion, or validation results
     """
     if action == "run":
         from .run_tests import run_tests_async
         result = await run_tests_async(test_path, test_framework, verbose, coverage, output_path, ctx)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result should already be a string, but ensure it is
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     elif action == "coverage":
         from .test_coverage import analyze_test_coverage
         result = analyze_test_coverage(coverage_file, min_coverage, output_path, format)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result should already be a string, but ensure it is
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     elif action == "suggest":
         from .test_suggestions import suggest_test_cases
         result = suggest_test_cases(target_file, test_framework, min_confidence, output_path)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result should already be a string, but ensure it is
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     elif action == "validate":
         from .test_validation import validate_test_structure
         result = validate_test_structure(test_path, framework, output_path)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result should already be a string, but ensure it is
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown testing action: {action}. Use 'run', 'coverage', 'suggest', or 'validate'.",
-        }
+        }, indent=2)
 
 
 def testing(
@@ -619,7 +675,7 @@ def testing(
     # common
     output_path: Optional[str] = None,
     ctx: Optional[Any] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified testing tool (sync wrapper).
 
@@ -639,9 +695,9 @@ def testing(
         ctx: FastMCP Context for progress reporting (optional)
 
     Returns:
-        Test, coverage, suggestion, or validation results as dict
+        JSON string with test, coverage, suggestion, or validation results
     """
-    # Toggle: check if we're in an async context
+    # Check if we're in an async context
     in_async = False
     try:
         asyncio.get_running_loop()
@@ -650,8 +706,15 @@ def testing(
         pass
 
     if in_async:
-        raise RuntimeError("Use testing_async() in async context, or call from sync code")
-    return asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
+        # In async context (e.g., stdio server), use thread pool to run async function
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(asyncio.run, testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
+            result = future.result()
+    else:
+        result = asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
+    # Convert dict to JSON string
+    return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
 
 def lint(
@@ -668,7 +731,7 @@ def lint(
     include_hints: bool = True,
     # common
     output_path: Optional[str] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified linting tool.
 
@@ -685,21 +748,27 @@ def lint(
         output_path: Save results to file
 
     Returns:
-        Linting or analysis results as JSON string
+        JSON string with linting or analysis results
     """
     if action == "run":
         from .linter import run_linter
         result = run_linter(path, linter, fix, analyze, select, ignore)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result might already be a string, or might be a dict
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     elif action == "analyze":
         if not problems_json:
-            return {
+            return json.dumps({
                 "status": "error",
                 "error": "problems_json is required for analyze action",
-            }
+            }, indent=2)
         from .problems_advisor import analyze_problems_tool
         result = analyze_problems_tool(problems_json, include_hints, output_path)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result should already be a string, but ensure it is
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
     else:
         return {
             "status": "error",
@@ -1045,13 +1114,8 @@ def recommend(
             log=log,
             session_mode=session_mode
         )
-        # Ensure we always return a JSON string
-        if isinstance(result, str):
-            return result
-        elif isinstance(result, dict):
-            return json.dumps(result, indent=2)
-        else:
-            return json.dumps({"result": str(result)}, indent=2)
+        # consult_advisor now returns JSON string directly
+        return result
     
     else:
         return json.dumps({
@@ -1215,7 +1279,7 @@ def task_workflow(
     move_to_todo: bool = True,
     # common
     output_path: Optional[str] = None,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified task workflow management tool.
 
@@ -1236,12 +1300,15 @@ def task_workflow(
         output_path: Save results to file
 
     Returns:
-        Workflow operation results
+        JSON string with workflow operation results
     """
     if action == "sync":
         from .todo_sync import sync_todo_tasks
         result = sync_todo_tasks(dry_run, output_path)
-        return json.loads(result) if isinstance(result, str) else result
+        # Result might already be a string, or might be a dict
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
 
     elif action == "approve":
         from .batch_task_approval import batch_approve_tasks
@@ -1250,7 +1317,7 @@ def task_workflow(
             try:
                 ids = json.loads(task_ids)
             except json.JSONDecodeError:
-                return {"status": "error", "error": "Invalid task_ids JSON"}
+                return json.dumps({"status": "error", "error": "Invalid task_ids JSON"}, indent=2)
         result = batch_approve_tasks(
             status=status,
             new_status=new_status,
@@ -1260,7 +1327,10 @@ def task_workflow(
             dry_run=dry_run,
             confirm=False,  # Can be added as parameter if needed
         )
-        return json.loads(result) if isinstance(result, str) else result
+        # Result might already be a string, or might be a dict
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
 
     elif action == "clarify":
         from .task_clarification_resolution import (
@@ -1273,28 +1343,31 @@ def task_workflow(
             result = list_tasks_awaiting_clarification()
         elif sub_action == "resolve":
             if not task_id:
-                return {"status": "error", "error": "task_id required for resolve"}
+                return json.dumps({"status": "error", "error": "task_id required for resolve"}, indent=2)
             result = resolve_task_clarification(
                 task_id, clarification_text, decision, move_to_todo, dry_run
             )
         elif sub_action == "batch":
             if not decisions_json:
-                return {"status": "error", "error": "decisions_json required for batch"}
+                return json.dumps({"status": "error", "error": "decisions_json required for batch"}, indent=2)
             try:
                 decisions = json.loads(decisions_json)
             except json.JSONDecodeError:
-                return {"status": "error", "error": "Invalid decisions_json"}
+                return json.dumps({"status": "error", "error": "Invalid decisions_json"}, indent=2)
             result = resolve_multiple_clarifications(decisions, move_to_todo, dry_run)
         else:
-            return {"status": "error", "error": f"Unknown sub_action: {sub_action}. Use 'list', 'resolve', or 'batch'."}
+            return json.dumps({"status": "error", "error": f"Unknown sub_action: {sub_action}. Use 'list', 'resolve', or 'batch'."}, indent=2)
 
-        return result if isinstance(result, dict) else json.loads(result)
+        # Result might already be a string, or might be a dict
+        if isinstance(result, str):
+            return result
+        return json.dumps(result, indent=2)
 
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown task_workflow action: {action}. Use 'sync', 'approve', or 'clarify'.",
-        }
+        }, indent=2)
 
 
 def memory_maint(
@@ -1340,37 +1413,41 @@ def memory_maint(
         interactive: Use interactive MCP for approvals (reserved for future)
 
     Returns:
-        Maintenance operation results
+        JSON string with maintenance operation results
     """
     if action == "health":
         from .memory_maintenance import memory_health_check
-        return memory_health_check()
+        result = memory_health_check()
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
     elif action == "gc":
         from .memory_maintenance import memory_garbage_collect
-        return memory_garbage_collect(
+        result = memory_garbage_collect(
             max_age_days=max_age_days,
             delete_orphaned=delete_orphaned,
             delete_duplicates=delete_duplicates,
             scorecard_max_age_days=scorecard_max_age_days,
             dry_run=dry_run,
         )
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
     elif action == "prune":
         from .memory_maintenance import memory_prune
-        return memory_prune(
+        result = memory_prune(
             value_threshold=value_threshold,
             keep_minimum=keep_minimum,
             dry_run=dry_run,
         )
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
     elif action == "consolidate":
         from .memory_maintenance import memory_consolidate
-        return memory_consolidate(
+        result = memory_consolidate(
             similarity_threshold=similarity_threshold,
             merge_strategy=merge_strategy,
             dry_run=dry_run,
         )
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
     elif action == "dream":
         from .memory_dreaming import memory_dream
@@ -1379,17 +1456,18 @@ def memory_maint(
             try:
                 advisor_list = json.loads(advisors)
             except json.JSONDecodeError:
-                return {"status": "error", "error": "Invalid advisors JSON"}
-        return memory_dream(
+                return json.dumps({"status": "error", "error": "Invalid advisors JSON"}, indent=2)
+        result = memory_dream(
             scope=scope,
             advisors=advisor_list,
             generate_insights=generate_insights,
             save_dream=save_dream,
         )
+        return json.dumps(result, indent=2) if isinstance(result, dict) else result
 
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown memory_maint action: {action}. Use 'health', 'gc', 'prune', 'consolidate', or 'dream'.",
-        }
+        }, indent=2)
 
