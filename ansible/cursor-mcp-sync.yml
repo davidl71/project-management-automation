@@ -1,0 +1,74 @@
+---
+# Ansible Playbook: Sync Cursor MCP Configuration
+# Syncs MCP settings across multiple machines with platform awareness
+#
+# Usage:
+#   ansible-playbook -i inventory cursor-mcp-sync.yml
+#   ansible-playbook -i inventory cursor-mcp-sync.yml --limit macos-arm64
+#   ansible-playbook -i inventory cursor-mcp-sync.yml --limit linux-x86_64
+
+- name: Sync Cursor MCP Configuration
+  hosts: all
+  vars:
+    cursor_config_dir: "{{ ansible_env.HOME }}/.cursor"
+    dotfiles_repo: "{{ ansible_env.HOME }}/.dotfiles"
+    platform: "{{ ansible_architecture }}"
+    os_type: "{{ ansible_os_family | lower }}"
+    
+  tasks:
+    - name: Detect platform
+      set_fact:
+        platform_key: "{{ os_type }}-{{ platform }}"
+        homebrew_bin: "{{ '/opt/homebrew/bin' if platform == 'arm64' else '/usr/local/bin' }}"
+    
+    - name: Ensure Cursor config directory exists
+      file:
+        path: "{{ cursor_config_dir }}"
+        state: directory
+        mode: '0755'
+    
+    - name: Ensure dotfiles repo exists
+      file:
+        path: "{{ dotfiles_repo }}"
+        state: directory
+        mode: '0755'
+    
+    - name: Clone dotfiles repo if it doesn't exist
+      git:
+        repo: "{{ dotfiles_repo_url | default('') }}"
+        dest: "{{ dotfiles_repo }}"
+        update: yes
+      when: dotfiles_repo_url is defined and dotfiles_repo_url != ''
+      ignore_errors: yes
+    
+    - name: Generate platform-specific MCP config from template
+      template:
+        src: "{{ dotfiles_repo }}/cursor/templates/mcp.json.template"
+        dest: "{{ cursor_config_dir }}/mcp.json"
+        mode: '0644'
+        backup: yes
+      vars:
+        home_dir: "{{ ansible_env.HOME }}"
+        platform: "{{ platform }}"
+        os_type: "{{ os_type }}"
+        homebrew_bin: "{{ homebrew_bin }}"
+      when: dotfiles_repo is defined
+    
+    - name: Copy platform-specific config if template doesn't exist
+      copy:
+        src: "{{ dotfiles_repo }}/cursor/platforms/{{ platform_key }}/mcp.json"
+        dest: "{{ cursor_config_dir }}/mcp.json"
+        mode: '0644'
+        backup: yes
+      when: dotfiles_repo is defined
+      ignore_errors: yes
+    
+    - name: Verify MCP config exists
+      stat:
+        path: "{{ cursor_config_dir }}/mcp.json"
+      register: mcp_config
+    
+    - name: Report sync status
+      debug:
+        msg: "MCP config {{ 'synced successfully' if mcp_config.stat.exists else 'not found' }} to {{ cursor_config_dir }}/mcp.json"
+
