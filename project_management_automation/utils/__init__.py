@@ -22,6 +22,15 @@ from .dev_reload import (
 from .logging_config import configure_logging, get_logger, is_mcp_mode, suppress_noisy_loggers
 from .output import compact_json, output_to_human_and_ai, progress_wrapper, split_output
 from .project_root import find_project_root
+from .wisdom_client import (
+    call_wisdom_tool_sync,
+    consult_advisor,
+    format_text as format_wisdom_text,
+    get_daily_briefing,
+    get_wisdom,
+    list_sources as list_wisdom_sources,
+    read_wisdom_resource_sync,
+)
 from .security import (
     AccessController,
     # Access control
@@ -144,5 +153,13 @@ __all__ = [
     'track_task_delete',
     'track_task_status_change',
     'track_task_update',
+    # Wisdom MCP client (devwisdom-go)
+    'call_wisdom_tool_sync',
+    'consult_advisor',
+    'format_wisdom_text',
+    'get_daily_briefing',
+    'get_wisdom',
+    'list_wisdom_sources',
+    'read_wisdom_resource_sync',
 ]
 

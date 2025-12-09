@@ -1080,21 +1080,13 @@ def register_tools():
                             },
                         },
                     ),
-                    Tool(
-                        name="advisor_audio",
-                        description="[HINT: Advisor audio. action=quote|podcast|export. Voice synthesis and podcast generation.]",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
-                                "action": {"type": "string", "enum": ["quote", "podcast", "export"], "default": "podcast"},
-                                "text": {"type": "string"},
-                                "advisor": {"type": "string", "default": "default"},
-                                "days": {"type": "integer", "default": 7},
-                                "output_path": {"type": "string"},
-                                "backend": {"type": "string", "default": "auto"},
-                            },
-                        },
-                    ),
+                    # NOTE: advisor_audio tool migrated to devwisdom-go MCP server
+                    # Tool removed - use devwisdom MCP server directly
+                    # Tool(
+                    #     name="advisor_audio",
+                    #     description="[HINT: Advisor audio. action=quote|podcast|export. Voice synthesis and podcast generation.]",
+                    #     ...
+                    # ),
                     Tool(
                         name="task_analysis",
                         description="[HINT: Task analysis. action=duplicates|tags|hierarchy. Task quality and structure.]",
@@ -1520,14 +1512,12 @@ def register_tools():
                             arguments.get("include_tasks", True),
                         )
                     elif name == "advisor_audio":
-                        result = _advisor_audio(
-                            arguments.get("action", "podcast"),
-                            arguments.get("text"),
-                            arguments.get("advisor", "default"),
-                            arguments.get("days", 7),
-                            arguments.get("output_path"),
-                            arguments.get("backend", "auto"),
-                        )
+                        # Tool migrated to devwisdom-go MCP server
+                        result = json.dumps({
+                            "status": "error",
+                            "error": "advisor_audio tool migrated to devwisdom-go MCP server",
+                            "migration_note": "Use devwisdom MCP server tools directly"
+                        }, indent=2)
                     elif name == "task_analysis":
                         result = _task_analysis(
                             arguments.get("action", "duplicates"),
@@ -2442,28 +2432,11 @@ if mcp:
             else:
                 return json.dumps({"result": str(result)}, indent=2)
 
-        @ensure_json_string
-        @mcp.tool()
-        def advisor_audio(
-            action: str = "podcast",
-            text: Optional[str] = None,
-            advisor: str = "default",
-            days: int = 7,
-            output_path: Optional[str] = None,
-            backend: str = "auto",
-        ) -> str:
-            """
-            [HINT: Advisor audio. action=quote|podcast|export. Voice synthesis and podcast generation.]
-
-            Unified advisor audio:
-            - action="quote": Synthesize single advisor quote to audio
-            - action="podcast": Generate full podcast from recent consultations
-            - action="export": Export consultation data as JSON for external tools
-
-            📊 Output: Audio file path or export data
-            🔧 Side Effects: Creates audio files (quote/podcast actions)
-            """
-            return _advisor_audio(action, text, advisor, days, output_path, backend)
+        # NOTE: advisor_audio tool migrated to devwisdom-go MCP server
+        # Removed - use devwisdom MCP server directly
+        # @mcp.tool()
+        # def advisor_audio(...):
+        #     ...
 
         @ensure_json_string
         @mcp.tool()
@@ -2732,6 +2705,10 @@ if mcp:
                 # Context Management
                 CONTEXT_MANAGEMENT,
                 DAILY_CHECKIN,
+                # Session Handoff
+                END_OF_DAY,
+                RESUME_SESSION,
+                VIEW_HANDOFFS,
                 # Documentation
                 DOCUMENTATION_HEALTH_CHECK,
                 DOCUMENTATION_QUICK_CHECK,
@@ -2784,6 +2761,10 @@ if mcp:
                 # Context Management
                 CONTEXT_MANAGEMENT,
                 DAILY_CHECKIN,
+                # Session Handoff
+                END_OF_DAY,
+                RESUME_SESSION,
+                VIEW_HANDOFFS,
                 # Documentation
                 DOCUMENTATION_HEALTH_CHECK,
                 DOCUMENTATION_QUICK_CHECK,
@@ -2931,23 +2912,24 @@ if mcp:
                 return PROJECT_OVERVIEW
 
             # ═══════════════════════════════════════════════════════════════════════
-            # WISDOM ADVISOR PROMPTS
+            # WISDOM ADVISOR PROMPTS - MIGRATED TO devwisdom-go MCP SERVER
             # ═══════════════════════════════════════════════════════════════════════
-
-            @mcp.prompt()
-            def advisor() -> str:
-                """Consult a trusted advisor for wisdom on your current work."""
-                return ADVISOR_CONSULT
-
-            @mcp.prompt()
-            def briefing() -> str:
-                """Get morning briefing from advisors based on project health."""
-                return ADVISOR_BRIEFING
-
-            @mcp.prompt()
-            def advisor_voice() -> str:
-                """Generate audio from advisor consultations."""
-                return ADVISOR_AUDIO
+            # NOTE: These prompts are now handled by devwisdom-go MCP server
+            # Prompts removed - use devwisdom MCP server directly
+            # @mcp.prompt()
+            # def advisor() -> str:
+            #     """Consult a trusted advisor for wisdom on your current work."""
+            #     return ADVISOR_CONSULT
+            #
+            # @mcp.prompt()
+            # def briefing() -> str:
+            #     """Get morning briefing from advisors based on project health."""
+            #     return ADVISOR_BRIEFING
+            #
+            # @mcp.prompt()
+            # def advisor_voice() -> str:
+            #     """Generate audio from advisor consultations."""
+            #     return ADVISOR_AUDIO
 
             # ═══════════════════════════════════════════════════════════════════════
             # ADDITIONAL PROMPTS
@@ -2977,6 +2959,25 @@ if mcp:
             def remember() -> str:
                 """Use AI session memory to persist insights."""
                 return MEMORY_SYSTEM
+
+            # ═══════════════════════════════════════════════════════════════════════
+            # SESSION HANDOFF PROMPTS
+            # ═══════════════════════════════════════════════════════════════════════
+
+            @mcp.prompt()
+            def end_of_day() -> str:
+                """End your work session and create a handoff for other developers."""
+                return END_OF_DAY
+
+            @mcp.prompt()
+            def resume_session() -> str:
+                """Resume work by reviewing the latest handoff from another developer."""
+                return RESUME_SESSION
+
+            @mcp.prompt()
+            def view_handoffs() -> str:
+                """View recent handoff notes from all developers."""
+                return VIEW_HANDOFFS
 
             # ═══════════════════════════════════════════════════════════════════════
             # PERSONA WORKFLOW PROMPTS
@@ -3023,7 +3024,7 @@ if mcp:
                 return PERSONA_TECH_WRITER
 
             PROMPTS_AVAILABLE = True
-            logger.info("Registered 38 prompts successfully (FastMCP)")
+            logger.info("Registered 41 prompts successfully (FastMCP)")
         else:
             PROMPTS_AVAILABLE = True
             logger.info("Prompts imported (will register for stdio server below)")
@@ -3032,11 +3033,20 @@ if mcp:
         logger.warning(f"Prompts not available: {e}")
 
     # Register prompts for stdio server
+    import sys
+    print(f"DEBUG PROMPT REG: stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE}", file=sys.stderr)
+    logger.info(f"DEBUG: Checking prompt registration conditions - stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE}")
     if stdio_server_instance and PROMPTS_AVAILABLE:
+        print("DEBUG PROMPT REG: Entering prompt registration block", file=sys.stderr)
         logger.info(f"Attempting to register prompts for stdio server (stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE})")
+        logger.info(f"DEBUG: stdio_server_instance type: {type(stdio_server_instance)}")
+        logger.info(f"DEBUG: hasattr list_prompts: {hasattr(stdio_server_instance, 'list_prompts')}")
+        logger.info(f"DEBUG: hasattr get_prompt: {hasattr(stdio_server_instance, 'get_prompt')}")
         try:
             from mcp.types import Prompt, PromptArgument
+            logger.info("DEBUG: Successfully imported Prompt types")
             
+            logger.info("DEBUG: About to apply @stdio_server_instance.list_prompts() decorator")
             @stdio_server_instance.list_prompts()
             async def list_prompts() -> list[Prompt]:
                 """List all available prompts."""
@@ -3062,14 +3072,18 @@ if mcp:
                     Prompt(name="automation_setup", description="One-time automation setup: git hooks, triggers, cron.", arguments=[]),
                     Prompt(name="scorecard", description="Generate comprehensive project health scorecard with all metrics.", arguments=[]),
                     Prompt(name="overview", description="Generate one-page project overview for stakeholders.", arguments=[]),
-                    Prompt(name="advisor", description="Consult a trusted advisor for wisdom on your current work.", arguments=[]),
-                    Prompt(name="briefing", description="Get morning briefing from advisors based on project health.", arguments=[]),
-                    Prompt(name="advisor_voice", description="Generate audio from advisor consultations.", arguments=[]),
+                    # NOTE: Wisdom advisor prompts migrated to devwisdom-go MCP server
+                    # Prompt(name="advisor", ...),  # Migrated
+                    # Prompt(name="briefing", ...),  # Migrated
+                    # Prompt(name="advisor_voice", ...),  # Migrated
                     Prompt(name="discover", description="Discover tasks from TODO comments, markdown, and orphaned tasks.", arguments=[]),
                     Prompt(name="config", description="Generate IDE configuration files.", arguments=[]),
                     Prompt(name="mode", description="Suggest optimal Cursor IDE mode (Agent vs Ask) for a task.", arguments=[]),
                     Prompt(name="context", description="Manage LLM context with summarization and budget tools.", arguments=[]),
                     Prompt(name="remember", description="Use AI session memory to persist insights.", arguments=[]),
+                    Prompt(name="end_of_day", description="End your work session and create a handoff for other developers.", arguments=[]),
+                    Prompt(name="resume_session", description="Resume work by reviewing the latest handoff from another developer.", arguments=[]),
+                    Prompt(name="view_handoffs", description="View recent handoff notes from all developers.", arguments=[]),
                     Prompt(name="dev", description="Developer daily workflow for writing quality code.", arguments=[]),
                     Prompt(name="pm", description="Project Manager workflow for delivery tracking.", arguments=[]),
                     Prompt(name="reviewer", description="Code Reviewer workflow for quality gates.", arguments=[]),
@@ -3080,6 +3094,7 @@ if mcp:
                     Prompt(name="writer", description="Technical Writer workflow for documentation.", arguments=[]),
                 ]
             
+            logger.info("DEBUG: list_prompts decorator applied, about to apply get_prompt decorator")
             @stdio_server_instance.get_prompt()
             async def get_prompt(name: str, arguments: dict[str, Any] | None = None) -> "GetPromptResult":
                 """Get prompt template by name."""
@@ -3107,14 +3122,18 @@ if mcp:
                     "automation_setup": AUTOMATION_SETUP,
                     "scorecard": PROJECT_SCORECARD,
                     "overview": PROJECT_OVERVIEW,
-                    "advisor": ADVISOR_CONSULT,
-                    "briefing": ADVISOR_BRIEFING,
-                    "advisor_voice": ADVISOR_AUDIO,
+                    # NOTE: Wisdom advisor prompts migrated to devwisdom-go MCP server
+                    # "advisor": ADVISOR_CONSULT,  # Migrated
+                    # "briefing": ADVISOR_BRIEFING,  # Migrated
+                    # "advisor_voice": ADVISOR_AUDIO,  # Migrated
                     "discover": TASK_DISCOVERY,
                     "config": CONFIG_GENERATION,
                     "mode": MODE_SUGGESTION,
                     "context": CONTEXT_MANAGEMENT,
                     "remember": MEMORY_SYSTEM,
+                    "end_of_day": END_OF_DAY,
+                    "resume_session": RESUME_SESSION,
+                    "view_handoffs": VIEW_HANDOFFS,
                     "dev": PERSONA_DEVELOPER,
                     "pm": PERSONA_PROJECT_MANAGER,
                     "reviewer": PERSONA_CODE_REVIEWER,
@@ -3141,12 +3160,17 @@ if mcp:
                 else:
                     raise ValueError(f"Unknown prompt: {name}")
             
-            logger.info("Registered 38 prompts for stdio server successfully")
+            logger.info("DEBUG: Both prompt decorators applied successfully")
+            print("DEBUG PROMPT REG: Both decorators applied, registration complete", file=sys.stderr)
+            logger.info("Registered 41 prompts for stdio server successfully")
         except Exception as e:
-            logger.error(f"Failed to register prompts for stdio server: {e}", exc_info=True)
+            print(f"DEBUG PROMPT REG ERROR: {e}", file=sys.stderr)
             import traceback
+            print(f"DEBUG PROMPT REG TRACEBACK:\n{traceback.format_exc()}", file=sys.stderr)
+            logger.error(f"Failed to register prompts for stdio server: {e}", exc_info=True)
             logger.debug(f"Full traceback for prompt registration:\n{traceback.format_exc()}")
     else:
+        print(f"DEBUG PROMPT REG SKIPPED: stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE}", file=sys.stderr)
         logger.warning(f"Prompt registration skipped: stdio_server_instance={stdio_server_instance is not None}, PROMPTS_AVAILABLE={PROMPTS_AVAILABLE}")
 
     # Resource handlers (Phase 3)
@@ -3155,7 +3179,7 @@ if mcp:
         try:
             from .resources.cache import get_cache_status_resource
             from .resources.catalog import (
-                get_advisors_resource,
+                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
                 get_linters_resource,
                 get_models_resource,
                 get_problem_categories_resource,
@@ -3180,7 +3204,7 @@ if mcp:
             # Fallback to absolute imports (when run as script)
             from resources.cache import get_cache_status_resource
             from resources.catalog import (
-                get_advisors_resource,
+                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
                 get_linters_resource,
                 get_models_resource,
                 get_problem_categories_resource,
@@ -3199,7 +3223,7 @@ if mcp:
                     get_memories_resource,
                     get_recent_memories_resource,
                     get_session_memories_resource,
-                    get_wisdom_resource,
+                    # get_wisdom_resource,  # Migrated to devwisdom-go MCP server
                 )
 
                 MEMORIES_AVAILABLE = True
@@ -3250,10 +3274,12 @@ if mcp:
         # CATALOG RESOURCES (converted from list_* tools)
         # ═══════════════════════════════════════════════════════════════════════════════
 
-        @mcp.resource("automation://advisors")
-        def get_advisors_catalog() -> str:
-            """Get trusted advisors catalog with assignments by metric, tool, and stage."""
-            return get_advisors_resource()
+        # NOTE: automation://advisors resource migrated to devwisdom-go MCP server
+        # Resource removed - use devwisdom MCP server resources directly (wisdom://advisors)
+        # @mcp.resource("automation://advisors")
+        # def get_advisors_catalog() -> str:
+        #     """Get trusted advisors catalog with assignments by metric, tool, and stage."""
+        #     return get_advisors_resource()
 
         @mcp.resource("automation://models")
         def get_models_catalog() -> str:
@@ -3315,10 +3341,13 @@ if mcp:
                 """Get memories from a specific session date (YYYY-MM-DD format)."""
                 return get_session_memories_resource(date)
 
-            @mcp.resource("automation://wisdom")
-            def get_combined_wisdom() -> str:
-                """Get combined view of memories and advisor consultations."""
-                return get_wisdom_resource()
+            # NOTE: automation://wisdom resource migrated to devwisdom-go MCP server
+            # Resource removed - use devwisdom MCP server resources directly
+            # The combined wisdom view is now available via devwisdom-go MCP server
+            # @mcp.resource("automation://wisdom")
+            # def get_combined_wisdom() -> str:
+            #     """Get combined view of memories and advisor consultations."""
+            #     return get_wisdom_resource()
 
             @mcp.resource("automation://memories/health")
             def get_memory_health() -> str:
@@ -4054,23 +4083,63 @@ if stdio_server_instance:
         # Try relative imports first (when run as module)
         try:
             from .resources.cache import get_cache_status_resource
+            from .resources.catalog import (
+                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
+                get_linters_resource,
+                get_models_resource,
+                get_problem_categories_resource,
+                get_tts_backends_resource,
+            )
             from .resources.history import get_history_resource
             from .resources.list import get_tools_list_resource
+            from .resources.memories import (
+                get_memories_by_category_resource,
+                get_memories_by_task_resource,
+                get_memories_health_resource,
+                get_memories_resource,
+                get_recent_memories_resource,
+                get_session_memories_resource,
+                get_wisdom_resource,
+            )
             from .resources.status import get_status_resource
             from .resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
+            from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
+            MEMORIES_AVAILABLE = True
         except ImportError:
             # Fallback to absolute imports (when run as script)
             from resources.cache import get_cache_status_resource
+            from resources.catalog import (
+                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
+                get_linters_resource,
+                get_models_resource,
+                get_problem_categories_resource,
+                get_tts_backends_resource,
+            )
             from resources.history import get_history_resource
             from resources.list import get_tools_list_resource
             from resources.status import get_status_resource
             from resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
+            from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
+            
+            try:
+                from resources.memories import (
+                    get_memories_by_category_resource,
+                    get_memories_by_task_resource,
+                    get_memories_health_resource,
+                    get_memories_resource,
+                    get_recent_memories_resource,
+                    get_session_memories_resource,
+                    # get_wisdom_resource,  # Migrated to devwisdom-go MCP server
+                )
+                MEMORIES_AVAILABLE = True
+            except ImportError:
+                MEMORIES_AVAILABLE = False
 
         @stdio_server_instance.list_resources()
         async def list_resources():
             """List all available resources."""
             from mcp.types import Resource
-            return [
+            resources = [
                 Resource(
                     uri="automation://status",
                     name="Server Status",
@@ -4107,7 +4176,77 @@ if stdio_server_instance:
                     description="Cached data and results",
                     mimeType="application/json",
                 ),
+                # Catalog resources
+                Resource(
+                    uri="automation://advisors",
+                    name="Advisors Catalog",
+                    description="Trusted advisors catalog with assignments by metric, tool, and stage",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://models",
+                    name="Models Catalog",
+                    description="Available AI models with recommendations for task types",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://problem-categories",
+                    name="Problem Categories",
+                    description="Problem categories with resolution hints",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://linters",
+                    name="Linters Catalog",
+                    description="Available linters and their installation status",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://tts-backends",
+                    name="TTS Backends",
+                    description="Available text-to-speech backends",
+                    mimeType="application/json",
+                ),
+                Resource(
+                    uri="automation://scorecard",
+                    name="Project Scorecard",
+                    description="Current project scorecard with all health metrics",
+                    mimeType="application/json",
+                ),
             ]
+            
+            # Add memory resources if available
+            if MEMORIES_AVAILABLE:
+                resources.extend([
+                    Resource(
+                        uri="automation://memories",
+                        name="All Memories",
+                        description="All AI session memories - browsable context for session continuity",
+                        mimeType="application/json",
+                    ),
+                    Resource(
+                        uri="automation://memories/recent",
+                        name="Recent Memories",
+                        description="Memories from the last 24 hours",
+                        mimeType="application/json",
+                    ),
+                    Resource(
+                        uri="automation://memories/health",
+                        name="Memory Health",
+                        description="Memory system health metrics and maintenance recommendations",
+                        mimeType="application/json",
+                    ),
+                    Resource(
+                        uri="automation://wisdom",
+                        name="Combined Wisdom",
+                        description="Combined view of memories and advisor consultations",
+                        mimeType="application/json",
+                    ),
+                    # Note: Pattern-based resources (category/{category}, task/{task_id}, session/{date})
+                    # are handled dynamically in read_resource() but not listed here as they require parameters
+                ])
+            
+            return resources
 
         @stdio_server_instance.read_resource()
         async def read_resource(uri: str) -> str:
@@ -4130,6 +4269,69 @@ if stdio_server_instance:
                 return get_agents_resource()
             elif uri == "automation://cache":
                 return get_cache_status_resource()
+            # Catalog resources
+            elif uri == "automation://advisors":
+                # Resource migrated to devwisdom-go MCP server
+                return json.dumps({
+                    "error": "automation://advisors resource migrated to devwisdom-go MCP server",
+                    "migration_note": "Use devwisdom MCP server resources (wisdom://advisors) directly"
+                }, separators=(",", ":"))
+            elif uri == "automation://models":
+                return get_models_resource()
+            elif uri == "automation://problem-categories":
+                return get_problem_categories_resource()
+            elif uri == "automation://linters":
+                return get_linters_resource()
+            elif uri == "automation://tts-backends":
+                return get_tts_backends_resource()
+            elif uri == "automation://scorecard":
+                result = _generate_project_scorecard("json", True, None)
+                if isinstance(result, str):
+                    return result
+                elif isinstance(result, dict):
+                    return json.dumps(result, separators=(",", ":"))
+                else:
+                    return json.dumps({"result": str(result)}, separators=(",", ":"))
+            # Memory resources
+            elif uri == "automation://memories":
+                if MEMORIES_AVAILABLE:
+                    return get_memories_resource()
+                else:
+                    return json.dumps({"error": "Memory resources not available"})
+            elif uri.startswith("automation://memories/category/"):
+                if MEMORIES_AVAILABLE:
+                    category = uri.replace("automation://memories/category/", "")
+                    return get_memories_by_category_resource(category)
+                else:
+                    return json.dumps({"error": "Memory resources not available"})
+            elif uri.startswith("automation://memories/task/"):
+                if MEMORIES_AVAILABLE:
+                    task_id = uri.replace("automation://memories/task/", "")
+                    return get_memories_by_task_resource(task_id)
+                else:
+                    return json.dumps({"error": "Memory resources not available"})
+            elif uri == "automation://memories/recent":
+                if MEMORIES_AVAILABLE:
+                    return get_recent_memories_resource()
+                else:
+                    return json.dumps({"error": "Memory resources not available"})
+            elif uri.startswith("automation://memories/session/"):
+                if MEMORIES_AVAILABLE:
+                    date = uri.replace("automation://memories/session/", "")
+                    return get_session_memories_resource(date)
+                else:
+                    return json.dumps({"error": "Memory resources not available"})
+            elif uri == "automation://wisdom":
+                # Resource migrated to devwisdom-go MCP server
+                return json.dumps({
+                    "error": "automation://wisdom resource migrated to devwisdom-go MCP server",
+                    "migration_note": "Use devwisdom MCP server resources directly"
+                }, separators=(",", ":"))
+            elif uri == "automation://memories/health":
+                if MEMORIES_AVAILABLE:
+                    return get_memories_health_resource()
+                else:
+                    return json.dumps({"error": "Memory resources not available"})
             else:
                 return json.dumps({"error": f"Unknown resource: {uri}"})
 

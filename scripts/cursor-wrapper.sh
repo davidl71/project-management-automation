@@ -2,7 +2,7 @@
 #
 # Cursor Wrapper Script
 # Ensures RAM disk is ready before launching Cursor
-# Syncs to SSD when Cursor exits
+# Syncs to local backup when Cursor exits
 #
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -26,15 +26,9 @@ error() {
     echo -e "${RED}[Cursor]${NC} $*"
 }
 
-# Check if SSD is mounted
-if [[ ! -d "/Volumes/SSD1_APFS" ]]; then
-    error "SSD not mounted at /Volumes/SSD1_APFS"
-    error "Cursor will use default storage location"
-    
-    # Fall back to regular Cursor launch
-    open -a "Cursor" "$@"
-    exit 0
-fi
+# Ensure backup directory exists
+BACKUP_DIR="$HOME/.cursor-cache-backup"
+mkdir -p "$BACKUP_DIR"
 
 # Ensure RAM disk is running
 if ! mount | grep -q "CursorRAM"; then
@@ -43,11 +37,11 @@ if ! mount | grep -q "CursorRAM"; then
     
     if [[ $? -ne 0 ]]; then
         error "Failed to start RAM disk"
-        error "Falling back to SSD storage"
+        error "Falling back to local storage"
         
-        # Ensure symlink points to SSD
+        # Ensure symlink points to backup location
         CURSOR_APPDATA="$HOME/Library/Application Support/Cursor"
-        SSD_BACKUP="/Volumes/SSD1_APFS/CursorCache/Cursor"
+        SSD_BACKUP="$BACKUP_DIR/Cursor"
         
         if [[ -d "$SSD_BACKUP" ]] && [[ ! -L "$CURSOR_APPDATA" || "$(readlink "$CURSOR_APPDATA")" != "$SSD_BACKUP" ]]; then
             rm -f "$CURSOR_APPDATA" 2>/dev/null
@@ -67,8 +61,8 @@ log "Launching Cursor..."
 # Launch Cursor and wait for it to exit
 open -a "Cursor" --wait-apps "$@"
 
-# Cursor has exited - sync to SSD
-log "Cursor closed, syncing to SSD..."
+# Cursor has exited - sync to backup
+log "Cursor closed, syncing to backup..."
 "$RAMDISK_SCRIPT" sync
 
 log "Sync complete!"

@@ -449,7 +449,8 @@ def report(
             from .project_scorecard import generate_project_scorecard
             result = generate_project_scorecard(output_format, include_recommendations, output_path)
         elif action == "briefing":
-            from .wisdom.advisors import get_daily_briefing
+            # Use devwisdom-go MCP server instead of direct import
+            from ..utils.wisdom_client import get_daily_briefing
             metric_scores = {
                 "security": security_score,
                 "testing": testing_score,
@@ -458,6 +459,9 @@ def report(
                 "alignment": alignment_score,
             }
             result = get_daily_briefing(overall_score, metric_scores)
+            # Convert dict to JSON string if needed
+            if isinstance(result, dict):
+                result = json.dumps(result, indent=2)
         elif action == "prd":
             from .prd_generator import generate_prd
             result = generate_prd(project_name, include_architecture, include_metrics, include_tasks, output_path)
@@ -503,25 +507,32 @@ def advisor_audio(
     Returns:
         JSON string with audio generation results or export data
     """
+    # NOTE: advisor_audio tool actions migrated to devwisdom-go MCP server
+    # Voice synthesis and podcast generation are now handled by external server
+    # This tool is kept for backward compatibility but should be deprecated
     if action == "quote":
-        if not text:
-            return json.dumps({"status": "error", "error": "text parameter required for quote action"}, indent=2)
-        from .wisdom.voice import synthesize_advisor_quote
-        result = synthesize_advisor_quote(text, advisor, output_path, backend)
-        return json.dumps(result, indent=2) if isinstance(result, dict) else result
+        return json.dumps({
+            "status": "error",
+            "error": "advisor_audio tool migrated to devwisdom-go MCP server. Use devwisdom MCP tools directly.",
+            "migration_note": "Voice synthesis is now available via devwisdom-go MCP server"
+        }, indent=2)
     elif action == "podcast":
-        from .wisdom.advisors import get_consultation_log
-        from .wisdom.voice import generate_podcast_audio
-        consultations = get_consultation_log(days=days)
-        result = generate_podcast_audio(consultations, output_path, backend)
-        return json.dumps(result, indent=2) if isinstance(result, dict) else result
+        return json.dumps({
+            "status": "error",
+            "error": "advisor_audio tool migrated to devwisdom-go MCP server. Use devwisdom MCP tools directly.",
+            "migration_note": "Podcast generation is now available via devwisdom-go MCP server"
+        }, indent=2)
     elif action == "export":
-        from pathlib import Path
-
-        from .wisdom.advisors import export_for_podcast
-        path = Path(output_path) if output_path else None
-        result = export_for_podcast(days=days, output_path=path)
-        return json.dumps(result, indent=2) if isinstance(result, dict) else result
+        # Export can still work by calling devwisdom-go MCP server
+        from ..utils.wisdom_client import call_wisdom_tool_sync
+        from ..utils import find_project_root
+        result = call_wisdom_tool_sync("export_for_podcast", {"days": days}, find_project_root())
+        if result:
+            return json.dumps(result, indent=2)
+        return json.dumps({
+            "status": "error",
+            "error": "Failed to export consultations from devwisdom-go MCP server"
+        }, indent=2)
     else:
         return json.dumps({
             "status": "error",
@@ -1093,7 +1104,8 @@ def recommend(
             return json.dumps({"result": str(result)}, indent=2)
     
     elif action == "advisor":
-        from .wisdom.advisors import consult_advisor
+        # Use devwisdom-go MCP server instead of direct import
+        from ..utils.wisdom_client import consult_advisor
         # Get session mode if not provided
         if session_mode is None:
             try:
@@ -1110,12 +1122,12 @@ def recommend(
             tool=tool,
             stage=stage,
             score=score,
-            context=context,
-            log=log,
-            session_mode=session_mode
+            context=context
         )
-        # consult_advisor now returns JSON string directly
-        return result
+        # Convert dict to JSON string if needed
+        if isinstance(result, dict):
+            return json.dumps(result, indent=2)
+        return result if result else json.dumps({"error": "Failed to consult advisor"}, indent=2)
     
     else:
         return json.dumps({

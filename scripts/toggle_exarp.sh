@@ -10,8 +10,8 @@ set -e
 # Find all mcp.json files in common locations
 MCP_CONFIGS=(
     "$HOME/.cursor/mcp.json"
-    "/Volumes/SSD1_APFS/ib_box_spread_full_universal/.cursor/mcp.json"
-    "/Volumes/SSD1_APFS/project-management-automation/.cursor/mcp.json"
+    "$HOME/Projects/Trading/ib_box_spread_full_universal/.cursor/mcp.json"
+    "$HOME/Projects/project-management-automation/.cursor/mcp.json"
 )
 
 ACTION="${1:-status}"

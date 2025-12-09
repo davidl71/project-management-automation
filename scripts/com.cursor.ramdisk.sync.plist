@@ -10,7 +10,7 @@
     
     <key>ProgramArguments</key>
     <array>
-        <string>/Volumes/SSD1_APFS/project-management-automation/scripts/cursor-ramdisk.sh</string>
+        <string>/Users/davidl/Projects/project-management-automation/scripts/cursor-ramdisk.sh</string>
         <string>sync</string>
     </array>
     

@@ -19,10 +19,9 @@ from ..resources.memories import (
     _load_all_memories,
     create_memory,
 )
-from .wisdom.advisors import (
-    METRIC_ADVISORS,
-    consult_advisor,
-)
+# Use devwisdom-go MCP server instead of direct import
+from ..utils.wisdom_client import consult_advisor
+# METRIC_ADVISORS no longer needed (handled by external server)
 
 logger = logging.getLogger(__name__)
 
@@ -284,13 +283,19 @@ def memory_dream(
         # Calculate a "score" based on memory health
         score = min(100, len(memories) * 5)  # More memories = higher score
 
-        consultation_json = consult_advisor(
+        consultation_result = consult_advisor(
             metric=metric,
             stage="retrospective",  # Dreaming is like a retrospective
             score=score,
             context=f"Dreaming on {len(memories)} memories from last {days} days",
-            log=True,
         )
+        
+        # consult_advisor now returns dict (from MCP server), convert to JSON string if needed
+        if isinstance(consultation_result, dict):
+            import json
+            consultation_json = json.dumps(consultation_result, indent=2)
+        else:
+            consultation_json = consultation_result or "{}"
         
         # Parse JSON string to dict
         import json

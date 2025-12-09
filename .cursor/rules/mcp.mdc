@@ -1,0 +1,27 @@
+---
+description: MCP tool development rules for AI assistance
+globs: ["**/tools/**/*.py", "**/mcp/**/*.py"]
+alwaysApply: false
+---
+
+# MCP Tool Development Rules
+
+## Tool Design
+- Each tool should do one thing well
+- Use clear, descriptive function names
+- Include comprehensive docstrings with HINT
+
+## HINT Format
+- Start with: [HINT: Brief description. Key outputs.]
+- Include: 📊 Output, 🔧 Side Effects, 📁 Files, ⏱️ Runtime
+- Add example prompts
+
+## Error Handling
+- Return JSON responses always
+- Use format_success_response/format_error_response
+- Log execution with log_automation_execution
+
+## Registration
+- Register tools in server.py
+- Follow existing import patterns
+- Include both relative and absolute import fallbacks

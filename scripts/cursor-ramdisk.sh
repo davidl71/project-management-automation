@@ -1,12 +1,12 @@
 #!/bin/bash
 #
 # Cursor RAM Disk Manager
-# Creates a RAM disk for Cursor cache with SSD backup/sync
+# Creates a RAM disk for Cursor cache with local backup/sync
 #
 # Usage:
-#   cursor-ramdisk.sh start    - Create RAM disk and populate from SSD
-#   cursor-ramdisk.sh stop     - Sync to SSD and unmount RAM disk
-#   cursor-ramdisk.sh sync     - Sync RAM disk to SSD (periodic backup)
+#   cursor-ramdisk.sh start    - Create RAM disk and populate from backup
+#   cursor-ramdisk.sh stop     - Sync to backup and unmount RAM disk
+#   cursor-ramdisk.sh sync     - Sync RAM disk to backup (periodic backup)
 #   cursor-ramdisk.sh status   - Show current status
 #
 # Configuration is at the top of this script.
@@ -24,8 +24,9 @@ RAMDISK_SIZE_MB="${CURSOR_RAMDISK_SIZE:-512}"
 # RAM disk mount point
 RAMDISK_MOUNT="/Volumes/CursorRAM"
 
-# SSD backup location (persistent storage)
-SSD_BACKUP="/Volumes/SSD1_APFS/CursorCache/Cursor"
+# Local backup location (persistent storage)
+BACKUP_DIR="$HOME/.cursor-cache-backup"
+SSD_BACKUP="$BACKUP_DIR/Cursor"
 
 # Original Cursor location (will be symlinked)
 CURSOR_APPDATA="$HOME/Library/Application Support/Cursor"
@@ -235,11 +236,8 @@ restore_ssd_symlink() {
 cmd_start() {
     log "=== Starting Cursor RAM Disk ==="
     
-    # Check if SSD is mounted
-    if [[ ! -d "/Volumes/SSD1_APFS" ]]; then
-        log_error "SSD not mounted at /Volumes/SSD1_APFS"
-        exit 1
-    fi
+    # Ensure backup directory exists
+    mkdir -p "$BACKUP_DIR"
     
     # Auto-prune before starting (keeps RAM disk small)
     if [[ "$AUTO_PRUNE_ON_START" == "true" ]] && [[ -x "$PRUNE_SCRIPT" ]]; then

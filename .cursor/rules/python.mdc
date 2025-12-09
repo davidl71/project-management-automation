@@ -1,0 +1,33 @@
+---
+description: Python development rules for AI assistance
+globs: ["**/*.py"]
+alwaysApply: true
+---
+
+# Python Development Rules
+
+## Code Style
+- Follow PEP 8 conventions
+- Use type hints for function arguments and return values
+- Maximum line length: 100 characters
+- Use docstrings for all public functions and classes
+
+## Imports
+- Group imports: stdlib, third-party, local
+- Use absolute imports over relative where possible
+- Sort imports alphabetically within groups
+
+## Error Handling
+- Use specific exception types
+- Always include informative error messages
+- Log exceptions with context
+
+## Testing
+- Write tests for all new functions
+- Use pytest as the testing framework
+- Aim for >80% test coverage
+
+## Security
+- Never hardcode secrets or credentials
+- Use environment variables for configuration
+- Validate all external input

@@ -401,6 +401,11 @@ def _generate_session_summary(memories: list[dict[str, Any]]) -> str:
 def get_wisdom_resource() -> str:
     """
     Get combined view of memories and advisor consultations.
+    
+    DEPRECATED: This resource has been migrated to devwisdom-go MCP server.
+    Use devwisdom MCP server resources directly instead.
+    
+    The combined wisdom view is now available via devwisdom-go MCP server.
 
     Returns:
         JSON string with unified wisdom view

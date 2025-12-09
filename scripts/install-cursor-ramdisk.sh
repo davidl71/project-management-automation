@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Cursor RAM Disk Installer
-# Sets up RAM disk for Cursor with SSD backup
+# Sets up RAM disk for Cursor with local backup
 #
 
 set -euo pipefail
@@ -31,11 +31,10 @@ echo ""
 # Check prerequisites
 info "Checking prerequisites..."
 
-if [[ ! -d "/Volumes/SSD1_APFS" ]]; then
-    error "SSD not mounted at /Volumes/SSD1_APFS"
-    exit 1
-fi
-log "SSD mounted"
+# Ensure backup directory exists
+BACKUP_DIR="$HOME/.cursor-cache-backup"
+mkdir -p "$BACKUP_DIR"
+log "Backup directory ready: $BACKUP_DIR"
 
 if pgrep -x "Cursor" >/dev/null 2>&1; then
     error "Cursor is running. Please quit Cursor first (Cmd+Q)"
@@ -98,10 +97,10 @@ log "LaunchAgents loaded"
 info "Setting up initial backup..."
 
 CURSOR_APPDATA="$HOME/Library/Application Support/Cursor"
-SSD_BACKUP="/Volumes/SSD1_APFS/CursorCache/Cursor"
+SSD_BACKUP="$BACKUP_DIR/Cursor"
 
 if [[ -d "$CURSOR_APPDATA" ]] && [[ ! -L "$CURSOR_APPDATA" ]]; then
-    info "Backing up existing Cursor data to SSD..."
+    info "Backing up existing Cursor data to local backup..."
     mkdir -p "$(dirname "$SSD_BACKUP")"
     rsync -a "$CURSOR_APPDATA/" "$SSD_BACKUP/"
     rm -rf "$CURSOR_APPDATA"
@@ -121,7 +120,7 @@ echo "║                   Installation Complete!                   ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 log "RAM disk created: /Volumes/CursorRAM (${RAMDISK_SIZE}MB)"
-log "SSD backup: $SSD_BACKUP"
+log "Local backup: $SSD_BACKUP"
 log "Periodic sync: Every 5 minutes"
 echo ""
 info "To launch Cursor with RAM disk:"
@@ -134,7 +133,7 @@ info "Status check:"
 echo "    $SCRIPT_DIR/cursor-ramdisk.sh status"
 echo ""
 warn "Note: RAM disk will be created automatically on login."
-warn "Data is synced to SSD every 5 minutes and when Cursor closes."
+warn "Data is synced to local backup every 5 minutes and when Cursor closes."
 echo ""
 
 # Show status

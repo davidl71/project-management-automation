@@ -1,0 +1,27 @@
+---
+description: TypeScript development rules for AI assistance
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: true
+---
+
+# TypeScript Development Rules
+
+## Type Safety
+- Always use explicit types, avoid `any`
+- Use interfaces for object shapes
+- Prefer `const` assertions where applicable
+
+## Code Style
+- Use arrow functions for callbacks
+- Prefer async/await over raw Promises
+- Use destructuring for cleaner code
+
+## React (if applicable)
+- Use functional components with hooks
+- Prefer named exports over default exports
+- Keep components small and focused
+
+## Testing
+- Use Jest for unit testing
+- Write tests for edge cases
+- Mock external dependencies

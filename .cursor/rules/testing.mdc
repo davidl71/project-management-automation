@@ -1,0 +1,27 @@
+---
+description: Testing rules for AI assistance
+globs: ["**/test_*.py", "**/*_test.py", "**/*.test.ts", "**/*.spec.ts"]
+alwaysApply: false
+---
+
+# Testing Rules
+
+## Test Structure
+- Use descriptive test names
+- Follow Arrange-Act-Assert pattern
+- One assertion per test when possible
+
+## Mocking
+- Mock external dependencies
+- Use dependency injection for testability
+- Reset mocks between tests
+
+## Coverage
+- Aim for >80% code coverage
+- Cover edge cases and error paths
+- Test both happy and unhappy paths
+
+## Performance
+- Keep tests fast (<1s each)
+- Use fixtures for expensive setup
+- Run tests in isolation

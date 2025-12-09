@@ -63,20 +63,15 @@ Production Ready: {'✅ Yes' if result.get('production_ready') else '❌ No'}
         scorecard_logger.debug("Session memory not available for saving scorecard")
         return {"success": False, "error": "Memory system not available"}
 
-# Optional: Multi-source wisdom system (extraction-ready subpackage)
+# Optional: Multi-source wisdom system (now via devwisdom-go MCP server)
 try:
-    from .wisdom import (
+    from ..utils.wisdom_client import (
         format_text as format_wisdom_text,
-    )
-    from .wisdom import (
         get_wisdom,
-    )
-    from .wisdom import (
         list_sources as list_available_sources,
     )
-    from .wisdom import (
-        load_config as load_wisdom_config,
-    )
+    # Load config is no longer needed (handled by external server)
+    load_wisdom_config = lambda: {"disabled": False}
     WISDOM_AVAILABLE = True
 except ImportError:
     WISDOM_AVAILABLE = False

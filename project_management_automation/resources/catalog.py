@@ -23,7 +23,10 @@ logger = logging.getLogger(__name__)
 def get_advisors_resource() -> str:
     """
     Resource: automation://advisors
-
+    
+    DEPRECATED: This resource has been migrated to devwisdom-go MCP server.
+    Use devwisdom MCP server resources (wisdom://advisors) directly instead.
+    
     Returns list of trusted advisors with their assignments.
     """
     try:

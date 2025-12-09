@@ -218,7 +218,7 @@
           "id": "AUTO-20251126032540-C-3",
           "todoId": "AUTO-20251126032540",
           "type": "result",
-          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Users/davidl/Projects/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
           "created": "2025-11-26T03:25:41.134026",
           "lastModified": "2025-11-26T03:25:41.134036"
         },
@@ -2970,7 +2970,7 @@
           "id": "AUTO-20251201010005-004438-C-1",
           "todoId": "AUTO-20251201010005-004438",
           "type": "result",
-          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Volumes/SSD1_APFS/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
+          "content": "**Automation Results:**\n\n**Test Coverage: 0.0%**\n- Minimum Threshold: 80%\n\u26a0\ufe0f Coverage below threshold (gap: 80.0%)\n\n**Key Findings:**\n{\n  \"status\": \"success\",\n  \"coverage_file\": \"/Users/davidl/Projects/project-management-automation/.coverage\",\n  \"coverage_data\": {\n    \"format\": \"coverage.py\",\n    \"error\": \"Failed to parse coverage.py file\"\n  },\n  \"report_path\": \"coverage-report/coverage_report.html\",\n  \"gaps\": [],\n  \"meets_threshold\": false\n}",
           "created": "2025-12-01T01:00:05.234444",
           "lastModified": "2025-12-01T01:00:05.234455"
         }
@@ -3050,6 +3050,289 @@
           "lastModified": "2025-12-01T23:25:57.649120"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251207212140-470354",
+      "name": "Automation: Test Coverage Analyzer",
+      "content": "Automated Test Coverage Analyzer execution",
+      "status": "in_progress",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "test-coverage-analyzer"
+      ],
+      "created": "2025-12-07T21:21:40.470421",
+      "lastModified": "2025-12-07T21:21:40.470422",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "AUTO-20251207222515-707539",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-12-07T22:25:15.707576",
+      "lastModified": "2025-12-07T22:25:16.191224",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207222515-707539-C-1",
+          "todoId": "AUTO-20251207222515-707539",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 996 duplicate issues**\n\n\ud83d\udd0d **9 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **987 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":123,\"duplicates_found\":996,\"duplicate_ids\":[],\"exact_name_matches\":\"[9 items - truncated]\",\"similar_name_matches\":\"[987 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-07T22:25:16.187572",
+          "lastModified": "2025-12-07T22:25:16.187579"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251207222516-217459",
+      "name": "Automation: Test Runner",
+      "content": "Automated Test Runner execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "test-runner"
+      ],
+      "created": "2025-12-07T22:25:16.217500",
+      "lastModified": "2025-12-07T22:25:16.243906",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207222516-217459-C-1",
+          "todoId": "AUTO-20251207222516-217459",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Execution (unknown):** 0 tests run\n- Passed: 0\n- Failed: 0\n\n**Key Findings:**\n{\n  \"framework\": \"pytest\",\n  \"tests_run\": 0,\n  \"tests_passed\": 0,\n  \"tests_failed\": 0,\n  \"tests_skipped\": 0,\n  \"output\": \"\",\n  \"error\": \"/Library/Developer/CommandLineTools/usr/bin/python3: No module named pytest\\n\",\n  \"returncode\": 1,\n  \"output_file\": \"test-results/junit.xml\",\n  \"status\": \"success\"\n}",
+          "created": "2025-12-07T22:25:16.240926",
+          "lastModified": "2025-12-07T22:25:16.240932"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251207223028-683756",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-12-07T22:30:28.683724",
+      "lastModified": "2025-12-07T22:30:29.174267",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207223028-683756-C-1",
+          "todoId": "AUTO-20251207223028-683756",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 1003 duplicate issues**\n\n\ud83d\udd0d **9 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **994 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":125,\"duplicates_found\":1003,\"duplicate_ids\":[],\"exact_name_matches\":\"[9 items - truncated]\",\"similar_name_matches\":\"[994 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-07T22:30:29.171271",
+          "lastModified": "2025-12-07T22:30:29.171279"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251207223029-193339",
+      "name": "Automation: Test Runner",
+      "content": "Automated Test Runner execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "test-runner"
+      ],
+      "created": "2025-12-07T22:30:29.193322",
+      "lastModified": "2025-12-07T22:30:29.226750",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207223029-193339-C-1",
+          "todoId": "AUTO-20251207223029-193339",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Test Execution (unknown):** 0 tests run\n- Passed: 0\n- Failed: 0\n\n**Key Findings:**\n{\n  \"framework\": \"pytest\",\n  \"tests_run\": 0,\n  \"tests_passed\": 0,\n  \"tests_failed\": 0,\n  \"tests_skipped\": 0,\n  \"output\": \"\",\n  \"error\": \"/Library/Developer/CommandLineTools/usr/bin/python3: No module named pytest\\n\",\n  \"returncode\": 1,\n  \"output_file\": \"test-results/junit.xml\",\n  \"status\": \"success\"\n}",
+          "created": "2025-12-07T22:30:29.223193",
+          "lastModified": "2025-12-07T22:30:29.223200"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251207223029-284374",
+      "name": "Automation: Shared TODO Table Synchronization",
+      "content": "Automated Shared TODO Table Synchronization execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "shared-todo-table-synchronization"
+      ],
+      "created": "2025-12-07T22:30:29.284332",
+      "lastModified": "2025-12-07T22:30:29.294625",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207223029-284374-C-1",
+          "todoId": "AUTO-20251207223029-284374",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Synchronization Summary:**\n- 0 tasks matched between systems\n- 0 status conflicts detected\n- 0 new shared TODOs (will create Todo2 tasks)\n- 127 new Todo2 tasks (not in shared TODO)\n- 0 updates performed\n\n**Key Findings:**\n{\"shared_todos\":[],\"todo2_tasks\":\"[127 items - see logs for details]\",\"matches\":[],\"conflicts\":[],\"new_shared_todos\":[],\"new_todo2_tasks\":\"[127 items - see logs for details]\",\"updates\":[],\"dry_run\":true}",
+          "created": "2025-12-07T22:30:29.288062",
+          "lastModified": "2025-12-07T22:30:29.288063"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251207235842-969990",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-07T23:58:42.969980",
+      "lastModified": "2025-12-07T23:58:43.307702",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207235842-969990-C-1",
+          "todoId": "AUTO-20251207235842-969990",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 93.2%**\n\u26a0\ufe0f 3 high-priority tasks are not strategy-aligned\n\u26a0\ufe0f Tool count approaching limit (27/30)\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":61,\"high_priority\":27,\"aligned\":61},\"phase2\":{\"total\":2,\"high_priority\":0,\"aligned\":2},\"phase3\":{\"total\":13,\"high_priority\":10,\"aligned\":13},\"phase4\":{\"total\":42,\"high_priority\":18,\"aligned\":42},\"phase5\":{\"total\":1,\"high_priority\":0,\"aligned\":1},\"phase6\":{\"total\":1,\"high_priority\":0,\"aligned\":1},\"phase7\":{\"total\":10,\"high_priority\":5,\"aligned\":10},\"phase8\":{\"total\":28,\"high_priority\":12,\"aligned\":28},\"phase9\":{\"total\":17,\"high_priority\":8,\"aligned\":17},\"phase10\":{\"total\":6,\"high_priority\":3,\"aligned\":6}},\"strategy_critical\":\"[28 items - see logs for details]\",\"misaligned_tasks\":[{\"id\":\"ce4d9c05-8dd6-4085-9076-80971046c572\",\"content\":\"Add human contribution suggestion feature to sprint_automation\",\"priority\":\"high\",\"status\":\"pending\"},{\"id\":\"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\"content\":\"Add human wishlist parsing to sprint_automation\",\"priority\":\"high\",\"status\":\"pending\"},{\"id\":\"8010c892-9c2f-46b2-a158-88adff9497dc\",\"content\":\"Define API interface for parent project integration\",\"priority\":\"high\",\"status\":\"pending\"}],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"constraint_violations\":[],\"current_tool_count\":27,\"tool_limit\":30,\"alignment_score\":93.2}",
+          "created": "2025-12-07T23:58:43.301710",
+          "lastModified": "2025-12-07T23:58:43.301716"
+        }
+      ]
+    },
+    {
+      "id": "T-20251207235843-304661",
+      "name": "Review misaligned high-priority tasks",
+      "content": "Review 3 high-priority tasks that are not strategy-aligned",
+      "status": "todo",
+      "priority": "high",
+      "tags": [
+        "todo2",
+        "alignment",
+        "review"
+      ],
+      "dependencies": [
+        "AUTO-20251207235842-969990"
+      ],
+      "created": "2025-12-07T23:58:43.304698",
+      "lastModified": "2025-12-07T23:58:43.304699",
+      "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "AUTO-20251207235912-044959",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-07T23:59:12.045002",
+      "lastModified": "2025-12-07T23:59:12.124862",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207235912-044959-C-1",
+          "todoId": "AUTO-20251207235912-044959",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 93.2%**\n\u26a0\ufe0f 3 high-priority tasks are not strategy-aligned\n\u26a0\ufe0f Tool count approaching limit (27/30)\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":61,\"high_priority\":27,\"aligned\":61},\"phase2\":{\"total\":2,\"high_priority\":0,\"aligned\":2},\"phase3\":{\"total\":13,\"high_priority\":10,\"aligned\":13},\"phase4\":{\"total\":42,\"high_priority\":18,\"aligned\":42},\"phase5\":{\"total\":1,\"high_priority\":0,\"aligned\":1},\"phase6\":{\"total\":1,\"high_priority\":0,\"aligned\":1},\"phase7\":{\"total\":10,\"high_priority\":5,\"aligned\":10},\"phase8\":{\"total\":28,\"high_priority\":12,\"aligned\":28},\"phase9\":{\"total\":17,\"high_priority\":8,\"aligned\":17},\"phase10\":{\"total\":6,\"high_priority\":3,\"aligned\":6}},\"strategy_critical\":\"[28 items - see logs for details]\",\"misaligned_tasks\":[{\"id\":\"ce4d9c05-8dd6-4085-9076-80971046c572\",\"content\":\"Add human contribution suggestion feature to sprint_automation\",\"priority\":\"high\",\"status\":\"pending\"},{\"id\":\"6a420472-b6ba-4f69-a10d-9465a2bfc468\",\"content\":\"Add human wishlist parsing to sprint_automation\",\"priority\":\"high\",\"status\":\"pending\"},{\"id\":\"8010c892-9c2f-46b2-a158-88adff9497dc\",\"content\":\"Define API interface for parent project integration\",\"priority\":\"high\",\"status\":\"pending\"}],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"constraint_violations\":[],\"current_tool_count\":27,\"tool_limit\":30,\"alignment_score\":93.2}",
+          "created": "2025-12-07T23:59:12.119079",
+          "lastModified": "2025-12-07T23:59:12.119084"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251207235949-633957",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-12-07T23:59:49.634002",
+      "lastModified": "2025-12-07T23:59:50.144112",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251207235949-633957-C-1",
+          "todoId": "AUTO-20251207235949-633957",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 1041 duplicate issues**\n\n\ud83d\udd0d **9 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **1032 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":131,\"duplicates_found\":1041,\"duplicate_ids\":[],\"exact_name_matches\":\"[9 items - truncated]\",\"similar_name_matches\":\"[1032 items - see logs for details]\",\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-07T23:59:50.140271",
+          "lastModified": "2025-12-07T23:59:50.140280"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251208000210-532878",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-08T00:02:10.532866",
+      "lastModified": "2025-12-08T00:02:10.624817",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251208000210-532878-C-1",
+          "todoId": "AUTO-20251208000210-532878",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u26a0\ufe0f Tool count approaching limit (27/30)\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":50,\"high_priority\":22,\"aligned\":50},\"phase2\":{\"total\":49,\"high_priority\":20,\"aligned\":49},\"phase3\":{\"total\":56,\"high_priority\":26,\"aligned\":56},\"phase4\":{\"total\":57,\"high_priority\":27,\"aligned\":57},\"phase5\":{\"total\":35,\"high_priority\":17,\"aligned\":35}},\"strategy_critical\":\"[31 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"constraint_violations\":[],\"current_tool_count\":27,\"tool_limit\":30,\"alignment_score\":100.0}",
+          "created": "2025-12-08T00:02:10.621807",
+          "lastModified": "2025-12-08T00:02:10.621812"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251208000225-451231",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-08T00:02:25.451226",
+      "lastModified": "2025-12-08T00:02:25.537672",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251208000225-451231-C-1",
+          "todoId": "AUTO-20251208000225-451231",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 100.0%**\n\u26a0\ufe0f Tool count approaching limit (27/30)\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":72,\"by_priority\":{\"high\":31,\"medium\":35,\"low\":3,\"critical\":3},\"by_status\":{\"todo\":0,\"in_progress\":0,\"review\":0,\"done\":16},\"by_phase\":{\"phase1\":{\"total\":50,\"high_priority\":22,\"aligned\":50},\"phase2\":{\"total\":49,\"high_priority\":20,\"aligned\":49},\"phase3\":{\"total\":56,\"high_priority\":26,\"aligned\":56},\"phase4\":{\"total\":57,\"high_priority\":27,\"aligned\":57},\"phase5\":{\"total\":35,\"high_priority\":17,\"aligned\":35}},\"strategy_critical\":\"[31 items - see logs for details]\",\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[],\"constraint_violations\":[],\"current_tool_count\":27,\"tool_limit\":30,\"alignment_score\":100.0}",
+          "created": "2025-12-08T00:02:25.533982",
+          "lastModified": "2025-12-08T00:02:25.533988"
+        }
+      ]
     }
   ],
   "lastModified": "2025-11-26T11:04:07.852092",
@@ -3057,7 +3340,7 @@
   "project": {
     "id": "davidl71/project-management-automation",
     "name": "Project Management Automation (Exarp)",
-    "path": "/Volumes/SSD1_APFS/project-management-automation",
+    "path": "/Users/davidl/Projects/project-management-automation",
     "repository": "git@github.com:davidl71/project-management-automation.git",
     "added_at": "2025-11-26T14:49:58.177927"
   }
