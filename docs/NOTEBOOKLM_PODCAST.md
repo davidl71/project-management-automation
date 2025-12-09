@@ -187,10 +187,18 @@ Once configured, you can:
 ```python
 # In your daily check-in script or cron job:
 
-from project_management_automation.tools.wisdom.advisors import (
+# Migrated to devwisdom-go MCP server
+from project_management_automation.utils.wisdom_client import (
     consult_advisor,
-    export_for_podcast
+    call_wisdom_tool_sync,
 )
+from project_management_automation.utils.project_root import find_project_root
+
+# For export_for_podcast, use MCP client
+def export_for_podcast(days: int = 7):
+    """Export consultations for podcast - calls devwisdom-go MCP server."""
+    project_root = find_project_root()
+    return call_wisdom_tool_sync("export_for_podcast", {"days": days}, project_root)
 
 # 1. Consult advisors during your work
 consult_advisor(metric="security", score=85.0, context="Code review")

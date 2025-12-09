@@ -23,10 +23,45 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from project_management_automation.tools.wisdom.advisors import (
-    METRIC_ADVISORS,
-    export_for_podcast,
-)
+# Migrated to devwisdom-go MCP server
+# Use wisdom_client for MCP calls, fallback to old module if needed
+try:
+    from project_management_automation.utils.wisdom_client import call_wisdom_tool_sync, read_wisdom_resource_sync
+    from project_management_automation.utils.project_root import find_project_root
+    WISDOM_CLIENT_AVAILABLE = True
+except ImportError:
+    WISDOM_CLIENT_AVAILABLE = False
+
+# For METRIC_ADVISORS, try to get from MCP server, fallback to old module
+if WISDOM_CLIENT_AVAILABLE:
+    try:
+        project_root = find_project_root()
+        advisors_json = read_wisdom_resource_sync("wisdom://advisors", project_root)
+        if advisors_json:
+            import json
+            advisors_data = json.loads(advisors_json) if isinstance(advisors_json, str) else advisors_json
+            METRIC_ADVISORS = advisors_data.get("by_metric", {})
+        else:
+            # Fallback
+            from project_management_automation.tools.wisdom.advisors import METRIC_ADVISORS
+    except Exception:
+        from project_management_automation.tools.wisdom.advisors import METRIC_ADVISORS
+else:
+    from project_management_automation.tools.wisdom.advisors import METRIC_ADVISORS
+
+# For export_for_podcast, use MCP client wrapper
+def export_for_podcast(days: int = 7) -> dict:
+    """Export consultations for podcast - calls devwisdom-go MCP server."""
+    if WISDOM_CLIENT_AVAILABLE:
+        try:
+            project_root = find_project_root()
+            result = call_wisdom_tool_sync("export_for_podcast", {"days": days}, project_root)
+            return result if result else {}
+        except Exception:
+            pass
+    # Fallback to old implementation
+    from project_management_automation.tools.wisdom.advisors import export_for_podcast as _old_export
+    return _old_export(days)
 
 
 def generate_markdown_script(podcast_data: dict) -> str:

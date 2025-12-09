@@ -2,6 +2,10 @@
 Unit Tests for Sefaria Wisdom Integration
 
 Tests for wisdom/sefaria.py module (9% coverage → target: 80%+).
+
+NOTE: These tests currently test the Python wisdom module directly.
+TODO: Update to mock wisdom_client and test MCP integration instead.
+The old module is kept as fallback, so these tests still work.
 """
 
 import json

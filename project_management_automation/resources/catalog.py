@@ -28,51 +28,75 @@ def get_advisors_resource() -> str:
     Use devwisdom MCP server resources (wisdom://advisors) directly instead.
     
     Returns list of trusted advisors with their assignments.
+    
+    This function now reads from devwisdom-go MCP server via wisdom_client.
     """
     try:
-        from ..tools.wisdom.advisors import (
-            METRIC_ADVISORS,
-            STAGE_ADVISORS,
-            TOOL_ADVISORS,
-        )
+        from ..utils.wisdom_client import read_wisdom_resource_sync
+        from ..utils.project_root import find_project_root
+        
+        # Try to get advisors from devwisdom-go MCP server
+        project_root = find_project_root()
+        advisors_json = read_wisdom_resource_sync("wisdom://advisors", project_root)
+        
+        if advisors_json:
+            return advisors_json
+        
+        # Fallback: return error message
+        import json
+        return json.dumps({
+            "error": "devwisdom-go MCP server not available",
+            "message": "Please configure devwisdom MCP server in .cursor/mcp.json",
+            "migration_note": "Use wisdom://advisors resource from devwisdom-go MCP server"
+        }, indent=2)
+    except Exception as e:
+        # Fallback to old implementation if MCP client unavailable
+        try:
+            from ..tools.wisdom.advisors import (
+                METRIC_ADVISORS,
+                STAGE_ADVISORS,
+                TOOL_ADVISORS,
+            )
 
-        advisors = {
-            "description": "Trusted Advisors for EXARP Project Management",
-            "by_metric": {
-                metric: {
-                    "advisor": info["advisor"],
-                    "icon": info.get("icon", "📚"),
-                    "rationale": info["rationale"],
-                    "helps_with": info.get("helps_with", ""),
-                }
-                for metric, info in METRIC_ADVISORS.items()
-            },
-            "by_tool": {
-                tool: {
-                    "advisor": info["advisor"],
-                    "rationale": info["rationale"],
-                }
-                for tool, info in TOOL_ADVISORS.items()
-            },
-            "by_stage": {
-                stage: {
-                    "advisor": info["advisor"],
-                    "rationale": info["rationale"],
-                }
-                for stage, info in STAGE_ADVISORS.items()
-            },
-            "total_advisors": len(set(
-                [v["advisor"] for v in METRIC_ADVISORS.values()] +
-                [v["advisor"] for v in TOOL_ADVISORS.values()] +
-                [v["advisor"] for v in STAGE_ADVISORS.values()]
-            )),
-        }
+            advisors = {
+                "description": "Trusted Advisors for EXARP Project Management",
+                "by_metric": {
+                    metric: {
+                        "advisor": info["advisor"],
+                        "icon": info.get("icon", "📚"),
+                        "rationale": info["rationale"],
+                        "helps_with": info.get("helps_with", ""),
+                    }
+                    for metric, info in METRIC_ADVISORS.items()
+                },
+                "by_tool": {
+                    tool: {
+                        "advisor": info["advisor"],
+                        "rationale": info["rationale"],
+                    }
+                    for tool, info in TOOL_ADVISORS.items()
+                },
+                "by_stage": {
+                    stage: {
+                        "advisor": info["advisor"],
+                        "rationale": info["rationale"],
+                    }
+                    for stage, info in STAGE_ADVISORS.items()
+                },
+                "total_advisors": len(set(
+                    [v["advisor"] for v in METRIC_ADVISORS.values()] +
+                    [v["advisor"] for v in TOOL_ADVISORS.values()] +
+                    [v["advisor"] for v in STAGE_ADVISORS.values()]
+                )),
+            }
 
-        return json.dumps(advisors, indent=2)
+            import json
+            return json.dumps(advisors, indent=2)
 
-    except ImportError as e:
-        logger.error(f"Failed to load advisors: {e}")
-        return json.dumps({"error": "Advisors not available"})
+        except ImportError as e:
+            logger.error(f"Failed to load advisors: {e}")
+            import json
+            return json.dumps({"error": "Advisors not available"})
 
 
 def get_models_resource() -> str:

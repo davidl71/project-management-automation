@@ -250,6 +250,30 @@ def get_advisor_info(advisor_id: str) -> dict[str, Any]:
         Advisor information
     """
     try:
+        # Try to use devwisdom-go MCP server first
+        from ..utils.wisdom_client import read_wisdom_resource_sync
+        from ..utils.project_root import find_project_root
+        
+        project_root = find_project_root()
+        advisors_json = read_wisdom_resource_sync("wisdom://advisors", project_root)
+        sources_json = read_wisdom_resource_sync("wisdom://sources", project_root)
+        
+        if advisors_json and sources_json:
+            import json
+            advisors_data = json.loads(advisors_json) if isinstance(advisors_json, str) else advisors_json
+            sources_data = json.loads(sources_json) if isinstance(sources_json, str) else sources_json
+            
+            # Extract advisor mappings from JSON
+            METRIC_ADVISORS = advisors_data.get("by_metric", {})
+            TOOL_ADVISORS = advisors_data.get("by_tool", {})
+            STAGE_ADVISORS = advisors_data.get("by_stage", {})
+            WISDOM_SOURCES = {item.get("id", ""): item for item in sources_data} if isinstance(sources_data, list) else sources_data
+        else:
+            # Fallback to old implementation
+            from ..tools.wisdom.advisors import METRIC_ADVISORS, STAGE_ADVISORS, TOOL_ADVISORS
+            from ..tools.wisdom.sources import WISDOM_SOURCES
+    except Exception:
+        # Fallback to old implementation if MCP client unavailable
         from ..tools.wisdom.advisors import METRIC_ADVISORS, STAGE_ADVISORS, TOOL_ADVISORS
         from ..tools.wisdom.sources import WISDOM_SOURCES
 

@@ -101,6 +101,19 @@ def generate_project_scorecard(
         Dictionary with scorecard data and formatted output
     """
     project_root = find_project_root()
+    
+    # Safety check: Ensure we're not scanning the entire home directory
+    # If project_root is the home directory, something went wrong
+    if str(project_root) == str(Path.home()) or str(project_root) == '/Users/davidl':
+        # Try to find the actual project by looking for project_management_automation package
+        potential_root = Path(__file__).parent.parent.parent
+        if (potential_root / 'project_management_automation').exists():
+            project_root = potential_root
+        else:
+            # Last resort: use current working directory if it looks like a project
+            cwd = Path.cwd()
+            if (cwd / 'project_management_automation').exists() or (cwd / '.git').exists():
+                project_root = cwd
 
     scores = {}
     metrics = {}
@@ -108,9 +121,17 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     # 1. CODEBASE METRICS
     # ═══════════════════════════════════════════════════════════════
+    # Add exclusions for system directories to prevent scanning home directory
     py_files = list(project_root.rglob('*.py'))
-    py_files = [f for f in py_files if 'venv' not in str(f) and '.build-env' not in str(f)
-                and '__pycache__' not in str(f)]
+    py_files = [f for f in py_files 
+                if 'venv' not in str(f) 
+                and '.build-env' not in str(f)
+                and '__pycache__' not in str(f)
+                and 'Library' not in str(f)  # Exclude macOS Library directories
+                and 'Containers' not in str(f)  # Exclude app containers
+                and 'Group Containers' not in str(f)  # Exclude group containers
+                and '.Trash' not in str(f)  # Exclude trash
+                and str(f).startswith(str(project_root))]  # Ensure file is within project
 
     total_py_lines = 0
     for f in py_files:
@@ -213,9 +234,15 @@ def generate_project_scorecard(
     
     # C++ source files (exclude tests)
     cpp_files = list(project_root.rglob('*.cpp'))
-    cpp_files = [f for f in cpp_files if 'venv' not in str(f) and '.build-env' not in str(f)
-                and '__pycache__' not in str(f) and 'test' not in str(f).lower()
-                and 'target' not in str(f)]
+    cpp_files = [f for f in cpp_files 
+                if 'venv' not in str(f) 
+                and '.build-env' not in str(f)
+                and '__pycache__' not in str(f) 
+                and 'test' not in str(f).lower()
+                and 'target' not in str(f)
+                and 'Library' not in str(f)
+                and 'Containers' not in str(f)
+                and str(f).startswith(str(project_root))]
     total_cpp_lines = 0
     for f in cpp_files:
         try:
@@ -225,8 +252,13 @@ def generate_project_scorecard(
     
     # Rust source files (exclude tests)
     rust_files = list(project_root.rglob('*.rs'))
-    rust_files = [f for f in rust_files if 'target' not in str(f) and 'test' not in str(f).lower()
-                  and 'tests' not in str(f)]
+    rust_files = [f for f in rust_files 
+                 if 'target' not in str(f) 
+                 and 'test' not in str(f).lower()
+                 and 'tests' not in str(f)
+                 and 'Library' not in str(f)
+                 and 'Containers' not in str(f)
+                 and str(f).startswith(str(project_root))]
     total_rust_lines = 0
     for f in rust_files:
         try:
@@ -237,8 +269,14 @@ def generate_project_scorecard(
     # TypeScript source files (exclude tests)
     ts_files = list(project_root.rglob('*.ts'))
     ts_files.extend(project_root.rglob('*.tsx'))
-    ts_files = [f for f in ts_files if 'node_modules' not in str(f) and 'test' not in str(f).lower()
-                and 'spec' not in str(f).lower() and '.test.' not in str(f)]
+    ts_files = [f for f in ts_files 
+                if 'node_modules' not in str(f) 
+                and 'test' not in str(f).lower()
+                and 'spec' not in str(f).lower() 
+                and '.test.' not in str(f)
+                and 'Library' not in str(f)
+                and 'Containers' not in str(f)
+                and str(f).startswith(str(project_root))]
     total_ts_lines = 0
     for f in ts_files:
         try:
@@ -248,6 +286,10 @@ def generate_project_scorecard(
     
     # Swift source files (exclude tests)
     swift_files = list(project_root.rglob('*.swift'))
+    swift_files = [f for f in swift_files 
+                  if 'Library' not in str(f)
+                  and 'Containers' not in str(f)
+                  and str(f).startswith(str(project_root))]
     swift_files = [f for f in swift_files if 'test' not in str(f).lower() and 'build' not in str(f)]
     total_swift_lines = 0
     for f in swift_files:
@@ -272,6 +314,10 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     project_root / 'docs'
     md_files = list(project_root.rglob('*.md'))
+    md_files = [f for f in md_files 
+               if 'Library' not in str(f)
+               and 'Containers' not in str(f)
+               and str(f).startswith(str(project_root))]
     md_files = [f for f in md_files if 'venv' not in str(f)]
 
     doc_lines = sum(len(f.read_text().splitlines()) for f in md_files if f.exists() and f.is_file())

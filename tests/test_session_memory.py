@@ -435,6 +435,7 @@ class TestWisdomIntegration:
                 "project_management_automation.resources.memories.find_project_root",
                 return_value=Path(tmpdir),
             ):
+                # NOTE: get_wisdom_resource is deprecated but still works for backward compatibility
                 from project_management_automation.resources.memories import get_wisdom_resource
 
                 result_json = get_wisdom_resource()

@@ -1,6 +1,11 @@
 """
 Unit tests for voice synthesis module.
 
+NOTE: These tests currently test the Python wisdom module directly.
+TODO: Update to mock wisdom_client and test MCP integration instead.
+The old module is kept as fallback, so these tests still work.
+"""
+
 Tests cover:
 - Backend detection
 - Voice mappings

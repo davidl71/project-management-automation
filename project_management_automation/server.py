@@ -3468,7 +3468,7 @@ xw() {{
 
     local result
     result=$(uvx --from exarp python3 -c "
-from project_management_automation.tools.wisdom import get_wisdom, format_text
+from project_management_automation.utils.wisdom_client import get_wisdom, format_text
 print(format_text(get_wisdom(50)))
 " 2>/dev/null)
 
@@ -3907,7 +3907,7 @@ alias pma="uvx exarp"
 # Simple aliases (no caching - for minimal setup)
 alias xs="uvx --from exarp python3 -c 'from project_management_automation.tools.project_scorecard import generate_project_scorecard; r=generate_project_scorecard(); print(r.get(\"formatted_output\",\"\"))'"
 alias xo="uvx --from exarp python3 -c 'from project_management_automation.tools.project_overview import generate_project_overview; r=generate_project_overview(); print(r.get(\"formatted_output\",\"\"))'"
-alias xw="uvx --from exarp python3 -c 'from project_management_automation.tools.wisdom import get_wisdom, format_text; print(format_text(get_wisdom(50)))'"
+alias xw="uvx --from exarp python3 -c 'from project_management_automation.utils.wisdom_client import get_wisdom, format_text; print(format_text(get_wisdom(50)))'"
 
 # For full features with caching and offline fallback, use:
 #   eval "$(exarp --shell-setup)"
@@ -4177,12 +4177,14 @@ if stdio_server_instance:
                     mimeType="application/json",
                 ),
                 # Catalog resources
-                Resource(
-                    uri="automation://advisors",
-                    name="Advisors Catalog",
-                    description="Trusted advisors catalog with assignments by metric, tool, and stage",
-                    mimeType="application/json",
-                ),
+                # NOTE: automation://advisors resource migrated to devwisdom-go MCP server
+                # Resource removed - use devwisdom MCP server resources (wisdom://advisors) directly
+                # Resource(
+                #     uri="automation://advisors",
+                #     name="Advisors Catalog",
+                #     description="Trusted advisors catalog with assignments by metric, tool, and stage",
+                #     mimeType="application/json",
+                # ),
                 Resource(
                     uri="automation://models",
                     name="Models Catalog",
@@ -4236,12 +4238,14 @@ if stdio_server_instance:
                         description="Memory system health metrics and maintenance recommendations",
                         mimeType="application/json",
                     ),
-                    Resource(
-                        uri="automation://wisdom",
-                        name="Combined Wisdom",
-                        description="Combined view of memories and advisor consultations",
-                        mimeType="application/json",
-                    ),
+                    # NOTE: automation://wisdom resource migrated to devwisdom-go MCP server
+                    # Resource removed - use devwisdom MCP server resources directly
+                    # Resource(
+                    #     uri="automation://wisdom",
+                    #     name="Combined Wisdom",
+                    #     description="Combined view of memories and advisor consultations",
+                    #     mimeType="application/json",
+                    # ),
                     # Note: Pattern-based resources (category/{category}, task/{task_id}, session/{date})
                     # are handled dynamically in read_resource() but not listed here as they require parameters
                 ])
@@ -4272,10 +4276,9 @@ if stdio_server_instance:
             # Catalog resources
             elif uri == "automation://advisors":
                 # Resource migrated to devwisdom-go MCP server
-                return json.dumps({
-                    "error": "automation://advisors resource migrated to devwisdom-go MCP server",
-                    "migration_note": "Use devwisdom MCP server resources (wisdom://advisors) directly"
-                }, separators=(",", ":"))
+                # Try to use get_advisors_resource() which now calls devwisdom-go
+                from ..resources.catalog import get_advisors_resource
+                return get_advisors_resource()
             elif uri == "automation://models":
                 return get_models_resource()
             elif uri == "automation://problem-categories":
@@ -4323,10 +4326,15 @@ if stdio_server_instance:
                     return json.dumps({"error": "Memory resources not available"})
             elif uri == "automation://wisdom":
                 # Resource migrated to devwisdom-go MCP server
-                return json.dumps({
-                    "error": "automation://wisdom resource migrated to devwisdom-go MCP server",
-                    "migration_note": "Use devwisdom MCP server resources directly"
-                }, separators=(",", ":"))
+                # Still provide via get_wisdom_resource() for backward compatibility
+                if MEMORIES_AVAILABLE:
+                    from ..resources.memories import get_wisdom_resource
+                    return get_wisdom_resource()
+                else:
+                    return json.dumps({
+                        "error": "automation://wisdom resource migrated to devwisdom-go MCP server",
+                        "migration_note": "Use devwisdom MCP server resources directly"
+                    }, separators=(",", ":"))
             elif uri == "automation://memories/health":
                 if MEMORIES_AVAILABLE:
                     return get_memories_health_resource()

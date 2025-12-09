@@ -380,7 +380,7 @@ alias xo="exarp-overview"
 # Wisdom only
 exarp-wisdom() {
     uvx --from exarp python -c "
-from project_management_automation.tools.wisdom import get_wisdom, format_text
+from project_management_automation.utils.wisdom_client import get_wisdom, format_text
 import os
 
 # Get score from cache or use default

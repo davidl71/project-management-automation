@@ -274,7 +274,21 @@ def memory_dream(
             continue
 
         # Find a relevant metric for this advisor
+        # Try to get METRIC_ADVISORS from MCP server, fallback to old module
         metric = None
+        try:
+            from ..utils.wisdom_client import read_wisdom_resource_sync
+            from ..utils.project_root import find_project_root
+            project_root = find_project_root()
+            advisors_json = read_wisdom_resource_sync("wisdom://advisors", project_root)
+            if advisors_json:
+                import json
+                advisors_data = json.loads(advisors_json) if isinstance(advisors_json, str) else advisors_json
+                METRIC_ADVISORS = advisors_data.get("by_metric", {})
+        except Exception:
+            # Fallback to old implementation
+            from ..tools.wisdom.advisors import METRIC_ADVISORS
+        
         for m, info in METRIC_ADVISORS.items():
             if info.get("advisor") == advisor_key:
                 metric = m
