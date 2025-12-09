@@ -42,7 +42,7 @@
         "PROJECT_ROOT": "/Users/davidl/Projects/project-management-automation",
         "EXARP_FORCE_STDIO": "1"
       },
-      "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms. Documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
+      "description": "Exarp for Project Management Automation - Documentation health, task alignment, duplicate detection, security scanning, and automation opportunities"
     }
   }
 }
