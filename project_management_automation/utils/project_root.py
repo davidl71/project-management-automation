@@ -8,7 +8,7 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
     """
     Find project root by looking for marker files.
 
-    Looks for .git, .todo2, or CMakeLists.txt to identify project root.
+    Looks for .git, .todo2, CMakeLists.txt, or go.mod to identify project root.
 
     Search order:
     1. If start_path provided, search up from there
@@ -25,7 +25,7 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
         """Search upward for project markers."""
         current = path.resolve()
         while current != current.parent:
-            if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists():
+            if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists() or (current / 'go.mod').exists():
                 return current
             current = current.parent
         return None

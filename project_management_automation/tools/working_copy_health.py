@@ -145,7 +145,7 @@ def _find_project_root(start_path: Path) -> Path:
     current = start_path
     for _ in range(5):  # Go up max 5 levels
         # Check for project markers
-        if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists():
+        if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists() or (current / 'go.mod').exists():
             return current.resolve()
         if current.parent == current:  # Reached filesystem root
             break

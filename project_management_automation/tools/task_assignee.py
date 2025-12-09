@@ -65,7 +65,7 @@ def _find_project_root() -> Path:
 
     current = Path.cwd()
     for _ in range(5):
-        if (current / ".git").exists() or (current / ".todo2").exists():
+        if (current / ".git").exists() or (current / ".todo2").exists() or (current / "CMakeLists.txt").exists() or (current / "go.mod").exists():
             return current.resolve()
         if current.parent == current:
             break

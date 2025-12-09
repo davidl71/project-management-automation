@@ -62,7 +62,7 @@ def find_project_root() -> Path:
     """Find project root by looking for .todo2 directory."""
     current = Path.cwd()
     while current != current.parent:
-        if (current / '.todo2').exists():
+        if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists() or (current / 'go.mod').exists():
             return current
         current = current.parent
     return Path.cwd()
