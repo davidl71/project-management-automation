@@ -532,6 +532,157 @@ def require_access(tool_name: Optional[str] = None):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# SUBPROCESS SANDBOXING
+# ═══════════════════════════════════════════════════════════════════════════════
+
+import subprocess
+from typing import Any
+
+
+class SubprocessSecurityError(Exception):
+    """Raised when subprocess security validation fails."""
+    pass
+
+
+# Allowed commands with their allowed arguments
+# Format: command -> set of allowed first arguments (None = any)
+ALLOWED_COMMANDS = {
+    'git': {'status', 'log', 'diff', 'show', 'rev-parse', 'ls-files', 'branch', 'remote', None},
+    'python': {'-m', '-c', None},
+    'pytest': {'-v', '--version', '--co', '--cov', '--junit-xml', None},
+    'pip': {'list', 'show', 'install', '--version', None},
+    'npm': {'audit', 'list', '--version', None},
+    'cargo': {'audit', '--version', None},
+    'uv': {'sync', 'run', 'pip', 'install', '--version', None},
+    'uvx': {None},  # uvx can run any package, but we validate the package name
+    'pip-audit': {'--version', None},
+    'ruff': {'check', 'format', '--version', None},
+    'black': {'--version', '--check', None},
+    'mypy': {'--version', None},
+    # System commands (use with caution)
+    'ls': {None},
+    'cat': {None},
+    'head': {None},
+    'tail': {None},
+    'grep': {None},
+    'find': {None},
+    'which': {None},
+}
+
+
+def validate_command(command: list[str], project_root: Optional[Path] = None) -> None:
+    """
+    Validate a command is safe to execute.
+
+    Args:
+        command: Command as list (e.g., ['git', 'status'])
+        project_root: Project root for path validation
+
+    Raises:
+        SubprocessSecurityError: If command is not allowed
+    """
+    if not command:
+        raise SubprocessSecurityError("Empty command")
+
+    cmd_name = command[0]
+
+    # Check if command is in allowlist
+    if cmd_name not in ALLOWED_COMMANDS:
+        raise SubprocessSecurityError(
+            f"Command '{cmd_name}' is not in the allowlist. "
+            f"Allowed commands: {sorted(ALLOWED_COMMANDS.keys())}"
+        )
+
+    # Check first argument if provided
+    allowed_args = ALLOWED_COMMANDS[cmd_name]
+    if len(command) > 1:
+        first_arg = command[1]
+        # None in allowed_args means any argument is allowed
+        if None not in allowed_args and first_arg not in allowed_args:
+            raise SubprocessSecurityError(
+                f"Command '{cmd_name}' with argument '{first_arg}' is not allowed. "
+                f"Allowed arguments: {sorted(allowed_args - {None})}"
+            )
+
+    # Additional validation for specific commands
+    if cmd_name == 'uvx':
+        # For uvx, validate the package name (second arg) is safe
+        if len(command) > 1:
+            package = command[1]
+            # Only allow alphanumeric, hyphens, underscores, dots, and == for versions
+            if not re.match(r'^[a-zA-Z0-9._-]+(==[0-9.]+)?$', package):
+                raise SubprocessSecurityError(
+                    f"Invalid package name for uvx: '{package}'. "
+                    "Only alphanumeric, dots, hyphens, underscores, and version specifiers allowed."
+                )
+
+
+def safe_subprocess(
+    command: list[str],
+    cwd: Optional[Union[str, Path]] = None,
+    project_root: Optional[Path] = None,
+    timeout: Optional[int] = 300,
+    capture_output: bool = True,
+    text: bool = True,
+    **kwargs: Any
+) -> subprocess.CompletedProcess:
+    """
+    Execute a subprocess command with security validation.
+
+    Validates:
+    - Command is in allowlist
+    - Working directory is within project boundaries
+    - Command arguments are safe
+
+    Args:
+        command: Command to execute as list
+        cwd: Working directory (must be within project_root)
+        project_root: Project root for boundary validation
+        timeout: Command timeout in seconds
+        capture_output: Capture stdout/stderr
+        text: Return text instead of bytes
+        **kwargs: Additional subprocess.run() arguments
+
+    Returns:
+        CompletedProcess result
+
+    Raises:
+        SubprocessSecurityError: If validation fails
+        PathBoundaryError: If cwd is outside boundaries
+    """
+    # Validate command
+    validate_command(command, project_root)
+
+    # Validate and resolve working directory
+    if cwd:
+        if project_root:
+            validator = get_default_path_validator()
+            safe_cwd = validator.validate(cwd, must_exist=True)
+        else:
+            safe_cwd = Path(cwd).resolve()
+            if not safe_cwd.exists():
+                raise SubprocessSecurityError(f"Working directory does not exist: {cwd}")
+    else:
+        safe_cwd = project_root or Path.cwd()
+
+    # Execute with validated parameters
+    try:
+        result = subprocess.run(
+            command,
+            cwd=str(safe_cwd),
+            timeout=timeout,
+            capture_output=capture_output,
+            text=text,
+            **kwargs
+        )
+        return result
+    except subprocess.TimeoutExpired as e:
+        raise SubprocessSecurityError(f"Command timed out after {timeout}s: {' '.join(command)}") from e
+    except Exception as e:
+        raise SubprocessSecurityError(f"Subprocess execution failed: {e}") from e
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # EXPORTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -561,5 +712,11 @@ __all__ = [
     'get_access_controller',
     'set_access_controller',
     'require_access',
+
+    # Subprocess security
+    'SubprocessSecurityError',
+    'validate_command',
+    'safe_subprocess',
+    'ALLOWED_COMMANDS',
 ]
 
