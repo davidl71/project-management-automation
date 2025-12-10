@@ -2202,6 +2202,27 @@
         "ci-cd"
       ],
       "level": 1
+    },
+    {
+      "id": "257a159c-4b95-4d95-aa7a-5d54603c142e",
+      "name": "Adopt subprocess sandboxing across codebase",
+      "details": "Migrate 69 subprocess.run() calls to use safe_subprocess() utility for command injection prevention.\n\n**Current Status:**\n- safe_subprocess() utility implemented in project_management_automation/utils/security.py\n- Command allowlist validation active\n- Working directory boundary checking enabled\n\n**Tasks:**\n1. Identify all subprocess.run() calls (69 found across 20 files)\n2. Replace with safe_subprocess() wrapper\n3. Validate command allowlist coverage\n4. Test each migration\n5. Update documentation\n\n**Files to update:**\n- project_management_automation/tools/working_copy_health.py (9 calls)\n- project_management_automation/tools/session_handoff.py (13 calls)\n- project_management_automation/scripts/automate_dependency_security.py (5 calls)\n- And 17 more files\n\n**Priority:** High - Critical for command injection prevention",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-10T21:25:02.478Z",
+      "updatedAt": "2025-12-10T21:25:02.478Z",
+      "dependsOn": [],
+      "priority": 9,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "security",
+        "subprocess",
+        "sandboxing",
+        "critical"
+      ],
+      "estimatedHours": 6,
+      "level": 0
     }
   ],
   "subtasks": [],

@@ -3,21 +3,26 @@
 MCP Client Wrapper
 
 Provides Python interface to MCP servers (Tractatus Thinking, Sequential Thinking, Agentic-Tools).
-Uses lazy connection pattern - only connects when actually needed.
+Uses connection pooling to reuse sessions across multiple calls for better performance.
 """
 
 import asyncio
 import json
 import logging
 import time
+from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, AsyncContextManager, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
 # Retry configuration
 MAX_RETRIES = 3
 RETRY_DELAY = 0.5  # Base delay in seconds (exponential backoff)
+
+# Connection pool configuration
+SESSION_TIMEOUT = 300  # 5 minutes - close idle sessions
+MAX_SESSION_AGE = 3600  # 1 hour - maximum session lifetime
 
 # Try to import MCP client library
 try:
@@ -27,6 +32,158 @@ try:
 except ImportError:
     MCP_CLIENT_AVAILABLE = False
     logger.warning("MCP client library not available. Install with: pip install mcp>=1.0.0")
+
+
+class MCPSessionPool:
+    """
+    Connection pool for MCP server sessions.
+    
+    Maintains reusable sessions to avoid the overhead of creating new processes
+    for each tool call. Sessions are reused across multiple calls and automatically
+    recreated on errors or after timeout.
+    """
+    
+    def __init__(self):
+        self._pools: Dict[str, "_ServerPool"] = {}
+        self._lock = asyncio.Lock()
+    
+    def get_session(
+        self, 
+        server_name: str, 
+        server_params: StdioServerParameters
+    ) -> AsyncContextManager[ClientSession]:
+        """
+        Get a reusable session for the specified server.
+        
+        Args:
+            server_name: Name of the MCP server (e.g., 'agentic-tools')
+            server_params: Server parameters for connection
+            
+        Returns:
+            Async context manager that yields a ClientSession
+        """
+        # Create pool entry if it doesn't exist (synchronously)
+        # The actual async locking happens inside _ServerPool.get_session()
+        if server_name not in self._pools:
+            self._pools[server_name] = _ServerPool(server_name, server_params)
+        # Return the async context manager directly
+        return self._pools[server_name].get_session()
+    
+    async def close_all(self):
+        """Close all sessions in the pool."""
+        async with self._lock:
+            for pool in self._pools.values():
+                await pool.close()
+            self._pools.clear()
+
+
+class _ServerPool:
+    """Pool for a single MCP server type."""
+    
+    def __init__(self, server_name: str, server_params: StdioServerParameters):
+        self.server_name = server_name
+        self.server_params = server_params
+        self._client_context: Optional[Any] = None
+        self._session_context: Optional[Any] = None
+        self._session: Optional[ClientSession] = None
+        self._read_write: Optional[Tuple] = None
+        self._lock = asyncio.Lock()
+        self._last_used = time.time()
+        self._created_at = time.time()
+        self._in_use = False
+    
+    @asynccontextmanager
+    async def get_session(self):
+        """Get or create a session, reusing if available and healthy."""
+        async with self._lock:
+            # Check if we need to recreate the session
+            if self._session is None or not self._is_healthy():
+                await self._recreate_session()
+            
+            self._last_used = time.time()
+            self._in_use = True
+        
+        try:
+            if self._session is None:
+                raise RuntimeError(f"Failed to create session for {self.server_name}")
+            yield self._session
+        finally:
+            async with self._lock:
+                self._in_use = False
+                self._last_used = time.time()
+    
+    def _is_healthy(self) -> bool:
+        """Check if the current session is healthy and should be reused."""
+        if self._session is None:
+            return False
+        
+        # Check session age
+        age = time.time() - self._created_at
+        if age > MAX_SESSION_AGE:
+            logger.debug(f"Session for {self.server_name} expired (age: {age:.1f}s)")
+            return False
+        
+        # Check idle timeout
+        idle_time = time.time() - self._last_used
+        if idle_time > SESSION_TIMEOUT:
+            logger.debug(f"Session for {self.server_name} timed out (idle: {idle_time:.1f}s)")
+            return False
+        
+        return True
+    
+    async def _recreate_session(self):
+        """Create a new session, closing the old one if it exists."""
+        # Close existing session
+        await self._close_session()
+        
+        # Create new session
+        try:
+            self._client_context = stdio_client(self.server_params)
+            self._read_write = await self._client_context.__aenter__()
+            read, write = self._read_write
+            
+            self._session_context = ClientSession(read, write)
+            self._session = await self._session_context.__aenter__()
+            await self._session.initialize()
+            
+            self._created_at = time.time()
+            self._last_used = time.time()
+            logger.debug(f"Created new session for {self.server_name}")
+        except Exception as e:
+            logger.error(f"Failed to create session for {self.server_name}: {e}")
+            await self._close_session()
+            raise
+    
+    async def _close_session(self):
+        """Close the current session and clean up."""
+        if self._session_context is not None:
+            try:
+                await self._session_context.__aexit__(None, None, None)
+            except Exception as e:
+                logger.warning(f"Error closing session context for {self.server_name}: {e}")
+            self._session_context = None
+        
+        if self._client_context is not None:
+            try:
+                await self._client_context.__aexit__(None, None, None)
+            except Exception as e:
+                logger.warning(f"Error closing client context for {self.server_name}: {e}")
+            self._client_context = None
+        
+        self._session = None
+        self._read_write = None
+    
+    async def close(self):
+        """Close the session and clean up."""
+        async with self._lock:
+            await self._close_session()
+
+
+# Global session pool (exported for use by other modules)
+_session_pool = MCPSessionPool()
+
+# Export session pool for use in other modules
+__all__ = ['MCPClient', 'get_mcp_client', 'load_json_with_retry', '_session_pool']
 
 
 class MCPClient:
@@ -51,32 +208,52 @@ class MCPClient:
         return self._mcp_config or {}
 
     def _load_mcp_config_with_retry(self) -> dict:
-        """Load MCP server configuration with retry logic."""
-        for attempt in range(MAX_RETRIES):
-            if not self.mcp_config_path.exists():
-                if attempt < MAX_RETRIES - 1:
-                    logger.debug(f"MCP config not found, retry {attempt + 1}/{MAX_RETRIES}")
-                    time.sleep(RETRY_DELAY * (attempt + 1))
-                    continue
-                logger.info("MCP config not found, using fallback mode")
-                return {}
-
-            try:
-                with open(self.mcp_config_path) as f:
-                    config = json.load(f)
-                    return config.get('mcpServers', {})
-            except json.JSONDecodeError as e:
-                # File might be partially written - retry
-                if attempt < MAX_RETRIES - 1:
-                    logger.debug(f"MCP config parse error, retry {attempt + 1}/{MAX_RETRIES}: {e}")
-                    time.sleep(RETRY_DELAY * (attempt + 1))
-                else:
-                    logger.warning(f"Failed to parse MCP config after {MAX_RETRIES} attempts: {e}")
-                    return {}
-            except Exception as e:
-                logger.warning(f"Failed to load MCP config: {e}")
-                return {}
-        return {}
+        """Load MCP server configuration with retry logic.
+        
+        Checks both project config (.cursor/mcp.json) and global config (~/.cursor/mcp.json).
+        Merges them with project config taking precedence.
+        """
+        merged_config = {}
+        
+        # Try global config first (base configuration)
+        global_config_path = Path.home() / '.cursor' / 'mcp.json'
+        if global_config_path.exists():
+            for attempt in range(MAX_RETRIES):
+                try:
+                    with open(global_config_path) as f:
+                        global_config = json.load(f)
+                        merged_config.update(global_config.get('mcpServers', {}))
+                        break
+                except json.JSONDecodeError as e:
+                    if attempt < MAX_RETRIES - 1:
+                        logger.debug(f"Global MCP config parse error, retry {attempt + 1}/{MAX_RETRIES}: {e}")
+                        time.sleep(RETRY_DELAY * (attempt + 1))
+                    else:
+                        logger.warning(f"Failed to parse global MCP config after {MAX_RETRIES} attempts: {e}")
+                except Exception as e:
+                    logger.debug(f"Failed to load global MCP config: {e}")
+                    break
+        
+        # Try project config (overrides global)
+        if self.mcp_config_path.exists():
+            for attempt in range(MAX_RETRIES):
+                try:
+                    with open(self.mcp_config_path) as f:
+                        project_config = json.load(f)
+                        # Project config overrides global config
+                        merged_config.update(project_config.get('mcpServers', {}))
+                        break
+                except json.JSONDecodeError as e:
+                    if attempt < MAX_RETRIES - 1:
+                        logger.debug(f"Project MCP config parse error, retry {attempt + 1}/{MAX_RETRIES}: {e}")
+                        time.sleep(RETRY_DELAY * (attempt + 1))
+                    else:
+                        logger.warning(f"Failed to parse project MCP config after {MAX_RETRIES} attempts: {e}")
+                except Exception as e:
+                    logger.warning(f"Failed to load project MCP config: {e}")
+                    break
+        
+        return merged_config
 
     def call_tractatus_thinking(self, operation: str, **kwargs) -> Optional[dict]:
         """Call Tractatus Thinking MCP server."""
@@ -172,46 +349,79 @@ class MCPClient:
         return steps
 
     # Agentic-Tools MCP Support
-    async def _get_agentic_tools_session(self) -> Optional["ClientSession"]:
-        """Get or create agentic-tools MCP session."""
+    def _get_agentic_tools_params(self) -> Optional[StdioServerParameters]:
+        """Get agentic-tools server parameters."""
+        if not MCP_CLIENT_AVAILABLE:
+            return None
+        
+        if 'agentic-tools' not in self.mcp_config:
+            return None
+        
+        agentic_config = self.mcp_config.get('agentic-tools', {})
+        command = agentic_config.get('command', 'npx')
+        args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
+        
+        return StdioServerParameters(command=command, args=args)
+    
+    async def _call_agentic_tool(
+        self, 
+        tool_name: str, 
+        arguments: dict,
+        retry_on_error: bool = True
+    ) -> Optional[dict]:
+        """
+        Call an agentic-tools MCP tool using connection pooling.
+        
+        Args:
+            tool_name: Name of the tool to call
+            arguments: Tool arguments
+            retry_on_error: Whether to retry once on connection errors
+            
+        Returns:
+            Parsed JSON response or None on failure
+        """
         if not MCP_CLIENT_AVAILABLE:
             logger.warning("MCP client library not available")
             return None
-
-        if 'agentic-tools' not in self.mcp_config:
-            logger.warning("Agentic-tools MCP server not configured in .cursor/mcp.json")
+        
+        server_params = self._get_agentic_tools_params()
+        if server_params is None:
+            logger.warning("Agentic-tools MCP server not configured")
             return None
-
-        # Use lock to ensure thread-safe session creation
-        if self._agentic_tools_lock:
-            async with self._agentic_tools_lock:
-                if self.agentic_tools_session is None:
-                    try:
-                        # Get agentic-tools config
-                        agentic_config = self.mcp_config.get('agentic-tools', {})
-                        command = agentic_config.get('command', 'npx')
-                        args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-
-                        # Create stdio client connection
-                        server_params = StdioServerParameters(
-                            command=command,
-                            args=args
-                        )
-
-                        # Create session (will be managed by context manager in methods)
-                        # Note: We'll create a new session for each operation to avoid connection issues
-                        # In production, you might want to implement connection pooling
-                        logger.info("Creating agentic-tools MCP session")
-                        return None  # Will create session in each method call
-                    except Exception as e:
-                        logger.error(f"Failed to create agentic-tools session: {e}")
-                        return None
-                return self.agentic_tools_session
+        
+        max_attempts = 2 if retry_on_error else 1
+        for attempt in range(max_attempts):
+            try:
+                async with _session_pool.get_session('agentic-tools', server_params) as session:
+                    result = await session.call_tool(tool_name, arguments)
+                    
+                    # Parse JSON response
+                    if result.content and len(result.content) > 0:
+                        response_text = result.content[0].text
+                        try:
+                            return json.loads(response_text)
+                        except json.JSONDecodeError:
+                            logger.error(f"Failed to parse {tool_name} response: {response_text}")
+                            return None
+                    return None
+            except Exception as e:
+                if attempt < max_attempts - 1:
+                    logger.warning(f"Error calling {tool_name} (attempt {attempt + 1}), retrying: {e}")
+                    # Force session recreation on retry
+                    async with _session_pool._lock:
+                        if 'agentic-tools' in _session_pool._pools:
+                            await _session_pool._pools['agentic-tools'].close()
+                            del _session_pool._pools['agentic-tools']
+                    await asyncio.sleep(RETRY_DELAY * (attempt + 1))
+                else:
+                    logger.error(f"Failed to call {tool_name} via agentic-tools MCP: {e}", exc_info=True)
+                    return None
+        
         return None
 
     async def list_todos(self, project_id: str, working_directory: str) -> List[Dict]:
         """
-        List todos using agentic-tools MCP.
+        List todos using agentic-tools MCP with connection pooling.
         
         Args:
             project_id: The project ID to list todos for
@@ -220,52 +430,20 @@ class MCPClient:
         Returns:
             List of task dictionaries
         """
-        if not MCP_CLIENT_AVAILABLE:
-            logger.warning("MCP client library not available")
+        result = await self._call_agentic_tool("list_todos", {
+            "workingDirectory": working_directory,
+            "projectId": project_id
+        })
+        
+        if result is None:
             return []
-
-        try:
-            # Get agentic-tools config
-            agentic_config = self.mcp_config.get('agentic-tools', {})
-            command = agentic_config.get('command', 'npx')
-            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-
-            # Create stdio client connection
-            server_params = StdioServerParameters(
-                command=command,
-                args=args
-            )
-
-            async with stdio_client(server_params) as (read, write):
-                async with ClientSession(read, write) as session:
-                    await session.initialize()
-
-                    # Call list_todos tool
-                    result = await session.call_tool("list_todos", {
-                        "workingDirectory": working_directory,
-                        "projectId": project_id
-                    })
-
-                    # Parse JSON response
-                    if result.content and len(result.content) > 0:
-                        response_text = result.content[0].text
-                        # The response should be JSON, parse it
-                        try:
-                            response_data = json.loads(response_text)
-                            # Extract tasks from response (structure may vary)
-                            if isinstance(response_data, list):
-                                return response_data
-                            elif isinstance(response_data, dict):
-                                # Try common response formats
-                                return response_data.get('todos', response_data.get('tasks', []))
-                            return []
-                        except json.JSONDecodeError:
-                            logger.error(f"Failed to parse agentic-tools response: {response_text}")
-                            return []
-                    return []
-        except Exception as e:
-            logger.error(f"Failed to list todos via agentic-tools MCP: {e}", exc_info=True)
-            return []
+        
+        # Extract tasks from response (structure may vary)
+        if isinstance(result, list):
+            return result
+        elif isinstance(result, dict):
+            return result.get('todos', result.get('tasks', []))
+        return []
 
     async def create_task(
         self,
@@ -276,7 +454,7 @@ class MCPClient:
         **kwargs
     ) -> Optional[Dict]:
         """
-        Create task using agentic-tools MCP.
+        Create task using agentic-tools MCP with connection pooling.
         
         Args:
             project_id: The project ID
@@ -288,50 +466,15 @@ class MCPClient:
         Returns:
             Created task dictionary or None on failure
         """
-        if not MCP_CLIENT_AVAILABLE:
-            logger.warning("MCP client library not available")
-            return None
-
-        try:
-            # Get agentic-tools config
-            agentic_config = self.mcp_config.get('agentic-tools', {})
-            command = agentic_config.get('command', 'npx')
-            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-
-            # Create stdio client connection
-            server_params = StdioServerParameters(
-                command=command,
-                args=args
-            )
-
-            # Prepare task data
-            task_data = {
-                "workingDirectory": working_directory,
-                "projectId": project_id,
-                "name": name,
-                "details": details,
-                **kwargs
-            }
-
-            async with stdio_client(server_params) as (read, write):
-                async with ClientSession(read, write) as session:
-                    await session.initialize()
-
-                    # Call create_task tool
-                    result = await session.call_tool("create_task", task_data)
-
-                    # Parse JSON response
-                    if result.content and len(result.content) > 0:
-                        response_text = result.content[0].text
-                        try:
-                            return json.loads(response_text)
-                        except json.JSONDecodeError:
-                            logger.error(f"Failed to parse create_task response: {response_text}")
-                            return None
-                    return None
-        except Exception as e:
-            logger.error(f"Failed to create task via agentic-tools MCP: {e}", exc_info=True)
-            return None
+        task_data = {
+            "workingDirectory": working_directory,
+            "projectId": project_id,
+            "name": name,
+            "details": details,
+            **kwargs
+        }
+        
+        return await self._call_agentic_tool("create_task", task_data)
 
     async def update_task(
         self,
@@ -340,7 +483,7 @@ class MCPClient:
         **updates
     ) -> Optional[Dict]:
         """
-        Update task using agentic-tools MCP.
+        Update task using agentic-tools MCP with connection pooling.
         
         Args:
             task_id: The task ID to update
@@ -350,52 +493,17 @@ class MCPClient:
         Returns:
             Updated task dictionary or None on failure
         """
-        if not MCP_CLIENT_AVAILABLE:
-            logger.warning("MCP client library not available")
-            return None
-
-        try:
-            # Get agentic-tools config
-            agentic_config = self.mcp_config.get('agentic-tools', {})
-            command = agentic_config.get('command', 'npx')
-            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-
-            # Create stdio client connection
-            server_params = StdioServerParameters(
-                command=command,
-                args=args
-            )
-
-            # Prepare update data
-            update_data = {
-                "workingDirectory": working_directory,
-                "id": task_id,
-                **updates
-            }
-
-            async with stdio_client(server_params) as (read, write):
-                async with ClientSession(read, write) as session:
-                    await session.initialize()
-
-                    # Call update_task tool
-                    result = await session.call_tool("update_task", update_data)
-
-                    # Parse JSON response
-                    if result.content and len(result.content) > 0:
-                        response_text = result.content[0].text
-                        try:
-                            return json.loads(response_text)
-                        except json.JSONDecodeError:
-                            logger.error(f"Failed to parse update_task response: {response_text}")
-                            return None
-                    return None
-        except Exception as e:
-            logger.error(f"Failed to update task via agentic-tools MCP: {e}", exc_info=True)
-            return None
+        update_data = {
+            "workingDirectory": working_directory,
+            "id": task_id,
+            **updates
+        }
+        
+        return await self._call_agentic_tool("update_task", update_data)
 
     async def get_task(self, task_id: str, working_directory: str) -> Optional[Dict]:
         """
-        Get task details using agentic-tools MCP.
+        Get task details using agentic-tools MCP with connection pooling.
         
         Args:
             task_id: The task ID
@@ -404,48 +512,14 @@ class MCPClient:
         Returns:
             Task dictionary or None on failure
         """
-        if not MCP_CLIENT_AVAILABLE:
-            logger.warning("MCP client library not available")
-            return None
-
-        try:
-            # Get agentic-tools config
-            agentic_config = self.mcp_config.get('agentic-tools', {})
-            command = agentic_config.get('command', 'npx')
-            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-
-            # Create stdio client connection
-            server_params = StdioServerParameters(
-                command=command,
-                args=args
-            )
-
-            async with stdio_client(server_params) as (read, write):
-                async with ClientSession(read, write) as session:
-                    await session.initialize()
-
-                    # Call get_task tool
-                    result = await session.call_tool("get_task", {
-                        "workingDirectory": working_directory,
-                        "id": task_id
-                    })
-
-                    # Parse JSON response
-                    if result.content and len(result.content) > 0:
-                        response_text = result.content[0].text
-                        try:
-                            return json.loads(response_text)
-                        except json.JSONDecodeError:
-                            logger.error(f"Failed to parse get_task response: {response_text}")
-                            return None
-                    return None
-        except Exception as e:
-            logger.error(f"Failed to get task via agentic-tools MCP: {e}", exc_info=True)
-            return None
+        return await self._call_agentic_tool("get_task", {
+            "workingDirectory": working_directory,
+            "id": task_id
+        })
 
     async def delete_task(self, task_id: str, working_directory: str) -> bool:
         """
-        Delete task using agentic-tools MCP.
+        Delete task using agentic-tools MCP with connection pooling.
         
         Args:
             task_id: The task ID to delete
@@ -454,37 +528,99 @@ class MCPClient:
         Returns:
             True if successful, False otherwise
         """
+        result = await self._call_agentic_tool("delete_task", {
+            "workingDirectory": working_directory,
+            "id": task_id
+        })
+        
+        return result is not None
+    
+    async def batch_operations(
+        self,
+        operations: List[Dict[str, Any]],
+        working_directory: str
+    ) -> List[Optional[Dict]]:
+        """
+        Execute multiple tool calls in a single session for better performance.
+        
+        This method reuses the same connection for all operations, significantly
+        reducing overhead when making multiple calls.
+        
+        Args:
+            operations: List of operation dicts, each with:
+                - 'tool': Tool name (e.g., 'create_task', 'update_task')
+                - 'arguments': Tool arguments dict
+            working_directory: The working directory for the project
+            
+        Returns:
+            List of results (one per operation), None for failed operations
+            
+        Example:
+            results = await client.batch_operations([
+                {
+                    'tool': 'create_task',
+                    'arguments': {
+                        'projectId': 'my-project',
+                        'workingDirectory': '/path',
+                        'name': 'Task 1',
+                        'details': 'Description'
+                    }
+                },
+                {
+                    'tool': 'create_task',
+                    'arguments': {
+                        'projectId': 'my-project',
+                        'workingDirectory': '/path',
+                        'name': 'Task 2',
+                        'details': 'Description'
+                    }
+                }
+            ], '/path')
+        """
         if not MCP_CLIENT_AVAILABLE:
             logger.warning("MCP client library not available")
-            return False
-
+            return [None] * len(operations)
+        
+        server_params = self._get_agentic_tools_params()
+        if server_params is None:
+            logger.warning("Agentic-tools MCP server not configured")
+            return [None] * len(operations)
+        
+        results = []
         try:
-            # Get agentic-tools config
-            agentic_config = self.mcp_config.get('agentic-tools', {})
-            command = agentic_config.get('command', 'npx')
-            args = agentic_config.get('args', ['-y', '@modelcontextprotocol/server-agentic-tools'])
-
-            # Create stdio client connection
-            server_params = StdioServerParameters(
-                command=command,
-                args=args
-            )
-
-            async with stdio_client(server_params) as (read, write):
-                async with ClientSession(read, write) as session:
-                    await session.initialize()
-
-                    # Call delete_task tool
-                    result = await session.call_tool("delete_task", {
-                        "workingDirectory": working_directory,
-                        "id": task_id
-                    })
-
-                    # Check if successful (response format may vary)
-                    return result.content is not None and len(result.content) > 0
+            # Use a single session for all operations
+            async with _session_pool.get_session('agentic-tools', server_params) as session:
+                for op in operations:
+                    tool_name = op.get('tool')
+                    arguments = op.get('arguments', {})
+                    
+                    if not tool_name:
+                        logger.warning(f"Missing 'tool' in operation: {op}")
+                        results.append(None)
+                        continue
+                    
+                    try:
+                        result = await session.call_tool(tool_name, arguments)
+                        
+                        # Parse JSON response
+                        if result.content and len(result.content) > 0:
+                            response_text = result.content[0].text
+                            try:
+                                results.append(json.loads(response_text))
+                            except json.JSONDecodeError:
+                                logger.error(f"Failed to parse {tool_name} response: {response_text}")
+                                results.append(None)
+                        else:
+                            results.append(None)
+                    except Exception as e:
+                        logger.error(f"Error in batch operation {tool_name}: {e}")
+                        results.append(None)
         except Exception as e:
-            logger.error(f"Failed to delete task via agentic-tools MCP: {e}", exc_info=True)
-            return False
+            logger.error(f"Failed batch operations: {e}", exc_info=True)
+            # Return None for all operations on connection failure
+            return [None] * len(operations)
+        
+        return results
 
 
 # Global MCP client instance

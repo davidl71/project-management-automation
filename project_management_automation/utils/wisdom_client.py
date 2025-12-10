@@ -2,7 +2,7 @@
 Wisdom MCP Client Helper
 
 Provides Python interface to devwisdom-go MCP server.
-Uses async MCP client to call wisdom tools and resources.
+Uses connection pooling to reuse sessions across multiple calls for better performance.
 """
 
 import asyncio
@@ -22,6 +22,14 @@ except ImportError:
     MCP_CLIENT_AVAILABLE = False
     logger.warning("MCP client library not available. Install with: pip install mcp>=1.0.0")
 
+# Import session pool from mcp_client
+try:
+    from project_management_automation.scripts.base.mcp_client import _session_pool
+    POOL_AVAILABLE = True
+except ImportError:
+    POOL_AVAILABLE = False
+    _session_pool = None
+
 
 def _load_mcp_config(project_root: Path) -> dict:
     """Load MCP configuration from .cursor/mcp.json"""
@@ -39,7 +47,7 @@ def _load_mcp_config(project_root: Path) -> dict:
 
 
 async def _call_wisdom_tool(tool_name: str, arguments: dict, project_root: Path) -> Optional[dict]:
-    """Call a wisdom tool via MCP."""
+    """Call a wisdom tool via MCP with connection pooling."""
     if not MCP_CLIENT_AVAILABLE:
         logger.warning("MCP client library not available")
         return None
@@ -59,11 +67,9 @@ async def _call_wisdom_tool(tool_name: str, arguments: dict, project_root: Path)
             args=args
         )
         
-        async with stdio_client(server_params) as (read, write):
-            async with ClientSession(read, write) as session:
-                await session.initialize()
-                
-                # Call the tool
+        # Use connection pool if available, otherwise fall back to direct connection
+        if POOL_AVAILABLE and _session_pool is not None:
+            async with _session_pool.get_session('devwisdom', server_params) as session:
                 result = await session.call_tool(tool_name, arguments)
                 
                 # Parse JSON response
@@ -75,13 +81,31 @@ async def _call_wisdom_tool(tool_name: str, arguments: dict, project_root: Path)
                         logger.error(f"Failed to parse wisdom tool response: {response_text}")
                         return None
                 return None
+        else:
+            # Fallback to direct connection
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Call the tool
+                    result = await session.call_tool(tool_name, arguments)
+                    
+                    # Parse JSON response
+                    if result.content and len(result.content) > 0:
+                        response_text = result.content[0].text
+                        try:
+                            return json.loads(response_text)
+                        except json.JSONDecodeError:
+                            logger.error(f"Failed to parse wisdom tool response: {response_text}")
+                            return None
+                    return None
     except Exception as e:
         logger.error(f"Failed to call wisdom tool {tool_name}: {e}", exc_info=True)
         return None
 
 
 async def _read_wisdom_resource(uri: str, project_root: Path) -> Optional[str]:
-    """Read a wisdom resource via MCP."""
+    """Read a wisdom resource via MCP with connection pooling."""
     if not MCP_CLIENT_AVAILABLE:
         logger.warning("MCP client library not available")
         return None
@@ -101,10 +125,9 @@ async def _read_wisdom_resource(uri: str, project_root: Path) -> Optional[str]:
             args=args
         )
         
-        async with stdio_client(server_params) as (read, write):
-            async with ClientSession(read, write) as session:
-                await session.initialize()
-                
+        # Use connection pool if available, otherwise fall back to direct connection
+        if POOL_AVAILABLE and _session_pool is not None:
+            async with _session_pool.get_session('devwisdom', server_params) as session:
                 # Read the resource
                 result = await session.read_resource(uri)
                 
@@ -112,6 +135,19 @@ async def _read_wisdom_resource(uri: str, project_root: Path) -> Optional[str]:
                 if result.contents and len(result.contents) > 0:
                     return result.contents[0].text
                 return None
+        else:
+            # Fallback to direct connection
+            async with stdio_client(server_params) as (read, write):
+                async with ClientSession(read, write) as session:
+                    await session.initialize()
+                    
+                    # Read the resource
+                    result = await session.read_resource(uri)
+                    
+                    # Return resource content
+                    if result.contents and len(result.contents) > 0:
+                        return result.contents[0].text
+                    return None
     except Exception as e:
         logger.error(f"Failed to read wisdom resource {uri}: {e}", exc_info=True)
         return None
