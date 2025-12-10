@@ -43,6 +43,7 @@ uv.lock
 .coverage
 htmlcov/
 .tox/
+test-results/
 
 # Logs
 *.log
