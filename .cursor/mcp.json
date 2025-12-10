@@ -1,16 +1,5 @@
 {
   "mcpServers": {
-    "tractatus_thinking": {
-      "command": "uvx",
-      "args": [
-        "mcpower-proxy==0.0.87",
-        "--wrapped-config",
-        "{\"command\": \"npx\", \"args\": [\"-y\", \"tractatus_thinking\"]}",
-        "--name",
-        "tractatus_thinking"
-      ],
-      "description": "Tractatus Thinking MCP server for structural analysis and logical decomposition"
-    },
     "filesystem": {
       "command": "uvx",
       "args": [
