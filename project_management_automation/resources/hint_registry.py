@@ -417,7 +417,7 @@ def create_hints_directory() -> Path:
 def get_hint_registry_status() -> str:
     """Resource: automation://hints/status - Get registry status."""
     registry = get_hint_registry()
-    return json.dumps(registry.status(), indent=2)
+    return json.dumps(registry.status(), separators=(',', ':'))
 
 
 def register_hint_registry_resources(mcp) -> None:

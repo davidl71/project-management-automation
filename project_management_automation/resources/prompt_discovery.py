@@ -429,22 +429,22 @@ def register_prompt_discovery_resources(mcp) -> None:
         @mcp.resource("automation://prompts")
         def all_prompts_resource() -> str:
             """Get all prompts in compact format."""
-            return json.dumps(get_all_prompts_compact(), indent=2)
+            return json.dumps(get_all_prompts_compact(), separators=(',', ':'))
 
         @mcp.resource("automation://prompts/mode/{mode}")
         def prompts_by_mode_resource(mode: str) -> str:
             """Get prompts for a workflow mode."""
-            return json.dumps(get_prompts_for_mode(mode), indent=2)
+            return json.dumps(get_prompts_for_mode(mode), separators=(',', ':'))
 
         @mcp.resource("automation://prompts/persona/{persona}")
         def prompts_by_persona_resource(persona: str) -> str:
             """Get prompts for a persona."""
-            return json.dumps(get_prompts_for_persona(persona), indent=2)
+            return json.dumps(get_prompts_for_persona(persona), separators=(',', ':'))
 
         @mcp.resource("automation://prompts/category/{category}")
         def prompts_by_category_resource(category: str) -> str:
             """Get prompts in a category."""
-            return json.dumps(get_prompts_for_category(category), indent=2)
+            return json.dumps(get_prompts_for_category(category), separators=(',', ':'))
 
         logger.info("✅ Registered 4 prompt discovery resources")
 
@@ -480,7 +480,7 @@ def discover_prompts_tool(
         category=category,
         keywords=kw_list,
     )
-    return json.dumps(result, indent=2)
+    return json.dumps(result, separators=(',', ':'))
 
 
 def register_prompt_discovery_tools(mcp) -> None:

@@ -85,7 +85,7 @@ def get_cache_status_resource() -> str:
             "agent_caches": len([c for c in cache_info["caches"] if c["type"] == "agent_metadata"])
         }
 
-        return json.dumps(cache_info, indent=2)
+        return json.dumps(cache_info, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting cache status resource: {e}")
@@ -93,4 +93,4 @@ def get_cache_status_resource() -> str:
             "caches": [],
             "error": str(e),
             "timestamp": datetime.now().isoformat()
-        }, indent=2)
+        }, separators=(',', ':'))

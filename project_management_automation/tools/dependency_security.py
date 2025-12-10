@@ -266,14 +266,18 @@ def scan_dependency_security(
     Returns:
         JSON string with scan results
     """
-    # Toggle: check if we're in an async context
-    in_async = False
+    # Check if we're in an async context using try/except/else pattern
+    # This ensures the intentional RuntimeError is raised in else block, not caught
     try:
         asyncio.get_running_loop()
-        in_async = True
-    except RuntimeError:
-        pass
-
-    if in_async:
-        raise RuntimeError("Use scan_dependency_security_async() in async context, or call from sync code")
-    return asyncio.run(scan_dependency_security_async(languages, config_path, ctx, alert_critical))
+        # If we get here, we're in an async context - raise helpful error
+        raise RuntimeError(
+            "scan_dependency_security() cannot be called from an async context. "
+            "Use scan_dependency_security_async() instead and await it."
+        )
+    except RuntimeError as e:
+        # Re-raise if it's our intentional error
+        if "scan_dependency_security_async()" in str(e) or "async context" in str(e).lower():
+            raise
+        # Otherwise, no running loop - safe to use asyncio.run()
+        return asyncio.run(scan_dependency_security_async(languages, config_path, ctx, alert_critical))

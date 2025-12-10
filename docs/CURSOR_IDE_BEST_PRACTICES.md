@@ -1,5 +1,13 @@
 # Cursor IDE: 10 Best Practices
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on FastAPI, Pydantic, Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use FastAPI async endpoints? use context7"
+> - "Show me FastAPI hooks examples use context7"
+> - "FastAPI best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 > **Source:** [Mastering Cursor IDE: 10 Best Practices (Building a Daily Task Manager App)](https://medium.com/@roberto.g.infante/mastering-cursor-ide-10-best-practices-building-a-daily-task-manager-app-0b26524411c1) by Roberto Infante
 
 ## Overview

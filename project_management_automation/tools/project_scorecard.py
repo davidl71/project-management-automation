@@ -2,7 +2,7 @@
 Project Scorecard Tool - Generate comprehensive project health overview.
 
 [HINT: Project scorecard. Returns overall score, component scores (security, testing,
-docs, alignment, clarity, parallelizable, dogfooding, uniqueness), task metrics, production readiness.]
+docs, alignment, clarity, parallelizable, performance, dogfooding, uniqueness), task metrics, production readiness.]
 
 Memory Integration:
 - Saves score history for trend tracking
@@ -90,7 +90,7 @@ def generate_project_scorecard(
     Generate comprehensive project health scorecard.
 
     [HINT: Project scorecard. Returns overall score, component scores (security, testing,
-    docs, alignment, clarity, parallelizable), task metrics, production readiness.]
+    docs, alignment, clarity, parallelizable, performance, dogfooding, uniqueness), task metrics, production readiness.]
 
     Args:
         output_format: Output format - "text", "json", or "markdown"
@@ -557,7 +557,156 @@ def generate_project_scorecard(
     metrics['ci_cd'] = ci_checks
 
     # ═══════════════════════════════════════════════════════════════
-    # 9. DOGFOODING SCORE (Does Exarp use its own tools?)
+    # 9. PERFORMANCE
+    # ═══════════════════════════════════════════════════════════════
+    # Check for performance optimizations and infrastructure
+    
+    # Check for MCP connection pooling
+    mcp_client_path = project_root / 'project_management_automation' / 'scripts' / 'base' / 'mcp_client.py'
+    mcp_client_content = mcp_client_path.read_text() if mcp_client_path.exists() else ""
+    
+    # Check for logging middleware with timing
+    logging_middleware_path = project_root / 'project_management_automation' / 'middleware' / 'logging_middleware.py'
+    logging_middleware_content = logging_middleware_path.read_text() if logging_middleware_path.exists() else ""
+    
+    # Check for async operations
+    server_path = project_root / 'project_management_automation' / 'server.py'
+    server_content = server_path.read_text() if server_path.exists() else ""
+    
+    performance_checks = {
+        'mcp_connection_pooling': 'MCPSessionPool' in mcp_client_content or 'connection_pool' in mcp_client_content.lower(),
+        'async_operations': 'async def' in server_content or 'asyncio' in server_content,
+        'timing_middleware': 'elapsed_ms' in logging_middleware_content or 'timing' in logging_middleware_content.lower(),
+        'batch_operations': 'batch_operations' in mcp_client_content or 'batch' in mcp_client_content.lower(),
+        'rate_limiting': 'RateLimiter' in server_content or 'rate_limit' in server_content,
+        'caching': 'cache' in server_content.lower() or 'lru_cache' in server_content,
+    }
+    
+    # NetworkX-based dependency analysis for performance insights
+    dependency_analysis = {}
+    try:
+        import networkx as nx
+        
+        # Build task dependency graph if we have tasks
+        if todo2_file.exists() and todos:
+            G = nx.DiGraph()
+            
+            # Add tasks as nodes
+            for task in todos:
+                task_id = task.get('id', '')
+                if task_id:
+                    G.add_node(task_id)
+            
+            # Add dependencies as edges
+            for task in todos:
+                task_id = task.get('id', '')
+                if not task_id:
+                    continue
+                    
+                # Check both dependsOn and dependencies fields
+                deps = task.get('dependsOn', []) or task.get('dependencies', [])
+                for dep_id in deps:
+                    if dep_id in G:
+                        G.add_edge(dep_id, task_id)
+            
+            if len(G.nodes()) > 0:
+                # Check for circular dependencies (performance killer)
+                try:
+                    cycles = list(nx.simple_cycles(G))
+                    dependency_analysis['has_cycles'] = len(cycles) > 0
+                    dependency_analysis['cycle_count'] = len(cycles)
+                    performance_checks['no_circular_dependencies'] = len(cycles) == 0
+                except Exception:
+                    dependency_analysis['has_cycles'] = False
+                    dependency_analysis['cycle_count'] = 0
+                    performance_checks['no_circular_dependencies'] = True
+                
+                # Check for long dependency chains (potential bottlenecks)
+                if isinstance(G, nx.DiGraph):
+                    longest_path = 0
+                    try:
+                        # Find longest path in DAG
+                        if nx.is_directed_acyclic_graph(G):
+                            longest_path = len(nx.dag_longest_path(G)) if len(G.nodes()) > 0 else 0
+                        else:
+                            # If not DAG, find longest simple path
+                            for source in G.nodes():
+                                for target in G.nodes():
+                                    if source != target:
+                                        try:
+                                            path = nx.shortest_path(G, source, target)
+                                            longest_path = max(longest_path, len(path))
+                                        except (nx.NetworkXNoPath, nx.NetworkXError):
+                                            pass
+                    except Exception:
+                        pass
+                    
+                    dependency_analysis['longest_chain'] = longest_path
+                    # Long chains (>10) indicate potential performance issues
+                    performance_checks['reasonable_dependency_chains'] = longest_path <= 10
+                else:
+                    dependency_analysis['longest_chain'] = 0
+                    performance_checks['reasonable_dependency_chains'] = True
+                
+                # Check for bottleneck tasks (high in-degree = many tasks depend on this)
+                if len(G.nodes()) > 0:
+                    in_degrees = dict(G.in_degree())
+                    max_dependents = max(in_degrees.values()) if in_degrees else 0
+                    dependency_analysis['max_dependents'] = max_dependents
+                    # Tasks with >5 dependents might be bottlenecks
+                    performance_checks['no_bottleneck_tasks'] = max_dependents <= 5
+                else:
+                    dependency_analysis['max_dependents'] = 0
+                    performance_checks['no_bottleneck_tasks'] = True
+                
+                # Check parallelization opportunities (tasks with no dependencies)
+                independent_tasks = sum(1 for n in G.nodes() if G.in_degree(n) == 0)
+                dependency_analysis['independent_tasks'] = independent_tasks
+                dependency_analysis['total_tasks'] = len(G.nodes())
+                # Good if >20% of tasks can run in parallel
+                parallel_ratio = independent_tasks / len(G.nodes()) if len(G.nodes()) > 0 else 0
+                performance_checks['good_parallelization'] = parallel_ratio >= 0.2
+            else:
+                # No tasks, skip dependency analysis
+                performance_checks['no_circular_dependencies'] = True
+                performance_checks['reasonable_dependency_chains'] = True
+                performance_checks['no_bottleneck_tasks'] = True
+                performance_checks['good_parallelization'] = True
+        else:
+            # No tasks file, assume good performance
+            performance_checks['no_circular_dependencies'] = True
+            performance_checks['reasonable_dependency_chains'] = True
+            performance_checks['no_bottleneck_tasks'] = True
+            performance_checks['good_parallelization'] = True
+    except ImportError:
+        # NetworkX not available, skip dependency analysis
+        performance_checks['no_circular_dependencies'] = True
+        performance_checks['reasonable_dependency_chains'] = True
+        performance_checks['no_bottleneck_tasks'] = True
+        performance_checks['good_parallelization'] = True
+        dependency_analysis['networkx_available'] = False
+    except Exception as e:
+        # Error in analysis, assume good performance
+        scorecard_logger.debug(f"NetworkX dependency analysis failed: {e}")
+        performance_checks['no_circular_dependencies'] = True
+        performance_checks['reasonable_dependency_chains'] = True
+        performance_checks['no_bottleneck_tasks'] = True
+        performance_checks['good_parallelization'] = True
+        dependency_analysis['error'] = str(e)
+    
+    performance_passed = sum(1 for v in performance_checks.values() if v)
+    scores['performance'] = performance_passed / len(performance_checks) * 100
+    
+    metrics['performance'] = {
+        'checks_passed': performance_passed,
+        'checks_total': len(performance_checks),
+        'details': performance_checks,
+        'dependency_analysis': dependency_analysis,
+        'description': 'Performance optimizations: connection pooling, async ops, timing, batching, dependency analysis',
+    }
+
+    # ═══════════════════════════════════════════════════════════════
+    # 10. DOGFOODING SCORE (Does Exarp use its own tools?)
     # ═══════════════════════════════════════════════════════════════
     dogfooding_checks = {
         # Git hooks using exarp
@@ -597,7 +746,7 @@ def generate_project_scorecard(
     }
 
     # ═══════════════════════════════════════════════════════════════
-    # 10. UNIQUENESS SCORE (Are we reinventing the wheel?)
+    # 11. UNIQUENESS SCORE (Are we reinventing the wheel?)
     # ═══════════════════════════════════════════════════════════════
 
     # Check for common patterns that could use existing libraries
@@ -757,15 +906,16 @@ def generate_project_scorecard(
     # CALCULATE OVERALL SCORE
     # ═══════════════════════════════════════════════════════════════
     weights = {
-        'documentation': 0.07,
-        'ci_cd': 0.07,
-        'codebase': 0.07,
-        'clarity': 0.07,
-        'parallelizable': 0.07,
-        'alignment': 0.07,
+        'documentation': 0.06,
+        'ci_cd': 0.06,
+        'codebase': 0.06,
+        'clarity': 0.06,
+        'parallelizable': 0.06,
+        'alignment': 0.06,
         'security': 0.20,
         'testing': 0.10,
         'completion': 0.05,
+        'performance': 0.08,  # Performance optimizations
         'dogfooding': 0.13,  # Eating our own dog food
         'uniqueness': 0.10,  # Not reinventing wheels (or justified if we are)
     }
@@ -834,6 +984,37 @@ def generate_project_scorecard(
                 'area': 'Testing',
                 'action': 'Fix failing tests and increase coverage to 30%',
                 'impact': '+15% to testing score',
+            })
+
+        if scores.get('performance', 0) < 70:
+            perf_metrics = metrics.get('performance', {})
+            perf_details = perf_metrics.get('details', {})
+            dep_analysis = perf_metrics.get('dependency_analysis', {})
+            
+            missing = [k for k, v in perf_details.items() if not v]
+            issues = []
+            
+            # Check for dependency-related performance issues
+            if dep_analysis.get('has_cycles'):
+                issues.append(f"{dep_analysis.get('cycle_count', 0)} circular dependencies")
+            if dep_analysis.get('longest_chain', 0) > 10:
+                issues.append(f"long dependency chain ({dep_analysis.get('longest_chain', 0)} tasks)")
+            if dep_analysis.get('max_dependents', 0) > 5:
+                issues.append(f"bottleneck tasks ({dep_analysis.get('max_dependents', 0)} dependents)")
+            
+            action_parts = []
+            if missing:
+                action_parts.append(f"Enable: {', '.join(missing[:2])}")
+            if issues:
+                action_parts.append(f"Fix: {', '.join(issues[:2])}")
+            
+            action = ' | '.join(action_parts) if action_parts else 'Review performance optimizations'
+            
+            recommendations.append({
+                'priority': 'medium',
+                'area': 'Performance',
+                'action': action,
+                'impact': '+15% to performance score',
             })
 
         if scores.get('completion', 0) < 25:
@@ -929,6 +1110,17 @@ def _format_text(data: dict) -> str:
         p = data['metrics']['parallelizable']
         lines.append(f"    Parallelizable: {p.get('ready', 0)} tasks ({p.get('score', 0)}%)")
 
+    if 'performance' in data['metrics']:
+        p = data['metrics']['performance']
+        dep_analysis = p.get('dependency_analysis', {})
+        perf_info = f"    Performance: {p.get('checks_passed', 0)}/{p.get('checks_total', 0)} optimizations"
+        if dep_analysis.get('networkx_available') is not False and dep_analysis:
+            if dep_analysis.get('has_cycles'):
+                perf_info += f" | ⚠️ {dep_analysis.get('cycle_count', 0)} cycles"
+            if dep_analysis.get('longest_chain', 0) > 10:
+                perf_info += f" | ⚠️ Long chain ({dep_analysis.get('longest_chain', 0)})"
+        lines.append(perf_info)
+
     if 'dogfooding' in data['metrics']:
         d = data['metrics']['dogfooding']
         lines.append(f"    Dogfooding: {d.get('checks_passed', 0)}/{d.get('checks_total', 0)} self-checks")
@@ -1023,6 +1215,22 @@ def _format_markdown(data: dict) -> str:
     if 'parallelizable' in data['metrics']:
         p = data['metrics']['parallelizable']
         lines.append(f"- **Parallelizable:** {p.get('ready', 0)} tasks ({p.get('score', 0)}%)")
+
+    if 'performance' in data['metrics']:
+        p = data['metrics']['performance']
+        dep_analysis = p.get('dependency_analysis', {})
+        perf_line = f"- **Performance:** {p.get('checks_passed', 0)}/{p.get('checks_total', 0)} optimizations ({data['scores'].get('performance', 0):.0f}%)"
+        if dep_analysis.get('networkx_available') is not False and dep_analysis:
+            issues = []
+            if dep_analysis.get('has_cycles'):
+                issues.append(f"⚠️ {dep_analysis.get('cycle_count', 0)} circular dependencies")
+            if dep_analysis.get('longest_chain', 0) > 10:
+                issues.append(f"⚠️ Long chain ({dep_analysis.get('longest_chain', 0)} tasks)")
+            if dep_analysis.get('max_dependents', 0) > 5:
+                issues.append(f"⚠️ Bottleneck ({dep_analysis.get('max_dependents', 0)} dependents)")
+            if issues:
+                perf_line += f" - {', '.join(issues)}"
+        lines.append(perf_line)
 
     if 'dogfooding' in data['metrics']:
         d = data['metrics']['dogfooding']

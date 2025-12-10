@@ -1,5 +1,13 @@
 # Exarp Modular Breakdown Recommendation
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Pydantic, Python, Rust, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Pydantic patterns? use context7"
+> - "Show me Pydantic examples examples use context7"
+> - "Pydantic best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 > **Date**: 2025-01-26  
 > **Purpose**: Breaking down exarp into separate, focused MCP servers  
 > **Language Preferences**: C++, Rust, Python, Go

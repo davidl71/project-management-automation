@@ -1,5 +1,13 @@
 # Sprint Automation Report
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Pandas, Pydantic, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Pandas patterns? use context7"
+> - "Show me Pandas examples examples use context7"
+> - "Pandas best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 *Generated: 2025-11-27T04:15:04.726120*
 
 ## Summary

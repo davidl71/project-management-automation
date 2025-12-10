@@ -65,6 +65,19 @@ Add to your MCP client config (Cursor, Claude Desktop, VS Code):
 
 See [UVX Location Guide](docs/UVX_LOCATION_GUIDE.md) for detailed platform-specific instructions.
 
+## Development
+
+### Keeping MCP Features in Sync
+
+This project supports both FastMCP and stdio server interfaces. When adding tools, resources, or prompts, you must register them in **both** systems.
+
+**📖 See [MCP Sync Guide](docs/MCP_SYNC_GUIDE.md) for complete instructions.**
+
+**Quick check:**
+```bash
+uv run python scripts/verify_mcp_sync.py
+```
+
 ## Features
 
 ### 🏥 Project Health

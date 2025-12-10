@@ -4,6 +4,14 @@
 
 ### High Priority (Direct Function Calls)
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me Python examples examples use context7"
+> - "Python best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 1. **`project_management_automation/server.py`**
    - Lines: 2122-2151, 2422, 2680, 2942-2947, 3221, 3250, 3366-3369, 3483-3510, 3784-3785, 3929, 4121, 4151, 4259-4260, 4339-4341
    - Changes: Replace `consult_advisor()`, `get_daily_briefing()`, `get_wisdom_resource()` with MCP client calls

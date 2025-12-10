@@ -1,0 +1,449 @@
+{
+  "timestamp": "2025-12-11T01:11:05.357532",
+  "total_tools": 43,
+  "successful": 26,
+  "failed": 17,
+  "results": [
+    {
+      "tool_name": "add_external_tool_hints",
+      "success": true,
+      "execution_time": 0.4940667499904521,
+      "error": null,
+      "result_size": 3186
+    },
+    {
+      "tool_name": "analyze_prd_alignment",
+      "success": true,
+      "execution_time": 0.01349016698077321,
+      "error": null,
+      "result_size": 3286
+    },
+    {
+      "tool_name": "analyze_todo2_alignment",
+      "success": true,
+      "execution_time": 0.09142062504542992,
+      "error": null,
+      "result_size": 592
+    },
+    {
+      "tool_name": "auto_prime_session",
+      "success": true,
+      "execution_time": 0.002678624994587153,
+      "error": null,
+      "result_size": 3011
+    },
+    {
+      "tool_name": "check_attribution",
+      "success": true,
+      "execution_time": 0.0018667500116862357,
+      "error": null,
+      "result_size": 265
+    },
+    {
+      "tool_name": "compare_task_diff_tool",
+      "success": true,
+      "execution_time": 0.00019108300330117345,
+      "error": null,
+      "result_size": 43
+    },
+    {
+      "tool_name": "dev_reload",
+      "success": true,
+      "execution_time": 1.85410026460886e-05,
+      "error": null,
+      "result_size": 202
+    },
+    {
+      "tool_name": "estimate_task_duration",
+      "success": true,
+      "execution_time": 0.0062687500030733645,
+      "error": null,
+      "result_size": 65
+    },
+    {
+      "tool_name": "exarp_session_handoff",
+      "success": true,
+      "execution_time": 0.00015866599278524518,
+      "error": null,
+      "result_size": 1419
+    },
+    {
+      "tool_name": "find_prompts",
+      "success": true,
+      "execution_time": 3.4374999813735485e-05,
+      "error": null,
+      "result_size": 3446
+    },
+    {
+      "tool_name": "generate_graph_tool",
+      "success": true,
+      "execution_time": 1.2040953151881695e-05,
+      "error": null,
+      "result_size": 114
+    },
+    {
+      "tool_name": "get_branch_commits_tool",
+      "success": true,
+      "execution_time": 1.0041985660791397e-05,
+      "error": null,
+      "result_size": 57
+    },
+    {
+      "tool_name": "get_branch_tasks_tool",
+      "success": true,
+      "execution_time": 0.001744624983984977,
+      "error": null,
+      "result_size": 52
+    },
+    {
+      "tool_name": "get_estimation_statistics",
+      "success": true,
+      "execution_time": 0.004707083979155868,
+      "error": null,
+      "result_size": 241
+    },
+    {
+      "tool_name": "get_task_commits_tool",
+      "success": true,
+      "execution_time": 1.3665994629263878e-05,
+      "error": null,
+      "result_size": 76
+    },
+    {
+      "tool_name": "get_task_context",
+      "success": true,
+      "execution_time": 0.0021619999897666276,
+      "error": null,
+      "result_size": 3011
+    },
+    {
+      "tool_name": "improve_task_clarity",
+      "success": true,
+      "execution_time": 0.02130787499481812,
+      "error": null,
+      "result_size": 1640
+    },
+    {
+      "tool_name": "infer_session_mode",
+      "success": true,
+      "execution_time": 0.0001806250074878335,
+      "error": null,
+      "result_size": 278
+    },
+    {
+      "tool_name": "list_branches_tool",
+      "success": true,
+      "execution_time": 0.0019572920282371342,
+      "error": null,
+      "result_size": 578
+    },
+    {
+      "tool_name": "merge_branch_tools_tool",
+      "success": true,
+      "execution_time": 0.007847166038118303,
+      "error": null,
+      "result_size": 196
+    },
+    {
+      "tool_name": "report",
+      "success": true,
+      "execution_time": 1.0165967978537083e-05,
+      "error": null,
+      "result_size": 46
+    },
+    {
+      "tool_name": "run_daily_automation",
+      "success": true,
+      "execution_time": 6.0198732080170885,
+      "error": null,
+      "result_size": 971
+    },
+    {
+      "tool_name": "run_discover_automation",
+      "success": true,
+      "execution_time": 0.23800150002352893,
+      "error": null,
+      "result_size": 872
+    },
+    {
+      "tool_name": "run_sprint_automation",
+      "success": true,
+      "execution_time": 306.7622220000485,
+      "error": null,
+      "result_size": 183
+    },
+    {
+      "tool_name": "set_task_branch",
+      "success": true,
+      "execution_time": 0.0012475000112317502,
+      "error": null,
+      "result_size": 32
+    },
+    {
+      "tool_name": "task_assignee_tool",
+      "success": true,
+      "execution_time": 0.0014500829856842756,
+      "error": null,
+      "result_size": 208
+    }
+  ],
+  "errors": [
+    {
+      "tool_name": "context",
+      "error": "name '_context' is not defined",
+      "args": {
+        "action": "summarize",
+        "data": null,
+        "level": "brief",
+        "tool_type": null,
+        "max_tokens": null,
+        "include_raw": false,
+        "items": null,
+        "budget_tokens": 4000,
+        "combine": true
+      }
+    },
+    {
+      "tool_name": "discovery",
+      "error": "name '_discovery' is not defined",
+      "args": {
+        "action": "list",
+        "category": null,
+        "persona": null,
+        "include_examples": true,
+        "tool_name": null
+      }
+    },
+    {
+      "tool_name": "generate_config",
+      "error": "name '_generate_config' is not defined",
+      "args": {
+        "action": "rules",
+        "rules": null,
+        "overwrite": false,
+        "analyze_only": false,
+        "include_indexing": true,
+        "analyze_project": true,
+        "rule_files": null,
+        "output_dir": null,
+        "dry_run": false
+      }
+    },
+    {
+      "tool_name": "health",
+      "error": "name '_health' is not defined",
+      "args": {
+        "action": "server",
+        "agent_name": null,
+        "check_remote": true,
+        "output_path": null,
+        "create_tasks": true,
+        "task_id": null,
+        "changed_files": null,
+        "auto_check": true,
+        "workflow_path": null,
+        "check_runners": true
+      }
+    },
+    {
+      "tool_name": "lint",
+      "error": "name '_lint' is not defined",
+      "args": {
+        "action": "run",
+        "path": null,
+        "linter": "ruff",
+        "fix": false,
+        "analyze": true,
+        "select": null,
+        "ignore": null,
+        "problems_json": null,
+        "include_hints": true,
+        "output_path": null
+      }
+    },
+    {
+      "tool_name": "memory",
+      "error": "name '_memory' is not defined",
+      "args": {
+        "action": "search",
+        "title": null,
+        "content": null,
+        "category": "insight",
+        "task_id": null,
+        "metadata": null,
+        "include_related": true,
+        "query": null,
+        "limit": 10
+      }
+    },
+    {
+      "tool_name": "memory_maint",
+      "error": "name '_memory_maint' is not defined",
+      "args": {
+        "action": "health",
+        "max_age_days": 90,
+        "delete_orphaned": true,
+        "delete_duplicates": true,
+        "scorecard_max_age_days": 7,
+        "value_threshold": 0.3,
+        "keep_minimum": 50,
+        "similarity_threshold": 0.85,
+        "merge_strategy": "newest",
+        "scope": "week",
+        "advisors": null,
+        "generate_insights": true,
+        "save_dream": true,
+        "dry_run": true,
+        "interactive": true
+      }
+    },
+    {
+      "tool_name": "prompt_tracking",
+      "error": "name '_prompt_tracking' is not defined",
+      "args": {
+        "action": "analyze",
+        "prompt": null,
+        "task_id": null,
+        "mode": null,
+        "outcome": null,
+        "iteration": 1,
+        "days": 7
+      }
+    },
+    {
+      "tool_name": "recommend",
+      "error": "name '_recommend' is not defined",
+      "args": {
+        "action": "model",
+        "task_description": null,
+        "task_type": null,
+        "optimize_for": "quality",
+        "include_alternatives": true,
+        "task_id": null,
+        "include_rationale": true,
+        "metric": null,
+        "tool": null,
+        "stage": null,
+        "score": 50.0,
+        "context": "",
+        "log": true
+      }
+    },
+    {
+      "tool_name": "run_nightly_automation",
+      "error": "name 'is_pending_status' is not defined",
+      "args": {
+        "max_tasks_per_host": 5,
+        "max_parallel_tasks": 10,
+        "priority_filter": null,
+        "tag_filter": null,
+        "dry_run": false,
+        "notify": false
+      }
+    },
+    {
+      "tool_name": "security",
+      "error": "name '_security' is not defined",
+      "args": {
+        "action": "report",
+        "repo": "davidl71/project-management-automation",
+        "languages": null,
+        "config_path": null,
+        "state": "open",
+        "include_dismissed": false,
+        "alert_critical": false
+      }
+    },
+    {
+      "tool_name": "setup_hooks",
+      "error": "name '_setup_hooks' is not defined",
+      "args": {
+        "action": "git",
+        "hooks": null,
+        "patterns": null,
+        "config_path": null,
+        "install": true,
+        "dry_run": false
+      }
+    },
+    {
+      "tool_name": "task_analysis",
+      "error": "name '_task_analysis' is not defined",
+      "args": {
+        "action": "duplicates",
+        "similarity_threshold": 0.85,
+        "auto_fix": false,
+        "dry_run": true,
+        "custom_rules": null,
+        "remove_tags": null,
+        "output_format": "text",
+        "include_recommendations": true,
+        "output_path": null
+      }
+    },
+    {
+      "tool_name": "task_discovery",
+      "error": "name '_task_discovery' is not defined",
+      "args": {
+        "action": "all",
+        "file_patterns": null,
+        "include_fixme": true,
+        "doc_path": null,
+        "output_path": null,
+        "create_tasks": false
+      }
+    },
+    {
+      "tool_name": "task_workflow",
+      "error": "name '_task_workflow' is not defined",
+      "args": {
+        "action": "sync",
+        "dry_run": false,
+        "status": "Review",
+        "new_status": "Todo",
+        "clarification_none": true,
+        "filter_tag": null,
+        "task_ids": null,
+        "sub_action": "list",
+        "task_id": null,
+        "clarification_text": null,
+        "decision": null,
+        "decisions_json": null,
+        "move_to_todo": true,
+        "output_path": null
+      }
+    },
+    {
+      "tool_name": "testing",
+      "error": "name '_testing' is not defined",
+      "args": {
+        "action": "run",
+        "test_path": null,
+        "test_framework": "auto",
+        "verbose": true,
+        "coverage": false,
+        "coverage_file": null,
+        "min_coverage": 80,
+        "format": "html",
+        "target_file": null,
+        "min_confidence": 0.7,
+        "framework": null,
+        "output_path": null
+      }
+    },
+    {
+      "tool_name": "workflow_mode",
+      "error": "name '_workflow_mode' is not defined",
+      "args": {
+        "action": "focus",
+        "mode": null,
+        "enable_group": null,
+        "disable_group": null,
+        "status": false,
+        "text": null,
+        "auto_switch": false,
+        "ctx": null
+      }
+    }
+  ]
+}

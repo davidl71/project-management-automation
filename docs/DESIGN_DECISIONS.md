@@ -1,5 +1,13 @@
 # Design Decisions - Why Custom Implementations?
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on FastAPI, Pydantic, Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use FastAPI async endpoints? use context7"
+> - "Show me FastAPI examples examples use context7"
+> - "FastAPI best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 This document justifies Exarp's architectural decisions, explaining why certain features
 are custom-built rather than using existing libraries or services.
 

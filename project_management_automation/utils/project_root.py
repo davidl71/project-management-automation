@@ -3,6 +3,9 @@
 from pathlib import Path
 from typing import Optional
 
+# Module-level cache for project root (only invalidates on process restart)
+_cached_project_root: Optional[Path] = None
+
 
 def find_project_root(start_path: Optional[Path] = None) -> Path:
     """
@@ -30,16 +33,23 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
             current = current.parent
         return None
 
-    # If explicit start_path, use only that
+    global _cached_project_root
+
+    # If explicit start_path, don't use cache
     if start_path is not None:
         result = _search_up(Path(start_path))
         if result:
             return result
         return Path(start_path).resolve()
 
+    # Use cached value if available
+    if _cached_project_root is not None:
+        return _cached_project_root
+
     # Try current working directory first
     result = _search_up(Path.cwd())
     if result:
+        _cached_project_root = result
         return result
 
     # Try package location (for MCP server context)
@@ -47,8 +57,10 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
     package_path = Path(__file__).parent.parent.parent  # utils -> project_management_automation -> project root
     result = _search_up(package_path)
     if result:
+        _cached_project_root = result
         return result
 
     # Fallback to current working directory
-    return Path.cwd()
+    _cached_project_root = Path.cwd()
+    return _cached_project_root
 

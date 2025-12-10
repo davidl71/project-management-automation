@@ -93,7 +93,7 @@ def get_all_assignees_resource() -> str:
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting assignees resource: {e}")
@@ -239,7 +239,7 @@ def get_latest_handoff_resource() -> str:
         from ..tools.session_handoff import get_latest_handoff
         return get_latest_handoff()
     except Exception as e:
-        return json.dumps({"error": str(e)}, indent=2)
+        return json.dumps({"error": str(e)}, separators=(',', ':'))
 
 
 def register_assignee_resources(mcp) -> None:

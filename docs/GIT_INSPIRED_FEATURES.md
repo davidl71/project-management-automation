@@ -1,5 +1,13 @@
 # Git-Inspired Task Management Features
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me Python examples examples use context7"
+> - "Python best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 This document describes the Git-inspired task management features implemented in the project management automation system.
 
 **Note**: These features were inspired by concepts from [GitTask](https://github.com/Bengerthelorf/gittask) (GPL-3.0). All implementations are original Python code. See [ATTRIBUTIONS.md](../ATTRIBUTIONS.md) for details.

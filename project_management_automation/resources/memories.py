@@ -227,11 +227,11 @@ def get_memories_resource(limit: int = 50) -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting memories resource: {e}")
-        return json.dumps({"memories": [], "error": str(e), "timestamp": datetime.now().isoformat()}, indent=2)
+        return json.dumps({"memories": [], "error": str(e), "timestamp": datetime.now().isoformat()}, separators=(',', ':'))
 
 
 def get_memories_by_category_resource(category: str, limit: int = 50) -> str:
@@ -255,7 +255,7 @@ def get_memories_by_category_resource(category: str, limit: int = 50) -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting memories by category: {e}")
@@ -285,7 +285,7 @@ def get_memories_by_task_resource(task_id: str) -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting memories by task: {e}")
@@ -316,7 +316,7 @@ def get_recent_memories_resource(hours: int = 24) -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting recent memories: {e}")
@@ -359,7 +359,7 @@ def get_session_memories_resource(date: Optional[str] = None) -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting session memories: {e}")
@@ -448,11 +448,11 @@ def get_wisdom_resource() -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting wisdom resource: {e}")
-        return json.dumps({"error": str(e), "timestamp": datetime.now().isoformat()}, indent=2)
+        return json.dumps({"error": str(e), "timestamp": datetime.now().isoformat()}, separators=(',', ':'))
 
 
 def _merge_wisdom(memories: list[dict[str, Any]], consultations: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -510,7 +510,7 @@ def get_memories_health_resource() -> str:
             "timestamp": datetime.now().isoformat(),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting memories health: {e}")

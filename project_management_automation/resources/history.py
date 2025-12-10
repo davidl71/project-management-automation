@@ -66,7 +66,7 @@ def get_history_resource(limit: int = 50) -> str:
         # Limit results
         history["automation_history"] = history["automation_history"][:limit]
 
-        return json.dumps(history, indent=2)
+        return json.dumps(history, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting history resource: {e}")

@@ -1,6 +1,6 @@
 # Daily Automation Report
 
-**Date**: 2025-11-26 09:39:03
+**Date**: 2025-12-11 01:05:56
 **Mode**: APPLIED
 
 ## Summary
@@ -16,24 +16,24 @@
 ### ✅ Documentation Health Check
 
 - **Status**: success
-- **Duration**: 2.04s
+- **Duration**: 1.11s
 - **Summary**:
   - output: 
 
 ### ✅ Todo2 Alignment Analysis
 
 - **Status**: success
-- **Duration**: 1.63s
+- **Duration**: 1.12s
 - **Summary**:
   - output: 
 
 ### ✅ Duplicate Task Detection
 
 - **Status**: success
-- **Duration**: 29.67s
+- **Duration**: 3.78s
 - **Summary**:
   - output: 
 ✅ Duplicate detection complete!
-   Report: /Volumes/SSD1_APFS/project-management-automation/docs/TODO2_DUPLICATE_DETECTION_REPORT.md
+   Report: /Users/davidl/Projects/project-management-automation/docs/TODO2_DUPLICATE_DETECTION_REPORT.md
    Duplicates found: 0
 

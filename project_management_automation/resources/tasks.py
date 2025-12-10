@@ -18,18 +18,38 @@ from ..utils import (
 
 logger = logging.getLogger(__name__)
 
+# Cache for Todo2 state (invalidated on file modification)
+_todo2_cache: Optional[dict[str, Any]] = None
+_todo2_cache_mtime: Optional[float] = None
+
 
 def _load_todo2_state() -> dict[str, Any]:
-    """Load Todo2 state file."""
+    """Load Todo2 state file with caching based on file modification time."""
+    global _todo2_cache, _todo2_cache_mtime
+
     project_root = find_project_root()
     todo2_file = project_root / '.todo2' / 'state.todo2.json'
 
     if not todo2_file.exists():
         return {"todos": []}
 
+    # Check if file was modified since last cache
+    try:
+        current_mtime = todo2_file.stat().st_mtime
+        if _todo2_cache is not None and _todo2_cache_mtime == current_mtime:
+            return _todo2_cache
+    except OSError:
+        # File might have been deleted, invalidate cache
+        _todo2_cache = None
+        _todo2_cache_mtime = None
+
+    # Load and cache
     try:
         with open(todo2_file) as f:
-            return json.load(f)
+            data = json.load(f)
+            _todo2_cache = data
+            _todo2_cache_mtime = todo2_file.stat().st_mtime
+            return data
     except Exception as e:
         logger.error(f"Error loading Todo2 state: {e}")
         return {"todos": [], "error": str(e)}
@@ -151,7 +171,7 @@ def get_tasks_resource(agent: Optional[str] = None, status: Optional[str] = None
                 f"These are excluded from results but shown in cross_project_tasks."
             ]
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting tasks resource: {e}")
@@ -159,7 +179,7 @@ def get_tasks_resource(agent: Optional[str] = None, status: Optional[str] = None
             "tasks": [],
             "error": str(e),
             "timestamp": datetime.now().isoformat()
-        }, indent=2)
+        }, separators=(',', ':'))
 
 
 def get_agent_tasks_resource(agent_name: str, status: Optional[str] = None, limit: int = 50) -> str:
@@ -226,7 +246,7 @@ def get_agents_resource() -> str:
             "timestamp": datetime.now().isoformat()
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting agents resource: {e}")

@@ -1,5 +1,13 @@
 # Session Handoff Tool - MCP Framework Error Analysis
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me Python examples examples use context7"
+> - "Python best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date:** 2025-11-30  
 **Issue:** Error persists after code fixes: "object dict can't be used in 'await' expression"  
 **Status:** 🔍 Root cause in MCP framework layer, not application code

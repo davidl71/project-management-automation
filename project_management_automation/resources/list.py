@@ -216,7 +216,7 @@ def get_tools_list_resource() -> str:
             "timestamp": datetime.now().isoformat()
         }
 
-        return json.dumps(tools_list, indent=2)
+        return json.dumps(tools_list, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting tools list resource: {e}")

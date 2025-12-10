@@ -172,7 +172,7 @@ def get_session_mode_resource() -> str:
         # Try to get from storage first
         current = _storage.get_current_mode()
         if current:
-            return json.dumps(current, indent=2)
+            return json.dumps(current, separators=(',', ':'))
         
         # Fallback: compute from current manager state
         manager = get_tool_manager()
@@ -188,7 +188,7 @@ def get_session_mode_resource() -> str:
                 session_duration_seconds=session_duration
             )
             
-            return json.dumps(result.to_dict(), indent=2)
+            return json.dumps(result.to_dict(), separators=(',', ':'))
         
         # No data available
         return json.dumps({
@@ -197,7 +197,7 @@ def get_session_mode_resource() -> str:
             "signals": {},
             "last_updated": datetime.now().isoformat() + "Z",
             "reasoning": ["No session data available"]
-        }, indent=2)
+        }, separators=(',', ':'))
         
     except Exception as e:
         logger.warning(f"Failed to get session mode resource: {e}")
@@ -207,7 +207,7 @@ def get_session_mode_resource() -> str:
             "signals": {},
             "last_updated": datetime.now().isoformat() + "Z",
             "reasoning": [f"Error: {str(e)}"]
-        }, indent=2)
+        }, separators=(',', ':'))
 
 
 def infer_session_mode_tool(force_recompute: bool = False) -> str:
@@ -233,7 +233,7 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
                 "error": "Mode inference not initialized. Ensure DynamicToolManager has file_tracker and mode_inference.",
                 "mode": "UNKNOWN",
                 "confidence": 0.0
-            }, indent=2)
+            }, separators=(',', ':'))
         
         # Get cached result if available and not forcing recompute
         if not force_recompute:
@@ -246,7 +246,7 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
                         timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
                         age_seconds = (datetime.now(timestamp.tzinfo) - timestamp).total_seconds()
                         if age_seconds < 120:  # 2 minutes
-                            return json.dumps(current, indent=2)
+                            return json.dumps(current, separators=(',', ':'))
                     except Exception:
                         pass  # Continue to recompute
         
@@ -271,7 +271,7 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
             session_id=None  # Could extract from context if available
         )
         
-        return json.dumps(result.to_dict(), indent=2)
+        return json.dumps(result.to_dict(), separators=(',', ':'))
         
     except Exception as e:
         logger.error(f"Failed to infer session mode: {e}", exc_info=True)

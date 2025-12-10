@@ -91,7 +91,7 @@ def get_advisors_resource() -> str:
             }
 
             import json
-            return json.dumps(advisors, indent=2)
+            return json.dumps(advisors, separators=(',', ':'))
 
         except ImportError as e:
             logger.error(f"Failed to load advisors: {e}")
@@ -124,7 +124,7 @@ def get_models_resource() -> str:
             "recommended_default": "claude-sonnet",
         }
 
-        return json.dumps(models, indent=2)
+        return json.dumps(models, separators=(',', ':'))
 
     except ImportError as e:
         logger.error(f"Failed to load models: {e}")
@@ -161,7 +161,7 @@ def get_problem_categories_resource() -> str:
             "total_hints": len(PROBLEM_HINTS),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except ImportError as e:
         logger.error(f"Failed to load problem categories: {e}")
@@ -193,7 +193,7 @@ def get_tools_resource() -> str:
             "categories": list({h["category"] for h in TOOL_HINTS}),
         }
 
-        return json.dumps(tools, indent=2)
+        return json.dumps(tools, separators=(',', ':'))
 
     except ImportError as e:
         logger.error(f"Failed to load tools: {e}")
@@ -237,7 +237,7 @@ def get_linters_resource() -> str:
         ),
     }
 
-    return json.dumps(result, indent=2)
+    return json.dumps(result, separators=(',', ':'))
 
 
 def get_tts_backends_resource() -> str:
@@ -261,7 +261,7 @@ def get_tts_backends_resource() -> str:
             ),
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except ImportError as e:
         logger.error(f"Failed to load TTS backends: {e}")
@@ -303,7 +303,7 @@ def get_server_status_resource() -> str:
             },
         }
 
-        return json.dumps(result, indent=2)
+        return json.dumps(result, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Failed to get server status: {e}")

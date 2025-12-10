@@ -546,7 +546,7 @@ def get_context_primer(
     except Exception as e:
         logger.debug(f"Could not get tool count health: {e}")
 
-    return json.dumps(result, indent=2)
+    return json.dumps(result, separators=(',', ':'))
 
 
 def get_hints_for_mode(mode: str) -> str:

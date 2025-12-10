@@ -2223,6 +2223,83 @@
       ],
       "estimatedHours": 6,
       "level": 0
+    },
+    {
+      "id": "7f2546af-ffff-4b23-b79a-b79b66972a78",
+      "name": "Enable CodeQL workflow for automated security scanning",
+      "details": "Fixed CodeQL workflow configuration path in .github/workflows/codeql.yml. Changed config-file path from ./.github/codeql/codeql-config.yml to .github/codeql/codeql-config.yml. CodeQL workflow is now properly configured and will run on push, PR, and weekly schedule. This addresses the high-priority recommendation to enable CodeQL for +10% security score improvement.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-10T22:35:46.073Z",
+      "updatedAt": "2025-12-10T22:35:46.073Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "done",
+      "tags": [
+        "security",
+        "ci-cd",
+        "codeql"
+      ],
+      "estimatedHours": 0.5,
+      "level": 0
+    },
+    {
+      "id": "97a44727-ef5b-4aff-9053-3f8a0897e17e",
+      "name": "Fix async context detection in security, testing, and dependency_security functions",
+      "details": "Fixed async context detection in three functions to properly raise RuntimeError when called from async context:\n- security() in consolidated.py\n- testing() in consolidated.py  \n- scan_dependency_security() in dependency_security.py\n\nUpdated to use try/except/else pattern so intentional RuntimeError is raised correctly and not caught. All 13 async context detection tests now pass. This fixes the failing test that was blocking test suite.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-10T22:35:49.759Z",
+      "updatedAt": "2025-12-10T22:35:49.759Z",
+      "dependsOn": [],
+      "priority": 7,
+      "status": "done",
+      "tags": [
+        "testing",
+        "bug-fix",
+        "async"
+      ],
+      "estimatedHours": 1,
+      "level": 0
+    },
+    {
+      "id": "08ae3dbd-06a9-4685-a795-56acd591915c",
+      "name": "Increase test coverage to 30%",
+      "details": "Current test coverage is 9.5% (28.5% testing score). Need to increase to 30% to meet production readiness requirements. This is a high-priority blocker identified in project scorecard.\n\nTasks:\n1. Run coverage analysis to identify gaps\n2. Add tests for untested modules\n3. Increase coverage for low-coverage areas\n4. Target: 30% overall coverage (+15% to testing score)\n\nPriority: High - this is a production blocker.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-10T22:35:56.645Z",
+      "updatedAt": "2025-12-10T22:35:56.645Z",
+      "dependsOn": [],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "coverage",
+        "production-readiness"
+      ],
+      "estimatedHours": 8,
+      "level": 0
+    },
+    {
+      "id": "ba33b7c5-a982-4119-8aa4-d88a4938fc59",
+      "name": "Run coverage analysis to identify test gaps",
+      "details": "Run pytest with coverage to identify which modules have low or no test coverage. Generate coverage report and identify priority areas for test additions. This is the first step in increasing coverage to 30%.\n\nCommand: `uv run pytest tests/ --cov=project_management_automation --cov-report=html --cov-report=term-missing`\n\nAnalyze results and create follow-up tasks for specific modules that need tests.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-10T22:35:59.702Z",
+      "updatedAt": "2025-12-10T22:35:59.702Z",
+      "dependsOn": [],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "coverage",
+        "analysis"
+      ],
+      "estimatedHours": 2,
+      "level": 1,
+      "parentId": "08ae3dbd-06a9-4685-a795-56acd591915c"
     }
   ],
   "subtasks": [],

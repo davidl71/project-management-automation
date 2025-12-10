@@ -1,5 +1,13 @@
 # MCP Extension Evaluation
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Rust, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Rust patterns? use context7"
+> - "Show me Rust examples examples use context7"
+> - "Rust best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date:** 2025-11-26  
 **Status:** Evaluated - Not Adopted
 

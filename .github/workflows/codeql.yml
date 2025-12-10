@@ -46,7 +46,7 @@ jobs:
           # Custom queries: security-extended includes more checks
           queries: +security-extended,security-and-quality
           # Config file for custom configuration
-          config-file: ./.github/codeql/codeql-config.yml
+          config-file: .github/codeql/codeql-config.yml
 
       # For Python, CodeQL does extraction automatically (no build needed)
       # For compiled languages, you would add build steps here

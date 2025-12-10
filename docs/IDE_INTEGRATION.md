@@ -1,5 +1,13 @@
 # IDE Integration Guide
 
+
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me Python examples examples use context7"
+> - "Python best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 > **How to integrate Exarp workflows into Cursor and VSCode for seamless project management**
 
 ---

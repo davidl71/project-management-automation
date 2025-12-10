@@ -73,7 +73,7 @@ def get_status_resource() -> str:
             }
         }
 
-        return json.dumps(status, indent=2)
+        return json.dumps(status, separators=(',', ':'))
 
     except Exception as e:
         logger.error(f"Error getting status resource: {e}")

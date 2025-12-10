@@ -146,24 +146,20 @@ def security(
     Returns:
         JSON string with security scan/report results
     """
-    # Check if we're in an async context
-    in_async = False
+    # Check if we're in an async context using try/except/else pattern
+    # This ensures the intentional RuntimeError is raised in else block, not caught
     try:
         asyncio.get_running_loop()
-        in_async = True
-    except RuntimeError:
-        pass
-
-    if in_async:
-        # In async context (e.g., stdio server), we need to await
-        # But this is a sync function, so we'll use asyncio.create_task or run_until_complete
-        # Actually, for stdio server, the handler should call security_async directly
-        # For now, use a workaround: create a new event loop in a thread
-        import concurrent.futures
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(asyncio.run, security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
-            result = future.result()
-    else:
+        # If we get here, we're in an async context - raise helpful error
+        raise RuntimeError(
+            "security() cannot be called from an async context. "
+            "Use security_async() instead and await it."
+        )
+    except RuntimeError as e:
+        # Re-raise if it's our intentional error
+        if "security_async()" in str(e) or "async context" in str(e).lower():
+            raise
+        # Otherwise, no running loop - safe to use asyncio.run()
         result = asyncio.run(security_async(action, repo, languages, config_path, state, include_dismissed, ctx, alert_critical))
     # Convert dict to JSON string
     return json.dumps(result, indent=2) if isinstance(result, dict) else result
@@ -708,21 +704,20 @@ def testing(
     Returns:
         JSON string with test, coverage, suggestion, or validation results
     """
-    # Check if we're in an async context
-    in_async = False
+    # Check if we're in an async context using try/except/else pattern
+    # This ensures the intentional RuntimeError is raised in else block, not caught
     try:
         asyncio.get_running_loop()
-        in_async = True
-    except RuntimeError:
-        pass
-
-    if in_async:
-        # In async context (e.g., stdio server), use thread pool to run async function
-        import concurrent.futures
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(asyncio.run, testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
-            result = future.result()
-    else:
+        # If we get here, we're in an async context - raise helpful error
+        raise RuntimeError(
+            "testing() cannot be called from an async context. "
+            "Use testing_async() instead and await it."
+        )
+    except RuntimeError as e:
+        # Re-raise if it's our intentional error
+        if "testing_async()" in str(e) or "async context" in str(e).lower():
+            raise
+        # Otherwise, no running loop - safe to use asyncio.run()
         result = asyncio.run(testing_async(action, test_path, test_framework, verbose, coverage, coverage_file, min_coverage, format, target_file, min_confidence, framework, output_path, ctx))
     # Convert dict to JSON string
     return json.dumps(result, indent=2) if isinstance(result, dict) else result
