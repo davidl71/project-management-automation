@@ -567,6 +567,10 @@ try:
         )
         from .tools.task_clarification_resolution import resolve_task_clarification as _resolve_task_clarification
         from .tools.task_hierarchy_analyzer import analyze_task_hierarchy as _analyze_task_hierarchy
+        from .tools.task_clarity_improver import (
+            analyze_task_clarity as _analyze_task_clarity,
+            improve_task_clarity as _improve_task_clarity,
+        )
         from .tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
         from .tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
@@ -782,10 +786,14 @@ def register_tools():
 
     elif stdio_server_instance:
         # Stdio Server registration (handler-based)
+        # Use FastMCP's tool registry if available, otherwise fall back to manual list
         @stdio_server_instance.list_tools()
         async def list_tools() -> list[Tool]:
             """List all available tools."""
-            tools = [
+            tools = []
+            
+            # Add server_status tool (stdio-only utility)
+            tools.append(
                 Tool(
                     name="server_status",
                     description="Get the current status of the project management automation server.",
@@ -794,26 +802,36 @@ def register_tools():
                         "properties": {},
                     },
                 ),
-            ]
+            )
+            
+            # Add dev_reload tool (FastMCP has it)
+            tools.append(
+                Tool(
+                    name="dev_reload",
+                    description="[HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.] Reload Python modules without restarting Cursor.",
+                    inputSchema={
+                        "type": "object",
+                        "properties": {
+                            "modules": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "Optional list of specific modules to reload",
+                            },
+                        },
+                    },
+                ),
+            )
+            
+            # Note: FastMCP and stdio server are mutually exclusive (mcp is None when stdio is used)
+            # So we maintain a manual list here that should match FastMCP's @mcp.tool() registrations
+            # This ensures both interfaces expose the same tools
+            
+            # Manual tool list (must be kept in sync with FastMCP @mcp.tool() registrations above)
             if TOOLS_AVAILABLE:
                 # Add tool definitions for all automation tools
                 tools.extend(
                     [
-                        Tool(
-                            name="check_documentation_health",
-                            description="Analyze documentation structure, find broken references, identify issues.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                    "create_tasks": {
-                                        "type": "boolean",
-                                        "description": "Create Todo2 tasks",
-                                        "default": True,
-                                    },
-                                },
-                            },
-                        ),
+                        # NOTE: check_documentation_health removed - use health(action="docs") instead
                         Tool(
                             name="analyze_todo2_alignment",
                             description="Analyze task alignment with project goals, find misaligned tasks.",
@@ -829,84 +847,18 @@ def register_tools():
                                 },
                             },
                         ),
+                        # NOTE: Individual tools removed - use consolidated tools instead:
+                        # - analyze_alignment (action=todo2|prd) replaces analyze_todo2_alignment + analyze_prd_alignment
+                        # - task_analysis (action=duplicates) replaces detect_duplicate_tasks
+                        # - security (action=scan) replaces scan_dependency_security
+                        # - run_discover_automation replaces find_automation_opportunities
+                        # - task_workflow (action=sync) replaces sync_todo_tasks
                         Tool(
-                            name="analyze_alignment",
-                            description="[HINT: Alignment analysis. action=todo2|prd. Scores, misaligned items, recommendations.] Unified alignment analysis: action='todo2' for task-to-goals alignment, action='prd' for PRD persona mapping.",
+                            name="analyze_prd_alignment",
+                            description="Analyzes task alignment with PRD personas and user stories",
                             inputSchema={
                                 "type": "object",
                                 "properties": {
-                                    "action": {
-                                        "type": "string",
-                                        "description": "Alignment action: 'todo2' or 'prd'",
-                                        "default": "todo2",
-                                        "enum": ["todo2", "prd"],
-                                    },
-                                    "create_followup_tasks": {
-                                        "type": "boolean",
-                                        "description": "Create follow-up tasks for misaligned items (todo2 only)",
-                                        "default": True,
-                                    },
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                },
-                            },
-                        ),
-                        Tool(
-                            name="detect_duplicate_tasks",
-                            description="Find and consolidate duplicate Todo2 tasks.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "similarity_threshold": {
-                                        "type": "number",
-                                        "description": "Similarity threshold",
-                                        "default": 0.85,
-                                    },
-                                    "auto_fix": {
-                                        "type": "boolean",
-                                        "description": "Auto-fix duplicates",
-                                        "default": False,
-                                    },
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                },
-                            },
-                        ),
-                        Tool(
-                            name="scan_dependency_security",
-                            description="Scan project dependencies for security vulnerabilities.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "languages": {
-                                        "type": "array",
-                                        "items": {"type": "string"},
-                                        "description": "Languages to scan",
-                                    },
-                                    "config_path": {"type": "string", "description": "Config file path"},
-                                },
-                            },
-                        ),
-                        Tool(
-                            name="find_automation_opportunities",
-                            description="Discover new automation opportunities in the codebase.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "min_value_score": {
-                                        "type": "number",
-                                        "description": "Minimum value score",
-                                        "default": 0.7,
-                                    },
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                },
-                            },
-                        ),
-                        Tool(
-                            name="sync_todo_tasks",
-                            description="Synchronize tasks between shared TODO table and Todo2.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "dry_run": {"type": "boolean", "description": "Dry run mode", "default": False},
                                     "output_path": {"type": "string", "description": "Output file path"},
                                 },
                             },
@@ -931,31 +883,7 @@ def register_tools():
                                 },
                             },
                         ),
-                        Tool(
-                            name="run_daily_automation",
-                            description="Run routine daily maintenance tasks and generate a combined summary report.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "tasks": {
-                                        "type": "array",
-                                        "items": {"type": "string"},
-                                        "description": "List of task IDs to run (default: quick tasks only)",
-                                    },
-                                    "include_slow": {
-                                        "type": "boolean",
-                                        "description": "Include slow tasks like dependency security scan",
-                                        "default": False,
-                                    },
-                                    "dry_run": {
-                                        "type": "boolean",
-                                        "description": "Preview changes without applying",
-                                        "default": False,
-                                    },
-                                    "output_path": {"type": "string", "description": "Path for report output"},
-                                },
-                            },
-                        ),
+                        # NOTE: run_daily_automation moved to consolidated tools section below
                     ]
                 )
             
@@ -1353,6 +1281,18 @@ def register_tools():
                             },
                         },
                     ),
+                    Tool(
+                        name="improve_task_clarity",
+                        description="[HINT: Task clarity improvement. Analyzes and improves task clarity metrics.] Improves task clarity by adding time estimates, renaming tasks, removing dependencies.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "auto_apply": {"type": "boolean", "default": False, "description": "Apply improvements automatically"},
+                                "output_format": {"type": "string", "enum": ["text", "json"], "default": "text"},
+                                "output_path": {"type": "string", "description": "Optional file path to save results"},
+                            },
+                        },
+                    ),
                 ])
             
             return tools
@@ -1598,6 +1538,22 @@ def register_tools():
                             arguments.get("move_to_todo", True),
                             arguments.get("output_path"),
                         )
+                    elif name == "improve_task_clarity":
+                        from .tools.task_clarity_improver import (
+                            analyze_task_clarity as _analyze_task_clarity,
+                            improve_task_clarity as _improve_task_clarity,
+                        )
+                        auto_apply = arguments.get("auto_apply", False)
+                        output_format = arguments.get("output_format", "text")
+                        output_path = arguments.get("output_path")
+                        if auto_apply:
+                            result = _improve_task_clarity(auto_apply=True, output_path=output_path)
+                        else:
+                            result = _analyze_task_clarity(output_format=output_format, output_path=output_path, dry_run=True)
+                        if output_format == "text" and isinstance(result, dict) and "formatted_output" in result:
+                            result = result["formatted_output"]
+                        elif not isinstance(result, str):
+                            result = json.dumps(result, indent=2)
                     elif name == "memory_maint":
                         result = _memory_maint(
                             arguments.get("action", "health"),
@@ -2625,6 +2581,106 @@ if mcp:
 
         @ensure_json_string
         @mcp.tool()
+        def improve_task_clarity(
+            auto_apply: bool = False,
+            output_format: str = "text",
+            output_path: Optional[str] = None,
+        ) -> str:
+            """
+            [HINT: Task clarity improvement. Analyzes and improves task clarity metrics.]
+
+            Improves task clarity by:
+            - Adding time estimates (1-4 hours for parallelization)
+            - Renaming tasks to start with action verbs
+            - Removing unnecessary dependencies
+            - Breaking down large tasks
+
+            📊 Output: Analysis with current/potential clarity scores and improvement suggestions
+            🔧 Side Effects: Modifies tasks if auto_apply=True
+            """
+            if auto_apply:
+                result = _improve_task_clarity(auto_apply=True, output_path=output_path)
+            else:
+                result = _analyze_task_clarity(output_format=output_format, output_path=output_path, dry_run=True)
+            
+            if output_format == "text" and "formatted_output" in result:
+                return result["formatted_output"]
+            return json.dumps(result, indent=2)
+
+        @ensure_json_string
+        @mcp.tool()
+        def estimate_task_duration(
+            name: str,
+            details: str = "",
+            tags: Optional[str] = None,
+            priority: str = "medium",
+            use_historical: bool = True,
+            detailed: bool = False,
+        ) -> str:
+            """
+            [HINT: Task duration estimation. Uses statistical methods to estimate task duration.]
+
+            Estimates task duration using:
+            - Historical task completion data (when available)
+            - Statistical methods (mean, median, percentiles)
+            - Multi-factor matching (tags, keywords, priority)
+            - Confidence intervals and uncertainty ranges
+
+            📊 Output: Duration estimate with confidence and metadata
+            """
+            from .tools.task_duration_estimator import (
+                estimate_task_duration as _estimate_simple,
+                estimate_task_duration_detailed,
+                TaskDurationEstimator,
+            )
+            
+            tag_list = [t.strip() for t in tags.split(",")] if tags else []
+            
+            if detailed:
+                result = estimate_task_duration_detailed(
+                    name=name,
+                    details=details,
+                    tags=tag_list,
+                    priority=priority,
+                    use_historical=use_historical,
+                )
+                return json.dumps(result, indent=2)
+            else:
+                hours = _estimate_simple(
+                    name=name,
+                    details=details,
+                    tags=tag_list,
+                    priority=priority,
+                    use_historical=use_historical,
+                )
+                return json.dumps({
+                    "estimate_hours": hours,
+                    "name": name,
+                    "priority": priority,
+                }, indent=2)
+
+        @ensure_json_string
+        @mcp.tool()
+        def get_estimation_statistics() -> str:
+            """
+            [HINT: Estimation statistics. Get statistics about historical task durations.]
+
+            Returns statistical analysis of historical task completion data:
+            - Mean, median, standard deviation
+            - Percentiles (25th, 75th, 90th)
+            - Min/max values
+            - Estimation accuracy metrics
+
+            📊 Output: Statistical summary of historical task durations
+            """
+            from .tools.task_duration_estimator import TaskDurationEstimator
+            
+            estimator = TaskDurationEstimator()
+            stats = estimator.get_statistics()
+            return json.dumps(stats, indent=2)
+
+        @ensure_json_string
+        @mcp.tool()
         def memory_maint(
             action: str = "health",
             max_age_days: int = 90,
@@ -2661,6 +2717,152 @@ if mcp:
                 similarity_threshold, merge_strategy, scope, advisors,
                 generate_insights, save_dream, dry_run, interactive
             )
+
+        # ═══════════════════════════════════════════════════════════════════════════════
+        # GIT-INSPIRED TASK MANAGEMENT TOOLS
+        # ═══════════════════════════════════════════════════════════════════════════════
+        try:
+            from .tools.git_inspired_tools import (
+                compare_task_diff,
+                generate_graph,
+                get_branch_commits,
+                get_branch_tasks,
+                get_task_commits,
+                list_branches,
+                merge_branch_tools,
+                set_task_branch_tool,
+            )
+
+            GIT_INSPIRED_TOOLS_AVAILABLE = True
+        except ImportError:
+            GIT_INSPIRED_TOOLS_AVAILABLE = False
+            logger.warning("Git-inspired tools not available")
+
+        if GIT_INSPIRED_TOOLS_AVAILABLE:
+            @ensure_json_string
+            @mcp.tool()
+            def get_task_commits_tool(
+                task_id: str,
+                branch: Optional[str] = None,
+                limit: int = 50,
+            ) -> str:
+                """
+                [HINT: Git-inspired tools. Get commit history for a task.]
+
+                Get commit history for a task showing all changes over time.
+
+                📊 Output: JSON with commit list, timestamps, authors, and messages
+                """
+                return get_task_commits(task_id, branch, limit)
+
+            @ensure_json_string
+            @mcp.tool()
+            def get_branch_commits_tool(
+                branch: str,
+                limit: int = 100,
+            ) -> str:
+                """
+                [HINT: Git-inspired tools. Get all commits for a branch.]
+
+                Get all commits across all tasks in a branch.
+
+                📊 Output: JSON with commit list for the branch
+                """
+                return get_branch_commits(branch, limit)
+
+            @ensure_json_string
+            @mcp.tool()
+            def list_branches_tool() -> str:
+                """
+                [HINT: Git-inspired tools. List all branches with statistics.]
+
+                List all branches (work streams) from tasks and their statistics.
+
+                📊 Output: JSON with branch list and task counts per branch
+                """
+                return list_branches()
+
+            @ensure_json_string
+            @mcp.tool()
+            def get_branch_tasks_tool(branch: str) -> str:
+                """
+                [HINT: Git-inspired tools. Get all tasks in a branch.]
+
+                Get all tasks belonging to a specific branch.
+
+                📊 Output: JSON with task list for the branch
+                """
+                return get_branch_tasks(branch)
+
+            @ensure_json_string
+            @mcp.tool()
+            def compare_task_diff_tool(
+                task_id: str,
+                commit1: Optional[str] = None,
+                commit2: Optional[str] = None,
+                time1: Optional[str] = None,
+                time2: Optional[str] = None,
+            ) -> str:
+                """
+                [HINT: Git-inspired tools. Compare two versions of a task.]
+
+                Compare task versions across commits or timestamps to see what changed.
+
+                📊 Output: JSON with field-by-field differences
+                """
+                return compare_task_diff(task_id, commit1, commit2, time1, time2)
+
+            @ensure_json_string
+            @mcp.tool()
+            def generate_graph_tool(
+                branch: Optional[str] = None,
+                task_id: Optional[str] = None,
+                format: str = "text",
+                output_path: Optional[str] = None,
+                max_commits: int = 50,
+            ) -> str:
+                """
+                [HINT: Git-inspired tools. Generate commit graph visualization.]
+
+                Generate visual timeline of commits (text ASCII or Graphviz DOT format).
+
+                📊 Output: Graph visualization in text or DOT format
+                """
+                return generate_graph(branch, task_id, format, output_path, max_commits)
+
+            @ensure_json_string
+            @mcp.tool()
+            def merge_branch_tools_tool(
+                source_branch: str,
+                target_branch: str,
+                conflict_strategy: str = "newer",
+                author: str = "system",
+                dry_run: bool = False,
+            ) -> str:
+                """
+                [HINT: Git-inspired tools. Merge tasks from one branch to another.]
+
+                Merge tasks from source branch to target branch with conflict detection.
+
+                📊 Output: JSON with merge results, conflicts, and resolution
+                🔧 Side Effects: Modifies tasks if dry_run=False
+                """
+                return merge_branch_tools(source_branch, target_branch, conflict_strategy, author, dry_run)
+
+            @ensure_json_string
+            @mcp.tool()
+            def set_task_branch(task_id: str, branch: str) -> str:
+                """
+                [HINT: Git-inspired tools. Set branch for a task.]
+
+                Assign a task to a branch (work stream) by adding branch: tag.
+
+                📊 Output: JSON with result (old_branch, new_branch, success)
+                🔧 Side Effects: Modifies task tags
+                """
+                return set_task_branch_tool(task_id, branch)
+
+            logger.info("Git-inspired tools registered successfully")
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS

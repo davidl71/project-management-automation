@@ -4,6 +4,7 @@ Unit tests for Git-inspired tools (diff, graph, merge).
 Tests task diff, git graph visualization, and branch merging.
 """
 
+import json
 import tempfile
 from datetime import datetime
 from pathlib import Path

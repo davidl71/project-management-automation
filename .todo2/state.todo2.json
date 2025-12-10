@@ -341,9 +341,7 @@
         "update",
         "docs"
       ],
-      "dependencies": [
-        "AUTO-20251126032538"
-      ],
+      "dependencies": [],
       "created": "2025-11-26T03:41:08.033223",
       "lastModified": "2025-11-30T22:43:04.717728+00:00",
       "comments": [
@@ -472,7 +470,9 @@
           "created": "2025-11-26T03:49:23.485344"
         }
       ],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 3.0,
+      "dependsOn": []
     },
     {
       "id": "AUTO-20251126143529",
@@ -526,37 +526,37 @@
     },
     {
       "id": "T-20251126035735-50",
-      "name": "Review skipped files for manual hint addition",
-      "content": "17 files were skipped - review for manual hint addition if needed",
+      "name": "Update 17 files were skipped - review for manual hint addition if needed",
+      "content": "Update 17 files were skipped - review for manual hint addition if needed",
       "status": "Todo",
       "priority": "low",
       "tags": [
         "docs",
         "manual-review"
       ],
-      "dependencies": [
-        "AUTO-20251126035735"
-      ],
+      "dependencies": [],
       "created": "2025-11-26T03:57:35.910168",
       "lastModified": "2025-11-30T22:43:04.717739+00:00",
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0,
+      "dependsOn": []
     },
     {
       "id": "T-20251126040001-58",
-      "name": "Review Todo2 tasks not in shared TODO",
-      "content": "Review 58 Todo2 tasks that are not in shared TODO table",
+      "name": "Update 58 Todo2 tasks that are not in shared TODO table",
+      "content": "Update 58 Todo2 tasks that are not in shared TODO table",
       "status": "Todo",
       "priority": "low",
       "tags": [
         "todo-sync",
         "review"
       ],
-      "dependencies": [
-        "AUTO-20251126040001"
-      ],
+      "dependencies": [],
       "created": "2025-11-26T04:00:01.413812",
       "lastModified": "2025-11-30T22:43:04.717742+00:00",
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0,
+      "dependsOn": []
     },
     {
       "id": "AUTO-20251126230004",
@@ -584,7 +584,7 @@
     },
     {
       "id": "RESEARCH-0fb905eb",
-      "name": "Research RHDA implementation patterns for Exarp enhancement",
+      "name": "Implement Research RHDA implementation patterns for Exarp enhancement",
       "status": "Todo",
       "priority": "low",
       "long_description": "Research Red Hat Dependency Analytics (RHDA) extension implementation to identify patterns that could enhance Exarp's security scanning capabilities.\n\n## Research Goals\n\n1. **Inline Feedback Mechanism**\n   - How does RHDA provide real-time feedback in the editor?\n   - Can we expose Exarp scan results to LSP or similar protocols?\n\n2. **Snyk Integration**\n   - RHDA uses Snyk for vulnerability data\n   - Compare Snyk vs pip-audit/cargo-audit data sources\n   - Evaluate if Snyk integration would add value\n\n3. **Quick-Fix Actions**\n   - How does RHDA implement \"upgrade to safe version\" quick-fixes?\n   - Can Exarp generate similar actionable suggestions?\n\n4. **Hover Tooltips**\n   - CVE detail presentation in RHDA\n   - Could Exarp generate markdown for MCP prompts?\n\n## Why We Chose Exarp Over RHDA\n\nSee: ib_box_spread_full_universal/docs/EXARP_VS_RHDA.md\n\nKey factors:\n- Rust support (RHDA lacks this)\n- Todo2 task auto-creation\n- MCP integration\n- Multi-language single scan\n\n## Potential Enhancements\n\nAfter research, consider:\n- [ ] VS Code extension that consumes Exarp scan results\n- [ ] LSP integration for inline warnings\n- [ ] Snyk data source as alternative/supplement\n- [ ] Rich hover content generation\n\n## References\n\n- RHDA source: https://github.com/fabric8-analytics/fabric8-analytics-vscode-extension\n- Snyk API: https://docs.snyk.io/snyk-api\n- VS Code LSP: https://code.visualstudio.com/api/language-extensions/language-server-extension-guide\n",
@@ -605,7 +605,8 @@
           "created_at": "2025-11-26T11:12:03.200745+00:00"
         }
       ],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0
     },
     {
       "id": "RESEARCH-c162d40f",
@@ -630,11 +631,12 @@
           "created_at": "2025-11-26T11:28:29.945671+00:00"
         }
       ],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 3.0
     },
     {
       "id": "RESEARCH-ca28a3e8",
-      "name": "Research: Exarp Cursor Extension Architecture",
+      "name": "Implement Research: Exarp Cursor Extension Architecture",
       "status": "In Progress",
       "priority": "high",
       "tags": [
@@ -691,13 +693,14 @@
         }
       ],
       "project_id": "davidl71/project-management-automation",
-      "lastModified": "2025-11-30T19:42:33.158712Z"
+      "lastModified": "2025-11-30T19:42:33.158712Z",
+      "estimatedHours": 2.0
     },
     {
       "id": "ENHANCE-001",
-      "name": "Enhance Exarp to validate and use Todo2 project ownership",
+      "name": "Update Exarp to validate and use Todo2 project ownership",
       "long_description": "Implement project ownership validation in Exarp to ensure it operates on the correct project and enable future \"one system to track them all\" capability.\n\n## Changes Made\n- Added `project` object to state.todo2.json root with: id, name, path, repository\n- Added `project_id` field to every task (538 tasks across 2 projects)\n\n## Required Exarp Enhancements\n\n### 1. Project Validation (High Priority)\n- On startup, compare PROJECT_ROOT env var with Todo2's project.path\n- Warn or fail if mismatch detected\n- Log project context for debugging\n\n### 2. Task Project Validation\n- When creating tasks, auto-populate project_id\n- When loading tasks, verify project_id matches current project\n- Flag cross-project tasks for attention\n\n### 3. Cross-Project Visibility (Future)\n- Resource to list tasks across all known projects\n- Filter by project_id in task queries\n- Dashboard showing all project task counts\n\n### 4. \"One System\" Foundation\n- Central registry of known projects\n- Cross-project task dependencies\n- Unified task search across projects\n\n## Files to Update\n- project_management_automation/server.py - Add validation on init\n- project_management_automation/utils/__init__.py - Add project info helpers\n- project_management_automation/tools/*.py - Use project_id in task operations\n- project_management_automation/resources/tasks.py - Add project filtering",
-      "status": "Todo",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "enhancement",
@@ -714,7 +717,9 @@
           "content": "Created after implementing task-level project_id in both ib_box_spread and exarp projects.",
           "created_at": "2025-11-26T14:50:15.578569"
         }
-      ]
+      ],
+      "estimatedHours": 2.0,
+      "lastModified": "2025-01-30T00:00:00.000000+00:00"
     },
     {
       "id": "TOOL-001",
@@ -861,7 +866,8 @@
         "models"
       ],
       "created_at": "2025-11-26T18:00:06.524795Z",
-      "updated_at": "2025-11-26T18:00:06.524797Z"
+      "updated_at": "2025-11-26T18:00:06.524797Z",
+      "estimatedHours": 2.0
     },
     {
       "id": "AUTO-20251126231235-891865",
@@ -1153,9 +1159,9 @@
     },
     {
       "id": "MODE-001",
-      "name": "Research: Cursor mode detection signals",
+      "name": "Implement Research: Cursor mode detection signals",
       "long_description": "Research how to detect/infer Cursor's current mode (Agent/Ask/Manual).\n\nPotential signals to investigate:\n1. Tool call frequency and patterns\n2. File edit patterns (multi-file vs single-file)\n3. Session duration and complexity\n4. MCP context or headers (if any)\n5. Environment variables (CURSOR_* vars)\n\nGoal: Document reliable signals for mode inference.",
-      "status": "Todo",
+      "status": "Done",
       "priority": "low",
       "tags": [
         "research",
@@ -1164,8 +1170,9 @@
         "cursor-integration"
       ],
       "created": "2025-11-26T23:33:04.132641+00:00",
-      "lastModified": "2025-11-26T23:33:04.132874+00:00",
-      "dependencies": []
+      "lastModified": "2025-01-30T00:00:00.000000+00:00",
+      "dependencies": [],
+      "estimatedHours": 2.0
     },
     {
       "id": "MODE-002",
@@ -1182,7 +1189,8 @@
       "lastModified": "2025-11-26T23:33:04.132882+00:00",
       "dependencies": [
         "MODE-001"
-      ]
+      ],
+      "estimatedHours": 2.0
     },
     {
       "id": "MODE-003",
@@ -1200,7 +1208,8 @@
       "lastModified": "2025-11-26T23:33:04.132888+00:00",
       "dependencies": [
         "MODE-002"
-      ]
+      ],
+      "estimatedHours": 2.0
     },
     {
       "id": "MODE-004",
@@ -1218,7 +1227,8 @@
       "lastModified": "2025-11-26T23:33:04.132893+00:00",
       "dependencies": [
         "MODE-002"
-      ]
+      ],
+      "estimatedHours": 2.0
     },
     {
       "id": "MODE-005",
@@ -1237,7 +1247,8 @@
       "dependencies": [
         "MODE-002",
         "MODE-004"
-      ]
+      ],
+      "estimatedHours": 2.0
     },
     {
       "id": "MODE-006",
@@ -1253,7 +1264,8 @@
       ],
       "created": "2025-11-26T23:33:04.132901+00:00",
       "lastModified": "2025-11-26T23:33:04.132903+00:00",
-      "dependencies": []
+      "dependencies": [],
+      "estimatedHours": 2.0
     },
     {
       "id": "AUTO-20251127013512-665919",
@@ -1425,7 +1437,7 @@
     },
     {
       "id": "API-001",
-      "name": "Research: Cursor Cloud Agents API integration",
+      "name": "Implement Research: Cursor Cloud Agents API integration",
       "long_description": "Research Cursor's Cloud Agents API for potential EXARP integration.\n\nAPI Details (from https://cursor.com/docs/api):\n- Availability: Beta (All Plans) - accessible to non-Enterprise users\n- Purpose: Programmatically create and manage AI-powered coding agents\n- Endpoint: https://cursor.com/dashboard?tab=integrations (for API keys)\n\nResearch Areas:\n1. API capabilities and limitations\n2. Authentication requirements (Basic Auth with API key)\n3. Rate limiting (standard rate limiting applies)\n4. Use cases for EXARP:\n   - Automated agent spawning for background tasks\n   - Multi-agent coordination\n   - Workflow automation triggers\n5. Integration patterns with existing EXARP tools\n\nDependencies: None\nOutput: Integration feasibility report with recommendations",
       "status": "Todo",
       "priority": "low",
@@ -1437,11 +1449,12 @@
       ],
       "created": "2025-11-26T23:47:35.861820+00:00",
       "lastModified": "2025-11-26T23:47:35.862068+00:00",
-      "dependencies": []
+      "dependencies": [],
+      "estimatedHours": 2.0
     },
     {
       "id": "MODE-001-UPDATE",
-      "name": "Research: Update mode detection with Cursor API findings",
+      "name": "Update Research: Update mode detection with Cursor API findings",
       "long_description": "Update MODE-001 research with Cursor API insights.\n\nCursor API Findings (from https://cursor.com/docs/api):\n\nEnterprise-Only APIs (not accessible to most users):\n- Analytics API: Team usage patterns, AI metrics, model usage\n- AI Code Tracking API: Track AI contributions at commit level\n- Admin API: Usage data and spending\n\nAvailable to All Plans:\n- Cloud Agents API (Beta): Agent management\n\nImplications for Mode Detection:\n1. Enterprise users COULD use Analytics API for precise mode tracking\n2. Non-Enterprise users must rely on local inference:\n   - Tool call frequency patterns\n   - File edit patterns (multi-file vs single-file)\n   - Session duration analysis\n   - Request complexity heuristics\n\nRecommendations:\n1. Primary approach: Local pattern inference (works for all users)\n2. Optional enhancement: Cursor API integration for Enterprise users\n3. Consider Cloud Agents API for workflow triggers\n\nUpdate MODE-001 with these findings and adjust implementation plan.",
       "status": "Todo",
       "priority": "low",
@@ -1455,7 +1468,8 @@
       "lastModified": "2025-11-26T23:47:35.862077+00:00",
       "dependencies": [
         "MODE-001"
-      ]
+      ],
+      "estimatedHours": 3.0
     },
     {
       "id": "AUTO-20251127015017-769047",
@@ -2620,7 +2634,7 @@
       "id": "GIT-20251130235805-001",
       "name": "Create unit tests for Git-inspired features",
       "content": "Create comprehensive unit tests for all Git-inspired task management features including commit tracking, branch utilities, task diff, git graph visualization, and branch merging.",
-      "status": "Todo",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "testing",
@@ -2629,15 +2643,16 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T23:58:05.086304",
-      "lastModified": "2025-11-30T22:43:04.718006+00:00",
+      "lastModified": "2025-01-30T00:00:00.000000+00:00",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0
     },
     {
       "id": "GIT-20251130235805-002",
       "name": "Integrate Git-inspired tools into MCP server",
       "content": "Add Git-inspired task management tools to the MCP server (server.py) so they can be used by AI assistants. Register tools for commit tracking, branch management, task diff, visualization, and merging.",
-      "status": "Todo",
+      "status": "Done",
       "priority": "high",
       "tags": [
         "integration",
@@ -2646,9 +2661,10 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T23:58:05.086320",
-      "lastModified": "2025-11-30T22:43:04.718009+00:00",
+      "lastModified": "2025-01-30T00:00:00.000000+00:00",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 3.0
     },
     {
       "id": "GIT-20251130235805-003",
@@ -2665,7 +2681,8 @@
       "created": "2025-11-30T23:58:05.086330",
       "lastModified": "2025-11-30T22:43:04.718013+00:00",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0
     },
     {
       "id": "AUTO-20251201001427-132964",
@@ -2798,12 +2815,13 @@
       "created": "2025-12-01T00:16:56.001429",
       "lastModified": "2025-11-30T22:43:04.718035+00:00",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0
     },
     {
       "id": "DOC-20251201001656-003",
-      "name": "Update stale documentation files",
-      "content": "Review and update stale documentation files (>90 days old) identified in documentation health report. Update dates and content as needed.",
+      "name": "Update stale documentation files (>90 days old) identified in documentation health report. Update dates and content as needed.",
+      "content": "Update stale documentation files (>90 days old) identified in documentation health report. Update dates and content as needed.",
       "status": "Todo",
       "priority": "medium",
       "tags": [
@@ -2814,7 +2832,8 @@
       "created": "2025-12-01T00:16:56.001439",
       "lastModified": "2025-11-30T22:43:04.718038+00:00",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 3.0
     },
     {
       "id": "AUTO-20251201004020-351533",
@@ -3053,8 +3072,8 @@
     },
     {
       "id": "AUTO-20251207212140-470354",
-      "name": "Automation: Test Coverage Analyzer",
-      "content": "Automated Test Coverage Analyzer execution",
+      "name": "Create Automated Test Coverage Analyzer execution",
+      "content": "Create Automated Test Coverage Analyzer execution",
       "status": "in_progress",
       "priority": "medium",
       "tags": [
@@ -3064,7 +3083,8 @@
       "created": "2025-12-07T21:21:40.470421",
       "lastModified": "2025-12-07T21:21:40.470422",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0
     },
     {
       "id": "AUTO-20251207222515-707539",
@@ -3218,8 +3238,8 @@
     },
     {
       "id": "T-20251207235843-304661",
-      "name": "Review misaligned high-priority tasks",
-      "content": "Review 3 high-priority tasks that are not strategy-aligned",
+      "name": "Update 3 high-priority tasks that are not strategy-aligned",
+      "content": "Update 3 high-priority tasks that are not strategy-aligned",
       "status": "todo",
       "priority": "high",
       "tags": [
@@ -3227,12 +3247,12 @@
         "alignment",
         "review"
       ],
-      "dependencies": [
-        "AUTO-20251207235842-969990"
-      ],
+      "dependencies": [],
       "created": "2025-12-07T23:58:43.304698",
       "lastModified": "2025-12-07T23:58:43.304699",
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0,
+      "dependsOn": []
     },
     {
       "id": "AUTO-20251207235912-044959",
@@ -10179,8 +10199,8 @@
     },
     {
       "id": "AUTO-20251210230639-396630",
-      "name": "Automation: Test Runner",
-      "content": "Automated Test Runner execution",
+      "name": "Create Automated Test Runner execution",
+      "content": "Create Automated Test Runner execution",
       "status": "in_progress",
       "priority": "medium",
       "tags": [
@@ -10190,7 +10210,8 @@
       "created": "2025-12-10T23:06:39.396656",
       "lastModified": "2025-12-10T23:08:12.616697",
       "dependencies": [],
-      "project_id": "davidl71/project-management-automation"
+      "project_id": "davidl71/project-management-automation",
+      "estimatedHours": 2.0
     },
     {
       "id": "AUTO-20251210230640-602747",
@@ -11739,6 +11760,31 @@
           "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
           "created": "2025-12-10T23:08:12.479230",
           "lastModified": "2025-12-10T23:08:12.479238"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251211002712-039279",
+      "name": "Automation: Dependency Security Scan",
+      "content": "Automated Dependency Security Scan execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "dependency-security-scan"
+      ],
+      "created": "2025-12-11T00:27:12.039328",
+      "lastModified": "2025-12-11T00:27:12.062608",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251211002712-039279-C-1",
+          "todoId": "AUTO-20251211002712-039279",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 No vulnerabilities found in dependencies!\n\n**Key Findings:**\n{\"python\":[],\"rust\":[],\"npm\":[],\"summary\":{\"total_vulnerabilities\":0,\"by_severity\":{},\"by_language\":{\"python\":0,\"rust\":0,\"npm\":0},\"critical_vulnerabilities\":[]}}",
+          "created": "2025-12-11T00:27:12.053357",
+          "lastModified": "2025-12-11T00:27:12.053362"
         }
       ]
     }
