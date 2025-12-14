@@ -53,7 +53,7 @@ class RateLimitMiddleware(Middleware):
         self.rate = calls_per_minute / 60.0  # Calls per second
         self.burst_size = burst_size
         self.per_client = per_client
-        self.excluded_tools = excluded_tools or {"server_status", "dev_reload"}
+        self.excluded_tools = excluded_tools or {"server_status"}
         self._buckets: dict[str, dict[str, float]] = defaultdict(
             lambda: {"tokens": burst_size, "last_update": time.time()}
         )

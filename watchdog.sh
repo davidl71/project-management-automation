@@ -8,15 +8,17 @@
 # triggers reloads or restarts as needed.
 #
 # Usage:
-#   ./watchdog.sh [--watch-files] [--restart-on-change] [--log-file PATH]
+#   ./watchdog.sh [--no-watch-files] [--log-file PATH]
 #
 # Options:
-#   --watch-files          Watch for file changes and reload/restart
-#   --restart-on-change    Restart server on file changes (default: reload)
+#   --no-watch-files       Disable file watching (default: enabled)
 #   --log-file PATH        Log to file instead of stdout
 #   --pid-file PATH        Custom PID file location (default: .exarp.pid)
 #   --max-restarts N       Maximum restarts before giving up (default: 10)
 #   --restart-delay SEC    Delay between restarts (default: 2)
+#
+# Note: File watching is enabled by default and will restart the server
+#       on any changes to Python files or configuration files.
 ###############################################################################
 
 set -euo pipefail
@@ -27,8 +29,8 @@ PROJECT_ROOT="$SCRIPT_DIR"
 SERVER_SCRIPT="$PROJECT_ROOT/project_management_automation/server.py"
 PID_FILE="$PROJECT_ROOT/.exarp.pid"
 LOG_FILE=""
-WATCH_FILES=false
-RESTART_ON_CHANGE=false
+WATCH_FILES=true
+RESTART_ON_CHANGE=true
 MAX_RESTARTS=10
 RESTART_DELAY=2
 RESTART_COUNT=0
@@ -77,12 +79,8 @@ log() {
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            --watch-files)
-                WATCH_FILES=true
-                shift
-                ;;
-            --restart-on-change)
-                RESTART_ON_CHANGE=true
+            --no-watch-files)
+                WATCH_FILES=false
                 shift
                 ;;
             --log-file)
@@ -106,8 +104,7 @@ parse_args() {
 Usage: $0 [OPTIONS]
 
 Options:
-  --watch-files          Watch for file changes and reload/restart
-  --restart-on-change    Restart server on file changes (default: reload)
+  --no-watch-files       Disable file watching (default: enabled)
   --log-file PATH        Log to file instead of stdout
   --pid-file PATH        Custom PID file location (default: .exarp.pid)
   --max-restarts N       Maximum restarts before giving up (default: 10)
@@ -115,9 +112,8 @@ Options:
   --help, -h             Show this help message
 
 Examples:
-  $0                                    # Basic crash monitoring
-  $0 --watch-files                     # Watch files and reload on change
-  $0 --watch-files --restart-on-change # Restart on file changes
+  $0                                    # Crash monitoring + file watching (default)
+  $0 --no-watch-files                  # Crash monitoring only
   $0 --log-file watchdog.log           # Log to file
 EOF
                 exit 0
@@ -244,22 +240,16 @@ restart_server() {
     start_server
 }
 
-# Reload sources (if server supports it via signal)
+# Reload sources - always restart (dev_reload removed, watchdog handles reloads)
 reload_sources() {
     if ! is_running; then
         log WARN "Server is not running, cannot reload"
         return 1
     fi
 
-    local pid=$(get_pid)
-    # Send USR1 signal for reload (if server supports it)
-    # Otherwise, restart
-    if kill -USR1 "$pid" 2>/dev/null; then
-        log INFO "Reload signal sent to server (PID: $pid)"
-    else
-        log WARN "Reload signal not supported, restarting instead"
-        restart_server
-    fi
+    # Always restart on file changes (dev_reload functionality removed)
+    log INFO "File change detected, restarting server..."
+    restart_server
 }
 
 # Monitor server process
@@ -316,13 +306,10 @@ watch_files() {
         "$PROJECT_ROOT/pyproject.toml" \
         "$PROJECT_ROOT/requirements.txt" \
         2>/dev/null | while read -r; do
-        log INFO "File change detected, triggering reload..."
+        log INFO "File change detected, restarting server..."
         
-        if [[ "$RESTART_ON_CHANGE" == true ]]; then
-            restart_server
-        else
-            reload_sources
-        fi
+        # Always restart on file changes (dev_reload functionality removed)
+        restart_server
     done
 }
 
@@ -355,13 +342,10 @@ watch_files_polling() {
         done
         
         if [[ $current_modified -gt $last_modified ]] && [[ $last_modified -gt 0 ]]; then
-            log INFO "File change detected, triggering reload..."
+            log INFO "File change detected, restarting server..."
             
-            if [[ "$RESTART_ON_CHANGE" == true ]]; then
-                restart_server
-            else
-                reload_sources
-            fi
+            # Always restart on file changes (dev_reload functionality removed)
+            restart_server
         fi
         
         last_modified=$current_modified
@@ -389,8 +373,7 @@ main() {
     log INFO "Project root: $PROJECT_ROOT"
     log INFO "Server script: $SERVER_SCRIPT"
     log INFO "PID file: $PID_FILE"
-    log INFO "Watch files: $WATCH_FILES"
-    log INFO "Restart on change: $RESTART_ON_CHANGE"
+    log INFO "Watch files: $WATCH_FILES (restart on change)"
     log INFO "Max restarts: $MAX_RESTARTS"
     log INFO "=========================================="
     

@@ -349,7 +349,6 @@ def health(
         import time
 
         from ..utils import find_project_root
-        from ..utils.dev_reload import is_dev_mode
 
         project_root = find_project_root()
         version = "unknown"
@@ -364,7 +363,6 @@ def health(
         result = {
             "status": "operational",
             "version": version,
-            "dev_mode": is_dev_mode(),
             "project_root": str(project_root),
             "timestamp": time.time(),
         }

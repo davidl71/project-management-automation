@@ -422,16 +422,16 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
             try:
                 with open(self.todo2_path, 'w') as f:
                     json.dump(state, f, indent=2)
-            logger.info(f"Todo2 state updated: {tasks_removed} tasks removed")
-            return {
-                'applied': True,
-                'tasks_removed': tasks_removed,
-                'tasks_merged': tasks_merged,
-                'dependencies_updated': dependencies_updated
-            }
-        except Exception as e:
-            logger.error(f"Failed to save Todo2 state: {e}")
-            return {'applied': False, 'tasks_removed': 0, 'tasks_merged': 0, 'dependencies_updated': 0}
+                logger.info(f"Todo2 state updated: {tasks_removed} tasks removed")
+                return {
+                    'applied': True,
+                    'tasks_removed': tasks_removed,
+                    'tasks_merged': tasks_merged,
+                    'dependencies_updated': dependencies_updated
+                }
+            except Exception as e:
+                logger.error(f"Failed to save Todo2 state: {e}")
+                return {'applied': False, 'tasks_removed': 0, 'tasks_merged': 0, 'dependencies_updated': 0}
 
     def _select_best_task(self, tasks: list[dict], all_tasks: list[dict]) -> dict:
         """Select the best task to keep from a list of duplicates."""

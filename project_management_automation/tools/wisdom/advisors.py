@@ -149,7 +149,6 @@ TOOL_ADVISORS = {
     "scan_dependency_security": {"advisor": "bofh", "rationale": "Security paranoia is a feature"},
     "run_tests": {"advisor": "stoic", "rationale": "Tests teach through failure"},
     "validate_ci_cd_workflow": {"advisor": "kybalion", "rationale": "CI/CD is cause and effect"},
-    "dev_reload": {"advisor": "murphy", "rationale": "Hot reload because Murphy says restarts will fail at the worst time"},
     # Hebrew advisor tools - for ethical and wisdom-focused operations
     "ethics_check": {"advisor": "rebbe", "rationale": "Rebbe guides ethical code review and conduct"},
     "wisdom_reflection": {"advisor": "chacham", "rationale": "Chacham provides deep wisdom for retrospectives"},

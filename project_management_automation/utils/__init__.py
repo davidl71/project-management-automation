@@ -12,13 +12,6 @@ Exports:
     - is_mcp_mode: Check if running as MCP server
 """
 
-from .dev_reload import (
-    get_module_info,
-    is_dev_mode,
-    reload_all_modules,
-    reload_module,
-    reload_specific_modules,
-)
 from .logging_config import configure_logging, get_logger, is_mcp_mode, suppress_noisy_loggers
 from .output import compact_json, output_to_human_and_ai, progress_wrapper, split_output
 from .project_root import find_project_root
@@ -111,12 +104,6 @@ __all__ = [
     'get_logger',
     'is_mcp_mode',
     'suppress_noisy_loggers',
-    # Dev reload
-    'is_dev_mode',
-    'reload_all_modules',
-    'reload_specific_modules',
-    'reload_module',
-    'get_module_info',
     # Security - Path validation
     'PathBoundaryError',
     'PathValidator',

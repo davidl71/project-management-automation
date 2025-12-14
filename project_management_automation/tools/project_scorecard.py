@@ -468,7 +468,6 @@ def generate_project_scorecard(
         # ═══════════════════════════════════════════════════════════
         try:
             from project_management_automation.tools.auto_update_task_status import auto_update_task_status
-            import json
             
             # Call with dry_run=True to get metrics without updating
             inference_json = auto_update_task_status(

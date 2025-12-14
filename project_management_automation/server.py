@@ -739,50 +739,8 @@ def register_tools():
     if mcp:
         # FastMCP registration (decorator-based)
         # NOTE: server_status removed - use health(type="server")
-
-        @mcp.tool()
-        @ensure_json_string
-        def dev_reload(modules: Optional[list[str]] = None) -> str:
-            """
-            [HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.]
-
-            Reload Python modules without restarting Cursor.
-            Only available when EXARP_DEV_MODE=1 is set in environment.
-
-            Args:
-                modules: Optional list of specific modules to reload (e.g., ["tools.project_scorecard"]).
-                        If not provided, reloads all package modules.
-
-            To enable dev mode, add to your MCP config:
-                "env": {"EXARP_DEV_MODE": "1"}
-            """
-            from .utils.dev_reload import is_dev_mode, reload_all_modules, reload_specific_modules
-
-            if not is_dev_mode():
-                return json.dumps(
-                    {
-                        "success": False,
-                        "error": "Dev mode not enabled",
-                        "hint": 'Add to MCP config: "env": {"EXARP_DEV_MODE": "1"}',
-                        "config_example": {"mcpServers": {"exarp": {"command": "...", "env": {"EXARP_DEV_MODE": "1"}}}},
-                    },
-                    separators=(",", ":"),
-                )
-
-            if modules:
-                result = reload_specific_modules(modules)
-            else:
-                result = reload_all_modules()
-
-            # Ensure we always return a JSON string
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, separators=(",", ":"))
-            else:
-                return json.dumps({"result": str(result)}, separators=(",", ":"))
-
-        # Continue with more tool registrations below...
+        # NOTE: dev_reload removed - use watchdog script for automatic reloads on file changes
+        pass  # Tool registrations continue below with @mcp.tool() decorators
 
     elif stdio_server_instance:
         # Stdio Server registration (handler-based)
@@ -804,23 +762,7 @@ def register_tools():
                 ),
             )
             
-            # Add dev_reload tool (FastMCP has it)
-            tools.append(
-                Tool(
-                    name="dev_reload",
-                    description="[HINT: Dev reload. Hot-reload modules without restart. Requires EXARP_DEV_MODE=1.] Reload Python modules without restarting Cursor.",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "modules": {
-                                "type": "array",
-                                "items": {"type": "string"},
-                                "description": "Optional list of specific modules to reload",
-                            },
-                        },
-                    },
-                ),
-            )
+            # NOTE: dev_reload removed - use watchdog script for automatic reloads on file changes
             
             # Note: FastMCP and stdio server are mutually exclusive (mcp is None when stdio is used)
             # So we maintain a manual list here that should match FastMCP's @mcp.tool() registrations

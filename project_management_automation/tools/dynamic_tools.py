@@ -111,7 +111,7 @@ class ToolGroup(str, Enum):
     """Tool groups for lazy loading."""
 
     # Always visible
-    CORE = "core"           # server_status, dev_reload
+    CORE = "core"           # server_status
     DISCOVERY = "discovery" # list_tools, get_tool_help, focus_mode
 
     # Contextually loaded
@@ -149,8 +149,6 @@ class WorkflowMode(str, Enum):
 TOOL_GROUP_MAPPING: dict[str, ToolGroup] = {
     # Core (always)
     "server_status": ToolGroup.CORE,
-    "dev_reload": ToolGroup.CORE,
-
     # Discovery (always)
     "list_tools": ToolGroup.DISCOVERY,
     "get_tool_help": ToolGroup.DISCOVERY,

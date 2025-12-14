@@ -62,7 +62,6 @@ DEFAULT_TOOL_LEVELS = {
     # Admin operations
     "run_nightly_task_automation": AccessLevel.ADMIN,
     "run_automation": AccessLevel.ADMIN,
-    "dev_reload": AccessLevel.ADMIN,
 }
 
 
