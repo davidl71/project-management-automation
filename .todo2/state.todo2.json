@@ -7,9 +7,8 @@
       "status": "Done",
       "priority": "high",
       "tags": [
-        "documentation",
-        "links",
         "docs",
+        "links",
         "fix",
         "completed"
       ],
@@ -418,7 +417,7 @@
       "long_description": "New MCP tool that analyzes IDE diagnostics and provides resolution hints.\n\n## Features\n- Categorizes problems (spelling, type_error, import_error, unused_code, etc.)\n- Provides resolution hints for each problem\n- Identifies auto-fixable issues\n- Suggests quick fix commands\n- Generates detailed reports\n\n## Usage\n```python\n# Analyze problems from read_lints output\nanalyze_problems(problems_json=\"[{...}]\", include_hints=True)\n\n# List all categories\nlist_problem_categories()\n```\n\n## Categories Supported\n- spelling (cspell)\n- type_error (pyright, rust-analyzer)\n- import_error (pip, cargo)\n- unused_code (ruff, autoflake)\n- security (semgrep, bandit)\n- style (eslint, prettier)\n- deprecation\n- syntax_error",
       "tags": [
         "mcp",
-        "tools",
+        "tool",
         "diagnostics"
       ],
       "comments": [
@@ -828,7 +827,7 @@
       "status": "Todo",
       "priority": "medium",
       "tags": [
-        "documentation",
+        "docs",
         "git-inspired",
         "examples",
         "branch:git-features"
@@ -846,7 +845,7 @@
       "status": "Todo",
       "priority": "medium",
       "tags": [
-        "documentation",
+        "docs",
         "health",
         "improvement"
       ],
@@ -863,7 +862,7 @@
       "status": "Todo",
       "priority": "medium",
       "tags": [
-        "documentation",
+        "docs",
         "update",
         "stale"
       ],
@@ -882,7 +881,7 @@
       "tags": [
         "bugfix",
         "fastmcp",
-        "tools",
+        "tool",
         "resources"
       ],
       "created": "2025-11-30T22:51:22.422002+00:00",
@@ -916,7 +915,6 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "test-coverage-analyzer",
         "coverage-analyzer"
       ],
       "created": "2025-12-01T01:00:05.004482",
@@ -959,7 +957,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "test-coverage-analyzer"
+        "coverage-analyzer"
       ],
       "created": "2025-12-07T21:21:40.470421",
       "lastModified": "2025-12-07T21:21:40.470422",
@@ -975,7 +973,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "shared-todo-table-synchronization"
+        "todo-sync"
       ],
       "created": "2025-12-07T22:30:29.284332",
       "lastModified": "2025-12-11T01:06:02.045882",
@@ -1726,7 +1724,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "dependency-security-scan"
+        "security-scan"
       ],
       "created": "2025-12-11T00:27:12.039328",
       "lastModified": "2025-12-11T01:06:02.045585",
@@ -6037,8 +6035,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "tool-hints",
-        "external-tool-hints-automation"
+        "tool-hints"
       ],
       "created": "2025-12-11T01:05:49.933133",
       "lastModified": "2025-12-11T01:06:02.045700",
@@ -6140,7 +6137,7 @@
       "status": "todo",
       "priority": "low",
       "tags": [
-        "documentation",
+        "docs",
         "manual-review"
       ],
       "dependencies": [
@@ -6158,7 +6155,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-alignment-analysis"
+        "task-alignment"
       ],
       "created": "2025-12-11T01:05:50.453279",
       "lastModified": "2025-12-11T01:06:02.037263",
@@ -6344,7 +6341,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "documentation-health-analysis"
+        "docs-health"
       ],
       "created": "2025-12-11T01:05:51.447864",
       "lastModified": "2025-12-11T01:06:02.037024",
@@ -6902,7 +6899,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-duplicate-detection"
+        "duplicate-detect"
       ],
       "created": "2025-12-11T01:05:53.618750",
       "lastModified": "2025-12-11T01:06:02.037408",
@@ -7012,8 +7009,7 @@
         "coverage-analyzer",
         "automation-finder",
         "test-runner",
-        "automation",
-        "automation-opportunity-finder"
+        "automation"
       ],
       "created": "2025-12-11T01:05:56.595835",
       "lastModified": "2025-12-11T01:06:02.037435",
@@ -7175,7 +7171,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "automation-opportunity-finder"
+        "automation-finder"
       ],
       "created": "2025-12-11T01:06:02.088920",
       "lastModified": "2025-12-11T01:06:02.290941",
@@ -7200,7 +7196,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "test-coverage-analyzer"
+        "coverage-analyzer"
       ],
       "created": "2025-12-11T01:06:02.332162",
       "lastModified": "2025-12-11T01:11:02.587663",
@@ -7227,7 +7223,7 @@
         "performance",
         "testing",
         "benchmarking",
-        "tools"
+        "tool"
       ],
       "created": "2025-12-11T01:14:04.530868",
       "lastModified": "2025-12-11T01:14:04.530870",
@@ -7261,7 +7257,7 @@
         "performance",
         "testing",
         "bug-fix",
-        "tools"
+        "tool"
       ],
       "dependencies": [
         "PERF-20251211011404-001"
@@ -7300,6 +7296,64 @@
         "PERF-20251211011404-001"
       ],
       "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "AUTO-20251214172149-096070",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "duplicate-detect"
+      ],
+      "created": "2025-12-14T17:21:49.096047",
+      "lastModified": "2025-12-14T17:21:49.397007",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251214172149-096070-C-1",
+          "todoId": "AUTO-20251214172149-096070",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 6 duplicate issues**\n\n\ud83d\udd0d **3 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **3 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":62,\"duplicates_found\":6,\"duplicate_ids\":[],\"exact_name_matches\":[{\"name\":\"Automation: Test Coverage Analyzer\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251201010005-004438\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"done\",\"created\":\"2025-12-01T01:00:05.004482\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251211010602-332024\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"todo\",\"created\":\"2025-12-11T01:06:02.332162\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Todo2 Duplicate Detection\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251211010553-618673\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\",\"created\":\"2025-12-11T01:05:53.618750\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251214172149-096070\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\",\"created\":\"2025-12-14T17:21:49.096047\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Automation Opportunity Finder\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251211010556-595796\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\",\"created\":\"2025-12-11T01:05:56.595835\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251211010602-088853\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\",\"created\":\"2025-12-11T01:06:02.088920\",\"priority\":\"medium\"}]}],\"similar_name_matches\":[{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251201010005-004438\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"done\"},{\"id\":\"AUTO-20251211010602-332024\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"todo\"}]},{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251211010553-618673\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\"},{\"id\":\"AUTO-20251214172149-096070\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\"}]},{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251211010556-595796\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\"},{\"id\":\"AUTO-20251211010602-088853\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\"}]}],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-14T17:21:49.391295",
+          "lastModified": "2025-12-14T17:21:49.391303"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251214172222-080496",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "duplicate-detect"
+      ],
+      "created": "2025-12-14T17:22:22.080503",
+      "lastModified": "2025-12-14T17:23:00.243586",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251214172222-080496-C-1",
+          "todoId": "AUTO-20251214172222-080496",
+          "type": "note",
+          "content": "**Error:** 'NoneType' object is not subscriptable",
+          "created": "2025-12-14T17:22:22.396835",
+          "lastModified": "2025-12-14T17:22:22.396835"
+        },
+        {
+          "id": "AUTO-20251214172222-080496-C-2",
+          "todoId": "AUTO-20251214172222-080496",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u26a0\ufe0f **Found 8 duplicate issues**\n\n\ud83d\udd0d **3 exact name matches** (likely duplicates)\n\n\ud83d\udd0d **5 similar name matches** (potential duplicates)\n\n**Key Findings:**\n{\"total_tasks\":63,\"duplicates_found\":8,\"duplicate_ids\":[],\"exact_name_matches\":[{\"name\":\"Automation: Test Coverage Analyzer\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251201010005-004438\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"done\",\"created\":\"2025-12-01T01:00:05.004482\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251211010602-332024\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"todo\",\"created\":\"2025-12-11T01:06:02.332162\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Todo2 Duplicate Detection\",\"count\":3,\"tasks\":[{\"id\":\"AUTO-20251211010553-618673\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\",\"created\":\"2025-12-11T01:05:53.618750\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251214172149-096070\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\",\"created\":\"2025-12-14T17:21:49.096047\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251214172222-080496\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\",\"created\":\"2025-12-14T17:22:22.080503\",\"priority\":\"medium\"}]},{\"name\":\"Automation: Automation Opportunity Finder\",\"count\":2,\"tasks\":[{\"id\":\"AUTO-20251211010556-595796\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\",\"created\":\"2025-12-11T01:05:56.595835\",\"priority\":\"medium\"},{\"id\":\"AUTO-20251211010602-088853\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\",\"created\":\"2025-12-11T01:06:02.088920\",\"priority\":\"medium\"}]}],\"similar_name_matches\":[{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251201010005-004438\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"done\"},{\"id\":\"AUTO-20251211010602-332024\",\"name\":\"Automation: Test Coverage Analyzer\",\"status\":\"todo\"}]},{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251211010553-618673\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\"},{\"id\":\"AUTO-20251214172149-096070\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\"}]},{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251211010553-618673\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\"},{\"id\":\"AUTO-20251214172222-080496\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\"}]},{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251211010556-595796\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\"},{\"id\":\"AUTO-20251211010602-088853\",\"name\":\"Automation: Automation Opportunity Finder\",\"status\":\"done\"}]},{\"similarity\":1.0,\"tasks\":[{\"id\":\"AUTO-20251214172149-096070\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"done\"},{\"id\":\"AUTO-20251214172222-080496\",\"name\":\"Automation: Todo2 Duplicate Detection\",\"status\":\"in_progress\"}]}],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":true,\"tasks_removed\":4,\"tasks_merged\":4,\"dependencies_updated\":0}",
+          "created": "2025-12-14T17:23:00.237719",
+          "lastModified": "2025-12-14T17:23:00.237722"
+        }
+      ]
     }
   ],
   "lastModified": "2025-12-11T01:06:02.052525",
@@ -7310,5 +7364,6 @@
     "path": "/Users/davidl/Projects/project-management-automation",
     "repository": "git@github.com:davidl71/project-management-automation.git",
     "added_at": "2025-11-26T14:49:58.177927"
-  }
+  },
+  "tasks": []
 }

@@ -412,6 +412,12 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
                 update_todos_mcp(updates, project_root=self.project_root)
             
             logger.info(f"Applied auto-fix via MCP: {tasks_removed} removed, {tasks_merged} merged")
+            return {
+                'applied': True,
+                'tasks_removed': tasks_removed,
+                'tasks_merged': tasks_merged,
+                'dependencies_updated': dependencies_updated
+            }
         except Exception as e:
             logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
             

@@ -31,6 +31,10 @@ try:
     MCP_CLIENT_AVAILABLE = True
 except ImportError:
     MCP_CLIENT_AVAILABLE = False
+    # Create type aliases for when MCP is not available
+    from typing import Any
+    ClientSession = Any
+    StdioServerParameters = Any
     logger.warning("MCP client library not available. Install with: pip install mcp>=1.0.0")
 
 
@@ -50,8 +54,8 @@ class MCPSessionPool:
     def get_session(
         self, 
         server_name: str, 
-        server_params: StdioServerParameters
-    ) -> AsyncContextManager[ClientSession]:
+        server_params: "StdioServerParameters"
+    ) -> "AsyncContextManager[ClientSession]":
         """
         Get a reusable session for the specified server.
         
