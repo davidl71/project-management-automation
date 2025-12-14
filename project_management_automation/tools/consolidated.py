@@ -15,7 +15,7 @@ Consolidated tools:
 - health(action=server|git|docs|dod|cicd) ← server_status, check_working_copy_health, check_documentation_health, check_definition_of_done, validate_ci_cd_workflow
 - report(action=overview|scorecard|briefing|prd) ← generate_project_overview, generate_project_scorecard, get_daily_briefing, generate_prd
 - advisor_audio(action=quote|podcast|export) ← synthesize_advisor_quote, generate_podcast_audio, export_advisor_podcast
-- task_analysis(action=duplicates|tags|hierarchy) ← detect_duplicate_tasks, consolidate_tags, analyze_task_hierarchy
+- task_analysis(action=duplicates|tags|hierarchy|dependencies|parallelization) ← detect_duplicate_tasks, consolidate_tags, analyze_task_hierarchy, analyze_todo2_dependencies, optimize_todo2_parallelization
 - testing(action=run|coverage|suggest|validate) ← run_tests, analyze_test_coverage, suggest_test_cases, validate_test_structure
 - lint(action=run|analyze) ← run_linter, analyze_problems
 - memory(action=save|recall|search) ← save_memory, recall_context, search_memories
@@ -23,7 +23,7 @@ Consolidated tools:
 - task_discovery(action=comments|markdown|orphans|all) ← NEW: find tasks from various sources
 - task_workflow(action=sync|approve|clarify, sub_action for clarify) ← sync_todo_tasks, batch_approve_tasks, clarification
 - context(action=summarize|budget|batch) ← summarize_context, estimate_context_budget, batch_summarize
-- discovery(action=list|help) ← list_tools, get_tool_help
+- tool_catalog(action=list|help) ← list_tools, get_tool_help
 - workflow_mode(action=focus|suggest|stats) ← focus_mode, suggest_mode, get_tool_usage_stats
 - recommend(action=model|workflow|advisor) ← recommend_model, recommend_workflow_mode, consult_advisor
 """
@@ -546,6 +546,8 @@ def task_analysis(
     # hierarchy params
     output_format: str = "text",
     include_recommendations: bool = True,
+    # dependencies params (uses output_format)
+    # parallelization params (uses output_format)
     # common
     output_path: Optional[str] = None,
 ) -> str:
@@ -553,13 +555,14 @@ def task_analysis(
     Unified task analysis tool.
 
     Args:
-        action: "duplicates" to find duplicates, "tags" for tag cleanup, "hierarchy" for structure analysis
+        action: "duplicates" to find duplicates, "tags" for tag cleanup, "hierarchy" for structure analysis,
+                "dependencies" for dependency chain analysis, "parallelization" for parallel execution optimization
         similarity_threshold: Threshold for duplicate detection (duplicates action)
         auto_fix: Auto-merge duplicates (duplicates action)
         dry_run: Preview changes without applying (tags action)
         custom_rules: Custom tag rename rules as JSON (tags action)
         remove_tags: Tags to remove as JSON list (tags action)
-        output_format: Output format - text or json (hierarchy action)
+        output_format: Output format - text, json, or markdown (hierarchy/dependencies/parallelization actions)
         include_recommendations: Include recommendations (hierarchy action)
         output_path: Save results to file
 
@@ -578,10 +581,18 @@ def task_analysis(
         from .task_hierarchy_analyzer import analyze_task_hierarchy
         result = analyze_task_hierarchy(output_format, output_path, include_recommendations)
         return json.dumps(result, indent=2) if isinstance(result, dict) else result
+    elif action == "dependencies":
+        from .analyze_todo2_dependencies import analyze_todo2_dependencies
+        result = analyze_todo2_dependencies(output_format, output_path)
+        return result if isinstance(result, str) else json.dumps(result, indent=2)
+    elif action == "parallelization":
+        from .optimize_todo2_parallelization import optimize_todo2_parallelization
+        result = optimize_todo2_parallelization(output_format, output_path)
+        return result if isinstance(result, str) else json.dumps(result, indent=2)
     else:
         return json.dumps({
             "status": "error",
-            "error": f"Unknown task_analysis action: {action}. Use 'duplicates', 'tags', or 'hierarchy'.",
+            "error": f"Unknown task_analysis action: {action}. Use 'duplicates', 'tags', 'hierarchy', 'dependencies', or 'parallelization'.",
         }, indent=2)
 
 
@@ -940,7 +951,7 @@ def context(
         }, indent=2)
 
 
-def discovery(
+def tool_catalog(
     action: str = "list",
     # list action params
     category: Optional[str] = None,
@@ -950,9 +961,9 @@ def discovery(
     tool_name: Optional[str] = None,
 ) -> str:
     """
-    Unified discovery tool.
+    Unified tool catalog tool.
 
-    Consolidates tool discovery and help operations.
+    Consolidates tool catalog browsing and help operations.
 
     Args:
         action: "list" for tool catalog, "help" for specific tool documentation
@@ -962,7 +973,7 @@ def discovery(
         tool_name: Name of tool to get help for (help action)
 
     Returns:
-        JSON with discovery results
+        JSON with tool catalog results
     """
     if action == "list":
         from .hint_catalog import list_tools
@@ -980,7 +991,7 @@ def discovery(
     else:
         return json.dumps({
             "status": "error",
-            "error": f"Unknown discovery action: {action}. Use 'list' or 'help'.",
+            "error": f"Unknown tool_catalog action: {action}. Use 'list' or 'help'.",
         }, indent=2)
 
 

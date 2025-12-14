@@ -24,14 +24,11 @@
 
 **exarp Task Management Tools:**
 - `analyze_todo2_alignment` - Analyze task alignment with project goals
-- `detect_duplicate_tasks` - Find and merge duplicate tasks
-- `consolidate_tags` - Standardize task tags
-- `task_hierarchy_analyzer` - Recommend task hierarchies
+- `task_analysis` - Unified task analysis (duplicates/tags/hierarchy/dependencies/parallelization)
 - `batch_approve_tasks` - Batch approve tasks
 - `sync_todo_tasks` - Sync between TODO table and Todo2
 - `task_discovery` - Find tasks from various sources
 - `task_workflow` - Task workflow management
-- `task_analysis` - Analyze task duplicates/tags/hierarchy
 - Resources: `automation://tasks`, `automation://tasks/agent/{agent}`, etc.
 
 **agentic-tools Task Management Tools:**

@@ -709,7 +709,7 @@ def register_tools():
             task_workflow as _task_workflow,
             testing as _testing,
             context as _context,
-            discovery as _discovery,
+            tool_catalog as _tool_catalog,
             workflow_mode as _workflow_mode,
             recommend as _recommend,
         )
@@ -732,7 +732,7 @@ def register_tools():
         _task_workflow = None
         _testing = None
         _context = None
-        _discovery = None
+        _tool_catalog = None
         _workflow_mode = None
         _recommend = None
     
@@ -959,11 +959,11 @@ def register_tools():
                     # ),
                     Tool(
                         name="task_analysis",
-                        description="[HINT: Task analysis. action=duplicates|tags|hierarchy. Task quality and structure.]",
+                        description="[HINT: Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality and structure.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
-                                "action": {"type": "string", "enum": ["duplicates", "tags", "hierarchy"], "default": "duplicates"},
+                                "action": {"type": "string", "enum": ["duplicates", "tags", "hierarchy", "dependencies", "parallelization"], "default": "duplicates"},
                                 "similarity_threshold": {"type": "number", "default": 0.85},
                                 "auto_fix": {"type": "boolean", "default": False},
                                 "dry_run": {"type": "boolean", "default": True},
@@ -1154,8 +1154,8 @@ def register_tools():
                         },
                     ),
                     Tool(
-                        name="discovery",
-                        description="[HINT: Discovery tool. action=list|help. Unified tool discovery and help.]",
+                        name="tool_catalog",
+                        description="[HINT: Tool catalog. action=list|help. Unified tool catalog and help.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
@@ -1550,8 +1550,8 @@ def register_tools():
                             arguments.get("min_value_score", 0.7),
                             arguments.get("output_path"),
                         )
-                    elif name == "discovery":
-                        result = _discovery(
+                    elif name == "tool_catalog":
+                        result = _tool_catalog(
                             arguments.get("action", "list"),
                             arguments.get("category"),
                             arguments.get("persona"),
@@ -1810,7 +1810,7 @@ if mcp:
 
         @ensure_json_string
         @mcp.tool()
-        def discovery(
+        def tool_catalog(
             action: str = "list",
             category: Optional[str] = None,
             persona: Optional[str] = None,
@@ -1818,9 +1818,9 @@ if mcp:
             tool_name: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Discovery tool. action=list|help. Unified tool discovery and help.]
+            [HINT: Tool catalog. action=list|help. Unified tool catalog and help.]
 
-            Unified discovery tool consolidating tool catalog and help operations.
+            Unified tool catalog tool consolidating tool browsing and help operations.
 
             📊 Output: Tool catalog or detailed tool documentation
             🔧 Side Effects: None
@@ -1834,13 +1834,13 @@ if mcp:
                 tool_name: Name of tool to get help for (help action)
 
             Examples:
-                discovery(action="list", category="security")
+                tool_catalog(action="list", category="security")
                 → Filtered tool catalog
 
-                discovery(action="help", tool_name="project_scorecard")
+                tool_catalog(action="help", tool_name="project_scorecard")
                 → Detailed tool documentation
             """
-            return _discovery(action, category, persona, include_examples, tool_name)
+            return _tool_catalog(action, category, persona, include_examples, tool_name)
 
         # NOTE: focus_mode, suggest_mode, tool_usage_stats removed - use workflow_mode(action=focus|suggest|stats)
 
@@ -2350,12 +2350,14 @@ if mcp:
             output_path: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Task analysis. action=duplicates|tags|hierarchy. Task quality and structure.]
+            [HINT: Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality and structure.]
 
             Unified task analysis:
             - action="duplicates": Find duplicate tasks by similarity
             - action="tags": Consolidate/cleanup task tags
             - action="hierarchy": Analyze task structure and groupings
+            - action="dependencies": Analyze dependency chains, detect cycles, find critical paths
+            - action="parallelization": Identify tasks that can run in parallel
 
             📊 Output: Analysis results with recommendations
             🔧 Side Effects: Modifies tasks (duplicates with auto_fix, tags without dry_run)
@@ -4209,9 +4211,31 @@ def main():
                 asyncio.run(run())
             except KeyboardInterrupt:
                 logger.info("Server stopped by user")
+            except ExceptionGroup as e:
+                # Check if it's just a BrokenResourceError wrapped in ExceptionGroup
+                # This happens during stdio server cleanup when client disconnects
+                # anyio.BrokenResourceError is a normal connection closure, not an error
+                broken_resource_found = False
+                for exc in e.exceptions:
+                    exc_type_name = type(exc).__name__
+                    if exc_type_name == "BrokenResourceError" or "BrokenResource" in exc_type_name:
+                        broken_resource_found = True
+                        break
+                if broken_resource_found:
+                    logger.info("MCP connection closed by client (normal shutdown)")
+                else:
+                    # Real error - log it
+                    logger.error(f"Server error: {e}", exc_info=True)
+                    sys.exit(1)
             except Exception as e:
-                logger.error(f"Server error: {e}", exc_info=True)
-                sys.exit(1)
+                # Check if it's a BrokenResourceError (anyio raises this on connection close)
+                # This is a normal connection closure when client disconnects, not an error
+                exc_type_name = type(e).__name__
+                if exc_type_name == "BrokenResourceError" or "BrokenResource" in exc_type_name or "ConnectionError" in exc_type_name:
+                    logger.info(f"MCP connection closed by client: {exc_type_name}")
+                else:
+                    logger.error(f"Server error: {e}", exc_info=True)
+                    sys.exit(1)
         else:
             print("Error: MCP server not initialized properly", file=sys.stderr)
             sys.exit(1)

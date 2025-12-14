@@ -157,7 +157,7 @@ class TestFastMCPReturnTypes:
         string_returning_functions = [
             'memory',
             'context',
-            'discovery',
+            'tool_catalog',
             'workflow_mode',
             'recommend',
             'task_discovery',

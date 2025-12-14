@@ -279,12 +279,12 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
     },
     "list_tools": {
         "hint": "Tool catalog. Lists all tools with rich descriptions and examples.",
-        "category": "discovery",
+        "category": "tool_catalog",
         "outputs": ["tools", "categories", "count"],
     },
     "get_tool_help": {
         "hint": "Tool help. Detailed help for a specific tool with examples.",
-        "category": "discovery",
+        "category": "tool_catalog",
         "outputs": ["tool_info", "examples", "related_tools"],
     },
 }
@@ -294,43 +294,43 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
 WORKFLOW_MODE_CONTEXT: Dict[str, Dict[str, Any]] = {
     "daily_checkin": {
         "description": "Quick health check for start of day - includes handoff review",
-        "tool_groups": ["core", "discovery", "health", "coordination"],
+        "tool_groups": ["core", "tool_catalog", "health", "coordination"],
         "prompts": ["daily_checkin", "project_scorecard", "advisor_consult", "resume_session"],
         "keywords": ["daily", "morning", "status", "health", "overview", "handoff"],
     },
     "security_review": {
         "description": "Security audits and dependency scanning",
-        "tool_groups": ["core", "discovery", "security", "health"],
+        "tool_groups": ["core", "tool_catalog", "security", "health"],
         "prompts": ["security_scan_all", "security_scan_python", "security_scan_rust"],
         "keywords": ["security", "vulnerability", "cve", "scan", "audit"],
     },
     "task_management": {
         "description": "Sprint backlog grooming and task management",
-        "tool_groups": ["core", "discovery", "tasks", "coordination"],
+        "tool_groups": ["core", "tool_catalog", "tasks", "coordination"],
         "prompts": ["task_alignment", "duplicate_cleanup", "task_sync", "task_discovery", "end_of_day"],
         "keywords": ["task", "backlog", "sprint", "duplicate", "alignment", "assign"],
     },
     "code_review": {
         "description": "PR reviews and code quality checks",
-        "tool_groups": ["core", "discovery", "testing", "health"],
+        "tool_groups": ["core", "tool_catalog", "testing", "health"],
         "prompts": ["project_health", "persona_code_reviewer"],
         "keywords": ["review", "pr", "test", "coverage", "quality"],
     },
     "sprint_planning": {
         "description": "Sprint planning and roadmap work",
-        "tool_groups": ["core", "discovery", "tasks", "automation", "prd", "coordination"],
+        "tool_groups": ["core", "tool_catalog", "tasks", "automation", "prd", "coordination"],
         "prompts": ["sprint_start", "sprint_end", "pre_sprint_cleanup", "automation_setup", "end_of_day"],
         "keywords": ["sprint", "planning", "roadmap", "prd", "automation", "handoff"],
     },
     "debugging": {
         "description": "Bug fixing and investigation",
-        "tool_groups": ["core", "discovery", "memory", "testing", "health"],
+        "tool_groups": ["core", "tool_catalog", "memory", "testing", "health"],
         "prompts": ["memory_system", "persona_developer"],
         "keywords": ["debug", "bug", "fix", "error", "investigate"],
     },
     "development": {
         "description": "General development work (default) - includes coordination tools",
-        "tool_groups": ["core", "discovery", "health", "tasks", "testing", "memory", "coordination"],
+        "tool_groups": ["core", "tool_catalog", "health", "tasks", "testing", "memory", "coordination"],
         "prompts": ["persona_developer", "mode_suggestion", "context_management", "end_of_day", "resume_session"],
         "keywords": ["develop", "implement", "build", "feature", "code", "handoff"],
     },

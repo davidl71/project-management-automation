@@ -6,7 +6,7 @@ Instead of exposing 40+ tools at all times (which pollutes LLM context),
 this module enables intelligent tool curation:
 
 1. CORE tools (always visible): server_status, list_tools, focus_mode
-2. DISCOVERY tools: help LLM understand what's available
+2. TOOL_CATALOG tools: help LLM understand what's available
 3. CONTEXTUAL tools: activated based on workflow/focus mode
 
 Philosophy (from https://www.jlowin.dev/blog/stop-converting-rest-apis-to-mcp):
@@ -112,7 +112,7 @@ class ToolGroup(str, Enum):
 
     # Always visible
     CORE = "core"           # server_status
-    DISCOVERY = "discovery" # list_tools, get_tool_help, focus_mode
+    TOOL_CATALOG = "tool_catalog" # list_tools, get_tool_help, focus_mode
 
     # Contextually loaded
     HEALTH = "health"       # project_scorecard, project_overview, docs_health
@@ -150,11 +150,11 @@ TOOL_GROUP_MAPPING: dict[str, ToolGroup] = {
     # Core (always)
     "server_status": ToolGroup.CORE,
     # Discovery (always)
-    "list_tools": ToolGroup.DISCOVERY,
-    "get_tool_help": ToolGroup.DISCOVERY,
-    "focus_mode": ToolGroup.DISCOVERY,  # The mode switcher itself
-    "suggest_mode": ToolGroup.DISCOVERY,  # Adaptive mode suggestion
-    "tool_usage_stats": ToolGroup.DISCOVERY,  # Usage analytics
+    "list_tools": ToolGroup.TOOL_CATALOG,
+    "get_tool_help": ToolGroup.TOOL_CATALOG,
+    "focus_mode": ToolGroup.TOOL_CATALOG,  # The mode switcher itself
+    "suggest_mode": ToolGroup.TOOL_CATALOG,  # Adaptive mode suggestion
+    "tool_usage_stats": ToolGroup.TOOL_CATALOG,  # Usage analytics
 
     # Health
     "check_documentation_health": ToolGroup.HEALTH,
@@ -228,28 +228,28 @@ TOOL_GROUP_MAPPING: dict[str, ToolGroup] = {
 WORKFLOW_TOOL_GROUPS: dict[WorkflowMode, set[ToolGroup]] = {
     # Minimal focused modes
     WorkflowMode.DAILY_CHECKIN: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.HEALTH
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.HEALTH
     },
     WorkflowMode.SECURITY_REVIEW: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.SECURITY, ToolGroup.HEALTH
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.SECURITY, ToolGroup.HEALTH
     },
     WorkflowMode.TASK_MANAGEMENT: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.TASKS
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.TASKS
     },
     WorkflowMode.SPRINT_PLANNING: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.TASKS, ToolGroup.AUTOMATION, ToolGroup.PRD
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.TASKS, ToolGroup.AUTOMATION, ToolGroup.PRD
     },
     WorkflowMode.CODE_REVIEW: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.TESTING, ToolGroup.HEALTH
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.TESTING, ToolGroup.HEALTH
     },
 
     # Balanced modes
     WorkflowMode.DEVELOPMENT: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.HEALTH,
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.HEALTH,
         ToolGroup.TASKS, ToolGroup.TESTING, ToolGroup.MEMORY
     },
     WorkflowMode.DEBUGGING: {
-        ToolGroup.CORE, ToolGroup.DISCOVERY, ToolGroup.MEMORY,
+        ToolGroup.CORE, ToolGroup.TOOL_CATALOG, ToolGroup.MEMORY,
         ToolGroup.TESTING, ToolGroup.HEALTH
     },
 
@@ -493,7 +493,7 @@ class DynamicToolManager:
 
         # Core and Discovery are always active
         active.add(ToolGroup.CORE)
-        active.add(ToolGroup.DISCOVERY)
+        active.add(ToolGroup.TOOL_CATALOG)
 
         return active
 
@@ -907,8 +907,8 @@ class DynamicToolManager:
         group: ToolGroup,
     ) -> dict[str, Any]:
         """Disable a tool group."""
-        # Never disable core/discovery
-        if group in (ToolGroup.CORE, ToolGroup.DISCOVERY):
+        # Never disable core/tool_catalog
+        if group in (ToolGroup.CORE, ToolGroup.TOOL_CATALOG):
             return {
                 "success": False,
                 "error": f"Cannot disable {group.value} group - always required",
@@ -1079,7 +1079,7 @@ def focus_mode(
     elif disable_group:
         try:
             group = ToolGroup(disable_group.lower())
-            if group in (ToolGroup.CORE, ToolGroup.DISCOVERY):
+            if group in (ToolGroup.CORE, ToolGroup.TOOL_CATALOG):
                 result = {
                     "success": False,
                     "error": f"Cannot disable {group.value} - always required",

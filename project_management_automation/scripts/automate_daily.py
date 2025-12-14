@@ -51,13 +51,8 @@ DAILY_TASKS = {
         'quick': False,
         'description': 'Check for vulnerable dependencies'
     },
-    'external_tool_hints': {
-        'name': 'External Tool Hints',
-        'script': 'project_management_automation/scripts/automate_external_tool_hints.py',
-        'mcp_tool': 'add_external_tool_hints',
-        'quick': True,
-        'description': 'Add Context7 hints to documentation'
-    },
+    # NOTE: external_tool_hints removed from daily automation - it's a one-time setup tool
+    # Run manually when new documentation files are added: add_external_tool_hints(dry_run=False)
     'tool_count_health': {
         'name': 'Tool Count Health Check',
         'script': None,  # Uses direct function call
