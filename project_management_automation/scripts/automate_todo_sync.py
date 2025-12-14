@@ -149,7 +149,22 @@ class TodoSyncAutomation(IntelligentAutomationBase):
             return []
 
     def _load_todo2_tasks(self) -> list[dict]:
-        """Load Todo2 tasks from JSON."""
+        """Load Todo2 tasks from MCP (preferred) or JSON file (fallback)."""
+        from project_management_automation.utils.todo2_mcp_client import list_todos_mcp
+        
+        # Try Todo2 MCP first (preferred)
+        try:
+            mcp_tasks = list_todos_mcp(project_root=self.project_root)
+            if mcp_tasks:
+                # Add source marker
+                for task in mcp_tasks:
+                    task['source'] = 'todo2'
+                logger.info(f"Loaded {len(mcp_tasks)} tasks from Todo2 MCP")
+                return mcp_tasks
+        except Exception as e:
+            logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
+        
+        # Fallback to direct file access
         if not self.todo2_path.exists():
             logger.warning(f"Todo2 file not found: {self.todo2_path}")
             return []
@@ -343,7 +358,25 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         return False
 
     def _update_todo2_status(self, todo2_id: str, new_status: str) -> bool:
-        """Update status in Todo2 JSON file."""
+        """Update status in Todo2 via MCP (preferred) or JSON file (fallback)."""
+        from project_management_automation.utils.todo2_mcp_client import update_todos_mcp
+        
+        # Try Todo2 MCP first (preferred)
+        try:
+            success = update_todos_mcp(
+                updates=[{
+                    'id': todo2_id,
+                    'status': new_status
+                }],
+                project_root=self.project_root
+            )
+            if success:
+                logger.debug(f"Updated Todo2 task {todo2_id} status via MCP")
+                return True
+        except Exception as e:
+            logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
+        
+        # Fallback to direct file access
         try:
             with open(self.todo2_path) as f:
                 data = json.load(f)
@@ -364,7 +397,39 @@ class TodoSyncAutomation(IntelligentAutomationBase):
         return False
 
     def _create_todo2_from_shared(self, shared: dict) -> dict:
-        """Create Todo2 task from shared TODO."""
+        """Create Todo2 task from shared TODO via MCP (preferred) or JSON file (fallback)."""
+        from project_management_automation.utils.todo2_mcp_client import create_todos_mcp, list_todos_mcp
+        
+        # Prepare task data
+        task_name = shared['description']
+        task_description = f"Synced from shared TODO {shared['id']}\n\nOwner: {shared['owner']}"
+        task_status = self.status_map.get(shared['status'], 'Todo')
+        task_tags = ['shared-todo', 'synced', shared.get('owner', 'unknown')]
+        
+        # Try Todo2 MCP first (preferred)
+        try:
+            created_ids = create_todos_mcp(
+                todos=[{
+                    'name': task_name,
+                    'long_description': task_description,
+                    'status': task_status,
+                    'priority': 'medium',
+                    'tags': task_tags
+                }],
+                project_root=self.project_root
+            )
+            if created_ids and len(created_ids) > 0:
+                todo2_id = created_ids[0]
+                # Fetch the created task to return full data
+                from project_management_automation.utils.todo2_mcp_client import get_todo_details_mcp
+                created_tasks = get_todo_details_mcp([todo2_id], project_root=self.project_root)
+                if created_tasks:
+                    logger.debug(f"Created Todo2 task {todo2_id} via MCP")
+                    return created_tasks[0]
+        except Exception as e:
+            logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
+        
+        # Fallback to direct file access
         try:
             with open(self.todo2_path) as f:
                 data = json.load(f)
@@ -377,13 +442,13 @@ class TodoSyncAutomation(IntelligentAutomationBase):
 
             new_task = {
                 'id': todo2_id,
-                'name': shared['description'],
-                'long_description': f"Synced from shared TODO {shared['id']}\n\nOwner: {shared['owner']}",
-                'status': self.status_map.get(shared['status'], 'Todo'),
+                'name': task_name,
+                'long_description': task_description,
+                'status': task_status,
                 'created': datetime.now(timezone.utc).isoformat(),
                 'lastModified': datetime.now(timezone.utc).isoformat(),
                 'priority': 'medium',
-                'tags': ['shared-todo', 'synced', shared.get('owner', 'unknown')]
+                'tags': task_tags
             }
 
             data.setdefault('todos', []).append(new_task)

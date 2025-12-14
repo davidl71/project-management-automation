@@ -354,6 +354,7 @@ class IntelligentAutomationBase(ABC):
         """Create follow-up tasks based on findings.
 
         Prevents duplicates by checking if task with same name already exists.
+        Uses Todo2 MCP client (preferred) or falls back to direct file access.
         """
         if not self.todo2_task:
             return
@@ -364,6 +365,41 @@ class IntelligentAutomationBase(ABC):
             return
 
         try:
+            # Try Todo2 MCP first (preferred)
+            from project_management_automation.utils.todo2_mcp_client import (
+                create_todos_mcp,
+                list_todos_mcp,
+            )
+            
+            # Get existing tasks to check for duplicates
+            existing_tasks = list_todos_mcp(project_root=self.project_root)
+            existing_names = {t.get('name') for t in existing_tasks}
+            
+            # Prepare tasks for creation (skip duplicates)
+            todos_to_create = []
+            for followup in followup_tasks:
+                task_name = followup['name']
+                if task_name in existing_names:
+                    logger.debug(f"Skipping duplicate follow-up task: {task_name}")
+                    continue
+                
+                todos_to_create.append({
+                    'name': task_name,
+                    'long_description': followup.get('description', task_name),
+                    'status': 'Todo',
+                    'priority': followup.get('priority', 'medium'),
+                    'tags': followup.get('tags', ['automation', 'followup']),
+                    'dependencies': [self.todo2_task['id']] if self.todo2_task else [],
+                })
+            
+            if todos_to_create:
+                created_ids = create_todos_mcp(todos_to_create, project_root=self.project_root)
+                if created_ids:
+                    self.results['followup_tasks'].extend(created_ids)
+                    logger.info(f"Created {len(created_ids)} follow-up tasks via Todo2 MCP")
+                    return
+            
+            # Fallback to direct file access
             todo2_path = self.project_root / '.todo2' / 'state.todo2.json'
             if todo2_path.exists():
                 with open(todo2_path) as f:

@@ -234,16 +234,35 @@ class Todo2AlignmentAnalyzerV2(IntelligentAutomationBase):
         }
 
     def _load_todo2_tasks(self) -> list[dict]:
-        """Load tasks from agentic-tools MCP (preferred) or legacy Todo2 format.
+        """Load tasks from Todo2 MCP (preferred), agentic-tools MCP, or legacy Todo2 format.
 
-        Uses retry logic to handle race conditions when another MCP server
-        is writing to the tasks file.
+        Priority:
+        1. Todo2 MCP server (via todo2_mcp_client)
+        2. agentic-tools MCP format (with retry)
+        3. Legacy Todo2 format (with retry)
         """
         from .base.mcp_client import load_json_with_retry
+        from project_management_automation.utils.todo2_mcp_client import list_todos_mcp
 
         project_id = get_repo_project_id(self.project_root)
 
-        # Try agentic-tools MCP format first (preferred) with retry
+        # Try Todo2 MCP first (preferred)
+        try:
+            mcp_tasks = list_todos_mcp(project_root=self.project_root)
+            if mcp_tasks:
+                # Normalize MCP tasks to expected format
+                tasks = [self._normalize_task(t) for t in mcp_tasks]
+                filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
+                logger.info(
+                    "Loaded %d tasks from Todo2 MCP (%d matched project)",
+                    len(tasks),
+                    len(filtered),
+                )
+                return filtered
+        except Exception as e:
+            logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
+
+        # Fall back to agentic-tools MCP format with retry
         data = load_json_with_retry(self.agentic_tools_path, default=None)
         if data is not None:
             raw_tasks = data.get('tasks', [])

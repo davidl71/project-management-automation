@@ -73,6 +73,14 @@ DAILY_TASKS = {
         'quick': True,
         'description': 'Check for handoff notes from other developers/machines',
         'function': 'project_management_automation.tools.session_handoff:get_latest_handoff'
+    },
+    'task_progress_inference': {
+        'name': 'Task Progress Inference',
+        'script': None,  # Uses direct function call
+        'mcp_tool': 'auto_update_task_status',
+        'quick': True,
+        'description': 'Infer task completion from codebase analysis',
+        'function': 'project_management_automation.tools.auto_update_task_status:auto_update_task_status'
     }
 }
 
@@ -135,6 +143,16 @@ class DailyAutomation:
                 self.results['tasks_succeeded'].append(task_id)
             else:
                 self.results['tasks_failed'].append(task_id)
+
+        # Get task recommendations (if agentic-tools available)
+        recommendations = self._get_task_recommendations()
+        if recommendations:
+            self.results['task_recommendations'] = recommendations
+        
+        # Get progress inference results (T-13)
+        progress_inference = self._get_progress_inference()
+        if progress_inference:
+            self.results['progress_inference'] = progress_inference
 
         # Generate summary
         self.results['summary'] = self._generate_summary()
@@ -261,6 +279,49 @@ class DailyAutomation:
                 'error': str(e)
             }
 
+    def _get_task_recommendations(self) -> Optional[dict[str, Any]]:
+        """Get intelligent task recommendations using agentic-tools."""
+        try:
+            from project_management_automation.utils.agentic_tools_client import get_next_task_recommendation_mcp
+            
+            recommendations = get_next_task_recommendation_mcp(
+                project_root=self.project_root,
+                max_recommendations=3,
+                consider_complexity=True,
+                exclude_blocked=True
+            )
+            
+            if recommendations:
+                logger.info(f"Received {len(recommendations.get('recommendations', []))} task recommendations")
+                return recommendations
+        except Exception as e:
+            logger.debug(f"Task recommendations not available: {e}")
+        return None
+
+    def _get_progress_inference(self) -> Optional[dict[str, Any]]:
+        """Get task progress inference using auto_update_task_status (T-13)."""
+        try:
+            from project_management_automation.tools.auto_update_task_status import auto_update_task_status
+            import json
+            
+            # Call with dry_run=True for safety (only report, don't update)
+            result_json = auto_update_task_status(
+                confidence_threshold=0.7,
+                auto_update=False,  # Don't auto-update in daily automation
+                output_path=None,  # Don't create separate report
+                codebase_path=str(self.project_root)
+            )
+            
+            if result_json:
+                result = json.loads(result_json)
+                if result.get('success') and result.get('data'):
+                    data = result['data']
+                    logger.info(f"Progress inference: {data.get('inferences_made', 0)} inferences made")
+                    return data
+        except Exception as e:
+            logger.debug(f"Progress inference not available: {e}")
+        return None
+
     def _generate_summary(self) -> dict:
         """Generate summary statistics."""
         total = len(self.results['tasks_run'])
@@ -314,6 +375,53 @@ class DailyAutomation:
                         report_lines.append(f"  - {key}: {value}")
 
             report_lines.append("")
+
+        # Add task recommendations if available
+        if self.results.get('task_recommendations'):
+            recommendations = self.results['task_recommendations']
+            rec_list = recommendations.get('recommendations', [])
+            if rec_list:
+                report_lines.extend([
+                    "",
+                    "## Task Recommendations",
+                    "",
+                    "Intelligent task recommendations based on dependencies, priorities, and complexity:",
+                    ""
+                ])
+                for i, rec in enumerate(rec_list[:3], 1):  # Show top 3
+                    task_id = rec.get('taskId', 'N/A')
+                    task_name = rec.get('taskName', 'Unknown')
+                    reason = rec.get('reason', 'No reason provided')
+                    report_lines.extend([
+                        f"### {i}. {task_name} ({task_id})",
+                        "",
+                        f"**Reason**: {reason}",
+                        ""
+                    ])
+        
+        # Add progress inference if available (T-13)
+        if self.results.get('progress_inference'):
+            inference = self.results['progress_inference']
+            inferences_made = inference.get('inferences_made', 0)
+            tasks_analyzed = inference.get('total_tasks_analyzed', 0)
+            if inferences_made > 0:
+                report_lines.extend([
+                    "",
+                    "## Progress Inference",
+                    "",
+                    f"- **Tasks Analyzed**: {tasks_analyzed}",
+                    f"- **Inferences Made**: {inferences_made}",
+                    "",
+                    "Tasks with inferred status changes:",
+                    ""
+                ])
+                for result in inference.get('inferred_results', [])[:5]:  # Show top 5
+                    task_name = result.get('task_name', 'N/A')
+                    current = result.get('current_status', 'N/A')
+                    inferred = result.get('inferred_status', 'N/A')
+                    confidence = result.get('confidence', 0.0)
+                    report_lines.append(f"- **{task_name}**: {current} → {inferred} (Confidence: {confidence:.0%})")
+                report_lines.append("")
 
         return '\n'.join(report_lines)
 

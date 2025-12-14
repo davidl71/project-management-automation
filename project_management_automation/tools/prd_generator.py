@@ -869,11 +869,40 @@ def generate_prd(
         # Write PRD
         out_path.write_text(result["markdown"])
 
+        # Parse PRD and create tasks (if agentic-tools available)
+        tasks_created = []
+        try:
+            from project_management_automation.utils.agentic_tools_client import parse_prd_mcp
+            from project_management_automation.utils.todo2_mcp_client import create_todos_mcp
+            
+            # Parse PRD to generate tasks
+            parse_result = parse_prd_mcp(
+                prd_content=result["markdown"],
+                project_root=project_root,
+                generate_subtasks=True,
+                default_priority=5,
+                estimate_complexity=True
+            )
+            
+            if parse_result and parse_result.get('tasks'):
+                # Create tasks in Todo2
+                created_ids = create_todos_mcp(
+                    todos=parse_result['tasks'],
+                    project_root=project_root
+                )
+                if created_ids:
+                    tasks_created = created_ids
+                    logger.info(f"Created {len(tasks_created)} tasks from PRD")
+        except Exception as e:
+            logger.debug(f"PRD parsing not available: {e}")
+
         # Prepare response
         response_data = {
             "output_path": str(out_path),
             "project_name": result["sections"]["project_name"],
             "stats": result["stats"],
+            "tasks_created": len(tasks_created),
+            "task_ids": tasks_created,
             "sections_generated": [
                 "overview",
                 "problem_statement",

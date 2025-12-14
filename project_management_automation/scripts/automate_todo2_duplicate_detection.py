@@ -129,14 +129,28 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         return results
 
     def _load_todo2_tasks(self) -> list[dict]:
-        """Load tasks from Todo2 state file."""
+        """Load tasks from Todo2 MCP (preferred) or state file (fallback)."""
+        from project_management_automation.utils.todo2_mcp_client import list_todos_mcp
+        
+        # Try Todo2 MCP first (preferred)
+        try:
+            mcp_tasks = list_todos_mcp(project_root=self.project_root)
+            if mcp_tasks:
+                project_id = get_repo_project_id(self.project_root)
+                filtered = filter_tasks_by_project(mcp_tasks, project_id, logger=logger)
+                logger.info("Loaded %d tasks from Todo2 MCP (%d matched project)", len(mcp_tasks), len(filtered))
+                return filtered
+        except Exception as e:
+            logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
+        
+        # Fallback to direct file access
         try:
             with open(self.todo2_path) as f:
                 data = json.load(f)
             tasks = data.get('todos', [])
             project_id = get_repo_project_id(self.project_root)
             filtered = filter_tasks_by_project(tasks, project_id, logger=logger)
-            logger.info("Loaded %d tasks (%d matched project)", len(tasks), len(filtered))
+            logger.info("Loaded %d tasks from file (%d matched project)", len(tasks), len(filtered))
             return filtered
         except FileNotFoundError:
             logger.error(f"Todo2 state file not found: {self.todo2_path}")
@@ -370,14 +384,44 @@ class Todo2DuplicateDetector(IntelligentAutomationBase):
         current_tasks = [t for t in current_tasks if t['id'] not in tasks_to_remove]
         tasks_removed = len(tasks_to_remove)
 
-        # Update state
-        state['todos'] = current_tasks
-        state['lastModified'] = datetime.now().isoformat()
-
-        # Save state
+        # Update via MCP (preferred) or file (fallback)
+        from project_management_automation.utils.todo2_mcp_client import (
+            delete_todos_mcp,
+            update_todos_mcp,
+        )
+        
+        # Try Todo2 MCP first (preferred)
         try:
-            with open(self.todo2_path, 'w') as f:
-                json.dump(state, f, indent=2)
+            # Delete removed tasks
+            if tasks_to_remove:
+                delete_todos_mcp(list(tasks_to_remove), project_root=self.project_root)
+            
+            # Update modified tasks (those with merged data or fixed dependencies)
+            updates = []
+            for task in current_tasks:
+                # Check if task was modified (has merge comment or dependency update)
+                if task.get('lastModified') and task.get('lastModified') != task.get('created'):
+                    updates.append({
+                        'id': task['id'],
+                        'dependencies': task.get('dependencies', []),
+                        'tags': task.get('tags', []),
+                        'comments': task.get('comments', [])
+                    })
+            
+            if updates:
+                update_todos_mcp(updates, project_root=self.project_root)
+            
+            logger.info(f"Applied auto-fix via MCP: {tasks_removed} removed, {tasks_merged} merged")
+        except Exception as e:
+            logger.debug(f"Todo2 MCP not available: {e}, falling back to file access")
+            
+            # Fallback to direct file access
+            state['todos'] = current_tasks
+            state['lastModified'] = datetime.now().isoformat()
+            
+            try:
+                with open(self.todo2_path, 'w') as f:
+                    json.dump(state, f, indent=2)
             logger.info(f"Todo2 state updated: {tasks_removed} tasks removed")
             return {
                 'applied': True,

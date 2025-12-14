@@ -125,6 +125,9 @@ class SprintAutomation(IntelligentAutomationBase):
         # Step 7: Identify blockers
         self._identify_blockers()
 
+        # Step 8: Run progress inference at sprint boundaries (T-14)
+        self._run_progress_inference()
+
         # Generate sprint report
         report = self._generate_sprint_report()
 
@@ -580,6 +583,40 @@ class SprintAutomation(IntelligentAutomationBase):
 
         return is_background
 
+    def _run_progress_inference(self):
+        """Run progress inference at sprint boundaries (T-14)."""
+        logger.info("Running progress inference...")
+        
+        try:
+            from project_management_automation.tools.auto_update_task_status import auto_update_task_status
+            import json
+            
+            # Call with dry_run=True for safety (only report, don't update by default)
+            # Can be configured to auto-update if needed
+            result_json = auto_update_task_status(
+                confidence_threshold=0.7,
+                auto_update=False,  # Don't auto-update in sprint automation by default
+                output_path=None,
+                codebase_path=str(self.project_root)
+            )
+            
+            if result_json:
+                result = json.loads(result_json)
+                if result.get('success') and result.get('data'):
+                    data = result['data']
+                    inferences_made = data.get('inferences_made', 0)
+                    tasks_analyzed = data.get('total_tasks_analyzed', 0)
+                    
+                    self.sprint_results['progress_inference'] = {
+                        'tasks_analyzed': tasks_analyzed,
+                        'inferences_made': inferences_made,
+                        'inferred_results': data.get('inferred_results', [])
+                    }
+                    
+                    logger.info(f"Progress inference: {inferences_made} inferences made for {tasks_analyzed} tasks")
+        except Exception as e:
+            logger.debug(f"Progress inference not available: {e}")
+
     def _identify_blockers(self):
         """Identify tasks that are blocked."""
         logger.info("Identifying blockers...")
@@ -662,6 +699,29 @@ class SprintAutomation(IntelligentAutomationBase):
                 report_lines.append(f"- **Duplicates Found:** {dup_count} (auto-fixed)")
 
             report_lines.append("")
+        
+        # Progress Inference Results (T-14)
+        if self.sprint_results.get('progress_inference'):
+            inference = self.sprint_results['progress_inference']
+            report_lines.extend([
+                "## Progress Inference",
+                "",
+                f"- **Tasks Analyzed**: {inference.get('tasks_analyzed', 0)}",
+                f"- **Inferences Made**: {inference.get('inferences_made', 0)}",
+                ""
+            ])
+            
+            inferred_results = inference.get('inferred_results', [])
+            if inferred_results:
+                report_lines.append("Tasks with inferred status changes:")
+                report_lines.append("")
+                for result in inferred_results[:5]:  # Show top 5
+                    task_name = result.get('task_name', 'N/A')
+                    current = result.get('current_status', 'N/A')
+                    inferred = result.get('inferred_status', 'N/A')
+                    confidence = result.get('confidence', 0.0)
+                    report_lines.append(f"- **{task_name}**: {current} → {inferred} (Confidence: {confidence:.0%})")
+                report_lines.append("")
 
         # Testing Results
         if self.sprint_results.get('testing_results'):

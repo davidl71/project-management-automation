@@ -462,6 +462,64 @@ def generate_project_scorecard(
             'total': total_pending,
             'score': round(parallel_score, 1),
         }
+        
+        # ═══════════════════════════════════════════════════════════
+        # 6.5. PROGRESS INFERENCE METRICS (T-17)
+        # ═══════════════════════════════════════════════════════════
+        try:
+            from project_management_automation.tools.auto_update_task_status import auto_update_task_status
+            import json
+            
+            # Call with dry_run=True to get metrics without updating
+            inference_json = auto_update_task_status(
+                confidence_threshold=0.7,
+                auto_update=False,  # Only get metrics, don't update
+                output_path=None,
+                codebase_path=str(project_root)
+            )
+            
+            if inference_json:
+                inference_result = json.loads(inference_json)
+                if inference_result.get('success') and inference_result.get('data'):
+                    inference_data = inference_result['data']
+                    inferred_results = inference_data.get('inferred_results', [])
+                    
+                    # Calculate inferred vs. marked completion comparison
+                    inferred_done = sum(1 for r in inferred_results if r.get('inferred_status') == 'Done')
+                    marked_done = len(completed)
+                    discrepancy_count = sum(
+                        1 for r in inferred_results
+                        if r.get('current_status') != r.get('inferred_status')
+                    )
+                    
+                    # Calculate inferred completion rate
+                    inferred_completion_rate = (inferred_done / len(todos) * 100) if todos else 0
+                    
+                    metrics['progress_inference'] = {
+                        'tasks_analyzed': inference_data.get('total_tasks_analyzed', 0),
+                        'inferences_made': inference_data.get('inferences_made', 0),
+                        'marked_completed': marked_done,
+                        'inferred_completed': inferred_done,
+                        'inferred_completion_rate': round(inferred_completion_rate, 1),
+                        'discrepancy_count': discrepancy_count,
+                        'discrepancies': [
+                            {
+                                'task_id': r.get('task_id'),
+                                'task_name': r.get('task_name'),
+                                'marked': r.get('current_status'),
+                                'inferred': r.get('inferred_status'),
+                                'confidence': round(r.get('confidence', 0.0), 2)
+                            }
+                            for r in inferred_results[:5]
+                            if r.get('current_status') != r.get('inferred_status')
+                        ]
+                    }
+        except Exception as e:
+            scorecard_logger.debug(f"Progress inference not available: {e}")
+            metrics['progress_inference'] = {
+                'available': False,
+                'error': str(e)
+            }
     else:
         scores['completion'] = 0
         scores['alignment'] = 0
@@ -1105,6 +1163,15 @@ def _format_text(data: dict) -> str:
         t = data['metrics']['tasks']
         lines.append(f"    Tasks: {t.get('pending', 0)} pending, {t.get('completed', 0)} completed")
         lines.append(f"    Remaining work: {t.get('remaining_hours', 0)}h")
+    
+    # Progress Inference Metrics (T-17)
+    if 'progress_inference' in data['metrics']:
+        pi = data['metrics']['progress_inference']
+        if pi.get('available') is not False:
+            lines.append(f"    Progress Inference: {pi.get('inferences_made', 0)} inferences for {pi.get('tasks_analyzed', 0)} tasks")
+            if pi.get('discrepancy_count', 0) > 0:
+                lines.append(f"    ⚠️ Status Discrepancies: {pi.get('discrepancy_count', 0)} tasks (marked vs. inferred)")
+                lines.append(f"    Inferred Completion: {pi.get('inferred_completed', 0)} (vs. {pi.get('marked_completed', 0)} marked)")
 
     if 'parallelizable' in data['metrics']:
         p = data['metrics']['parallelizable']
@@ -1211,6 +1278,15 @@ def _format_markdown(data: dict) -> str:
         t = data['metrics']['tasks']
         lines.append(f"- **Tasks:** {t.get('pending', 0)} pending, {t.get('completed', 0)} completed")
         lines.append(f"- **Remaining work:** {t.get('remaining_hours', 0)}h")
+    
+    # Progress Inference Metrics (T-17)
+    if 'progress_inference' in data['metrics']:
+        pi = data['metrics']['progress_inference']
+        if pi.get('available') is not False:
+            lines.append(f"- **Progress Inference:** {pi.get('inferences_made', 0)} inferences for {pi.get('tasks_analyzed', 0)} tasks")
+            if pi.get('discrepancy_count', 0) > 0:
+                lines.append(f"  - ⚠️ Status Discrepancies: {pi.get('discrepancy_count', 0)} tasks")
+                lines.append(f"  - Inferred Completion: {pi.get('inferred_completed', 0)} (vs. {pi.get('marked_completed', 0)} marked)")
 
     if 'parallelizable' in data['metrics']:
         p = data['metrics']['parallelizable']

@@ -85,6 +85,18 @@ from .todo2_utils import (
     task_belongs_to_project,
     validate_project_ownership,
 )
+from .todo2_mcp_client import (
+    add_comments_mcp,
+    create_todos_mcp,
+    delete_todos_mcp,
+    get_todo_details_mcp,
+    list_todos_mcp,
+    update_todos_mcp,
+)
+from .agentic_tools_client import (
+    generate_research_queries_mcp,
+    infer_task_progress_mcp,
+)
 
 
 __all__ = [
@@ -134,6 +146,20 @@ __all__ = [
     'load_todo2_project_info',
     'task_belongs_to_project',
     'validate_project_ownership',
+    # Todo2 MCP client
+    'list_todos_mcp',
+    'create_todos_mcp',
+    'update_todos_mcp',
+    'get_todo_details_mcp',
+    'add_comments_mcp',
+    'delete_todos_mcp',
+    # Agentic-Tools MCP client
+    'infer_task_progress_mcp',
+    'generate_research_queries_mcp',
+    'get_next_task_recommendation_mcp',
+    'parse_prd_mcp',
+    'analyze_task_complexity_mcp',
+    'research_task_mcp',
     # Branch utilities
     'BRANCH_TAG_PREFIX',
     'MAIN_BRANCH',
