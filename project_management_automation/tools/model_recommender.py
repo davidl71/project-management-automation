@@ -117,6 +117,71 @@ MODEL_RECOMMENDATIONS = {
         "cost": "moderate",
         "speed": "moderate",
     },
+    "ollama-llama3.2": {
+        "name": "Ollama Llama 3.2",
+        "best_for": [
+            "Local development without API costs",
+            "Privacy-sensitive tasks",
+            "Offline development",
+            "General coding tasks",
+            "Quick prototyping",
+        ],
+        "keywords": [
+            "local", "offline", "private", "free", "general", "prototype",
+            "development", "no-cost", "self-hosted",
+        ],
+        "task_types": ["general", "local", "privacy", "offline"],
+        "cost": "free",
+        "speed": "moderate",
+    },
+    "ollama-mistral": {
+        "name": "Ollama Mistral",
+        "best_for": [
+            "Fast local inference",
+            "Code generation",
+            "Quick iterations",
+            "Cost-free development",
+        ],
+        "keywords": [
+            "fast", "local", "code", "generation", "quick", "free",
+            "efficient", "lightweight",
+        ],
+        "task_types": ["code_generation", "quick_fix", "local"],
+        "cost": "free",
+        "speed": "fast",
+    },
+    "ollama-codellama": {
+        "name": "Ollama CodeLlama",
+        "best_for": [
+            "Code-specific tasks",
+            "Code completion",
+            "Code explanation",
+            "Local code analysis",
+        ],
+        "keywords": [
+            "code", "programming", "completion", "explain", "analyze",
+            "local", "codebase", "syntax",
+        ],
+        "task_types": ["code_analysis", "code_generation", "local"],
+        "cost": "free",
+        "speed": "moderate",
+    },
+    "ollama-phi3": {
+        "name": "Ollama Phi-3",
+        "best_for": [
+            "Small model for quick tasks",
+            "Resource-constrained environments",
+            "Fast local inference",
+            "Simple code edits",
+        ],
+        "keywords": [
+            "small", "lightweight", "fast", "quick", "simple",
+            "resource-efficient", "mobile",
+        ],
+        "task_types": ["quick_fix", "simple_edit", "local"],
+        "cost": "free",
+        "speed": "fast",
+    },
 }
 
 
@@ -143,6 +208,7 @@ def recommend_model(
     - GPT-4o: General tasks, API work, multimodal
     - o1-preview: Math, algorithms, complex reasoning
     - Gemini Pro: Large codebase analysis
+    - Ollama models: Local/offline tasks, privacy-sensitive, cost-free (llama3.2, mistral, codellama, phi3)
 
     Args:
         task_description: Description of the task
@@ -217,7 +283,9 @@ def recommend_model(
             ]
 
         # Add tip based on task
-        if "complex" in content or "architecture" in content:
+        if "local" in content or "offline" in content or "private" in content or "free" in content:
+            result["tip"] = "For local/offline tasks, consider Ollama models (llama3.2, mistral, codellama)"
+        elif "complex" in content or "architecture" in content:
             result["tip"] = "For complex tasks, Claude Sonnet provides the best reasoning"
         elif "quick" in content or "simple" in content:
             result["tip"] = "Claude Haiku is 5x faster for simple tasks"

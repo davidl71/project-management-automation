@@ -471,6 +471,26 @@ if MCP_AVAILABLE:
         except Exception as e:
             logger.warning(f"Failed to register session handoff: {e}")
 
+        # Ollama integration tools
+        try:
+            from .tools.ollama_integration import register_ollama_tools
+            register_ollama_tools(mcp)
+            logger.debug("✅ Ollama tools registered")
+        except ImportError as e:
+            logger.debug(f"Ollama tools not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register Ollama tools: {e}")
+
+        # Ollama-enhanced tools (code documentation, quality analysis, etc.)
+        try:
+            from .tools.ollama_enhanced_tools import register_ollama_enhanced_tools
+            register_ollama_enhanced_tools(mcp)
+            logger.debug("✅ Ollama-enhanced tools registered")
+        except ImportError as e:
+            logger.debug(f"Ollama-enhanced tools not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register Ollama-enhanced tools: {e}")
+
 # Import automation tools (handle both relative and absolute imports)
 try:
     # Try relative imports first (when run as module)
