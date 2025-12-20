@@ -1,0 +1,17 @@
+# Example Ansible Inventory File
+# Copy this to 'inventory' and customize for your hosts
+
+[local]
+localhost ansible_connection=local
+
+[macos]
+# macOS hosts
+macos-dev ansible_host=192.168.1.100 ansible_user=your_username
+
+[linux]
+# Linux hosts
+linux-dev ansible_host=192.168.1.101 ansible_user=your_username
+
+[all:vars]
+# Variables for all hosts
+project_root=/path/to/project-management-automation

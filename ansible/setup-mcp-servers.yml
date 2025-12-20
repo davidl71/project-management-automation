@@ -1,0 +1,350 @@
+---
+# Ansible Playbook: Setup MCP Servers for Cursor
+# Configures all MCP servers including exarp_pma and dependencies
+#
+# Usage:
+#   # For localhost (current machine)
+#   ansible-playbook -i localhost, -c local ansible/setup-mcp-servers.yml
+#
+#   # With project root override
+#   ansible-playbook -i localhost, -c local ansible/setup-mcp-servers.yml -e project_root=/path/to/project
+#
+#   # Check other projects for existing servers
+#   ansible-playbook -i localhost, -c local ansible/setup-mcp-servers.yml -e '{"check_other_projects": ["/path/to/other/project1", "/path/to/other/project2"]}'
+#
+#   # Merge instead of skip (adds missing servers to existing config)
+#   ansible-playbook -i localhost, -c local ansible/setup-mcp-servers.yml -e skip_if_exists=false
+#
+#   # For remote hosts (requires inventory file)
+#   ansible-playbook -i inventory ansible/setup-mcp-servers.yml
+
+- name: Setup MCP Servers for Cursor
+  hosts: all
+  vars:
+    # Default project root - will be auto-detected if not specified
+    project_root: "{{ project_root | default(playbook_dir) }}"
+    cursor_config_dir: "{{ ansible_env.HOME }}/.cursor"
+    project_cursor_config: "{{ project_root }}/.cursor"
+    # List of other project directories to check for existing MCP configs
+    check_other_projects: "{{ check_other_projects | default([]) }}"
+    # Skip if servers already exist (true) or merge (false)
+    skip_if_exists: "{{ skip_if_exists | default(true) }}"
+    # Required servers list
+    required_servers:
+      - filesystem
+      - interactive
+      - exarp_pma
+      - tractatus_thinking
+      - sequential_thinking
+      - context7
+      - agentic-tools
+    
+  tasks:
+    - name: Detect platform
+      set_fact:
+        platform_key: "{{ ansible_os_family | lower }}-{{ ansible_architecture }}"
+        is_macos: "{{ ansible_os_family == 'Darwin' }}"
+        is_linux: "{{ ansible_os_family == 'Linux' }}"
+        homebrew_bin: "{{ '/opt/homebrew/bin' if (ansible_architecture == 'arm64' or ansible_architecture == 'aarch64') else '/usr/local/bin' }}"
+    
+    - name: Check for global MCP configuration
+      stat:
+        path: "{{ cursor_config_dir }}/mcp.json"
+      register: global_mcp_config
+    
+    - name: Read global MCP configuration if it exists
+      slurp:
+        src: "{{ cursor_config_dir }}/mcp.json"
+      register: global_mcp_content
+      when: global_mcp_config.stat.exists
+    
+    - name: Parse global MCP configuration
+      set_fact:
+        global_mcp_data: "{{ global_mcp_content.content | b64decode | from_json }}"
+      when: global_mcp_config.stat.exists
+    
+    - name: Extract global server names
+      set_fact:
+        global_mcp_servers: "{{ (global_mcp_data.mcpServers | default({})).keys() | list }}"
+      when: global_mcp_config.stat.exists
+    
+    - name: Set default for global servers if config doesn't exist
+      set_fact:
+        global_mcp_servers: []
+        global_mcp_data: {}
+      when: not global_mcp_config.stat.exists
+    
+    - name: Check for existing project MCP configuration
+      stat:
+        path: "{{ project_cursor_config }}/mcp.json"
+      register: project_mcp_config
+    
+    - name: Read project MCP configuration if it exists
+      slurp:
+        src: "{{ project_cursor_config }}/mcp.json"
+      register: project_mcp_content
+      when: project_mcp_config.stat.exists
+    
+    - name: Parse project MCP configuration
+      set_fact:
+        project_mcp_data: "{{ project_mcp_content.content | b64decode | from_json }}"
+      when: project_mcp_config.stat.exists
+    
+    - name: Extract project server names
+      set_fact:
+        project_mcp_servers: "{{ (project_mcp_data.mcpServers | default({})).keys() | list }}"
+      when: project_mcp_config.stat.exists
+    
+    - name: Set default for project servers if config doesn't exist
+      set_fact:
+        project_mcp_servers: []
+        project_mcp_data: {}
+      when: not project_mcp_config.stat.exists
+    
+    - name: Check if other project configs exist
+      stat:
+        path: "{{ item }}/.cursor/mcp.json"
+      register: other_projects_stats
+      loop: "{{ check_other_projects }}"
+      when: check_other_projects | length > 0
+      loop_control:
+        label: "{{ item }}"
+    
+    - name: Read other project MCP configs
+      slurp:
+        src: "{{ item.item }}/.cursor/mcp.json"
+      register: other_projects_content
+      loop: "{{ other_projects_stats.results | default([]) }}"
+      when: check_other_projects | length > 0 and item.stat.exists
+    
+    - name: Extract servers from other projects
+      set_fact:
+        other_projects_server_list: "{{ (other_projects_server_list | default([])) + ((item.content | b64decode | from_json).mcpServers | default({})).keys() | list }}"
+      loop: "{{ other_projects_content.results | default([]) }}"
+      when: check_other_projects | length > 0
+    
+    - name: Set default for other projects servers
+      set_fact:
+        other_projects_server_list: []
+      when: check_other_projects | length == 0 or other_projects_server_list is not defined
+    
+    - name: Combine all existing server names
+      set_fact:
+        existing_servers: "{{ (global_mcp_servers | default([])) + (project_mcp_servers | default([])) + (other_projects_server_list | default([])) | unique | sort }}"
+    
+    - name: Find missing servers
+      set_fact:
+        missing_servers: "{{ required_servers | difference(existing_servers | default([])) }}"
+    
+    - name: Check if all servers already exist
+      set_fact:
+        all_servers_exist: "{{ missing_servers | length == 0 }}"
+    
+    - name: Display existing servers status
+      debug:
+        msg:
+          - "📊 MCP Server Status Check"
+          - "  Global config: {{ cursor_config_dir }}/mcp.json {{ 'exists' if global_mcp_config.stat.exists else 'not found' }}"
+          - "  Project config: {{ project_cursor_config }}/mcp.json {{ 'exists' if project_mcp_config.stat.exists else 'not found' }}"
+          - "  Existing servers: {{ existing_servers | join(', ') if existing_servers | length > 0 else 'none' }}"
+          - "  Required servers: {{ required_servers | join(', ') }}"
+          - "  Missing servers: {{ missing_servers | join(', ') if missing_servers | length > 0 else 'none (all exist)' }}"
+    
+    - name: Skip configuration if all servers exist and skip_if_exists is true
+      meta: end_play
+      when: all_servers_exist and skip_if_exists
+    
+    - name: Warn if skipping because all servers exist
+      debug:
+        msg:
+          - "✅ All required MCP servers are already configured"
+          - "  Found in: {{ 'global config' if global_mcp_config.stat.exists else '' }}{{ ' and ' if (global_mcp_config.stat.exists and project_mcp_config.stat.exists) else '' }}{{ 'project config' if project_mcp_config.stat.exists else '' }}{{ ' and other projects' if (check_other_projects | length > 0 and other_projects_server_list | length > 0) else '' }}"
+          - "  Skipping configuration (set skip_if_exists=false to merge/update)"
+      when: all_servers_exist and skip_if_exists
+    
+    - name: Check if Node.js is installed
+      command: which node
+      register: node_check
+      changed_when: false
+      failed_when: false
+    
+    - name: Check Node.js version
+      command: node --version
+      register: node_version
+      changed_when: false
+      failed_when: false
+      when: node_check.rc == 0
+    
+    - name: Install Node.js on macOS (Homebrew)
+      homebrew:
+        name: node
+        state: present
+      when: is_macos and node_check.rc != 0
+    
+    - name: Install Node.js on Linux (using nvm or package manager)
+      block:
+        - name: Check if nvm is installed
+          stat:
+            path: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+          register: nvm_check
+        
+        - name: Install Node.js via apt (Ubuntu/Debian)
+          become: yes
+          apt:
+            name:
+              - nodejs
+              - npm
+            state: present
+            update_cache: yes
+          when: ansible_distribution in ['Ubuntu', 'Debian'] and nvm_check.stat.exists == false
+        
+        - name: Install Node.js via yum (RHEL/CentOS)
+          become: yes
+          yum:
+            name:
+              - nodejs
+              - npm
+            state: present
+          when: ansible_distribution in ['RedHat', 'CentOS'] and nvm_check.stat.exists == false
+      when: is_linux and node_check.rc != 0
+    
+    - name: Verify Node.js installation
+      command: node --version
+      register: node_version_final
+      changed_when: false
+    
+    - name: Verify npx is available
+      command: npx --version
+      register: npx_version
+      changed_when: false
+    
+    - name: Check if uvx is available
+      command: which uvx
+      register: uvx_check
+      changed_when: false
+      failed_when: false
+    
+    - name: Find uvx location
+      command: which uvx
+      register: uvx_path
+      changed_when: false
+      when: uvx_check.rc == 0
+    
+    - name: Set uvx path fact
+      set_fact:
+        uvx_command: "{{ uvx_path.stdout if uvx_check.rc == 0 else 'uvx' }}"
+    
+    - name: Ensure project .cursor directory exists
+      file:
+        path: "{{ project_cursor_config }}"
+        state: directory
+        mode: '0755'
+    
+    - name: Define new MCP server configurations
+      set_fact:
+        new_servers_config:
+          filesystem:
+            command: npx
+            args:
+              - -y
+              - "@modelcontextprotocol/server-filesystem"
+              - "{{ project_root }}"
+            description: "File system operations for reading, writing, and managing project files"
+          interactive:
+            command: npx
+            args:
+              - -y
+              - interactive-mcp
+              - -t
+              - "60"
+            description: "Human-in-the-loop prompts and OS notifications for confirmations and alerts"
+          exarp_pma:
+            command: "{{ project_root }}/exarp-uvx-wrapper.sh"
+            args:
+              - --mcp
+            env:
+              EXARP_DEV_MODE: "1"
+              EXARP_FORCE_STDIO: "1"
+              PROJECT_ROOT: "{{ project_root }}"
+            description: "Exarp for Project Management Automation - auto-detects uvx location across platforms (stdio mode)"
+          tractatus_thinking:
+            command: npx
+            args:
+              - -y
+              - tractatus_thinking
+            description: "Tractatus Thinking MCP server for structural analysis and logical decomposition"
+          sequential_thinking:
+            command: npx
+            args:
+              - -y
+              - "@modelcontextprotocol/server-sequential-thinking"
+            description: "Sequential Thinking MCP server for implementation workflows"
+          context7:
+            command: npx
+            args:
+              - -y
+              - "@upstash/context7-mcp"
+            description: "Up-to-date documentation lookup for libraries and frameworks"
+          agentic-tools:
+            command: npx
+            args:
+              - -y
+              - "@pimzino/agentic-tools-mcp"
+            description: "Task management and agent memories with JSON file storage for Todo2 integration"
+    
+    - name: Merge with existing config or use new config
+      set_fact:
+        final_config:
+          mcpServers: "{{ (project_mcp_data.mcpServers | default({})) | combine(new_servers_config, recursive=False) }}"
+      when: project_mcp_config.stat.exists and not skip_if_exists
+    
+    - name: Use new config if no existing config or skip_if_exists is true
+      set_fact:
+        final_config:
+          mcpServers: "{{ new_servers_config }}"
+      when: not project_mcp_config.stat.exists or skip_if_exists
+    
+    - name: Write MCP configuration file
+      copy:
+        dest: "{{ project_cursor_config }}/mcp.json"
+        content: "{{ final_config | to_nice_json(indent=2) }}"
+        mode: '0644'
+    
+    - name: Validate JSON syntax
+      command: python3 -m json.tool "{{ project_cursor_config }}/mcp.json"
+      register: json_validation
+      changed_when: false
+      failed_when: false
+    
+    - name: Report installation status
+      debug:
+        msg:
+          - "✅ MCP Servers Setup Complete"
+          - "  Node.js: {{ node_version_final.stdout | default('Not installed') }}"
+          - "  npx: {{ npx_version.stdout | default('Not available') }}"
+          - "  uvx: {{ 'Available at ' + uvx_path.stdout if uvx_check.rc == 0 else 'Not found' }}"
+          - "  MCP Config: {{ project_cursor_config }}/mcp.json"
+          - "  Project Root: {{ project_root }}"
+          - ""
+          - "📊 Configuration Summary:"
+          - "  Existing servers found: {{ existing_servers | join(', ') if existing_servers | length > 0 else 'none' }}"
+          - "  Missing servers: {{ missing_servers | join(', ') if missing_servers | length > 0 else 'none (all configured)' }}"
+          - "  Action taken: {{ 'Merged with existing config' if (project_mcp_config.stat.exists and not skip_if_exists) else 'Created new config' }}"
+          - ""
+          - "📋 Configured MCP Servers:"
+          - "  - filesystem (npx)"
+          - "  - interactive (npx)"
+          - "  - exarp_pma (uvx wrapper)"
+          - "  - tractatus_thinking (npx)"
+          - "  - sequential_thinking (npx)"
+          - "  - context7 (npx)"
+          - "  - agentic-tools (npx)"
+          - ""
+          - "🚀 Next steps:"
+          - "  1. Restart Cursor to load the new MCP configuration"
+          - "  2. Verify servers are connected in Cursor Settings → Features → MCP"
+    
+    - name: Warn if JSON validation failed
+      debug:
+        msg: "⚠️  Warning: JSON validation failed. Please check the configuration file manually."
+      when: json_validation.rc != 0

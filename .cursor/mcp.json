@@ -1,13 +1,11 @@
 {
   "mcpServers": {
     "filesystem": {
-      "command": "uvx",
+      "command": "npx",
       "args": [
-        "mcpower-proxy==0.0.87",
-        "--wrapped-config",
-        "{\"command\": \"npx\", \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/Users/davidl/Projects/project-management-automation\"]}",
-        "--name",
-        "filesystem"
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/dlowes/Documents/Projects/project-management-automation"
       ],
       "description": "File system operations for reading, writing, and managing project files"
     },
@@ -20,6 +18,50 @@
         "60"
       ],
       "description": "Human-in-the-loop prompts and OS notifications for confirmations and alerts"
+    },
+    "exarp_pma": {
+      "command": "/Users/dlowes/Documents/Projects/project-management-automation/exarp-uvx-wrapper.sh",
+      "args": [
+        "--mcp"
+      ],
+      "env": {
+        "EXARP_DEV_MODE": "1",
+        "EXARP_FORCE_STDIO": "1",
+        "PROJECT_ROOT": "/Users/dlowes/Documents/Projects/project-management-automation"
+      },
+      "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms (stdio mode)"
+    },
+    "tractatus_thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "tractatus_thinking"
+      ],
+      "description": "Tractatus Thinking MCP server for structural analysis and logical decomposition"
+    },
+    "sequential_thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "description": "Sequential Thinking MCP server for implementation workflows"
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "description": "Up-to-date documentation lookup for libraries and frameworks"
+    },
+    "agentic-tools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@pimzino/agentic-tools-mcp"
+      ],
+      "description": "Task management and agent memories with JSON file storage for Todo2 integration"
     }
   }
 }
