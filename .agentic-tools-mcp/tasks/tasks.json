@@ -3099,6 +3099,27 @@
       ],
       "estimatedHours": 3,
       "level": 0
+    },
+    {
+      "id": "77016145-08e8-4bb9-b761-60f692358c3e",
+      "name": "Ollama Hardware Detection and RAM Optimization - Complete",
+      "details": "✅ COMPLETED: Added comprehensive hardware detection and RAM optimization for Ollama integration.\n\n**Features Implemented:**\n- Automatic hardware detection (Intel vs Apple Silicon/M4, NVIDIA vs AMD GPU)\n- RAM detection and automatic context size optimization\n- Flash Attention auto-enable for systems with >=8GB RAM\n- KV cache quantization for systems with <16GB RAM\n- AMD GPU (ROCm) support detection for Linux/Windows\n- Context size recommendations based on available RAM (2K-16K)\n\n**Files Changed:**\n- `project_management_automation/tools/ollama_integration.py` - Added RAM detection, hardware detection, optimizations\n- `project_management_automation/tools/ollama_enhanced_tools.py` - Enabled streaming by default\n- Multiple documentation files added/updated\n\n**Performance Improvements:**\n- Systems with 24GB+ RAM now use 6K-8K context (vs 2K default)\n- Flash Attention enabled automatically for memory efficiency\n- Better quality responses with larger context windows\n- Automatic optimization based on available hardware\n\n**Documentation:**\n- `docs/OLLAMA_PERFORMANCE_OPTIMIZATION.md` - Comprehensive optimization guide\n- `docs/OLLAMA_RAM_OPTIMIZATION.md` - RAM-specific optimizations\n- `docs/OLLAMA_AMD_GPU_SUPPORT.md` - AMD GPU support guide\n- `docs/OLLAMA_MACOS_GPU_LIMITATIONS.md` - macOS limitations explained\n- `OLLAMA_SPEED_QUICK_START.md` - Quick reference guide\n- `MODEL_PERFORMANCE_COMPARISON.md` - Performance test results\n\n**Tests:**\n- `test_hardware_detection.py` - Hardware detection verification\n- `test_ollama_performance.py` - Performance comparison tests\n- `test_small_model.py` - Small model optimization test\n\n**Git Commit:** bcd99772 - \"feat: Add RAM detection and optimization for Ollama\"",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-21T00:12:52.333Z",
+      "updatedAt": "2025-12-21T00:12:52.333Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "ollama",
+        "optimization",
+        "hardware",
+        "ram",
+        "performance",
+        "gpu"
+      ],
+      "level": 0
     }
   ],
   "subtasks": [],
