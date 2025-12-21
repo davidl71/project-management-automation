@@ -17,8 +17,12 @@ from ..tools.session_mode_inference import (
     SessionMode,
     SessionModeInference,
 )
+from ..utils.json_cache import JsonCacheManager
 
 logger = logging.getLogger("exarp.resources.session")
+
+# Cache manager for session data
+_cache_manager = JsonCacheManager.get_instance()
 
 # Storage path for session mode data
 SESSION_MODE_STORAGE = Path(".exarp") / "session_mode.json"
@@ -124,22 +128,28 @@ class SessionModeStorage:
             return []
     
     def _load_data(self) -> dict[str, Any]:
-        """Load data from storage file."""
+        """Load data from storage file with caching."""
         if not self.storage_path.exists():
             return {"current": None, "history": []}
         
         try:
-            with open(self.storage_path, "r") as f:
-                return json.load(f)
+            # Use unified JSON cache
+            cache = _cache_manager.get_cache(self.storage_path, enable_stats=False)
+            data = cache.get_or_load()
+            if not isinstance(data, dict):
+                return {"current": None, "history": []}
+            return data
         except Exception as e:
             logger.warning(f"Failed to load session mode data: {e}")
             return {"current": None, "history": []}
     
     def _save_data(self, data: dict[str, Any]) -> None:
-        """Save data to storage file."""
+        """Save data to storage file and invalidate cache."""
         try:
             with open(self.storage_path, "w") as f:
                 json.dump(data, f, indent=2)
+            # Invalidate cache after save
+            _cache_manager.invalidate_file(self.storage_path)
         except Exception as e:
             logger.error(f"Failed to save session mode data: {e}")
 

@@ -7393,6 +7393,56 @@
           "lastModified": "2025-12-14T17:27:33.307843"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251221012742-775443",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-21T01:27:42.775515",
+      "lastModified": "2025-12-21T01:27:42.940578",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251221012742-775443-C-1",
+          "todoId": "AUTO-20251221012742-775443",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\u26a0\ufe0f Tool count at limit (40/30) - no new tools should be created\n\n**Key Findings:**\n{\"total_tasks\":1,\"by_priority\":{\"high\":1,\"medium\":0,\"low\":0,\"critical\":0},\"by_status\":{\"todo\":1,\"in_progress\":0,\"review\":0,\"done\":0},\"by_phase\":{\"phase1\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase2\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase3\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase4\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase5\":{\"total\":0,\"high_priority\":0,\"aligned\":0}},\"strategy_critical\":[],\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[{\"id\":\"T-1\",\"content\":\"Review misaligned high-priority tasks\",\"priority\":\"high\",\"status\":\"todo\"}],\"constraint_violations\":[],\"current_tool_count\":40,\"tool_limit\":30,\"alignment_score\":60.0}",
+          "created": "2025-12-21T01:27:42.915516",
+          "lastModified": "2025-12-21T01:27:42.915527"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251221013541-723479",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-12-21T01:35:41.723555",
+      "lastModified": "2025-12-21T01:35:41.785689",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251221013541-723479-C-1",
+          "todoId": "AUTO-20251221013541-723479",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 **No duplicates found!** Your Todo2 task list is clean.\n\n**Key Findings:**\n{\"total_tasks\":1,\"duplicates_found\":0,\"duplicate_ids\":[],\"exact_name_matches\":[],\"similar_name_matches\":[],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-21T01:35:41.766511",
+          "lastModified": "2025-12-21T01:35:41.766536"
+        }
+      ]
     }
   ],
   "lastModified": "2025-12-14T17:31:00.946830",

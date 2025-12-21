@@ -29,10 +29,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 try:
     from tools.intelligent_automation_base import IntelligentAutomationBase
     from utils.todo2_utils import normalize_status, is_pending_status, is_review_status
+    from utils.task_locking import atomic_assign_task
 except ImportError:
     # Fallback if base class not available
     class IntelligentAutomationBase:
         pass
+    # Fallback for atomic assignment
+    def atomic_assign_task(*args, **kwargs):
+        return (False, "Import error")
 
 
 def _get_local_ip_addresses() -> list[str]:
@@ -519,17 +523,37 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
             # Update task status to In Progress (if not dry run)
             if not dry_run:
+                # Use atomic assignment to prevent race conditions
+                success, error = atomic_assign_task(
+                    task_id=task['id'],
+                    assignee_name=host_key,
+                    assignee_type='host',
+                    hostname=host_info['hostname'],
+                    assigned_by='nightly_automation',
+                    timeout=5.0,
+                )
+
+                if not success:
+                    # Task was assigned by another agent or assignment failed
+                    nightly_logger.warning(
+                        f"Failed to assign task {task['id']} to {host_key}: {error}. "
+                        "Task may have been assigned by another agent."
+                    )
+                    # Skip this task and try next
+                    host_index += 1
+                    continue
+
+                # Reload task to get updated state
+                state = self._load_todo2_state()
+                todos = state.get('todos', [])
+                for i, t in enumerate(todos):
+                    if t.get('id') == task['id']:
+                        task = t
+                        break
+
+                # Update task status to In Progress
                 task = self._update_task_status(task, 'In Progress',
                     f"Assigned to {host_key} agent for automated execution")
-
-                # Set assignee field for cross-host visibility
-                task['assignee'] = {
-                    'type': 'host',
-                    'name': host_key,
-                    'hostname': host_info['hostname'],
-                    'assigned_at': datetime.utcnow().isoformat() + 'Z',
-                    'assigned_by': 'nightly_automation',
-                }
 
                 # Update in state
                 for i, t in enumerate(todos):

@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any, Literal, Optional
 
 from ..utils.todo2_utils import normalize_status, is_pending_status, is_review_status
+from ..utils.task_locking import atomic_assign_task, atomic_check_and_assign, atomic_batch_assign
 
 logger = logging.getLogger(__name__)
 
@@ -215,10 +216,45 @@ def assign_task(
                 "new_assignee": assignee,
             }, indent=2)
 
-        # Apply assignment
+        # Use atomic assignment to prevent race conditions
         old_assignee = task.get("assignee")
-        task["assignee"] = assignee
-        task["lastModified"] = datetime.utcnow().isoformat() + "Z"
+        
+        # Check if already assigned (atomic check)
+        if old_assignee:
+            existing_name = old_assignee.get("name", "unknown")
+            existing_type = old_assignee.get("type", "unknown")
+            return json.dumps({
+                "success": False,
+                "error": f"Task already assigned to {existing_type}:{existing_name}",
+                "task_id": task_id,
+                "current_assignee": old_assignee,
+            }, indent=2)
+
+        # Atomically assign task (prevents concurrent assignment)
+        success, error = atomic_assign_task(
+            task_id=task_id,
+            assignee_name=assignee_name,
+            assignee_type=assignee_type,
+            hostname=hostname or (_get_current_hostname() if assignee_type == "host" else None),
+            assigned_by="manual",
+            timeout=5.0,
+        )
+
+        if not success:
+            return json.dumps({
+                "success": False,
+                "error": error or "Failed to assign task",
+                "task_id": task_id,
+            }, indent=2)
+
+        # Reload task to add change tracking (assignment already done atomically)
+        state = _load_todo2_state()
+        todos = state.get("todos", [])
+        for i, t in enumerate(todos):
+            if t.get("id") == task_id:
+                task = t
+                task_index = i
+                break
 
         # Add change record
         if "changes" not in task:
@@ -226,11 +262,11 @@ def assign_task(
         task["changes"].append({
             "field": "assignee",
             "oldValue": old_assignee,
-            "newValue": assignee,
+            "newValue": task.get("assignee"),
             "timestamp": datetime.utcnow().isoformat() + "Z",
         })
 
-        # Save state
+        # Save state with change tracking
         todos[task_index] = task
         state["todos"] = todos
         _save_todo2_state(state)
@@ -240,9 +276,10 @@ def assign_task(
             "success": True,
             "task_id": task_id,
             "task_name": task.get("name", ""),
-            "assignee": assignee,
+            "assignee": task.get("assignee"),
             "previous_assignee": old_assignee,
             "duration_ms": round(duration * 1000, 2),
+            "locked": True,  # Indicates atomic assignment was used
         }, indent=2)
 
     except Exception as e:
@@ -546,7 +583,7 @@ def bulk_assign_tasks(
     """
     [HINT: Bulk assign. Assigns multiple tasks to one assignee at once.]
 
-    Assign multiple tasks to the same assignee.
+    Assign multiple tasks to the same assignee atomically (all or nothing).
 
     Args:
         task_ids: List of task IDs to assign
@@ -558,31 +595,69 @@ def bulk_assign_tasks(
     Returns:
         JSON with bulk assignment results
     """
-    results = []
-    success_count = 0
-    fail_count = 0
+    if dry_run:
+        # Preview mode: check each task individually
+        results = []
+        for task_id in task_ids:
+            state = _load_todo2_state()
+            todos = state.get("todos", [])
+            task = next((t for t in todos if t.get("id") == task_id), None)
+            if task:
+                results.append({
+                    "task_id": task_id,
+                    "current_assignee": task.get("assignee"),
+                    "would_assign_to": assignee_name,
+                })
+            else:
+                results.append({
+                    "task_id": task_id,
+                    "error": "Task not found",
+                })
 
+        return json.dumps({
+            "success": True,
+            "dry_run": True,
+            "assignee": {
+                "type": assignee_type,
+                "name": assignee_name,
+                "hostname": hostname,
+            },
+            "summary": {
+                "total": len(task_ids),
+                "previewed": len(results),
+            },
+            "results": results,
+        }, indent=2)
+
+    # Use atomic batch assignment for thread-safe bulk assignment
+    batch_result = atomic_batch_assign(
+        task_ids=task_ids,
+        assignee_name=assignee_name,
+        assignee_type=assignee_type,
+        hostname=hostname,
+        timeout=10.0,
+    )
+
+    # Format results to match expected structure
+    results = []
     for task_id in task_ids:
-        result = json.loads(assign_task(
-            task_id=task_id,
-            assignee_name=assignee_name,
-            assignee_type=assignee_type,
-            hostname=hostname,
-            dry_run=dry_run,
-        ))
-        results.append({
-            "task_id": task_id,
-            "success": result.get("success", False),
-            "error": result.get("error"),
-        })
-        if result.get("success"):
-            success_count += 1
+        if task_id in batch_result["assigned"]:
+            results.append({
+                "task_id": task_id,
+                "success": True,
+            })
         else:
-            fail_count += 1
+            # Find failure reason
+            failed_info = next((f for f in batch_result["failed"] if f["task_id"] == task_id), None)
+            results.append({
+                "task_id": task_id,
+                "success": False,
+                "error": failed_info["reason"] if failed_info else "Unknown error",
+            })
 
     return json.dumps({
-        "success": fail_count == 0,
-        "dry_run": dry_run,
+        "success": batch_result["success"],
+        "dry_run": False,
         "assignee": {
             "type": assignee_type,
             "name": assignee_name,
@@ -590,10 +665,11 @@ def bulk_assign_tasks(
         },
         "summary": {
             "total": len(task_ids),
-            "success": success_count,
-            "failed": fail_count,
+            "success": len(batch_result["assigned"]),
+            "failed": len(batch_result["failed"]),
         },
         "results": results,
+        "locked": True,  # Indicates atomic batch assignment was used
     }, indent=2)
 
 
@@ -698,19 +774,27 @@ def auto_assign_background_tasks(
             })
 
             if not dry_run:
-                # Apply assignment
-                assignee = {
-                    "type": "agent",
-                    "name": agent,
-                    "hostname": None,
-                    "assigned_at": datetime.utcnow().isoformat() + "Z",
-                    "assigned_by": "auto_assign",
-                }
-                task["assignee"] = assignee
-                task["lastModified"] = datetime.utcnow().isoformat() + "Z"
+                # Use atomic assignment to prevent race conditions
+                success, error = atomic_assign_task(
+                    task_id=task.get("id"),
+                    assignee_name=agent,
+                    assignee_type="agent",
+                    hostname=None,
+                    assigned_by="auto_assign",
+                    timeout=3.0,
+                )
+                
+                if not success:
+                    # Task was assigned by another agent or assignment failed
+                    logger.warning(f"Failed to assign {task.get('id')} to {agent}: {error}")
+                    # Remove from assignments list
+                    assignments = [a for a in assignments if a["task_id"] != task.get("id")]
+                    continue
 
+        # Note: atomic_assign_task already saves state, so we don't need to save again
+        # But we reload to get updated state for the response
         if not dry_run:
-            _save_todo2_state(state)
+            state = _load_todo2_state()
 
         return json.dumps({
             "success": True,

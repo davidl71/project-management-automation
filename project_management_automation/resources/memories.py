@@ -20,8 +20,12 @@ from pathlib import Path
 from typing import Any, Optional
 
 from ..utils import find_project_root
+from ..utils.json_cache import JsonCacheManager
 
 logger = logging.getLogger(__name__)
+
+# Cache manager for memory files
+_cache_manager = JsonCacheManager.get_instance()
 
 # Memory categories
 MEMORY_CATEGORIES = [
@@ -42,14 +46,16 @@ def _get_memories_dir() -> Path:
 
 
 def _load_all_memories() -> list[dict[str, Any]]:
-    """Load all memories from storage."""
+    """Load all memories from storage with per-file caching."""
     memories_dir = _get_memories_dir()
     memories = []
 
     for memory_file in memories_dir.glob("*.json"):
         try:
-            with open(memory_file) as f:
-                memory = json.load(f)
+            # Use unified JSON cache for each memory file
+            cache = _cache_manager.get_cache(memory_file, enable_stats=False)
+            memory = cache.get_or_load()
+            if isinstance(memory, dict):
                 memories.append(memory)
         except Exception as e:
             logger.warning(f"Error loading memory {memory_file}: {e}")

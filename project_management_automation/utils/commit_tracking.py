@@ -20,8 +20,12 @@ from pathlib import Path
 from typing import Any, Optional
 
 from .project_root import find_project_root
+from .json_cache import JsonCacheManager
 
 logger = logging.getLogger(__name__)
+
+# Cache manager for commits
+_cache_manager = JsonCacheManager.get_instance()
 
 
 class TaskCommit:
@@ -81,7 +85,8 @@ class CommitTracker:
     def __init__(self, project_root: Optional[Path] = None):
         self.project_root = project_root or find_project_root()
         self.commits_file = self.project_root / ".todo2" / "commits.json"
-        self._commits_cache: Optional[list[TaskCommit]] = None
+        # Use unified JSON cache instead of module-level cache
+        self._cache = _cache_manager.get_cache(self.commits_file, enable_stats=True)
 
     def _ensure_commits_file(self) -> None:
         """Ensure commits file exists with initial structure."""
@@ -90,25 +95,21 @@ class CommitTracker:
             self.commits_file.write_text(json.dumps({"commits": [], "version": "1.0"}, indent=2))
 
     def _load_commits(self) -> list[TaskCommit]:
-        """Load all commits from storage."""
-        if self._commits_cache is not None:
-            return self._commits_cache
-
+        """Load all commits from storage with caching."""
         self._ensure_commits_file()
 
         try:
-            with open(self.commits_file) as f:
-                data = json.load(f)
-                commits_data = data.get("commits", [])
-                commits = [TaskCommit.from_dict(c) for c in commits_data]
-                self._commits_cache = commits
-                return commits
+            # Use unified JSON cache (automatically handles mtime invalidation)
+            data = self._cache.get_or_load()
+            commits_data = data.get("commits", [])
+            commits = [TaskCommit.from_dict(c) for c in commits_data]
+            return commits
         except Exception as e:
             logger.error(f"Error loading commits: {e}")
             return []
 
     def _save_commits(self, commits: list[TaskCommit]) -> None:
-        """Save commits to storage."""
+        """Save commits to storage and invalidate cache."""
         self._ensure_commits_file()
 
         try:
@@ -116,7 +117,8 @@ class CommitTracker:
             data = {"commits": commits_data, "version": "1.0", "last_updated": datetime.now().isoformat()}
             with open(self.commits_file, "w") as f:
                 json.dump(data, f, indent=2)
-            self._commits_cache = commits
+            # Invalidate cache after save (next load will pick up new mtime)
+            self._cache.invalidate()
         except Exception as e:
             logger.error(f"Error saving commits: {e}")
             raise

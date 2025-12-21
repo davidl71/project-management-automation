@@ -31,11 +31,6 @@
       },
       "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms (stdio mode)"
     },
-    "devwisdom": {
-      "command": "/Users/dlowes/Documents/Projects/devwisdom-go/devwisdom",
-      "args": [],
-      "description": "DevWisdom-Go MCP server providing wisdom quotes, trusted advisors, and inspirational guidance for developers"
-    },
     "tractatus_thinking": {
       "command": "npx",
       "args": [

@@ -109,7 +109,12 @@ Code:
 Generate the documented version of this code.
 """
 
-        docs_result = generate_with_ollama(prompt, model=model)
+        # Use optimized settings for faster generation
+        docs_result = generate_with_ollama(
+            prompt, 
+            model=model,
+            stream=True,  # Enable streaming for faster perceived response
+        )
         docs_data = json.loads(docs_result)
 
         if not docs_data.get("success"):
@@ -211,7 +216,12 @@ Code:
 {code}
 """
 
-        analysis_result = generate_with_ollama(prompt, model=model)
+        # Use optimized settings for faster generation
+        analysis_result = generate_with_ollama(
+            prompt, 
+            model=model,
+            stream=True,  # Enable streaming for faster perceived response
+        )
         analysis_data = json.loads(analysis_result)
 
         if not analysis_data.get("success"):
@@ -307,7 +317,12 @@ Data:
 {data_str}
 """
 
-        summary_result = generate_with_ollama(prompt, model=model, max_tokens=500)
+        # Use optimized settings for faster generation
+        summary_result = generate_with_ollama(
+            prompt, 
+            model=model,
+            stream=True,  # Enable streaming for faster perceived response
+        )
         summary_data = json.loads(summary_result)
 
         if not summary_data.get("success"):
