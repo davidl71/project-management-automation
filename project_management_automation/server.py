@@ -242,8 +242,8 @@ if FORCE_STDIO:
 else:
     # Normal mode: Try FastMCP first, fall back to stdio
     try:
-        # Try FastMCP from mcp package (may be available in newer versions)
-        from mcp import FastMCP
+        # Import FastMCP from fastmcp package (explicit dependency)
+        from fastmcp import FastMCP
         from mcp.types import TextContent, Tool
 
         MCP_AVAILABLE = True
@@ -252,33 +252,22 @@ else:
         stdio_server = None
     except ImportError:
         try:
-            # Try FastMCP from separate fastmcp package
-            from fastmcp import FastMCP
-            from mcp.types import TextContent, Tool
+            # Fallback to stdio server if FastMCP not available
+            from mcp.server import Server
+            from mcp.server.stdio import stdio_server
+            from mcp.types import TextContent, Tool, Prompt, PromptArgument
 
             MCP_AVAILABLE = True
-            USE_STDIO = False
+            USE_STDIO = True
+            FastMCP = None
+            logger.info("MCP stdio server available - using stdio server (FastMCP not available)")
+        except ImportError:
+            logger.warning("MCP not installed - server structure ready, install with: uv sync (or uv pip install mcp>=1.0.0 fastmcp>=2.0.0)")
+            MCP_AVAILABLE = False
             Server = None
             stdio_server = None
-        except ImportError:
-            try:
-                from mcp.server import Server
-                from mcp.server.stdio import stdio_server
-
-                # For stdio server, we'll construct Tool objects manually
-                from mcp.types import TextContent, Tool, Prompt, PromptArgument
-
-                MCP_AVAILABLE = True
-                USE_STDIO = True
-                FastMCP = None
-                logger.info("MCP stdio server available - using stdio server (FastMCP not available)")
-            except ImportError:
-                logger.warning("MCP not installed - server structure ready, install with: uv sync (or uv pip install mcp>=1.0.0)")
-                MCP_AVAILABLE = False
-                Server = None
-                stdio_server = None
-                Tool = None
-                TextContent = None
+            Tool = None
+            TextContent = None
 
 # Logging already configured above
 
