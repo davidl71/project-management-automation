@@ -76,6 +76,13 @@ DAILY_TASKS = {
         'quick': True,
         'description': 'Infer task completion from codebase analysis',
         'function': 'project_management_automation.tools.auto_update_task_status:auto_update_task_status'
+    },
+    'stale_task_cleanup': {
+        'name': 'Stale Task Cleanup',
+        'script': 'project_management_automation/scripts/automate_stale_task_cleanup.py',
+        'mcp_tool': 'cleanup_stale_tasks',
+        'quick': True,
+        'description': 'Move stale In Progress tasks back to Todo for accurate time tracking'
     }
 }
 
@@ -86,7 +93,7 @@ class DailyAutomation:
     def __init__(self, config: dict, project_root: Optional[Path] = None):
         self.config = config
         self.project_root = project_root
-        self.tasks_to_run = config.get('tasks', ['handoff_check', 'docs_health', 'todo2_alignment', 'duplicate_detection', 'tool_count_health'])
+        self.tasks_to_run = config.get('tasks', ['handoff_check', 'stale_task_cleanup', 'docs_health', 'todo2_alignment', 'duplicate_detection', 'tool_count_health'])
         self.dry_run = config.get('dry_run', False)
         self.output_path = config.get('output_path', 'docs/DAILY_AUTOMATION_REPORT.md')
         self.include_slow = config.get('include_slow', False)

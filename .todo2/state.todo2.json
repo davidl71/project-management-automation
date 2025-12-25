@@ -244,68 +244,6 @@
       ]
     },
     {
-      "id": "T-20251126035735-50",
-      "name": "Update 17 files were skipped - review for manual hint addition if needed",
-      "content": "Update 17 files were skipped - review for manual hint addition if needed",
-      "status": "Todo",
-      "priority": "low",
-      "tags": [
-        "docs",
-        "manual-review"
-      ],
-      "dependencies": [],
-      "created": "2025-11-26T01:57:35.910Z",
-      "lastModified": "2025-12-25T15:50:58.453Z",
-      "project_id": "davidl71/project-management-automation",
-      "estimatedHours": 2,
-      "dependsOn": [],
-      "changes": [
-        {
-          "field": "status",
-          "oldValue": "Todo",
-          "newValue": "In Progress",
-          "timestamp": "2025-12-25T15:50:45.929Z"
-        },
-        {
-          "field": "status",
-          "oldValue": "In Progress",
-          "newValue": "Todo",
-          "timestamp": "2025-12-25T15:50:58.453Z"
-        }
-      ]
-    },
-    {
-      "id": "T-20251126040001-58",
-      "name": "Update 58 Todo2 tasks that are not in shared TODO table",
-      "content": "Update 58 Todo2 tasks that are not in shared TODO table",
-      "status": "Todo",
-      "priority": "low",
-      "tags": [
-        "todo-sync",
-        "review"
-      ],
-      "dependencies": [],
-      "created": "2025-11-26T02:00:01.413Z",
-      "lastModified": "2025-12-25T15:51:07.438Z",
-      "project_id": "davidl71/project-management-automation",
-      "estimatedHours": 2,
-      "dependsOn": [],
-      "changes": [
-        {
-          "field": "status",
-          "oldValue": "Todo",
-          "newValue": "In Progress",
-          "timestamp": "2025-12-25T15:50:48.703Z"
-        },
-        {
-          "field": "status",
-          "oldValue": "In Progress",
-          "newValue": "Todo",
-          "timestamp": "2025-12-25T15:51:07.438Z"
-        }
-      ]
-    },
-    {
       "id": "RESEARCH-0fb905eb",
       "name": "Implement Research RHDA implementation patterns for Exarp enhancement",
       "status": "Todo",
@@ -732,7 +670,7 @@
       "id": "MODE-002",
       "name": "Implement: Session mode inference from tool patterns",
       "long_description": "Implement mode inference based on tool call patterns during a session.\n\nDetection heuristics:\n- AGENT mode: High tool call frequency, multi-file edits, longer sessions\n- ASK mode: Lower frequency, single queries, shorter interactions\n- MANUAL mode: No tool calls, direct file edits\n\nImplementation:\n1. Track tool calls in session\n2. Analyze patterns using sliding window\n3. Infer mode with confidence score\n4. Update session context\n\nDependencies: MODE-001 research findings",
-      "status": "Todo",
+      "status": "Done",
       "priority": "low",
       "tags": [
         "implementation",
@@ -740,11 +678,19 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-11-26T23:33:04.132Z",
+      "lastModified": "2025-12-25T21:00:03.105Z",
       "dependencies": [
         "MODE-001"
       ],
-      "estimatedHours": 2
+      "estimatedHours": 2,
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "Todo",
+          "newValue": "Done",
+          "timestamp": "2025-12-25T21:00:03.105Z"
+        }
+      ]
     },
     {
       "id": "MODE-003",
@@ -769,7 +715,7 @@
       "id": "MODE-004",
       "name": "Implement: Session mode resource (automation://session/mode)",
       "long_description": "Create MCP resource to expose current inferred session mode.\n\nResource: automation://session/mode\n\nReturns:\n{\n  \"inferred_mode\": \"AGENT|ASK|MANUAL|UNKNOWN\",\n  \"confidence\": 0.0-1.0,\n  \"signals\": {\n    \"tool_calls\": 15,\n    \"files_edited\": 3,\n    \"session_duration_sec\": 300,\n    \"multi_file_edits\": true\n  },\n  \"last_updated\": \"ISO timestamp\"\n}\n\nDependencies: MODE-002 mode inference",
-      "status": "Blocked",
+      "status": "Done",
       "priority": "low",
       "tags": [
         "implementation",
@@ -778,17 +724,25 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T16:04:03.540Z",
+      "lastModified": "2025-12-25T21:00:03.105Z",
       "dependencies": [
         "MODE-002"
       ],
-      "estimatedHours": 2
+      "estimatedHours": 2,
+      "changes": [
+        {
+          "field": "status",
+          "oldValue": "Blocked",
+          "newValue": "Done",
+          "timestamp": "2025-12-25T21:00:03.105Z"
+        }
+      ]
     },
     {
       "id": "MODE-005",
       "name": "Implement: Auto-log mode in memory system",
-      "long_description": "Automatically log inferred mode in the memory system for pattern analysis.\n\nFeatures:\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\nMemory format:\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\nDependencies: MODE-002, MODE-004",
-      "status": "Blocked",
+      "long_description": "**STATUS UPDATE**: Dependencies resolved - MODE-002 and MODE-004 are now complete.\n\n**Original Description:**\nAutomatically log inferred mode in the memory system for pattern analysis.\n\n**Features:**\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\n**Memory format:**\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\n**Dependencies**: MODE-002 ✅, MODE-004 ✅ (both complete)",
+      "status": "Todo",
       "priority": "low",
       "tags": [
         "implementation",
@@ -797,12 +751,26 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T16:04:03.540Z",
+      "lastModified": "2025-12-25T21:00:03.977Z",
       "dependencies": [
         "MODE-002",
         "MODE-004"
       ],
-      "estimatedHours": 2
+      "estimatedHours": 2,
+      "changes": [
+        {
+          "field": "long_description",
+          "oldValue": "Automatically log inferred mode in the memory system for pattern analysis.\n\nFeatures:\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\nMemory format:\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\nDependencies: MODE-002, MODE-004",
+          "newValue": "**STATUS UPDATE**: Dependencies resolved - MODE-002 and MODE-004 are now complete.\n\n**Original Description:**\nAutomatically log inferred mode in the memory system for pattern analysis.\n\n**Features:**\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\n**Memory format:**\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\n**Dependencies**: MODE-002 ✅, MODE-004 ✅ (both complete)",
+          "timestamp": "2025-12-25T21:00:03.977Z"
+        },
+        {
+          "field": "status",
+          "oldValue": "Blocked",
+          "newValue": "Todo",
+          "timestamp": "2025-12-25T21:00:03.977Z"
+        }
+      ]
     },
     {
       "id": "MODE-006",
@@ -820,58 +788,6 @@
       "lastModified": "2025-11-26T23:33:04.132Z",
       "dependencies": [],
       "estimatedHours": 2
-    },
-    {
-      "id": "API-001",
-      "name": "Implement Research: Cursor Cloud Agents API integration",
-      "long_description": "Research Cursor's Cloud Agents API for potential EXARP integration.\n\nAPI Details (from https://cursor.com/docs/api):\n- Availability: Beta (All Plans) - accessible to non-Enterprise users\n- Purpose: Programmatically create and manage AI-powered coding agents\n- Endpoint: https://cursor.com/dashboard?tab=integrations (for API keys)\n\nResearch Areas:\n1. API capabilities and limitations\n2. Authentication requirements (Basic Auth with API key)\n3. Rate limiting (standard rate limiting applies)\n4. Use cases for EXARP:\n   - Automated agent spawning for background tasks\n   - Multi-agent coordination\n   - Workflow automation triggers\n5. Integration patterns with existing EXARP tools\n\nDependencies: None\nOutput: Integration feasibility report with recommendations",
-      "status": "Todo",
-      "priority": "low",
-      "tags": [
-        "research",
-        "cursor-api",
-        "integration",
-        "cloud-agents"
-      ],
-      "created": "2025-11-26T23:47:35.861Z",
-      "lastModified": "2025-12-25T20:35:44.032Z",
-      "dependencies": [],
-      "estimatedHours": 2,
-      "changes": [
-        {
-          "field": "status",
-          "oldValue": "In Progress",
-          "newValue": "Todo",
-          "timestamp": "2025-12-25T20:35:44.032Z"
-        }
-      ]
-    },
-    {
-      "id": "MODE-001-UPDATE",
-      "name": "Update Research: Update mode detection with Cursor API findings",
-      "long_description": "Update MODE-001 research with Cursor API insights.\n\nCursor API Findings (from https://cursor.com/docs/api):\n\nEnterprise-Only APIs (not accessible to most users):\n- Analytics API: Team usage patterns, AI metrics, model usage\n- AI Code Tracking API: Track AI contributions at commit level\n- Admin API: Usage data and spending\n\nAvailable to All Plans:\n- Cloud Agents API (Beta): Agent management\n\nImplications for Mode Detection:\n1. Enterprise users COULD use Analytics API for precise mode tracking\n2. Non-Enterprise users must rely on local inference:\n   - Tool call frequency patterns\n   - File edit patterns (multi-file vs single-file)\n   - Session duration analysis\n   - Request complexity heuristics\n\nRecommendations:\n1. Primary approach: Local pattern inference (works for all users)\n2. Optional enhancement: Cursor API integration for Enterprise users\n3. Consider Cloud Agents API for workflow triggers\n\nUpdate MODE-001 with these findings and adjust implementation plan.",
-      "status": "Todo",
-      "priority": "low",
-      "tags": [
-        "research",
-        "mode-awareness",
-        "cursor-api",
-        "enhancement"
-      ],
-      "created": "2025-11-26T23:47:35.862Z",
-      "lastModified": "2025-12-25T20:35:44.032Z",
-      "dependencies": [
-        "MODE-001"
-      ],
-      "estimatedHours": 3,
-      "changes": [
-        {
-          "field": "status",
-          "oldValue": "In Progress",
-          "newValue": "Todo",
-          "timestamp": "2025-12-25T20:35:44.032Z"
-        }
-      ]
     },
     {
       "id": "T-CONTEXT-1",
@@ -8054,9 +7970,57 @@
         }
       ],
       "estimatedHours": 0.5
+    },
+    {
+      "id": "T-4",
+      "name": "Add error path tests for consolidated tools",
+      "long_description": "🎯 **Objective:** Improve test coverage for consolidated tools by adding tests for error paths and edge cases.\n\n📋 **Acceptance Criteria:**\n- Add tests for error handling in automation() tool (invalid parameters, missing dependencies)\n- Add tests for error handling in estimation() tool (invalid inputs, missing data)\n- Add tests for error handling in task_workflow() tool (invalid actions, missing parameters)\n- Add tests for error handling in analyze_alignment() tool (invalid actions)\n- Achieve >60% coverage for consolidated.py\n\n🚫 **Scope Boundaries:**\n- **Included:** Error path tests, edge case tests, parameter validation tests\n- **Excluded:** Integration tests, performance tests\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use pytest and unittest.mock\n- Follow existing test patterns in test_consolidated_tools.py\n- Use parse_result() helper for JSON string parsing\n\n📁 **Files/Components:**\n- Update: tests/test_consolidated_tools.py (add error path tests)\n\n🧪 **Testing Requirements:**\n- All new tests must pass\n- Coverage should increase from 35.36% to >60%\n- Verify error messages are properly formatted\n\n⚠️ **Edge Cases:**\n- Missing required parameters\n- Invalid action values\n- Import errors (when dependencies unavailable)\n- Network errors (for tools that make external calls)\n\n📚 **Dependencies:** None",
+      "status": "Todo",
+      "created": "2025-12-25T20:57:53.410Z",
+      "lastModified": "2025-12-25T20:57:53.410Z",
+      "taskNumber": 4,
+      "priority": "medium",
+      "tags": [
+        "testing",
+        "coverage",
+        "consolidated-tools"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "T-5",
+      "name": "Add async tool tests for consolidated tools",
+      "long_description": "🎯 **Objective:** Add tests for async versions of consolidated tools (security_async, testing_async).\n\n📋 **Acceptance Criteria:**\n- Add async tests for security_async() function\n- Add async tests for testing_async() function\n- Verify async/await patterns work correctly\n- Test progress reporting (ctx parameter)\n- All async tests pass\n\n🚫 **Scope Boundaries:**\n- **Included:** Async function tests, progress reporting tests\n- **Excluded:** Sync wrapper tests (already covered)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use pytest-asyncio for async test support\n- Mock async dependencies properly\n- Test both success and error paths\n\n📁 **Files/Components:**\n- Update: tests/test_consolidated_tools.py (add async test classes)\n\n🧪 **Testing Requirements:**\n- All async tests must pass\n- Verify proper async/await usage\n- Test error handling in async context\n\n⚠️ **Edge Cases:**\n- Async function errors\n- Progress reporting failures\n- Context cancellation\n\n📚 **Dependencies:** None",
+      "status": "Todo",
+      "created": "2025-12-25T20:57:53.410Z",
+      "lastModified": "2025-12-25T20:57:53.410Z",
+      "taskNumber": 5,
+      "priority": "low",
+      "tags": [
+        "testing",
+        "async",
+        "consolidated-tools"
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "T-6",
+      "name": "Add parameter validation tests for consolidated tools",
+      "long_description": "🎯 **Objective:** Add comprehensive parameter validation tests for all consolidated tools.\n\n📋 **Acceptance Criteria:**\n- Test parameter type validation (strings, lists, booleans, numbers)\n- Test parameter range validation (min/max values, enum values)\n- Test required parameter validation (missing required params)\n- Test parameter format validation (JSON strings, file paths)\n- All validation tests pass\n\n🚫 **Scope Boundaries:**\n- **Included:** Parameter validation, type checking, range checking\n- **Excluded:** Business logic validation (covered in other tests)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Test invalid parameter types\n- Test out-of-range values\n- Test malformed JSON strings\n- Test invalid file paths\n\n📁 **Files/Components:**\n- Update: tests/test_consolidated_tools.py (add validation test methods)\n\n🧪 **Testing Requirements:**\n- All validation tests must pass\n- Verify proper error messages for invalid parameters\n- Test edge cases (empty strings, None values, etc.)\n\n⚠️ **Edge Cases:**\n- Empty strings for required parameters\n- None values for optional parameters\n- Invalid enum values\n- Out-of-range numeric values\n- Malformed JSON\n\n📚 **Dependencies:** None",
+      "status": "Todo",
+      "created": "2025-12-25T20:57:53.410Z",
+      "lastModified": "2025-12-25T20:57:53.410Z",
+      "taskNumber": 6,
+      "priority": "low",
+      "tags": [
+        "testing",
+        "validation",
+        "consolidated-tools"
+      ],
+      "dependencies": []
     }
   ],
-  "lastModified": "2025-12-25T20:46:37.720Z",
+  "lastModified": "2025-12-25T21:02:00.998Z",
   "updated_at": "2025-11-26T11:28:29.945680+00:00",
   "project": {
     "id": "davidl71/project-management-automation",
@@ -8141,22 +8105,6 @@
       "lastModified": "2025-12-25T16:10:31.222Z"
     },
     {
-      "id": "API-001-C-1",
-      "todoId": "API-001",
-      "type": "research_with_links",
-      "content": "**MANDATORY RESEARCH COMPLETED** ✅\n\n## Local Codebase Analysis:\n\n**Task**: Research Cursor Cloud Agents API for Exarp integration\n\n**Existing Cursor Integration:**\n\n**Key Files:**\n1. **`docs/research/MODE-001_CURSOR_MODE_DETECTION_RESEARCH.md`**\n   - Contains Cursor API research findings\n   - Documents Enterprise vs All Plans APIs\n   - Mode detection strategies\n\n2. **`docs/EXARP_CURSOR_INTEGRATION_STRATEGY.md`**\n   - Current Cursor integration overview\n   - MCP server configuration\n   - Enhancement opportunities\n\n3. **`.cursor/mcp.json`**\n   - Current MCP server configuration\n   - Exarp server setup\n\n**Current Integration:**\n- ✅ MCP server integration (Exarp tools available in Cursor)\n- ✅ Mode detection via local inference\n- ✅ Project context awareness\n\n## Internet Research (2025):\n\n🔗 **[Cursor API Documentation](https://cursor.com/docs/api)**\n- **Found via web search:** Official Cursor API documentation\n- **Key Insights:**\n  - Cloud Agents API: Beta, All Plans (accessible to non-Enterprise)\n  - Authentication: Basic Auth with API key\n  - Rate limiting: Standard rate limiting applies\n  - Endpoint: https://cursor.com/dashboard?tab=integrations\n- **Applicable to Task:** Primary source for API capabilities\n\n🔗 **[Cursor Cloud Agents API](https://cursor.com/docs/api/cloud-agents)**\n- **Found via web search:** Cloud Agents API specific documentation\n- **Key Insights:**\n  - Programmatically create/manage AI-powered coding agents\n  - Agent management capabilities\n  - Workflow automation triggers\n- **Applicable to Task:** Use cases for Exarp integration\n\n## Synthesis & Recommendation:\n\n**API Capabilities:**\n1. **Cloud Agents API (Beta)**:\n   - ✅ Available to all plans (not Enterprise-only)\n   - ✅ Agent creation and management\n   - ✅ Workflow automation triggers\n   - ⚠️ Beta status (may change)\n\n2. **Authentication:**\n   - Basic Auth with API key\n   - API keys from dashboard\n   - Standard rate limiting\n\n**Use Cases for Exarp:**\n1. **Automated Agent Spawning**: Create agents for background tasks\n2. **Multi-Agent Coordination**: Coordinate multiple agents\n3. **Workflow Automation**: Trigger workflows based on agent state\n4. **Background Tasks**: Run long-running tasks in background agents\n\n**Integration Feasibility:**\n- ✅ **Feasible**: API is accessible, well-documented\n- ⚠️ **Considerations**: Beta status, rate limiting\n- ✅ **Value**: Could enhance automation capabilities\n\n**Recommendation:**\n- Research complete - API is accessible and useful\n- Create implementation plan for Cloud Agents integration\n- Consider rate limiting and beta API stability\n- Focus on workflow automation use cases\n\n**Next Steps:**\n- Document API integration plan\n- Create proof-of-concept for agent spawning\n- Test rate limiting and error handling",
-      "created": "2025-12-25T16:10:34.876Z",
-      "lastModified": "2025-12-25T16:10:34.876Z"
-    },
-    {
-      "id": "MODE-001-UPDATE-C-1",
-      "todoId": "MODE-001-UPDATE",
-      "type": "research_with_links",
-      "content": "**MANDATORY RESEARCH COMPLETED** ✅\n\n## Local Codebase Analysis:\n\n**Task**: Update MODE-001 research with Cursor API findings\n\n**Existing Research Found:**\n\n**Key Files:**\n1. **`docs/research/MODE-001_CURSOR_MODE_DETECTION_RESEARCH.md`**\n   - Comprehensive Cursor API research\n   - Documents Enterprise vs All Plans APIs\n   - Mode detection strategies and heuristics\n   - Implementation approach (local pattern inference)\n\n**Current API Findings in Research:**\n- **Enterprise-Only APIs**: Analytics API, AI Code Tracking API, Admin API\n- **Available to All Plans**: Cloud Agents API (Beta)\n- **Implications**: Non-Enterprise users must use local inference\n\n**Implementation Status:**\n- ✅ Local pattern inference implemented (`project_management_automation/tools/session_mode_inference.py`)\n- ✅ Mode detection heuristics working\n- ✅ Works for all users (no Enterprise requirement)\n\n## Internet Research (2025):\n\n🔗 **[Cursor API Documentation](https://cursor.com/docs/api)**\n- **Found via web search:** Official Cursor API documentation\n- **Key Insights:**\n  - Enterprise APIs: Analytics, AI Code Tracking, Admin (usage data)\n  - All Plans: Cloud Agents API (Beta)\n  - Authentication: API keys from dashboard\n- **Applicable to Task:** Confirms existing research findings\n\n🔗 **[Cursor Cloud Agents API](https://cursor.com/docs/api/cloud-agents)**\n- **Found via web search:** Cloud Agents API documentation\n- **Key Insights:**\n  - Agent management capabilities\n  - Workflow automation triggers\n  - Beta status (may change)\n- **Applicable to Task:** Could enhance mode detection for Enterprise users\n\n## Synthesis & Recommendation:\n\n**Key Findings:**\n1. ✅ Existing research is comprehensive and accurate\n2. ✅ Local inference approach is correct (works for all users)\n3. ✅ Enterprise APIs could enhance but are optional\n4. ✅ Cloud Agents API could provide workflow triggers\n\n**Update Recommendations:**\n1. **Confirm API Findings**: Research already documents Enterprise vs All Plans correctly\n2. **Enhance with Cloud Agents**: Add Cloud Agents API use cases\n3. **Update Implementation Status**: Document that local inference is implemented\n4. **Add Enterprise Enhancement Path**: Document optional Enterprise API integration\n\n**Recommendation:**\n- Research is already complete and accurate\n- Update document with:\n  - Implementation status confirmation\n  - Cloud Agents API use cases\n  - Enterprise enhancement path (optional)\n  - Current mode detection performance metrics\n\n**Next Steps:**\n- Update MODE-001 document with latest findings\n- Add Cloud Agents API integration examples\n- Document Enterprise enhancement opportunities\n- Confirm local inference is working as expected",
-      "created": "2025-12-25T16:10:45.530Z",
-      "lastModified": "2025-12-25T16:10:45.530Z"
-    },
-    {
       "id": "PERF-20251211011404-001-C-1",
       "todoId": "PERF-20251211011404-001",
       "type": "result",
@@ -8211,6 +8159,22 @@
       "content": "**TEST SUITE COMPLETE - ALL TESTS PASSING** ✅\n\n**Final Results:**\n- ✅ **28/28 tests passing** (100% success rate)\n- ✅ **17 tests** in `test_ollama_integration.py`\n- ✅ **11 tests** in `test_ollama_enhanced_tools.py`\n\n**Test Coverage Summary:**\n\n### test_ollama_integration.py (17 tests):\n- ✅ TestCheckOllamaStatus - 4 tests (success, connection error, package not available, custom host)\n- ✅ TestListOllamaModels - 3 tests (success, empty list, package not available)\n- ✅ TestGetHardwareInfo - 3 tests (Apple Silicon, Intel Mac, RAM detection fallback)\n- ✅ TestGenerateWithOllama - 4 tests (success, model not found, streaming, package not available)\n- ✅ TestPullOllamaModel - 3 tests (success, connection error, package not available)\n\n### test_ollama_enhanced_tools.py (11 tests):\n- ✅ TestGenerateCodeDocumentation - 4 tests (success, file not found, package not available, output path)\n- ✅ TestAnalyzeCodeQuality - 3 tests (success, markdown-wrapped JSON, file not found)\n- ✅ TestEnhanceContextSummary - 4 tests (dict input, list input, string input, package not available)\n\n**Issues Fixed During Testing:**\n1. ✅ Fixed subprocess mocking - changed from bytes to text strings (subprocess.check_output uses text=True)\n2. ✅ Fixed hardware detection mocking - added side_effect to handle multiple subprocess calls (RAM + chip model)\n3. ✅ Fixed hardware config mock - added all required fields (platform, cpu_cores, etc.)\n4. ✅ Fixed Path mocking - changed from patching individual methods to mocking Path class properly\n5. ✅ Fixed streaming test - corrected iterator mocking for streaming responses\n\n**Test Execution:**\n- All tests use mocking - no actual Ollama server required\n- Tests run in 0.62 seconds\n- No linter errors\n- All assertions pass\n\n**Files Created:**\n- `tests/test_ollama_integration.py` (401 lines)\n- `tests/test_ollama_enhanced_tools.py` (244 lines)\n\n**Ready for:**\n- CI/CD integration\n- Code coverage reporting\n- Regression testing",
       "created": "2025-12-25T19:44:12.301Z",
       "lastModified": "2025-12-25T19:44:12.301Z"
+    },
+    {
+      "id": "MODE-002-C-1",
+      "todoId": "MODE-002",
+      "type": "result",
+      "content": "✅ **IMPLEMENTATION COMPLETE**\n\n**Deliverables:**\n1. ✅ **Session Mode Inference Engine**: `project_management_automation/tools/session_mode_inference.py` (138 lines)\n   - `SessionModeInference` class with full heuristics\n   - Mode detection: AGENT/ASK/MANUAL/UNKNOWN\n   - Confidence scoring based on tool frequency, file edits, session duration\n\n2. ✅ **Integration**: Integrated in `project_management_automation/resources/session.py`\n   - Used by `infer_session_mode_tool()`\n   - Cached results with 2-minute TTL\n\n3. ✅ **Documentation**: `docs/MODE-002_IMPLEMENTATION_COMPLETE.md`\n\n**Key Features:**\n- Tool call frequency analysis (tools per minute)\n- File edit pattern detection (multi-file vs single-file)\n- Session duration tracking\n- Mode inference with confidence scores (0.0-1.0)\n- Sliding window analysis support (for future enhancements)\n\n**Detection Heuristics:**\n- AGENT: ≥5.0 tools/min, >2 files, ≥300s duration\n- ASK: 1.0-3.0 tools/min, ≤2 files, <300s duration\n- MANUAL: <1.0 tools/min, direct file edits\n\n**Status**: ✅ Complete - Implementation operational and tested",
+      "created": "2025-12-25T21:00:01.027Z",
+      "lastModified": "2025-12-25T21:00:01.027Z"
+    },
+    {
+      "id": "MODE-004-C-1",
+      "todoId": "MODE-004",
+      "type": "result",
+      "content": "✅ **IMPLEMENTATION COMPLETE**\n\n**Deliverables:**\n1. ✅ **Session Mode Resource**: `project_management_automation/resources/session.py`\n   - `get_session_mode_resource()` function (line 161)\n   - Resource URI: `automation://session/mode`\n   - Returns JSON with inferred mode, confidence, signals, timestamp\n\n2. ✅ **MCP Resource Registration**: Registered in FastMCP server\n   - Available via `automation://session/mode`\n   - Used in consolidated tools\n\n**Resource Returns:**\n```json\n{\n  \"inferred_mode\": \"AGENT|ASK|MANUAL|UNKNOWN\",\n  \"confidence\": 0.0-1.0,\n  \"signals\": {\n    \"tool_calls\": 15,\n    \"files_edited\": 3,\n    \"session_duration_sec\": 300,\n    \"multi_file_edits\": true\n  },\n  \"last_updated\": \"ISO timestamp\"\n}\n```\n\n**Integration:**\n- Used in `project_management_automation/tools/consolidated.py` (line 1064)\n- Accessible via MCP resource protocol\n- Cached results (2-minute TTL)\n\n**Status**: ✅ Complete - Resource available and operational",
+      "created": "2025-12-25T21:00:02.749Z",
+      "lastModified": "2025-12-25T21:00:02.749Z"
     }
   ],
   "activities": [
@@ -8656,7 +8620,171 @@
         "oldValue": "Review",
         "newValue": "Done"
       }
+    },
+    {
+      "id": "activity-1766696273410-17wlqhp66",
+      "type": "todo_created",
+      "todoId": "T-4",
+      "todoName": "Add error path tests for consolidated tools",
+      "timestamp": "2025-12-25T20:57:53.410Z",
+      "details": {
+        "priority": "medium",
+        "tags": [
+          "testing",
+          "coverage",
+          "consolidated-tools"
+        ],
+        "dependencies": []
+      }
+    },
+    {
+      "id": "activity-1766696273410-mps6ag1gn",
+      "type": "todo_created",
+      "todoId": "T-5",
+      "todoName": "Add async tool tests for consolidated tools",
+      "timestamp": "2025-12-25T20:57:53.410Z",
+      "details": {
+        "priority": "low",
+        "tags": [
+          "testing",
+          "async",
+          "consolidated-tools"
+        ],
+        "dependencies": []
+      }
+    },
+    {
+      "id": "activity-1766696273410-k6dxlz9kl",
+      "type": "todo_created",
+      "todoId": "T-6",
+      "todoName": "Add parameter validation tests for consolidated tools",
+      "timestamp": "2025-12-25T20:57:53.410Z",
+      "details": {
+        "priority": "low",
+        "tags": [
+          "testing",
+          "validation",
+          "consolidated-tools"
+        ],
+        "dependencies": []
+      }
+    },
+    {
+      "id": "activity-1766696401027-s2yvpi1cv",
+      "type": "comment_added",
+      "todoId": "MODE-002",
+      "todoName": "Implement: Session mode inference from tool patterns",
+      "timestamp": "2025-12-25T21:00:01.027Z",
+      "details": {
+        "commentType": "result",
+        "commentPreview": "✅ **IMPLEMENTATION COMPLETE**\n\n**Deliverables:**\n1. ✅ **Session Mode Inference Engine**: `project_ma...",
+        "commentId": "MODE-002-C-1"
+      }
+    },
+    {
+      "id": "activity-1766696402749-lno807q7f",
+      "type": "comment_added",
+      "todoId": "MODE-004",
+      "todoName": "Implement: Session mode resource (automation://session/mode)",
+      "timestamp": "2025-12-25T21:00:02.749Z",
+      "details": {
+        "commentType": "result",
+        "commentPreview": "✅ **IMPLEMENTATION COMPLETE**\n\n**Deliverables:**\n1. ✅ **Session Mode Resource**: `project_management...",
+        "commentId": "MODE-004-C-1"
+      }
+    },
+    {
+      "id": "activity-1766696403105-qpv55scig",
+      "type": "status_changed",
+      "todoId": "MODE-002",
+      "todoName": "Implement: Session mode inference from tool patterns",
+      "timestamp": "2025-12-25T21:00:03.105Z",
+      "details": {
+        "field": "status",
+        "oldValue": "Todo",
+        "newValue": "Done"
+      }
+    },
+    {
+      "id": "activity-1766696403105-jkpz8vmf0",
+      "type": "status_changed",
+      "todoId": "MODE-004",
+      "todoName": "Implement: Session mode resource (automation://session/mode)",
+      "timestamp": "2025-12-25T21:00:03.105Z",
+      "details": {
+        "field": "status",
+        "oldValue": "Blocked",
+        "newValue": "Done"
+      }
+    },
+    {
+      "id": "activity-1766696403977-5g1vsdcb9",
+      "type": "description_changed",
+      "todoId": "MODE-005",
+      "todoName": "Implement: Auto-log mode in memory system",
+      "timestamp": "2025-12-25T21:00:03.977Z",
+      "details": {
+        "field": "long_description",
+        "oldValue": "Automatically log inferred mode in the memory system for pattern analysis.\n\nFeatures:\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\nMemory format:\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\nDependencies: MODE-002, MODE-004",
+        "newValue": "**STATUS UPDATE**: Dependencies resolved - MODE-002 and MODE-004 are now complete.\n\n**Original Description:**\nAutomatically log inferred mode in the memory system for pattern analysis.\n\n**Features:**\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\n**Memory format:**\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\n**Dependencies**: MODE-002 ✅, MODE-004 ✅ (both complete)"
+      }
+    },
+    {
+      "id": "activity-1766696403977-0kqe1e02w",
+      "type": "status_changed",
+      "todoId": "MODE-005",
+      "todoName": "Implement: Auto-log mode in memory system",
+      "timestamp": "2025-12-25T21:00:03.977Z",
+      "details": {
+        "field": "status",
+        "oldValue": "Blocked",
+        "newValue": "Todo"
+      }
+    },
+    {
+      "id": "activity-1766696439609-60xki3vnd",
+      "type": "todo_deleted",
+      "todoId": "API-001",
+      "todoName": "Implement Research: Cursor Cloud Agents API integration",
+      "timestamp": "2025-12-25T21:00:39.609Z",
+      "details": {
+        "deletedTodoName": "Implement Research: Cursor Cloud Agents API integration",
+        "associatedCommentsCount": 1
+      }
+    },
+    {
+      "id": "activity-1766696439609-a3n1tprxa",
+      "type": "todo_deleted",
+      "todoId": "MODE-001-UPDATE",
+      "todoName": "Update Research: Update mode detection with Cursor API findings",
+      "timestamp": "2025-12-25T21:00:39.609Z",
+      "details": {
+        "deletedTodoName": "Update Research: Update mode detection with Cursor API findings",
+        "associatedCommentsCount": 1
+      }
+    },
+    {
+      "id": "activity-1766696479435-znk9bzm9m",
+      "type": "todo_deleted",
+      "todoId": "T-20251126040001-58",
+      "todoName": "Update 58 Todo2 tasks that are not in shared TODO table",
+      "timestamp": "2025-12-25T21:01:19.435Z",
+      "details": {
+        "deletedTodoName": "Update 58 Todo2 tasks that are not in shared TODO table",
+        "associatedCommentsCount": 0
+      }
+    },
+    {
+      "id": "activity-1766696520998-uqh8mb82g",
+      "type": "todo_deleted",
+      "todoId": "T-20251126035735-50",
+      "todoName": "Update 17 files were skipped - review for manual hint addition if needed",
+      "timestamp": "2025-12-25T21:02:00.998Z",
+      "details": {
+        "deletedTodoName": "Update 17 files were skipped - review for manual hint addition if needed",
+        "associatedCommentsCount": 0
+      }
     }
   ],
-  "nextTaskNumber": 4
+  "nextTaskNumber": 7
 }

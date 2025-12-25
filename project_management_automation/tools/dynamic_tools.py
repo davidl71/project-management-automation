@@ -200,10 +200,7 @@ TOOL_GROUP_MAPPING: dict[str, ToolGroup] = {
     "consult_advisor": ToolGroup.ADVISORS,
     "get_advisor_briefing": ToolGroup.ADVISORS,
     "list_advisors": ToolGroup.ADVISORS,
-    "export_advisor_podcast": ToolGroup.ADVISORS,
-    "check_tts_backends": ToolGroup.ADVISORS,
-    "synthesize_advisor_quote": ToolGroup.ADVISORS,
-    "generate_podcast_audio": ToolGroup.ADVISORS,
+    # Audio tools removed - migrated to devwisdom-go MCP server
 
     # Memory
     "save_memory": ToolGroup.MEMORY,

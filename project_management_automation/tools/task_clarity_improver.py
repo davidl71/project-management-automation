@@ -253,16 +253,33 @@ def analyze_task_clarity(
 
 def _estimate_task_hours(name: str, details: str, task: Optional[Dict] = None) -> float:
     """
-    Estimate task hours using statistical methods.
+    Estimate task hours using MLX-enhanced statistical methods.
     
-    Uses historical data when available, falls back to keyword heuristics.
+    Uses MLX semantic understanding combined with historical data when available,
+    falls back to keyword heuristics if MLX unavailable.
     """
     try:
         # Extract task metadata for better estimation
         tags = task.get('tags', []) if task else []
         priority = task.get('priority', 'medium') if task else 'medium'
         
-        # Use new statistical estimator
+        # Try MLX-enhanced estimator first (better accuracy)
+        try:
+            from .mlx_task_estimator import estimate_task_duration_mlx_enhanced
+            return estimate_task_duration_mlx_enhanced(
+                name=name,
+                details=details or task.get('details', '') or task.get('long_description', '') if task else '',
+                tags=tags,
+                priority=priority,
+                use_historical=True,
+                use_mlx=True,
+                mlx_weight=0.3,  # 30% MLX, 70% statistical
+            )
+        except ImportError:
+            # MLX not available, fall back to statistical-only
+            pass
+        
+        # Use statistical estimator (fallback or if MLX disabled)
         return estimate_task_duration(
             name=name,
             details=details or task.get('details', '') or task.get('long_description', '') if task else '',
@@ -271,7 +288,7 @@ def _estimate_task_hours(name: str, details: str, task: Optional[Dict] = None) -
             use_historical=True
         )
     except Exception as e:
-        logger.warning(f"Statistical estimation failed, using fallback: {e}")
+        logger.warning(f"Estimation failed, using fallback: {e}")
         # Fallback to simple heuristic
         text = (name + " " + details).lower()
         if any(word in text for word in ['quick', 'simple', 'minor', 'small', 'fix typo']):

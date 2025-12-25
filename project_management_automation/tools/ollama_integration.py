@@ -399,13 +399,27 @@ def check_ollama_status(host: Optional[str] = None) -> str:
             client = ollama.Client()
 
         # Try to list models to check connection
-        models = client.list()
+        models_response = client.list()
+        model_list = models_response.models if hasattr(models_response, 'models') else models_response.get("models", [])
+        
+        # Extract model names
+        model_names = []
+        for model_obj in model_list[:10]:  # First 10
+            if hasattr(model_obj, 'model'):
+                model_names.append(model_obj.model)
+            elif hasattr(model_obj, 'model_dump'):
+                model_dict = model_obj.model_dump()
+                model_names.append(model_dict.get("model", ""))
+            elif isinstance(model_obj, dict):
+                model_names.append(model_obj.get("model", model_obj.get("name", "")))
+            else:
+                model_names.append(str(model_obj))
         
         result = {
             "status": "running",
             "host": host or "http://localhost:11434",
-            "model_count": len(models.get("models", [])),
-            "models": [m.get("name", "") for m in models.get("models", [])[:10]],  # First 10
+            "model_count": len(model_list),
+            "models": model_names,
         }
 
         duration = time.time() - start_time
@@ -461,16 +475,41 @@ def list_ollama_models(host: Optional[str] = None) -> str:
             client = ollama.Client()
 
         models = client.list()
-        model_list = models.get("models", [])
+        model_list = models.models if hasattr(models, 'models') else models.get("models", [])
 
         # Format model information
         formatted_models = []
-        for model in model_list:
+        for model_obj in model_list:
+            # Convert Pydantic model to dict if needed
+            if hasattr(model_obj, 'model_dump'):
+                model_dict = model_obj.model_dump()
+            elif hasattr(model_obj, 'dict'):
+                model_dict = model_obj.dict()
+            elif isinstance(model_obj, dict):
+                model_dict = model_obj
+            else:
+                # Fallback: access attributes directly
+                model_dict = {
+                    "model": getattr(model_obj, "model", ""),
+                    "size": getattr(model_obj, "size", 0),
+                    "modified_at": getattr(model_obj, "modified_at", None),
+                    "digest": getattr(model_obj, "digest", ""),
+                }
+            
+            # Convert datetime to ISO string if present
+            modified_at = model_dict.get("modified_at")
+            if modified_at and hasattr(modified_at, 'isoformat'):
+                modified_at_str = modified_at.isoformat()
+            elif modified_at:
+                modified_at_str = str(modified_at)
+            else:
+                modified_at_str = ""
+            
             formatted_models.append({
-                "name": model.get("name", ""),
-                "size": model.get("size", 0),
-                "modified_at": model.get("modified_at", ""),
-                "digest": model.get("digest", "")[:12],  # Short digest
+                "name": model_dict.get("model", ""),  # Note: Ollama uses "model" not "name"
+                "size": model_dict.get("size", 0),
+                "modified_at": modified_at_str,
+                "digest": model_dict.get("digest", "")[:12] if model_dict.get("digest") else "",  # Short digest
             })
 
         result = {

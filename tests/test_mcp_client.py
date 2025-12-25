@@ -45,12 +45,12 @@ class TestMCPClient:
         # Config should be loaded (empty dict if file doesn't exist, or parsed JSON)
         assert isinstance(client.mcp_config, dict)
 
-    def test_mcp_client_no_config(self):
-        """Test MCPClient with no config file."""
+    def test_mcp_client_no_config(self, tmp_path):
+        """Test MCPClient handles missing config gracefully."""
         from project_management_automation.scripts.base.mcp_client import MCPClient
 
-        # Create client with non-existent config
-        client = MCPClient(project_root=Path("/nonexistent/project"))
+        # Create client with temporary path (no .cursor/mcp.json)
+        client = MCPClient(project_root=tmp_path)
 
         # Should handle gracefully with empty config
         assert client.mcp_config == {}
@@ -116,33 +116,9 @@ class TestMCPClient:
         assert result['problem'] == "test problem"
         assert 'steps' in result
 
-    def test_extract_components_simple(self):
-        """Test simple component extraction."""
-        from project_management_automation.scripts.base.mcp_client import MCPClient
-
-        client = MCPClient(project_root=Path("/test"))
-
-        # Test with × separator
-        components = client._extract_components_simple("A × B × C")
-        assert len(components) >= 3
-
-        # Test with * separator
-        components = client._extract_components_simple("A * B * C")
-        assert len(components) >= 3
-
-        # Test with no separator
-        components = client._extract_components_simple("Simple concept")
-        assert isinstance(components, list)
-
-    def test_plan_steps_simple(self):
-        """Test simple step planning."""
-        from project_management_automation.scripts.base.mcp_client import MCPClient
-
-        client = MCPClient(project_root=Path("/test"))
-
-        steps = client._plan_steps_simple("How do we implement X?")
-        assert isinstance(steps, list)
-        assert len(steps) > 0
+    # Helper method tests removed - more comprehensive tests exist in
+    # test_mcp_client_agentic_tools.py::TestMCPClientHelperMethods
+    # These helper methods are tested there with better coverage and fixtures
 
 
 if __name__ == '__main__':

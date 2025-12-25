@@ -222,9 +222,15 @@ def list_todos_mcp(
             # Check if dependencies are completed
             deps = task.get('dependencies', [])
             if deps:
-                # Would need to check dependency status - simplified for now
+                from .todo2_utils import is_completed_status
+                # Extract dependency IDs (handle both string and dict formats)
                 dep_ids = [d if isinstance(d, str) else d.get('id') for d in deps]
-                completed_deps = [t for t in tasks if t.get('id') in dep_ids and t.get('status') == 'Done']
+                # Check if all dependencies are completed (using normalized status check)
+                completed_deps = [
+                    t for t in tasks 
+                    if t.get('id') in dep_ids and is_completed_status(t.get('status', ''))
+                ]
+                # Task is only ready if ALL dependencies are completed
                 if len(completed_deps) < len(dep_ids):
                     continue
         filtered.append(task)

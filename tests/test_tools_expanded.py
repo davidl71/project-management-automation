@@ -35,54 +35,10 @@ class TestServerStatusTool:
         assert hasattr(server_module, 'mcp') or True
 
 
-class TestAutomationOpportunitiesTool:
-    """Tests for find_automation_opportunities tool."""
-
-    @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
-    def test_find_automation_opportunities_success(self, mock_finder_class):
-        """Test successful automation opportunity discovery."""
-        from project_management_automation.tools.automation_opportunities import find_automation_opportunities
-
-        mock_finder = Mock()
-        mock_finder.run.return_value = {
-            'status': 'success',
-            'results': {
-                'opportunities': [],
-                'total_opportunities': 0
-            }
-        }
-        mock_finder_class.return_value = mock_finder
-
-        with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-            result = find_automation_opportunities(min_value_score=0.7)
-            result_data = json.loads(result)
-
-            assert result_data['success'] is True
+# TestAutomationOpportunitiesTool removed - duplicate of test_automation_opportunities.py
 
 
-class TestTodoSyncTool:
-    """Tests for sync_todo_tasks tool."""
-
-    @patch('project_management_automation.scripts.automate_todo_sync.TodoSyncAutomation')
-    def test_sync_todo_tasks_success(self, mock_sync_class):
-        """Test successful todo task synchronization."""
-        from project_management_automation.tools.todo_sync import sync_todo_tasks
-
-        mock_sync = Mock()
-        mock_sync.run.return_value = {
-            'status': 'success',
-            'results': {
-                'matches_found': 0,
-                'conflicts': []
-            }
-        }
-        mock_sync_class.return_value = mock_sync
-
-        with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-            result = sync_todo_tasks(dry_run=True)
-            result_data = json.loads(result)
-
-            assert result_data['success'] is True
+# TestTodoSyncTool removed - duplicate of test_todo_sync.py
 
 
 class TestExternalToolHintsTool:
@@ -103,87 +59,13 @@ class TestExternalToolHintsTool:
         assert 'success' in result_data or 'status' in result_data or 'data' in result_data
 
 
-class TestDailyAutomationTool:
-    """Tests for run_daily_automation tool."""
-
-    @patch('project_management_automation.scripts.automate_daily.DailyAutomation')
-    def test_run_daily_automation_success(self, mock_daily_class):
-        """Test successful daily automation execution."""
-        from project_management_automation.tools.daily_automation import run_daily_automation
-
-        mock_daily = Mock()
-        mock_daily.run.return_value = {
-            'status': 'success',
-            'results': {
-                'tasks_run': [],
-                'success_rate': 1.0
-            }
-        }
-        mock_daily_class.return_value = mock_daily
-
-        with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-            result = run_daily_automation()
-            result_data = json.loads(result)
-
-            assert result_data['success'] is True
+# TestDailyAutomationTool removed - duplicate of test_daily_automation.py
 
 
-class TestCICDValidationTool:
-    """Tests for validate_ci_cd_workflow tool."""
-
-    @patch('pathlib.Path.exists', return_value=True)
-    @patch('builtins.open', new_callable=mock_open, read_data='name: test\non: {}')
-    @patch('yaml.safe_load', return_value={'name': 'test', 'on': {}})
-    def test_validate_ci_cd_workflow_success(self, mock_yaml, mock_file, mock_exists):
-        """Test successful CI/CD workflow validation."""
-        # Mock yaml module if not available
-        try:
-            import yaml
-        except ImportError:
-            # If yaml not available, mock it
-            yaml = MagicMock()
-            yaml.safe_load = mock_yaml
-
-        from project_management_automation.tools.ci_cd_validation import validate_ci_cd_workflow
-
-        result = validate_ci_cd_workflow()
-        result_data = json.loads(result)
-
-        assert result_data['success'] is True
-        # Result structure changed: workflow data is in 'data' key
-        assert 'data' in result_data or 'workflow_file' in result_data
+# TestCICDValidationTool removed - duplicate of test_ci_cd_validation.py
 
 
-class TestBatchTaskApprovalTool:
-    """Tests for batch_approve_tasks tool."""
-
-    @patch('subprocess.run')
-    @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    def test_batch_approve_tasks_success(self, mock_find_root, mock_subprocess):
-        """Test successful batch task approval."""
-        from project_management_automation.tools.batch_task_approval import batch_approve_tasks
-
-        # Mock find_project_root to return a mock path that supports / operations
-        mock_project_root = MagicMock()
-        mock_scripts_dir = MagicMock()
-        mock_script_path = MagicMock()
-        mock_script_path.exists.return_value = True
-        mock_scripts_dir.__truediv__ = MagicMock(return_value=mock_script_path)
-        mock_project_root.__truediv__ = MagicMock(return_value=mock_scripts_dir)
-        mock_find_root.return_value = mock_project_root
-
-        # Mock subprocess result
-        mock_result = Mock()
-        mock_result.returncode = 0
-        mock_result.stdout = '• T-1: Test task'
-        mock_result.stderr = ''
-        mock_subprocess.return_value = mock_result
-
-        result = batch_approve_tasks(status="Review", new_status="Todo", dry_run=True)
-
-        # batch_approve_tasks returns dict, not JSON string
-        assert isinstance(result, dict)
-        assert 'approved_count' in result or 'status' in result or 'success' in result
+# TestBatchTaskApprovalTool removed - duplicate of test_batch_task_approval.py
 
 
 class TestNightlyTaskAutomationTool:
@@ -261,115 +143,16 @@ class TestWorkingCopyHealthTool:
         assert 'summary' in result_data or 'agents' in result_data or result_data.get('success') is True
 
 
-class TestTaskClarificationTools:
-    """Tests for task clarification resolution tools."""
-
-    @patch('subprocess.run')
-    @patch('pathlib.Path.exists', return_value=True)
-    def test_resolve_task_clarification_success(self, mock_exists, mock_subprocess):
-        """Test successful task clarification resolution."""
-        from project_management_automation.tools.task_clarification_resolution import resolve_task_clarification
-
-        # Mock subprocess result
-        mock_result = Mock()
-        mock_result.returncode = 0
-        mock_result.stdout = '✅ Updated task T-1'
-        mock_result.stderr = ''
-        mock_subprocess.return_value = mock_result
-
-        result = resolve_task_clarification(
-            task_id="T-1",
-            clarification="Test?",
-            decision="Yes",
-            dry_run=True
-        )
-
-        # resolve_task_clarification returns dict, not JSON string
-        assert isinstance(result, dict)
-        assert 'status' in result
-
-    @patch('subprocess.run')
-    @patch('pathlib.Path.exists', return_value=True)
-    def test_resolve_multiple_clarifications_success(self, mock_exists, mock_subprocess):
-        """Test successful multiple clarifications resolution."""
-        from project_management_automation.tools.task_clarification_resolution import resolve_multiple_clarifications
-
-        # Mock subprocess result
-        mock_result = Mock()
-        mock_result.returncode = 0
-        mock_result.stdout = '{"resolved_count": 1}'
-        mock_result.stderr = ''
-        mock_subprocess.return_value = mock_result
-
-        decisions = json.dumps({"T-1": {"clarification": "Test?", "decision": "Yes"}})
-        result = resolve_multiple_clarifications(decisions=decisions, dry_run=True)
-
-        # resolve_multiple_clarifications returns dict, not JSON string
-        assert isinstance(result, dict)
-        assert 'status' in result
-
-    @patch('pathlib.Path.exists', return_value=True)
-    @patch('builtins.open', new_callable=mock_open, read_data='{"todos": [{"id": "T-1", "status": "Review"}]}')
-    def test_list_tasks_awaiting_clarification_success(self, mock_file, mock_exists):
-        """Test successful list of tasks awaiting clarification."""
-        from project_management_automation.tools.task_clarification_resolution import list_tasks_awaiting_clarification
-
-        result = list_tasks_awaiting_clarification()
-
-        # list_tasks_awaiting_clarification returns dict, not JSON string
-        assert isinstance(result, dict)
-        assert 'tasks' in result
+# TestTaskClarificationTools removed - duplicate of test_task_clarification_resolution.py
 
 
-class TestGitHooksTool:
-    """Tests for setup_git_hooks tool."""
-
-    @patch('pathlib.Path.exists', return_value=True)
-    @patch('pathlib.Path.mkdir')
-    @patch('pathlib.Path.write_text')
-    def test_setup_git_hooks_success(self, mock_write, mock_mkdir, mock_exists):
-        """Test successful git hooks setup."""
-        from project_management_automation.tools.git_hooks import setup_git_hooks
-
-        result = setup_git_hooks(dry_run=True)
-        result_data = json.loads(result)
-
-        assert result_data['status'] == 'success'
-        assert 'hooks_configured' in result_data or 'patterns_configured' in result_data
+# TestGitHooksTool removed - duplicate of test_git_hooks.py
 
 
-class TestPatternTriggersTool:
-    """Tests for setup_pattern_triggers tool."""
-
-    @patch('pathlib.Path.exists', return_value=True)
-    @patch('pathlib.Path.write_text')
-    @patch('builtins.open', new_callable=mock_open)
-    def test_setup_pattern_triggers_success(self, mock_file, mock_write, mock_exists):
-        """Test successful pattern triggers setup."""
-        from project_management_automation.tools.pattern_triggers import setup_pattern_triggers
-
-        result = setup_pattern_triggers(dry_run=True)
-        result_data = json.loads(result)
-
-        assert result_data['status'] == 'success'
-        assert 'patterns_configured' in result_data
+# TestPatternTriggersTool removed - duplicate of test_pattern_triggers.py
 
 
-class TestSimplifyRulesTool:
-    """Tests for simplify_rules tool."""
-
-    @patch('pathlib.Path.exists', return_value=True)
-    @patch('pathlib.Path.read_text', return_value='# Test rule content')
-    @patch('pathlib.Path.write_text')
-    def test_simplify_rules_success(self, mock_write, mock_read, mock_exists):
-        """Test successful rules simplification."""
-        from project_management_automation.tools.simplify_rules import simplify_rules
-
-        result = simplify_rules(dry_run=True)
-        result_data = json.loads(result)
-
-        assert result_data['status'] == 'success'
-        assert 'files_processed' in result_data
+# TestSimplifyRulesTool removed - duplicate of test_simplify_rules.py
 
 
 if __name__ == '__main__':

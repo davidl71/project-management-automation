@@ -8,7 +8,7 @@
 >
 > Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
 
-> **Date**: 2025-01-26  
+> **P25-12-25  
 > **Purpose**: Breaking down exarp into separate, focused MCP servers  
 > **Language Preferences**: C++, Rust, Python, Go
 
@@ -767,5 +767,5 @@ The wisdom module is **already designed for extraction**:
 
 ---
 
-**Last Updated**: 2025-01-26  
+P25-12-25  
 **Status**: Recommendation Document - Ready for Discussion

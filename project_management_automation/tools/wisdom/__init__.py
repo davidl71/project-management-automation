@@ -121,22 +121,10 @@ from .advisors import (
     get_daily_briefing,
 )
 
-# Voice/TTS System (optional - requires edge-tts or pyttsx3)
-try:
-    from .voice import (
-        ADVISOR_VOICES,
-        HEBREW_VOICES,
-        check_tts_backends,
-        generate_podcast_audio,
-        get_available_backend,
-        list_available_voices,
-        synthesize_advisor_quote,
-    )
-    VOICE_AVAILABLE = True
-except ImportError:
-    VOICE_AVAILABLE = False
-    ADVISOR_VOICES = {}
-    HEBREW_VOICES = {}
+# Voice/TTS System removed - migrated to devwisdom-go MCP server
+VOICE_AVAILABLE = False
+ADVISOR_VOICES = {}
+HEBREW_VOICES = {}
 
 __all__ = [
     # Core API (stable)
@@ -171,14 +159,7 @@ __all__ = [
     "get_consultation_log",
     "export_for_podcast",
 
-    # Voice/TTS System
-    "ADVISOR_VOICES",
-    "HEBREW_VOICES",
-    "check_tts_backends",
-    "synthesize_advisor_quote",
-    "generate_podcast_audio",
-    "list_available_voices",
-    "get_available_backend",
+    # Voice/TTS System removed - migrated to devwisdom-go MCP server
 ]
 
 # INTENTIONAL: Wisdom module has its own version, separate from Exarp.

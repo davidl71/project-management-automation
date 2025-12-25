@@ -216,4 +216,4 @@ python3 mcp-servers/project-management-automation/tools/simplify_rules.py --no-d
 
 ---
 
-**Last Updated**: 2025-01-27
+P25-12-25

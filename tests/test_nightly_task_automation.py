@@ -164,27 +164,6 @@ class TestNightlyTaskAutomation:
         assert len(updated_task.get('comments', [])) > 0
         assert 'changes' in updated_task
 
-    @patch('socket.gethostname')
-    @patch('socket.getfqdn')
-    def test_get_local_ip_addresses(self, mock_fqdn, mock_hostname):
-        """Test local IP address detection."""
-        from project_management_automation.tools.nightly_task_automation import _get_local_ip_addresses
-
-        mock_hostname.return_value = 'testhost'
-        mock_fqdn.return_value = 'testhost.local'
-        
-        ips = _get_local_ip_addresses()
-        
-        assert isinstance(ips, list)
-        assert 'testhost' in ips
-
-    @patch('socket.gethostname')
-    def test_is_local_host(self, mock_hostname):
-        """Test local host detection."""
-        from project_management_automation.tools.nightly_task_automation import _is_local_host
-
-        mock_hostname.return_value = 'testhost'
-        
-        assert _is_local_host('localhost') is True
-        assert _is_local_host('127.0.0.1') is True
-        assert _is_local_host('testhost') is True
+    # Network utility tests removed - moved to test_utils_network.py
+    # These functions are shared utilities (duplicated in working_copy_health.py)
+    # See test_utils_network.py for comprehensive tests

@@ -170,7 +170,7 @@ PROMPT_CATEGORIES: Dict[str, List[str]] = {
     "wisdom": [
         "advisor_consult",
         "advisor_briefing",
-        "advisor_audio",
+        # advisor_audio removed - migrated to devwisdom-go MCP server
     ],
     "memory": [
         "memory_system",
@@ -229,7 +229,7 @@ PROMPT_DESCRIPTIONS: Dict[str, str] = {
     # Wisdom
     "advisor_consult": "Consult a trusted advisor for wisdom on current work",
     "advisor_briefing": "Get morning briefing from trusted advisors",
-    "advisor_audio": "Generate audio from advisor consultations",
+    # advisor_audio removed - migrated to devwisdom-go MCP server
 
     # Memory
     "memory_system": "Use AI session memory to persist insights across sessions",

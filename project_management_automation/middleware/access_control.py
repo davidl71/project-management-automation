@@ -37,7 +37,7 @@ DEFAULT_TOOL_LEVELS = {
     "server_status": AccessLevel.READ,
     "list_problem_categories": AccessLevel.READ,
     "list_advisors": AccessLevel.READ,
-    "check_tts_backends": AccessLevel.READ,
+    # check_tts_backends removed - TTS functionality migrated to devwisdom-go MCP server
     "fetch_dependabot_alerts": AccessLevel.READ,
     "generate_security_report": AccessLevel.READ,
 
@@ -56,8 +56,7 @@ DEFAULT_TOOL_LEVELS = {
     "run_tests": AccessLevel.EXECUTE,
     "run_daily_automation": AccessLevel.EXECUTE,
     "scan_dependency_security": AccessLevel.EXECUTE,
-    "synthesize_advisor_quote": AccessLevel.EXECUTE,
-    "generate_podcast_audio": AccessLevel.EXECUTE,
+    # Audio tools removed - migrated to devwisdom-go MCP server
 
     # Admin operations
     "run_nightly_task_automation": AccessLevel.ADMIN,

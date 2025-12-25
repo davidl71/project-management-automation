@@ -21,7 +21,8 @@
       ],
       "env": {
         "PROJECT_ROOT": "/Users/davidl/Projects/project-management-automation"
-      }
+      },
+      "description": "Exarp Project Management Automation MCP Server"
     },
     "filesystem": {
       "args": [

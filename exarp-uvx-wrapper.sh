@@ -89,6 +89,7 @@ fi
 
 export PROJECT_ROOT
 
-# Execute uvx with exarp in editable mode (uses local code)
-# This ensures the latest local version is used instead of cached/remote version
-exec "$UVX_PATH" --with-editable "$SCRIPT_DIR" exarp "$@"
+# Execute uvx with exarp using local dev code
+# Use --from to explicitly point to local directory (prevents using PyPI version)
+# This ensures the latest local development version is used instead of cached/remote version
+exec "$UVX_PATH" --from "$SCRIPT_DIR" exarp "$@"

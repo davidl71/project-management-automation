@@ -18,8 +18,8 @@ sys.path.insert(0, str(project_root))
 class TestAutomationOpportunitiesTool:
     """Tests for automation opportunities tool."""
 
-    @patch('project_management_automation.tools.automation_opportunities.find_project_root')
-    @patch('project_management_automation.tools.automation_opportunities.AutomationOpportunityFinder')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
     def test_find_automation_opportunities_success(self, mock_finder_class, mock_find_root):
         """Test successful automation opportunity finding."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities
@@ -49,12 +49,12 @@ class TestAutomationOpportunitiesTool:
         
         assert result['success'] is True
         assert result['data']['total_opportunities'] == 3
-        assert result['data']['filtered_opportunities'] == 2  # Only scores >= 7.0
+        assert result['data']['filtered_opportunities'] == 1  # Only scores >= 7.0 (8.5 >= 7.0, 6.0 < 7.0, 4.0 < 7.0)
         assert result['data']['high_priority_count'] == 1
         assert result['data']['existing_automations'] == 5
 
-    @patch('project_management_automation.tools.automation_opportunities.find_project_root')
-    @patch('project_management_automation.tools.automation_opportunities.AutomationOpportunityFinder')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
     def test_find_automation_opportunities_custom_output_path(self, mock_finder_class, mock_find_root):
         """Test with custom output path."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities
@@ -79,8 +79,8 @@ class TestAutomationOpportunitiesTool:
         assert result['success'] is True
         assert '/custom/path/report.md' in result['data']['report_path']
 
-    @patch('project_management_automation.tools.automation_opportunities.find_project_root')
-    @patch('project_management_automation.tools.automation_opportunities.AutomationOpportunityFinder')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
     def test_find_automation_opportunities_custom_threshold(self, mock_finder_class, mock_find_root):
         """Test with custom min_value_score threshold."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities
@@ -109,8 +109,8 @@ class TestAutomationOpportunitiesTool:
         assert result['success'] is True
         assert result['data']['filtered_opportunities'] == 2  # Both pass threshold
 
-    @patch('project_management_automation.tools.automation_opportunities.find_project_root')
-    @patch('project_management_automation.tools.automation_opportunities.AutomationOpportunityFinder')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
     def test_find_automation_opportunities_error(self, mock_finder_class, mock_find_root):
         """Test error handling."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities
@@ -126,8 +126,8 @@ class TestAutomationOpportunitiesTool:
         assert result['success'] is False
         assert 'error' in result
 
-    @patch('project_management_automation.tools.automation_opportunities.find_project_root')
-    @patch('project_management_automation.tools.automation_opportunities.AutomationOpportunityFinder')
+    @patch('project_management_automation.utils.find_project_root')
+    @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
     def test_find_automation_opportunities_top_10_limit(self, mock_finder_class, mock_find_root):
         """Test that top_opportunities is limited to 10."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities

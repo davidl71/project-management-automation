@@ -8,7 +8,7 @@
 >
 > Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
 
-**Date**: 2025-01-26  
+**P25-12-25  
 **Status**: ✅ Complete - Feature Added to Exarp
 
 ---
@@ -194,7 +194,7 @@ The attribution score (0-100) is calculated by:
 ```markdown
 # Attribution Compliance Report
 
-**Generated**: 2025-01-26 10:30:00
+P25-12-25 10:30:00
 **Score**: 95.0/100
 **Status**: Compliant
 

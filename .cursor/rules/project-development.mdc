@@ -301,9 +301,22 @@ mcp_agentic-tools_create_task(
 - Works with the project's task management system
 - Follows the established architecture
 
+## Testing Guidelines
+
+### Test Organization
+- One test file per tool/module
+- Avoid duplicate tests across files
+- Use dedicated test files for shared utilities
+- See `docs/TEST_ORGANIZATION_GUIDELINES.md` for complete guidelines
+
+### Running Tests
+- Always use `uv run pytest` (never `pip install` or manual venv)
+- Check for duplicate test names: `uv run python scripts/check_duplicate_test_names.py`
+
 ## Related Documentation
 
 - `README.md` - Project overview and installation
 - `USAGE.md` - Tool usage guide
 - `DEPENDENCIES.md` - Complementary MCP servers
-- `CONTRIBUTING.md` - Contribution guidelines
+- `docs/TEST_ORGANIZATION_GUIDELINES.md` - Test organization and best practices
+- `docs/TEST_CLEANUP_PLAN.md` - Test cleanup and maintenance plan

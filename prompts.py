@@ -540,23 +540,7 @@ Combine with scorecard for context:
 1. report(action="scorecard") - Get current scores
 2. report(action="briefing", **scores) - Get focused guidance"""
 
-ADVISOR_AUDIO = """Generate audio from advisor consultations for podcast/video.
-
-Use: advisor_audio(action="quote", text="...", advisor="bofh")
-     advisor_audio(action="podcast", days=7)
-     advisor_audio(action="export", days=7)
-
-Audio backends:
-- elevenlabs: High-quality AI voices (requires API key)
-- edge-tts: Microsoft Edge TTS (free, good quality)
-- pyttsx3: Offline TTS (basic quality)
-
-Export formats:
-- Quote: Single MP3 file with advisor voice
-- Podcast: Combined audio from recent consultations
-- Export: JSON data for external podcast generation
-
-Advisor voice profiles are matched to their personality."""
+# ADVISOR_AUDIO removed - audio tools migrated to devwisdom-go MCP server
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PERSONA-BASED WORKFLOWS
@@ -962,12 +946,7 @@ PROMPTS = {
         "category": "wisdom",
         "arguments": []
     },
-    "advisor_audio": {
-        "name": "Advisor Audio Generation",
-        "description": ADVISOR_AUDIO,
-        "category": "wisdom",
-        "arguments": []
-    },
+    # advisor_audio removed - migrated to devwisdom-go MCP server
     # Memory System
     "memory_system": {
         "name": "AI Session Memory",

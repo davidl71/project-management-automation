@@ -491,6 +491,16 @@ if MCP_AVAILABLE:
         except Exception as e:
             logger.warning(f"Failed to register Ollama-enhanced tools: {e}")
 
+        # MLX integration tools (Apple Silicon only)
+        try:
+            from .tools.mlx_integration import register_mlx_tools
+            register_mlx_tools(mcp)
+            logger.debug("✅ MLX tools registered")
+        except ImportError as e:
+            logger.debug(f"MLX tools not available: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to register MLX tools: {e}")
+
 # Import automation tools (handle both relative and absolute imports)
 try:
     # Try relative imports first (when run as module)
@@ -594,6 +604,7 @@ try:
         from .tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
         from .tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
+        from .tools.stale_task_cleanup import cleanup_stale_tasks as _cleanup_stale_tasks
         from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
         from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
 
@@ -695,6 +706,7 @@ try:
         from tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
         from tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
+        from tools.stale_task_cleanup import cleanup_stale_tasks as _cleanup_stale_tasks
         from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
         from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
 
@@ -714,7 +726,9 @@ def register_tools():
     global CONSOLIDATED_AVAILABLE
     try:
         from .tools.consolidated import (
-            advisor_audio as _advisor_audio,
+            analyze_alignment as _analyze_alignment,
+            automation as _automation,
+            estimation as _estimation,
             generate_config as _generate_config,
             health as _health,
             lint as _lint,
@@ -737,7 +751,6 @@ def register_tools():
     except ImportError:
         CONSOLIDATED_AVAILABLE = False
         # Set dummy functions to avoid NameError
-        _advisor_audio = None
         _generate_config = None
         _health = None
         _lint = None
@@ -749,6 +762,9 @@ def register_tools():
         _setup_hooks = None
         _task_analysis = None
         _task_discovery = None
+        _analyze_alignment = None
+        _automation = None
+        _estimation = None
         _task_workflow = None
         _testing = None
         _context = None
@@ -970,13 +986,6 @@ def register_tools():
                             },
                         },
                     ),
-                    # NOTE: advisor_audio tool migrated to devwisdom-go MCP server
-                    # Tool removed - use devwisdom MCP server directly
-                    # Tool(
-                    #     name="advisor_audio",
-                    #     description="[HINT: Advisor audio. action=quote|podcast|export. Voice synthesis and podcast generation.]",
-                    #     ...
-                    # ),
                     Tool(
                         name="task_analysis",
                         description="[HINT: Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality and structure.]",
@@ -1278,26 +1287,26 @@ def register_tools():
                     result = _check_documentation_health(
                         arguments.get("output_path"), arguments.get("create_tasks", True)
                     )
-                elif name == "analyze_todo2_alignment":
-                    result = _analyze_todo2_alignment(
-                        arguments.get("create_followup_tasks", True), arguments.get("output_path")
-                    )
                 elif name == "analyze_alignment":
-                    # Unified alignment analysis tool (stdio server version)
-                    action = arguments.get("action", "todo2")
-                    create_followup_tasks = arguments.get("create_followup_tasks", True)
-                    output_path = arguments.get("output_path")
-                    
-                    if action == "todo2":
-                        result = _analyze_todo2_alignment(create_followup_tasks, output_path)
-                    elif action == "prd":
-                        from .tools.prd_alignment import analyze_prd_alignment
-                        result = analyze_prd_alignment(output_path)
+                    if _analyze_alignment is None:
+                        result = json.dumps({"success": False, "error": "analyze_alignment tool not available"}, indent=2)
                     else:
-                        result = json.dumps({
-                            "success": False,
-                            "error": f"Unknown alignment action: {action}. Use 'todo2' or 'prd'.",
-                        }, indent=2)
+                        result = _analyze_alignment(
+                            action=arguments.get("action", "todo2"),
+                            create_followup_tasks=arguments.get("create_followup_tasks", True),
+                            output_path=arguments.get("output_path"),
+                        )
+                elif name == "analyze_todo2_alignment" or name == "analyze_prd_alignment":
+                    # Redirect to analyze_alignment
+                    if _analyze_alignment is None:
+                        result = json.dumps({"success": False, "error": "analyze_alignment tool not available"}, indent=2)
+                    else:
+                        action = "todo2" if name == "analyze_todo2_alignment" else "prd"
+                        result = _analyze_alignment(
+                            action=action,
+                            create_followup_tasks=arguments.get("create_followup_tasks", True),
+                            output_path=arguments.get("output_path"),
+                        )
                     
                     # Ensure JSON string (stdio server expects strings)
                     if not isinstance(result, str):
@@ -1316,19 +1325,35 @@ def register_tools():
                     )
                 elif name == "sync_todo_tasks":
                     result = _sync_todo_tasks(arguments.get("dry_run", False), arguments.get("output_path"))
+                # NOTE: cleanup_stale_tasks removed - use task_workflow(action="cleanup")
                 elif name == "add_external_tool_hints":
                     result = _add_external_tool_hints(
                         arguments.get("dry_run", False),
                         arguments.get("output_path"),
                         arguments.get("min_file_size", 50),
                     )
-                elif name == "run_daily_automation":
-                    result = _run_daily_automation(
-                        arguments.get("tasks"),
-                        arguments.get("include_slow", False),
-                        arguments.get("dry_run", False),
-                        arguments.get("output_path"),
-                    )
+                elif name == "automation":
+                    if _automation is None:
+                        result = json.dumps({"success": False, "error": "automation tool not available"}, indent=2)
+                    else:
+                        result = _automation(
+                            action=arguments.get("action", "daily"),
+                            tasks=arguments.get("tasks"),
+                            include_slow=arguments.get("include_slow", False),
+                            max_tasks_per_host=arguments.get("max_tasks_per_host", 5),
+                            max_parallel_tasks=arguments.get("max_parallel_tasks", 10),
+                            priority_filter=arguments.get("priority_filter"),
+                            tag_filter=arguments.get("tag_filter"),
+                            max_iterations=arguments.get("max_iterations", 10),
+                            auto_approve=arguments.get("auto_approve", True),
+                            extract_subtasks=arguments.get("extract_subtasks", True),
+                            run_analysis_tools=arguments.get("run_analysis_tools", True),
+                            run_testing_tools=arguments.get("run_testing_tools", True),
+                            min_value_score=arguments.get("min_value_score", 0.7),
+                            dry_run=arguments.get("dry_run", False),
+                            output_path=arguments.get("output_path"),
+                            notify=arguments.get("notify", False),
+                        )
                 elif CONSOLIDATED_AVAILABLE:
                     # Consolidated tools
                     if name == "security":
@@ -1413,13 +1438,7 @@ def register_tools():
                             arguments.get("include_metrics", True),
                             arguments.get("include_tasks", True),
                         )
-                    elif name == "advisor_audio":
-                        # Tool migrated to devwisdom-go MCP server
-                        result = json.dumps({
-                            "status": "error",
-                            "error": "advisor_audio tool migrated to devwisdom-go MCP server",
-                            "migration_note": "Use devwisdom MCP server tools directly"
-                        }, indent=2)
+                    # advisor_audio tool removed - migrated to devwisdom-go MCP server
                     elif name == "task_analysis":
                         result = _task_analysis(
                             arguments.get("action", "duplicates"),
@@ -1500,22 +1519,57 @@ def register_tools():
                             arguments.get("move_to_todo", True),
                             arguments.get("output_path"),
                         )
-                    elif name == "improve_task_clarity":
-                        from .tools.task_clarity_improver import (
-                            analyze_task_clarity as _analyze_task_clarity,
-                            improve_task_clarity as _improve_task_clarity,
-                        )
-                        auto_apply = arguments.get("auto_apply", False)
-                        output_format = arguments.get("output_format", "text")
-                        output_path = arguments.get("output_path")
-                        if auto_apply:
-                            result = _improve_task_clarity(auto_apply=True, output_path=output_path)
+                    # NOTE: improve_task_clarity removed - use task_workflow(action="clarity")
+                    elif name == "estimation":
+                        if _estimation is None:
+                            result = json.dumps({"success": False, "error": "estimation tool not available"}, indent=2)
                         else:
-                            result = _analyze_task_clarity(output_format=output_format, output_path=output_path, dry_run=True)
-                        if output_format == "text" and isinstance(result, dict) and "formatted_output" in result:
-                            result = result["formatted_output"]
-                        elif not isinstance(result, str):
-                            result = json.dumps(result, indent=2)
+                            result = _estimation(
+                                action=arguments.get("action", "estimate"),
+                                name=arguments.get("name"),
+                                details=arguments.get("details", ""),
+                                tags=arguments.get("tags"),
+                                priority=arguments.get("priority", "medium"),
+                                use_historical=arguments.get("use_historical", True),
+                                detailed=arguments.get("detailed", False),
+                                use_mlx=arguments.get("use_mlx", True),
+                                mlx_weight=arguments.get("mlx_weight", 0.3),
+                            )
+                    # NOTE: estimate_task_duration, analyze_estimation_accuracy, get_estimation_statistics removed
+                    # Use estimation(action=estimate|analyze|stats) instead
+                    elif name == "improve_task_clarity":
+                        # Redirect to task_workflow(action="clarity")
+                        if _task_workflow is None:
+                            result = json.dumps({"success": False, "error": "task_workflow tool not available"}, indent=2)
+                        else:
+                            result = _task_workflow(
+                                action="clarity",
+                                auto_apply=arguments.get("auto_apply", False),
+                                output_format=arguments.get("output_format", "text"),
+                                output_path=arguments.get("output_path"),
+                            )
+                    elif name == "cleanup_stale_tasks":
+                        # Redirect to task_workflow(action="cleanup")
+                        if _task_workflow is None:
+                            result = json.dumps({"success": False, "error": "task_workflow tool not available"}, indent=2)
+                        else:
+                            result = _task_workflow(
+                                action="cleanup",
+                                stale_threshold_hours=arguments.get("stale_threshold_hours", 2.0),
+                                dry_run=arguments.get("dry_run", False),
+                                output_path=arguments.get("output_path"),
+                            )
+                    elif name == "analyze_todo2_alignment" or name == "analyze_prd_alignment":
+                        # Redirect to analyze_alignment
+                        if _analyze_alignment is None:
+                            result = json.dumps({"success": False, "error": "analyze_alignment tool not available"}, indent=2)
+                        else:
+                            action = "todo2" if name == "analyze_todo2_alignment" else "prd"
+                            result = _analyze_alignment(
+                                action=action,
+                                create_followup_tasks=arguments.get("create_followup_tasks", True),
+                                output_path=arguments.get("output_path"),
+                            )
                     elif name == "memory_maint":
                         result = _memory_maint(
                             arguments.get("action", "health"),
@@ -1534,42 +1588,30 @@ def register_tools():
                             arguments.get("dry_run", True),
                             arguments.get("interactive", True),
                         )
-                    elif name == "run_daily_automation":
-                        result = _run_daily_automation(
-                            arguments.get("tasks"),
-                            arguments.get("include_slow", False),
-                            arguments.get("dry_run", False),
-                            arguments.get("output_path"),
-                        )
-                    elif name == "run_nightly_automation":
-                        from .tools.nightly_task_automation import run_nightly_task_automation
-                        result = run_nightly_task_automation(
-                            max_tasks_per_host=arguments.get("max_tasks_per_host", 5),
-                            max_parallel_tasks=arguments.get("max_parallel_tasks", 10),
-                            priority_filter=arguments.get("priority_filter"),
-                            tag_filter=arguments.get("tag_filter"),
-                            dry_run=arguments.get("dry_run", False),
-                            notify=arguments.get("notify", False),
-                        )
-                    elif name == "run_sprint_automation":
-                        from .tools.sprint_automation import sprint_automation
-                        result = sprint_automation(
-                            max_iterations=arguments.get("max_iterations", 10),
-                            auto_approve=arguments.get("auto_approve", True),
-                            extract_subtasks=arguments.get("extract_subtasks", True),
-                            run_analysis_tools=arguments.get("run_analysis_tools", True),
-                            run_testing_tools=arguments.get("run_testing_tools", True),
-                            priority_filter=arguments.get("priority_filter"),
-                            tag_filter=arguments.get("tag_filter"),
-                            dry_run=arguments.get("dry_run", False),
-                            output_path=arguments.get("output_path"),
-                            notify=arguments.get("notify", False),
-                        )
-                    elif name == "run_discover_automation":
-                        result = _find_automation_opportunities(
-                            arguments.get("min_value_score", 0.7),
-                            arguments.get("output_path"),
-                        )
+                    elif name == "automation":
+                        if _automation is None:
+                            result = json.dumps({"success": False, "error": "automation tool not available"}, indent=2)
+                        else:
+                            result = _automation(
+                                action=arguments.get("action", "daily"),
+                                tasks=arguments.get("tasks"),
+                                include_slow=arguments.get("include_slow", False),
+                                max_tasks_per_host=arguments.get("max_tasks_per_host", 5),
+                                max_parallel_tasks=arguments.get("max_parallel_tasks", 10),
+                                priority_filter=arguments.get("priority_filter"),
+                                tag_filter=arguments.get("tag_filter"),
+                                max_iterations=arguments.get("max_iterations", 10),
+                                auto_approve=arguments.get("auto_approve", True),
+                                extract_subtasks=arguments.get("extract_subtasks", True),
+                                run_analysis_tools=arguments.get("run_analysis_tools", True),
+                                run_testing_tools=arguments.get("run_testing_tools", True),
+                                min_value_score=arguments.get("min_value_score", 0.7),
+                                dry_run=arguments.get("dry_run", False),
+                                output_path=arguments.get("output_path"),
+                                notify=arguments.get("notify", False),
+                            )
+                    # NOTE: run_daily_automation, run_nightly_automation, run_sprint_automation, run_discover_automation removed
+                    # Use automation(action=daily|nightly|sprint|discover) instead
                     elif name == "tool_catalog":
                         result = _tool_catalog(
                             arguments.get("action", "list"),
@@ -1648,6 +1690,8 @@ if mcp:
         # NOTE: find_automation_opportunities removed - use run_automation(mode="discover")
         # NOTE: sync_todo_tasks removed - use task_workflow(action="sync")
 
+        # NOTE: cleanup_stale_tasks removed - use task_workflow(action="cleanup")
+
         @ensure_json_string
         @mcp.tool()
         def add_external_tool_hints(
@@ -1660,111 +1704,95 @@ if mcp:
         # NOTE: list_problem_categories removed - use resource automation://problem-categories
         # NOTE: get_linter_status removed - use resource automation://linters
 
-        # Split run_automation into separate tools to eliminate conditional logic (matches working tools pattern)
+        # NOTE: run_daily_automation, run_nightly_automation, run_sprint_automation, run_discover_automation removed
+        # Use automation(action=daily|nightly|sprint|discover) instead
+
         @ensure_json_string
         @mcp.tool()
-        def run_daily_automation(
+        def automation(
+            action: str = "daily",
             tasks: Optional[list[str]] = None,
             include_slow: bool = False,
-            dry_run: bool = False,
-            output_path: Optional[str] = None,
-        ) -> str:
-            """
-            [HINT: Daily automation. Run daily checks (docs_health, alignment, duplicates, security).]
-
-            Run daily automation checks including documentation health, task alignment,
-            duplicate detection, and security scanning.
-
-            📊 Output: Daily automation results
-            🔧 Side Effects: Creates tasks and reports
-            """
-            return _run_daily_automation(tasks, include_slow, dry_run, output_path)
-
-        @ensure_json_string
-        @mcp.tool()
-        def run_nightly_automation(
             max_tasks_per_host: int = 5,
             max_parallel_tasks: int = 10,
             priority_filter: Optional[str] = None,
             tag_filter: Optional[list[str]] = None,
-            dry_run: bool = False,
-            notify: bool = False,
-        ) -> str:
-            """
-            [HINT: Nightly automation. Process tasks automatically with host limits.]
-
-            Process background-capable tasks automatically with host and parallel limits.
-
-            📊 Output: Nightly automation results
-            🔧 Side Effects: Processes tasks, sends notifications
-            """
-            result = _run_nightly_task_automation(
-                max_tasks_per_host=max_tasks_per_host,
-                max_parallel_tasks=max_parallel_tasks,
-                priority_filter=priority_filter,
-                tag_filter=tag_filter,
-                dry_run=dry_run,
-                notify=notify,
-            )
-            # Ensure JSON string return
-            if isinstance(result, str):
-                return result
-            elif isinstance(result, dict):
-                return json.dumps(result, indent=2)
-            else:
-                return json.dumps({"result": str(result)}, indent=2)
-
-        @ensure_json_string
-        @mcp.tool()
-        def run_sprint_automation(
             max_iterations: int = 10,
             auto_approve: bool = True,
             extract_subtasks: bool = True,
             run_analysis_tools: bool = True,
             run_testing_tools: bool = True,
-            priority_filter: Optional[str] = None,
-            tag_filter: Optional[list[str]] = None,
+            min_value_score: float = 0.7,
             dry_run: bool = False,
             output_path: Optional[str] = None,
             notify: bool = False,
         ) -> str:
             """
-            [HINT: Sprint automation. Full sprint automation with subtask extraction.]
+            [HINT: Automation. action=daily|nightly|sprint|discover. Unified automation tool.]
 
-            Systematically process all background-capable tasks with minimal prompts.
-            Extracts subtasks, auto-approves safe tasks, runs analysis/testing tools.
+            Unified automation tool consolidating daily, nightly, sprint, and discovery automation.
 
-            📊 Output: Sprint automation results
-            🔧 Side Effects: Creates tasks, extracts subtasks, runs tools
+            Actions:
+            - action="daily": Run daily maintenance tasks (docs_health, alignment, duplicates, security)
+            - action="nightly": Process background-capable tasks automatically with host limits
+            - action="sprint": Full sprint automation with subtask extraction and auto-approval
+            - action="discover": Find automation opportunities in codebase
+
+            📊 Output: Automation results based on action
+            🔧 Side Effects: Creates tasks, processes tasks, generates reports
+            ⏱️ Typical Runtime: Varies by action (daily: <30s, nightly: minutes, sprint: minutes, discover: <10s)
+
+            Args:
+                action: "daily", "nightly", "sprint", or "discover"
+                tasks: List of task IDs to run (daily action)
+                include_slow: Include slow tasks (daily action)
+                max_tasks_per_host: Max tasks per host (nightly action)
+                max_parallel_tasks: Max parallel tasks (nightly action)
+                priority_filter: Filter by priority (nightly/sprint actions)
+                tag_filter: Filter by tags (nightly/sprint actions)
+                max_iterations: Max sprint iterations (sprint action)
+                auto_approve: Auto-approve tasks (sprint action)
+                extract_subtasks: Extract subtasks (sprint action)
+                run_analysis_tools: Run analysis tools (sprint action)
+                run_testing_tools: Run testing tools (sprint action)
+                min_value_score: Min value score threshold (discover action)
+                dry_run: Preview without applying
+                output_path: Save results to file
+                notify: Send notifications (nightly/sprint actions)
+
+            Examples:
+                automation(action="daily")
+                → Run daily maintenance checks
+
+                automation(action="nightly", max_tasks_per_host=10)
+                → Process tasks with higher host limit
+
+                automation(action="sprint", max_iterations=5)
+                → Run sprint with fewer iterations
             """
-            return _sprint_automation(
-                max_iterations,
-                auto_approve,
-                extract_subtasks,
-                run_analysis_tools,
-                run_testing_tools,
-                priority_filter,
-                tag_filter,
-                dry_run,
-                output_path,
-                notify,
+            if _automation is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "automation tool not available - import failed"
+                }, indent=2)
+            return _automation(
+                action=action,
+                tasks=tasks,
+                include_slow=include_slow,
+                max_tasks_per_host=max_tasks_per_host,
+                max_parallel_tasks=max_parallel_tasks,
+                priority_filter=priority_filter,
+                tag_filter=tag_filter,
+                max_iterations=max_iterations,
+                auto_approve=auto_approve,
+                extract_subtasks=extract_subtasks,
+                run_analysis_tools=run_analysis_tools,
+                run_testing_tools=run_testing_tools,
+                min_value_score=min_value_score,
+                dry_run=dry_run,
+                output_path=output_path,
+                notify=notify,
             )
-
-        @ensure_json_string
-        @mcp.tool()
-        def run_discover_automation(
-            min_value_score: float = 0.7,
-            output_path: Optional[str] = None,
-        ) -> str:
-            """
-            [HINT: Discover automation. Find automation opportunities in codebase.]
-
-            Discover automation opportunities in the codebase based on value score.
-
-            📊 Output: Automation opportunities
-            🔧 Side Effects: Creates discovery report
-            """
-            return _find_automation_opportunities(min_value_score, output_path)
 
         # NOTE: validate_ci_cd_workflow removed - use health(action="cicd")
         # NOTE: batch_approve_tasks removed - use task_workflow(action="approve")
@@ -2077,12 +2105,6 @@ if mcp:
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
 
-        # NOTE: export_advisor_podcast removed - use advisor_audio(action="export")
-        # NOTE: synthesize_advisor_quote removed - use advisor_audio(action="quote")
-        # NOTE: generate_podcast_audio removed - use advisor_audio(action="podcast")
-        # NOTE: list_advisors removed - use resource automation://advisors
-        # NOTE: check_tts_backends removed - use resource automation://tts-backends
-
         # ═══════════════════════════════════════════════════════════════════
         # DEPENDABOT INTEGRATION TOOLS
         # ═══════════════════════════════════════════════════════════════════
@@ -2098,39 +2120,47 @@ if mcp:
     # The imports are duplicated in register_tools() for stdio server access.
 
     if CONSOLIDATED_AVAILABLE:
-        # Register analyze_alignment - unified alignment analysis tool
-        # Simplified: Underlying functions already return JSON strings, just pass through
-        # Split into two separate tools to eliminate conditional logic (matches working tools pattern)
+        # NOTE: analyze_todo2_alignment, analyze_prd_alignment removed
+        # Use analyze_alignment(action=todo2|prd) instead
+
         @ensure_json_string
         @mcp.tool()
-        def analyze_todo2_alignment(
+        def analyze_alignment(
+            action: str = "todo2",
             create_followup_tasks: bool = True,
             output_path: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Todo2 alignment. Task-to-goals alignment, creates follow-up tasks.]
+            [HINT: Alignment analysis. action=todo2|prd. Unified alignment analysis tool.]
 
-            Analyze task alignment with project goals, find misaligned tasks.
+            Unified alignment analysis tool consolidating Todo2 and PRD alignment.
+
+            Actions:
+            - action="todo2": Analyze task alignment with project goals, find misaligned tasks
+            - action="prd": Analyze PRD alignment with persona mapping and advisor assignments
 
             📊 Output: Alignment scores, misaligned items, recommendations
-            🔧 Side Effects: Creates tasks (if create_followup_tasks=True)
-            """
-            return _analyze_todo2_alignment(create_followup_tasks, output_path)
+            🔧 Side Effects: Creates tasks/reports based on action
+            ⏱️ Typical Runtime: <5 seconds
 
-        @ensure_json_string
-        @mcp.tool()
-        def analyze_prd_alignment(
-            output_path: Optional[str] = None,
-        ) -> str:
-            """
-            [HINT: PRD alignment. PRD persona mapping, advisor assignments.]
+            Args:
+                action: "todo2" for task alignment, "prd" for PRD persona mapping
+                create_followup_tasks: Create tasks for misaligned items (todo2 action)
+                output_path: Optional file to save results
 
-            Analyze PRD alignment with persona mapping and advisor assignments.
+            Examples:
+                analyze_alignment(action="todo2")
+                → Analyze task-to-goals alignment
 
-            📊 Output: PRD alignment scores, persona mappings, advisor assignments
-            🔧 Side Effects: Creates alignment reports
+                analyze_alignment(action="prd", output_path="prd_alignment.json")
+                → Analyze PRD alignment and save results
             """
-            return _analyze_prd_alignment(output_path)
+            if _analyze_alignment is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "analyze_alignment tool not available - import failed"
+                }, indent=2)
+            return _analyze_alignment(action, create_followup_tasks, output_path)
 
         @ensure_json_string
         @mcp.tool()
@@ -2350,12 +2380,6 @@ if mcp:
             else:
                 return json.dumps({"result": str(result)}, indent=2)
 
-        # NOTE: advisor_audio tool migrated to devwisdom-go MCP server
-        # Removed - use devwisdom MCP server directly
-        # @mcp.tool()
-        # def advisor_audio(...):
-        #     ...
-
         @ensure_json_string
         @mcp.tool()
         def task_analysis(
@@ -2508,6 +2532,9 @@ if mcp:
                 action, file_patterns, include_fixme, doc_path, output_path, create_tasks
             )
 
+        # NOTE: improve_task_clarity removed - use task_workflow(action="clarity")
+        # NOTE: cleanup_stale_tasks removed - use task_workflow(action="cleanup")
+
         @ensure_json_string
         @mcp.tool()
         def task_workflow(
@@ -2524,124 +2551,148 @@ if mcp:
             decision: Optional[str] = None,
             decisions_json: Optional[str] = None,
             move_to_todo: bool = True,
+            auto_apply: bool = False,
+            output_format: str = "text",
+            stale_threshold_hours: float = 2.0,
             output_path: Optional[str] = None,
         ) -> str:
             """
-            [HINT: Task workflow. action=sync|approve|clarify. Manage task lifecycle.]
+            [HINT: Task workflow. action=sync|approve|clarify|clarity|cleanup. Manage task lifecycle.]
 
-            Unified task workflow:
+            Unified task workflow tool consolidating sync, approval, clarification, clarity improvement, and stale cleanup.
+
+            Actions:
             - action="sync": Sync TODO markdown tables ↔ Todo2
             - action="approve": Bulk approve/move tasks by status
             - action="clarify": Manage task clarifications (sub_action: list|resolve|batch)
+            - action="clarity": Improve task clarity (adds estimates, renames, removes dependencies)
+            - action="cleanup": Move stale In Progress tasks back to Todo
 
             📊 Output: Workflow operation results
             🔧 Side Effects: Modifies task states
+            ⏱️ Typical Runtime: <1 second (most actions)
+
+            Args:
+                action: "sync", "approve", "clarify", "clarity", or "cleanup"
+                dry_run: Preview changes without applying (sync, approve, cleanup)
+                status: Filter tasks by status (approve)
+                new_status: Target status (approve)
+                clarification_none: Only tasks without clarification (approve)
+                filter_tag: Filter by tag (approve)
+                task_ids: JSON list of task IDs (approve)
+                sub_action: "list", "resolve", or "batch" (clarify action)
+                task_id: Task to resolve (clarify)
+                clarification_text: Clarification response (clarify)
+                decision: Decision made (clarify)
+                decisions_json: Batch decisions as JSON (clarify)
+                move_to_todo: Move resolved tasks to Todo (clarify)
+                auto_apply: Auto-apply improvements (clarity action)
+                output_format: Output format (clarity action)
+                stale_threshold_hours: Hours before task is stale (cleanup action)
+                output_path: Save results to file
+
+            Examples:
+                task_workflow(action="sync")
+                → Sync TODO tables
+
+                task_workflow(action="clarity", auto_apply=True)
+                → Improve task clarity automatically
+
+                task_workflow(action="cleanup", stale_threshold_hours=4.0)
+                → Clean up tasks stale for 4+ hours
             """
+            if _task_workflow is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "task_workflow tool not available - import failed"
+                }, indent=2)
             return _task_workflow(
-                action, dry_run, status, new_status, clarification_none,
-                filter_tag, task_ids, sub_action, task_id,
-                clarification_text, decision, decisions_json, move_to_todo, output_path
+                action=action,
+                dry_run=dry_run,
+                status=status,
+                new_status=new_status,
+                clarification_none=clarification_none,
+                filter_tag=filter_tag,
+                task_ids=task_ids,
+                sub_action=sub_action,
+                task_id=task_id,
+                clarification_text=clarification_text,
+                decision=decision,
+                decisions_json=decisions_json,
+                move_to_todo=move_to_todo,
+                auto_apply=auto_apply,
+                output_format=output_format,
+                stale_threshold_hours=stale_threshold_hours,
+                output_path=output_path,
             )
 
-        @ensure_json_string
-        @mcp.tool()
-        def improve_task_clarity(
-            auto_apply: bool = False,
-            output_format: str = "text",
-            output_path: Optional[str] = None,
-        ) -> str:
-            """
-            [HINT: Task clarity improvement. Analyzes and improves task clarity metrics.]
-
-            Improves task clarity by:
-            - Adding time estimates (1-4 hours for parallelization)
-            - Renaming tasks to start with action verbs
-            - Removing unnecessary dependencies
-            - Breaking down large tasks
-
-            📊 Output: Analysis with current/potential clarity scores and improvement suggestions
-            🔧 Side Effects: Modifies tasks if auto_apply=True
-            """
-            if auto_apply:
-                result = _improve_task_clarity(auto_apply=True, output_path=output_path)
-            else:
-                result = _analyze_task_clarity(output_format=output_format, output_path=output_path, dry_run=True)
-            
-            if output_format == "text" and "formatted_output" in result:
-                return result["formatted_output"]
-            return json.dumps(result, indent=2)
+        # NOTE: estimate_task_duration, analyze_estimation_accuracy, get_estimation_statistics removed
+        # Use estimation(action=estimate|analyze|stats) instead
 
         @ensure_json_string
         @mcp.tool()
-        def estimate_task_duration(
-            name: str,
+        def estimation(
+            action: str = "estimate",
+            name: Optional[str] = None,
             details: str = "",
             tags: Optional[str] = None,
             priority: str = "medium",
             use_historical: bool = True,
             detailed: bool = False,
+            use_mlx: bool = True,
+            mlx_weight: float = 0.3,
         ) -> str:
             """
-            [HINT: Task duration estimation. Uses statistical methods to estimate task duration.]
+            [HINT: Estimation. action=estimate|analyze|stats. Unified task duration estimation tool.]
 
-            Estimates task duration using:
-            - Historical task completion data (when available)
-            - Statistical methods (mean, median, percentiles)
-            - Multi-factor matching (tags, keywords, priority)
-            - Confidence intervals and uncertainty ranges
+            Unified task duration estimation tool consolidating estimation, accuracy analysis, and statistics.
 
-            📊 Output: Duration estimate with confidence and metadata
+            Actions:
+            - action="estimate": Generate MLX-enhanced time estimate for a task
+            - action="analyze": Analyze estimation accuracy from historical data
+            - action="stats": Get statistical summary of historical task durations
+
+            📊 Output: Estimation results based on action
+            🔧 MLX Enhancement: When use_mlx=True, combines statistical methods with MLX semantic analysis for 30-40% better accuracy
+            ⏱️ Typical Runtime: <1 second (estimate), <2 seconds (analyze), <1 second (stats)
+
+            Args:
+                action: "estimate", "analyze", or "stats"
+                name: Task name (required for estimate action)
+                details: Task details (estimate action)
+                tags: Comma-separated tags (estimate action)
+                priority: Task priority (estimate action)
+                use_historical: Use historical data (estimate action)
+                detailed: Return detailed breakdown (estimate action)
+                use_mlx: Use MLX enhancement (estimate action)
+                mlx_weight: MLX weight in hybrid estimate (estimate action)
+
+            Examples:
+                estimation(action="estimate", name="Implement feature X", details="...")
+                → Generate time estimate
+
+                estimation(action="analyze")
+                → Analyze estimation accuracy
+
+                estimation(action="stats")
+                → Get statistical summary
             """
-            from .tools.task_duration_estimator import (
-                estimate_task_duration as _estimate_simple,
-                estimate_task_duration_detailed,
-                TaskDurationEstimator,
-            )
-            
-            tag_list = [t.strip() for t in tags.split(",")] if tags else []
-            
-            if detailed:
-                result = estimate_task_duration_detailed(
-                    name=name,
-                    details=details,
-                    tags=tag_list,
-                    priority=priority,
-                    use_historical=use_historical,
-                )
-                return json.dumps(result, indent=2)
-            else:
-                hours = _estimate_simple(
-                    name=name,
-                    details=details,
-                    tags=tag_list,
-                    priority=priority,
-                    use_historical=use_historical,
-                )
+            if _estimation is None:
                 return json.dumps({
-                    "estimate_hours": hours,
-                    "name": name,
-                    "priority": priority,
+                    "success": False,
+                    "error": "estimation tool not available - import failed"
                 }, indent=2)
-
-        @ensure_json_string
-        @mcp.tool()
-        def get_estimation_statistics() -> str:
-            """
-            [HINT: Estimation statistics. Get statistics about historical task durations.]
-
-            Returns statistical analysis of historical task completion data:
-            - Mean, median, standard deviation
-            - Percentiles (25th, 75th, 90th)
-            - Min/max values
-            - Estimation accuracy metrics
-
-            📊 Output: Statistical summary of historical task durations
-            """
-            from .tools.task_duration_estimator import TaskDurationEstimator
-            
-            estimator = TaskDurationEstimator()
-            stats = estimator.get_statistics()
-            return json.dumps(stats, indent=2)
+            return _estimation(
+                action=action,
+                name=name,
+                details=details,
+                tags=tags,
+                priority=priority,
+                use_historical=use_historical,
+                detailed=detailed,
+                use_mlx=use_mlx,
+                mlx_weight=mlx_weight,
+            )
 
         @ensure_json_string
         @mcp.tool()
@@ -2859,7 +2910,6 @@ if mcp:
         # Try relative imports first (when run as module)
         try:
             from .prompts import (
-                ADVISOR_AUDIO,
                 ADVISOR_BRIEFING,
                 # Wisdom
                 ADVISOR_CONSULT,
@@ -2915,7 +2965,6 @@ if mcp:
         except ImportError:
             # Fallback to absolute imports (when run as script)
             from prompts import (
-                ADVISOR_AUDIO,
                 ADVISOR_BRIEFING,
                 # Wisdom
                 ADVISOR_CONSULT,
@@ -3078,26 +3127,6 @@ if mcp:
                 return PROJECT_OVERVIEW
 
             # ═══════════════════════════════════════════════════════════════════════
-            # WISDOM ADVISOR PROMPTS - MIGRATED TO devwisdom-go MCP SERVER
-            # ═══════════════════════════════════════════════════════════════════════
-            # NOTE: These prompts are now handled by devwisdom-go MCP server
-            # Prompts removed - use devwisdom MCP server directly
-            # @mcp.prompt()
-            # def advisor() -> str:
-            #     """Consult a trusted advisor for wisdom on your current work."""
-            #     return ADVISOR_CONSULT
-            #
-            # @mcp.prompt()
-            # def briefing() -> str:
-            #     """Get morning briefing from advisors based on project health."""
-            #     return ADVISOR_BRIEFING
-            #
-            # @mcp.prompt()
-            # def advisor_voice() -> str:
-            #     """Generate audio from advisor consultations."""
-            #     return ADVISOR_AUDIO
-
-            # ═══════════════════════════════════════════════════════════════════════
             # ADDITIONAL PROMPTS
             # ═══════════════════════════════════════════════════════════════════════
 
@@ -3238,10 +3267,6 @@ if mcp:
                     Prompt(name="automation_setup", description="One-time automation setup: git hooks, triggers, cron.", arguments=[]),
                     Prompt(name="scorecard", description="Generate comprehensive project health scorecard with all metrics.", arguments=[]),
                     Prompt(name="overview", description="Generate one-page project overview for stakeholders.", arguments=[]),
-                    # NOTE: Wisdom advisor prompts migrated to devwisdom-go MCP server
-                    # Prompt(name="advisor", ...),  # Migrated
-                    # Prompt(name="briefing", ...),  # Migrated
-                    # Prompt(name="advisor_voice", ...),  # Migrated
                     Prompt(name="discover", description="Discover tasks from TODO comments, markdown, and orphaned tasks.", arguments=[]),
                     Prompt(name="config", description="Generate IDE configuration files.", arguments=[]),
                     Prompt(name="mode", description="Suggest optimal Cursor IDE mode (Agent vs Ask) for a task.", arguments=[]),
@@ -3288,10 +3313,6 @@ if mcp:
                     "automation_setup": AUTOMATION_SETUP,
                     "scorecard": PROJECT_SCORECARD,
                     "overview": PROJECT_OVERVIEW,
-                    # NOTE: Wisdom advisor prompts migrated to devwisdom-go MCP server
-                    # "advisor": ADVISOR_CONSULT,  # Migrated
-                    # "briefing": ADVISOR_BRIEFING,  # Migrated
-                    # "advisor_voice": ADVISOR_AUDIO,  # Migrated
                     "discover": TASK_DISCOVERY,
                     "config": CONFIG_GENERATION,
                     "mode": MODE_SUGGESTION,
@@ -3345,7 +3366,6 @@ if mcp:
         try:
             from .resources.cache import get_cache_status_resource
             from .resources.catalog import (
-                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
                 get_linters_resource,
                 get_models_resource,
                 get_problem_categories_resource,
@@ -3370,7 +3390,6 @@ if mcp:
             # Fallback to absolute imports (when run as script)
             from resources.cache import get_cache_status_resource
             from resources.catalog import (
-                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
                 get_linters_resource,
                 get_models_resource,
                 get_problem_categories_resource,
@@ -3389,7 +3408,6 @@ if mcp:
                     get_memories_resource,
                     get_recent_memories_resource,
                     get_session_memories_resource,
-                    # get_wisdom_resource,  # Migrated to devwisdom-go MCP server
                 )
 
                 MEMORIES_AVAILABLE = True
@@ -3439,13 +3457,6 @@ if mcp:
         # ═══════════════════════════════════════════════════════════════════════════════
         # CATALOG RESOURCES (converted from list_* tools)
         # ═══════════════════════════════════════════════════════════════════════════════
-
-        # NOTE: automation://advisors resource migrated to devwisdom-go MCP server
-        # Resource removed - use devwisdom MCP server resources directly (wisdom://advisors)
-        # @mcp.resource("automation://advisors")
-        # def get_advisors_catalog() -> str:
-        #     """Get trusted advisors catalog with assignments by metric, tool, and stage."""
-        #     return get_advisors_resource()
 
         @mcp.resource("automation://models")
         def get_models_catalog() -> str:
@@ -3506,13 +3517,6 @@ if mcp:
             def get_session_memories(date: str) -> str:
                 """Get memories from a specific session date (YYYY-MM-DD format)."""
                 return get_session_memories_resource(date)
-
-            # NOTE: automation://wisdom resource migrated to devwisdom-go MCP server
-            # Resource removed - use devwisdom MCP server resources directly
-            # The combined wisdom view is now available via devwisdom-go MCP server
-            # @mcp.resource("automation://wisdom")
-            # def get_combined_wisdom() -> str:
-            #     """Get combined view of memories and advisor consultations."""
             #     return get_wisdom_resource()
 
             @mcp.resource("automation://memories/health")
@@ -4272,7 +4276,6 @@ if stdio_server_instance:
         try:
             from .resources.cache import get_cache_status_resource
             from .resources.catalog import (
-                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
                 get_linters_resource,
                 get_models_resource,
                 get_problem_categories_resource,
@@ -4297,7 +4300,6 @@ if stdio_server_instance:
             # Fallback to absolute imports (when run as script)
             from resources.cache import get_cache_status_resource
             from resources.catalog import (
-                # get_advisors_resource,  # Migrated to devwisdom-go MCP server
                 get_linters_resource,
                 get_models_resource,
                 get_problem_categories_resource,
@@ -4317,7 +4319,6 @@ if stdio_server_instance:
                     get_memories_resource,
                     get_recent_memories_resource,
                     get_session_memories_resource,
-                    # get_wisdom_resource,  # Migrated to devwisdom-go MCP server
                 )
                 MEMORIES_AVAILABLE = True
             except ImportError:
@@ -4365,14 +4366,6 @@ if stdio_server_instance:
                     mimeType="application/json",
                 ),
                 # Catalog resources
-                # NOTE: automation://advisors resource migrated to devwisdom-go MCP server
-                # Resource removed - use devwisdom MCP server resources (wisdom://advisors) directly
-                # Resource(
-                #     uri="automation://advisors",
-                #     name="Advisors Catalog",
-                #     description="Trusted advisors catalog with assignments by metric, tool, and stage",
-                #     mimeType="application/json",
-                # ),
                 Resource(
                     uri="automation://models",
                     name="Models Catalog",
@@ -4426,14 +4419,6 @@ if stdio_server_instance:
                         description="Memory system health metrics and maintenance recommendations",
                         mimeType="application/json",
                     ),
-                    # NOTE: automation://wisdom resource migrated to devwisdom-go MCP server
-                    # Resource removed - use devwisdom MCP server resources directly
-                    # Resource(
-                    #     uri="automation://wisdom",
-                    #     name="Combined Wisdom",
-                    #     description="Combined view of memories and advisor consultations",
-                    #     mimeType="application/json",
-                    # ),
                     # Note: Pattern-based resources (category/{category}, task/{task_id}, session/{date})
                     # are handled dynamically in read_resource() but not listed here as they require parameters
                 ])
@@ -4463,8 +4448,6 @@ if stdio_server_instance:
                 return get_cache_status_resource()
             # Catalog resources
             elif uri == "automation://advisors":
-                # Resource migrated to devwisdom-go MCP server
-                # Try to use get_advisors_resource() which now calls devwisdom-go
                 from ..resources.catalog import get_advisors_resource
                 return get_advisors_resource()
             elif uri == "automation://models":
@@ -4513,8 +4496,6 @@ if stdio_server_instance:
                 else:
                     return json.dumps({"error": "Memory resources not available"})
             elif uri == "automation://wisdom":
-                # Resource migrated to devwisdom-go MCP server
-                # Still provide via get_wisdom_resource() for backward compatibility
                 if MEMORIES_AVAILABLE:
                     from ..resources.memories import get_wisdom_resource
                     return get_wisdom_resource()

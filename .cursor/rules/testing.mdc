@@ -6,10 +6,25 @@ alwaysApply: false
 
 # Testing Rules
 
+## Test Organization
+
+### File Structure
+- **One test file per tool/module**: `project_management_automation/tools/automation_opportunities.py` → `tests/test_automation_opportunities.py`
+- **Dedicated files for shared utilities**: Shared network utilities → `tests/test_utils_network.py`
+- **Avoid duplicate tests**: Never duplicate the same test in multiple files
+
+### Naming Conventions
+- Use descriptive test names: `test_find_automation_opportunities_success` (not `test_success`)
+- Include context in names to prevent duplicates across files
+- Group related tests into test classes: `TestAutomationOpportunitiesTool`
+
+**See:** [Test Organization Guidelines](../../docs/TEST_ORGANIZATION_GUIDELINES.md)
+
 ## Test Structure
 - Use descriptive test names
 - Follow Arrange-Act-Assert pattern
 - One assertion per test when possible
+- Group related tests into test classes
 
 ## Mocking
 - Mock external dependencies
@@ -30,3 +45,7 @@ alwaysApply: false
 - **Always use `uv run pytest`** to run tests
 - Never use `pip install` or manual virtual environments
 - Example: `uv run pytest tests/ -v`
+
+## Checking for Duplicates
+- Run `uv run python scripts/check_duplicate_test_names.py` before committing
+- Ensure no duplicate test names across different files

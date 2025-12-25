@@ -45,11 +45,8 @@ class TestMCPClientAgenticTools:
         assert 'agentic-tools' in mcp_client.mcp_config
         assert mcp_client.agentic_tools_session is None
 
-    def test_mcp_client_no_config(self, tmp_path):
-        """Test MCPClient handles missing config gracefully."""
-        from project_management_automation.scripts.base.mcp_client import MCPClient
-        client = MCPClient(tmp_path)
-        assert client.mcp_config == {}
+    # test_mcp_client_no_config removed - duplicate of test_mcp_client.py
+    # This is a general MCPClient initialization test, not agentic-tools specific
 
     @pytest.mark.asyncio
     async def test_list_todos_no_mcp_available(self, tmp_path):

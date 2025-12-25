@@ -244,28 +244,16 @@ def get_tts_backends_resource() -> str:
     """
     Resource: automation://tts-backends
 
-    Returns available TTS backends.
+    DEPRECATED: TTS/voice functionality migrated to devwisdom-go MCP server.
+    This resource is kept for backward compatibility but returns an error.
     """
-    try:
-        from ..tools.wisdom.voice import check_tts_availability
-
-        backends = check_tts_availability()
-
-        result = {
-            "description": "Available Text-to-Speech Backends",
-            "backends": backends,
-            "recommended": next(
-                (b for b in ['elevenlabs', 'edge-tts', 'pyttsx3']
-                 if backends.get(b, {}).get('available')),
-                None
-            ),
-        }
-
-        return json.dumps(result, separators=(',', ':'))
-
-    except ImportError as e:
-        logger.error(f"Failed to load TTS backends: {e}")
-        return json.dumps({"error": "TTS backends not available"})
+    return json.dumps({
+        "description": "TTS backends migrated to devwisdom-go MCP server",
+        "error": "TTS functionality has been migrated to devwisdom-go MCP server",
+        "migration_note": "Use devwisdom MCP server for TTS/voice functionality",
+        "backends": {},
+        "recommended": None,
+    }, separators=(',', ':'))
 
 
 def get_server_status_resource() -> str:
