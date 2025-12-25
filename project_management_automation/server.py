@@ -233,7 +233,7 @@ if FORCE_STDIO:
         stdio_server = stdio_server
         logger.info("MCP stdio server initialized (forced mode)")
     except ImportError:
-        logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
+        logger.warning("MCP not installed - server structure ready, install with: uv sync (or uv pip install mcp>=1.0.0)")
         MCP_AVAILABLE = False
         Server = None
         stdio_server = None
@@ -273,7 +273,7 @@ else:
                 FastMCP = None
                 logger.info("MCP stdio server available - using stdio server (FastMCP not available)")
             except ImportError:
-                logger.warning("MCP not installed - server structure ready, install with: pip install mcp")
+                logger.warning("MCP not installed - server structure ready, install with: uv sync (or uv pip install mcp>=1.0.0)")
                 MCP_AVAILABLE = False
                 Server = None
                 stdio_server = None
@@ -4204,7 +4204,7 @@ def main():
     if "--mcp" in args or _is_mcp_mode():
         # MCP server mode
         if not MCP_AVAILABLE:
-            print("Error: MCP not available. Install with: pip install mcp", file=sys.stderr)
+            print("Error: MCP not available. Install with: uv sync (or uv pip install mcp>=1.0.0)", file=sys.stderr)
             sys.exit(1)
         
         if not USE_STDIO and mcp:

@@ -40,6 +40,30 @@ find_uvx() {
     return 1
 }
 
+# Find project root by looking for marker files
+find_project_root() {
+    local start_path="$1"
+    local current="$start_path"
+    
+    # Search up the directory tree for project markers
+    while [ "$current" != "/" ] && [ "$current" != "." ]; do
+        # Check for common project markers
+        if [ -d "$current/.git" ] || \
+           [ -d "$current/.todo2" ] || \
+           [ -f "$current/CMakeLists.txt" ] || \
+           [ -f "$current/go.mod" ] || \
+           [ -f "$current/pyproject.toml" ]; then
+            echo "$current"
+            return 0
+        fi
+        current="$(dirname "$current")"
+    done
+    
+    # Fallback to script directory's parent (project root)
+    echo "$start_path"
+    return 0
+}
+
 # Find uvx
 UVX_PATH=$(find_uvx)
 
@@ -53,7 +77,18 @@ if [ -z "$UVX_PATH" ]; then
     exit 1
 fi
 
+# Get script directory and detect project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT=$(find_project_root "$SCRIPT_DIR")
+
+# Set PROJECT_ROOT environment variable if not already set
+# This allows MCP config to override, but provides automatic detection
+if [ -z "$PROJECT_ROOT" ] || [ ! -d "$PROJECT_ROOT" ]; then
+    PROJECT_ROOT="$SCRIPT_DIR"
+fi
+
+export PROJECT_ROOT
+
 # Execute uvx with exarp in editable mode (uses local code)
 # This ensures the latest local version is used instead of cached/remote version
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 exec "$UVX_PATH" --with-editable "$SCRIPT_DIR" exarp "$@"

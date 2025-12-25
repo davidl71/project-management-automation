@@ -352,6 +352,52 @@ def is_review_status(status: str) -> bool:
     return normalized == 'review'
 
 
+def normalize_status_to_title_case(status: str) -> str:
+    """
+    Normalize task status to Title Case for storage/display.
+    
+    This ensures consistent capitalization in Todo2 files:
+    - "Todo" (not "todo", "TODO", "pending")
+    - "In Progress" (not "in_progress", "in-progress", "In Progress")
+    - "Review" (not "review", "Review")
+    - "Done" (not "done", "DONE", "completed")
+    
+    Args:
+        status: Raw status value (case-insensitive, handles variants)
+    
+    Returns:
+        Title Case status value (defaults to 'Todo' if empty/invalid)
+    
+    Examples:
+        >>> normalize_status_to_title_case('todo')
+        'Todo'
+        >>> normalize_status_to_title_case('DONE')
+        'Done'
+        >>> normalize_status_to_title_case('in_progress')
+        'In Progress'
+        >>> normalize_status_to_title_case('')
+        'Todo'
+    """
+    if not status:
+        return 'Todo'
+    
+    # First normalize to canonical lowercase form
+    normalized = normalize_status(status)
+    
+    # Map canonical lowercase to Title Case
+    title_case_map = {
+        'todo': 'Todo',
+        'in_progress': 'In Progress',
+        'review': 'Review',
+        'completed': 'Done',  # Map 'completed' to 'Done' for consistency
+        'done': 'Done',
+        'blocked': 'Blocked',
+        'cancelled': 'Cancelled',
+    }
+    
+    return title_case_map.get(normalized, status.title())
+
+
 __all__ = [
     "get_repo_project_id",
     "task_belongs_to_project",
@@ -362,6 +408,7 @@ __all__ = [
     "get_current_project_id",
     # Status normalization
     "normalize_status",
+    "normalize_status_to_title_case",
     "is_pending_status",
     "is_completed_status",
     "is_active_status",

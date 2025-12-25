@@ -26,6 +26,7 @@ alwaysApply: true
 - Write tests for all new functions
 - Use pytest as the testing framework
 - Aim for >80% test coverage
+- **Always use `uv run pytest`** to run tests (never use `pip install` or manual venv)
 
 ## Security
 - Never hardcode secrets or credentials

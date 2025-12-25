@@ -1,72 +1,72 @@
 {
   "mcpServers": {
+    "agentic-tools": {
+      "args": [
+        "-y",
+        "@pimzino/agentic-tools-mcp"
+      ],
+      "command": "npx"
+    },
+    "context7": {
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "command": "npx"
+    },
+    "exarp": {
+      "command": "/Users/davidl/Projects/project-management-automation/exarp-uvx-wrapper.sh",
+      "args": [
+        "--mcp"
+      ],
+      "env": {
+        "PROJECT_ROOT": "/Users/davidl/Projects/project-management-automation"
+      }
+    },
     "filesystem": {
-      "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/Users/dlowes/Documents/Projects/project-management-automation"
+        "/Users/davidl/Projects/project-management-automation"
       ],
-      "description": "File system operations for reading, writing, and managing project files"
+      "command": "npx"
     },
     "interactive": {
-      "command": "npx",
       "args": [
         "-y",
         "interactive-mcp",
         "-t",
         "60"
       ],
-      "description": "Human-in-the-loop prompts and OS notifications for confirmations and alerts"
+      "command": "npx"
     },
-    "exarp_pma": {
-      "command": "/Users/dlowes/Documents/Projects/project-management-automation/exarp-uvx-wrapper.sh",
+    "ollama": {
       "args": [
-        "--mcp"
+        "mcp-ollama"
       ],
+      "command": "uvx",
       "env": {
-        "EXARP_DEV_MODE": "1",
-        "EXARP_FORCE_STDIO": "1",
-        "PROJECT_ROOT": "/Users/dlowes/Documents/Projects/project-management-automation"
-      },
-      "description": "Exarp for Project Management Automation - auto-detects uvx location across platforms (stdio mode)"
-    },
-    "devwisdom": {
-      "command": "/Users/dlowes/Documents/Projects/devwisdom-go/devwisdom",
-      "args": [],
-      "description": "DevWisdom-Go MCP server providing wisdom quotes, trusted advisors, and inspirational guidance for developers"
-    },
-    "tractatus_thinking": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "tractatus_thinking"
-      ],
-      "description": "Tractatus Thinking MCP server for structural analysis and logical decomposition"
+        "OLLAMA_BASE_URL": "http://localhost:11434"
+      }
     },
     "sequential_thinking": {
-      "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ],
-      "description": "Sequential Thinking MCP server for implementation workflows"
+      "command": "npx"
     },
-    "context7": {
-      "command": "npx",
+    "tractatus_thinking": {
       "args": [
         "-y",
-        "@upstash/context7-mcp"
+        "tractatus_thinking"
       ],
-      "description": "Up-to-date documentation lookup for libraries and frameworks"
+      "command": "npx"
     },
-    "agentic-tools": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@pimzino/agentic-tools-mcp"
-      ],
-      "description": "Task management and agent memories with JSON file storage for Todo2 integration"
+    "devwisdom": {
+      "command": "/Users/davidl/Projects/devwisdom-go/devwisdom",
+      "args": [],
+      "description": "DevWisdom-Go MCP server providing wisdom quotes, trusted advisors, and inspirational guidance for developers"
     }
   }
 }

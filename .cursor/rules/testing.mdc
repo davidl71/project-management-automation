@@ -25,3 +25,8 @@ alwaysApply: false
 - Keep tests fast (<1s each)
 - Use fixtures for expensive setup
 - Run tests in isolation
+
+## Running Tests
+- **Always use `uv run pytest`** to run tests
+- Never use `pip install` or manual virtual environments
+- Example: `uv run pytest tests/ -v`

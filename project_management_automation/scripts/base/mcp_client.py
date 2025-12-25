@@ -35,7 +35,7 @@ except ImportError:
     from typing import Any
     ClientSession = Any
     StdioServerParameters = Any
-    logger.warning("MCP client library not available. Install with: pip install mcp>=1.0.0")
+    logger.warning("MCP client library not available. Install with: uv sync (or uv pip install mcp>=1.0.0)")
 
 
 class MCPSessionPool:

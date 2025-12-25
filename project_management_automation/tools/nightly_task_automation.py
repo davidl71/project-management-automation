@@ -261,7 +261,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
     def _move_to_review(self, task: dict[str, Any], reason: str) -> dict[str, Any]:
         """Move task to Review status."""
-        task['status'] = 'Review'
+        from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
+        task['status'] = normalize_status_to_title_case('Review')
 
         # Add note comment about why moved to review
         if 'comments' not in task:
@@ -373,8 +374,9 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
     def _update_task_status(self, task: dict[str, Any], new_status: str, result_comment: Optional[str] = None) -> dict[str, Any]:
         """Update task status in TODO2 state."""
+        from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
         old_status = task.get('status', 'Todo')
-        task['status'] = new_status
+        task['status'] = normalize_status_to_title_case(new_status)
         task['lastModified'] = datetime.utcnow().isoformat() + 'Z'
 
         # Add status change

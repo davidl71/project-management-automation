@@ -63,24 +63,11 @@ def get_app_state() -> ExarpState:
 async def _init_project_root() -> Path:
     """Find and validate project root."""
     import os
+    from .utils.project_root import find_project_root
 
-    # Try environment variable first
-    env_root = os.getenv("PROJECT_ROOT") or os.getenv("WORKSPACE_PATH")
-    if env_root:
-        root = Path(env_root)
-        if root.exists():
-            return root.resolve()
-
-    # Try to find project markers
-    current = Path.cwd()
-    for _ in range(5):
-        if (current / ".git").exists() or (current / ".todo2").exists() or (current / "CMakeLists.txt").exists() or (current / "go.mod").exists():
-            return current.resolve()
-        if current.parent == current:
-            break
-        current = current.parent
-
-    return Path.cwd().resolve()
+    # Use centralized project root detection
+    # This checks environment variables, markers, and provides fallbacks
+    return find_project_root()
 
 
 async def _init_todo2(project_root: Path) -> Path:

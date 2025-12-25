@@ -1,0 +1,117 @@
+---
+alwaysApply: true
+---
+# Semgrep MCP Server Usage
+
+## When to Use Semgrep
+
+**ALWAYS use Semgrep for:**
+- Security vulnerability scanning
+- Code quality checks
+- Pattern-based code analysis
+- Security best practices enforcement
+- Before committing code changes
+
+**Usage Pattern:**
+Use Semgrep when:
+- Scanning code for security issues
+- Checking for common vulnerabilities
+- Enforcing coding standards
+- Reviewing code before deployment
+- Validating security practices
+
+## Examples
+
+✅ **Good:**
+- "Scan this code with Semgrep for security vulnerabilities"
+- "Check this code with Semgrep for common issues"
+- "Use Semgrep to validate this security implementation"
+- "Run Semgrep on this file before committing"
+
+❌ **Avoid:**
+- General code questions (use Cursor AI or Context7)
+- Documentation lookups (use Context7)
+- Code generation (use Cursor AI)
+
+## Benefits
+
+- **Security**: Detects common vulnerabilities and security issues
+- **Quality**: Enforces coding standards and best practices
+- **Automation**: Can be integrated into CI/CD pipelines
+- **Comprehensive**: Scans for hundreds of security patterns
+
+## Integration with Other Tools
+
+- **With Ollama**: Semgrep for security scanning, Ollama for code analysis
+- **With Context7**: Semgrep for security, Context7 for library documentation
+- **Before commits**: Always run Semgrep before committing security-sensitive code
+
+## Workflow for Security Review
+
+1. **Before changes**: Run Semgrep on modified files
+2. **Review findings**: Address security issues found
+3. **Fix issues**: Implement fixes for identified vulnerabilities
+4. **Re-scan**: Verify fixes resolved the issues
+
+## Best Practices
+
+### Security Scanning
+
+- **Scan before commit**: Always scan code before committing
+- **Fix critical issues**: Address high-severity findings immediately
+- **Review all findings**: Don't ignore warnings without review
+- **Regular scans**: Run scans periodically on the entire codebase
+
+### Query Optimization
+
+- **Be specific**: "Scan this file for SQL injection vulnerabilities"
+- **Provide context**: Include file paths or code sections
+- **Review output**: Always review Semgrep findings carefully
+
+## Available MCP Tools
+
+The Semgrep MCP server provides:
+
+1. **`security_check`** - Scan code for security vulnerabilities
+2. **`scan_file`** - Scan a specific file for issues
+3. **`scan_directory`** - Scan a directory for security issues
+
+## Usage Examples
+
+### Security Scan
+
+```
+"Scan this code with Semgrep for security vulnerabilities"
+```
+
+### Pre-Commit Check
+
+```
+"Run Semgrep on this file before committing"
+```
+
+### Pattern Detection
+
+```
+"Use Semgrep to check for common security patterns in this code"
+```
+
+## Troubleshooting
+
+### Semgrep Not Responding
+
+1. Restart Cursor completely (not just reload)
+2. Check `.cursor/mcp.json` configuration
+3. Verify Semgrep is installed: `npx @semgrep/mcp-server-semgrep --help`
+
+### No Findings
+
+- This may be normal if code is secure
+- Try scanning different files or directories
+- Check Semgrep rules are enabled
+
+### False Positives
+
+- Review each finding carefully
+- Some patterns may be false positives
+- Adjust Semgrep rules if needed

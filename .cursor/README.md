@@ -43,8 +43,8 @@ If you want to use complementary MCP servers during development, create `.cursor
       "description": "Tractatus Thinking MCP server for structural analysis"
     },
     "sequential_thinking": {
-      "command": "python3",
-      "args": ["-m", "sequential_thinking"],
+      "command": "uvx",
+      "args": ["sequential_thinking"],
       "description": "Sequential Thinking MCP server for implementation workflows"
     },
     "context7": {

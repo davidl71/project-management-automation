@@ -75,6 +75,7 @@ from .todo2_utils import (
     get_current_project_id,
     get_repo_project_id,
     load_todo2_project_info,
+    normalize_status_to_title_case,
     task_belongs_to_project,
     validate_project_ownership,
 )
@@ -131,6 +132,7 @@ __all__ = [
     'get_current_project_id',
     'get_repo_project_id',
     'load_todo2_project_info',
+    'normalize_status_to_title_case',
     'task_belongs_to_project',
     'validate_project_ownership',
     # Todo2 MCP client

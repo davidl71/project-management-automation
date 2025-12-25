@@ -21,7 +21,7 @@ try:
     MCP_CLIENT_AVAILABLE = True
 except ImportError:
     MCP_CLIENT_AVAILABLE = False
-    logger.warning("MCP client library not available. Install with: pip install mcp>=1.0.0")
+    logger.warning("MCP client library not available. Install with: uv sync (or uv pip install mcp>=1.0.0)")
 
 # Import session pool from mcp_client if available
 try:
@@ -313,6 +313,9 @@ def update_todos_mcp(
     """
     Update todos using Todo2 MCP, with fallback to file access.
     
+    Automatically normalizes status values to Title Case (Todo, In Progress, Done, etc.)
+    to ensure consistency across all updates.
+    
     Args:
         updates: List of update dictionaries with 'id' and fields to update
         project_root: Project root path (defaults to find_project_root)
@@ -321,12 +324,21 @@ def update_todos_mcp(
         True if successful, False otherwise
     """
     from .project_root import find_project_root
+    from .todo2_utils import normalize_status_to_title_case
     
     if project_root is None:
         project_root = find_project_root()
     
+    # Normalize status values to Title Case before updating
+    normalized_updates = []
+    for update in updates:
+        normalized_update = update.copy()
+        if 'status' in normalized_update:
+            normalized_update['status'] = normalize_status_to_title_case(normalized_update['status'])
+        normalized_updates.append(normalized_update)
+    
     # Try MCP first
-    arguments = {'updates': updates}
+    arguments = {'updates': normalized_updates}
     result = _call_todo2_tool_sync('mcp_extension-todo2_update_todos', arguments, project_root)
     
     if result is not None:
@@ -353,9 +365,12 @@ def update_todos_mcp(
             continue
         
         task = task_dict[task_id]
-        # Update fields
+        # Update fields (normalize status if present)
         for key, value in update.items():
             if key != 'id':
+                if key == 'status':
+                    from .todo2_utils import normalize_status_to_title_case
+                    value = normalize_status_to_title_case(value)
                 task[key] = value
     
     # Write back to file

@@ -16,14 +16,15 @@ The Project Management Automation MCP Server exposes project-specific automation
 ### Prerequisites
 
 - Python 3.9+
-- MCP Python SDK: `pip install mcp`
+- MCP Python SDK: `uv sync` (or `uv pip install mcp>=1.0.0`)
 - Project dependencies (IntelligentAutomationBase, etc.)
 
 ### Setup
 
 1. **Install MCP package:**
    ```bash
-   pip install mcp
+   uv sync
+   # Or: uv pip install mcp>=1.0.0
    ```
 
 2. **Verify server is configured:**
@@ -324,7 +325,7 @@ All tools use centralized error handling:
 1. **Restart Cursor completely** (not just reload)
 2. **Check Python path** - Ensure `python3` is in PATH
 3. **Check file permissions** - Server file must be readable
-4. **Check MCP package** - Run `pip install mcp`
+4. **Check MCP package** - Run `uv sync` (or `uv pip install mcp>=1.0.0`)
 
 ### Tools Not Working
 

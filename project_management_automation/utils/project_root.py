@@ -11,12 +11,13 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
     """
     Find project root by looking for marker files.
 
-    Looks for .git, .todo2, CMakeLists.txt, or go.mod to identify project root.
+    Looks for .git, .todo2, CMakeLists.txt, go.mod, or pyproject.toml to identify project root.
 
     Search order:
-    1. If start_path provided, search up from there
-    2. Search up from current working directory
-    3. Search up from package location (for MCP server context)
+    1. PROJECT_ROOT or WORKSPACE_PATH environment variable (if set)
+    2. If start_path provided, search up from there
+    3. Search up from current working directory
+    4. Search up from package location (for MCP server context)
 
     Args:
         start_path: Starting path for search (optional)
@@ -24,14 +25,28 @@ def find_project_root(start_path: Optional[Path] = None) -> Path:
     Returns:
         Path to project root, or current working directory if not found
     """
+    import os
+    
     def _search_up(path: Path) -> Optional[Path]:
         """Search upward for project markers."""
         current = path.resolve()
         while current != current.parent:
-            if (current / '.git').exists() or (current / '.todo2').exists() or (current / 'CMakeLists.txt').exists() or (current / 'go.mod').exists():
+            # Check for common project markers
+            if ((current / '.git').exists() or 
+                (current / '.todo2').exists() or 
+                (current / 'CMakeLists.txt').exists() or 
+                (current / 'go.mod').exists() or
+                (current / 'pyproject.toml').exists()):
                 return current
             current = current.parent
         return None
+    
+    # Check environment variable first (highest priority)
+    env_root = os.getenv("PROJECT_ROOT") or os.getenv("WORKSPACE_PATH")
+    if env_root:
+        env_path = Path(env_root)
+        if env_path.exists():
+            return env_path.resolve()
 
     global _cached_project_root
 

@@ -1,0 +1,101 @@
+---
+description: Task status standardization rules for AI assistance
+alwaysApply: true
+---
+
+# Task Status Standardization Rules
+
+## 🚨 CRITICAL: Always Use Title Case for Task Status
+
+**All Exarp tools MUST normalize task status to Title Case before updating.**
+
+### Standard Status Values
+
+**✅ CORRECT (Title Case):**
+- `"Todo"` (not "todo", "TODO", "pending")
+- `"In Progress"` (not "in_progress", "in-progress", "In Progress")
+- `"Review"` (not "review", "Review")
+- `"Done"` (not "done", "DONE", "completed")
+
+### Required Pattern
+
+**ALWAYS use `normalize_status_to_title_case()` before setting status:**
+
+```python
+from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
+
+# ✅ CORRECT
+task['status'] = normalize_status_to_title_case('done')  # → "Done"
+task['status'] = normalize_status_to_title_case('in_progress')  # → "In Progress"
+task['status'] = normalize_status_to_title_case('todo')  # → "Todo"
+
+# ❌ WRONG
+task['status'] = 'done'  # Will create inconsistency
+task['status'] = 'in_progress'  # Wrong format
+task['status'] = 'Todo'  # OK but not normalized
+```
+
+### Where to Apply
+
+**MUST normalize status in:**
+1. ✅ `update_todos_mcp()` - Already updated
+2. ✅ `_update_task_status()` in automation base - Already updated
+3. ✅ Direct file writes - Use normalization
+4. ✅ Status updates in tools - Use normalization
+5. ✅ Task creation - Use normalization
+
+### Enforcement
+
+**Before ANY status update:**
+1. Import: `from project_management_automation.utils.todo2_utils import normalize_status_to_title_case`
+2. Normalize: `status = normalize_status_to_title_case(raw_status)`
+3. Use normalized value
+
+**Status normalization function:**
+- Location: `project_management_automation/utils/todo2_utils.py`
+- Function: `normalize_status_to_title_case(status: str) -> str`
+- Handles: All case variants, aliases (done→Done, completed→Done), spaces/underscores
+
+### Examples
+
+**Tool Updates:**
+```python
+# ✅ CORRECT
+updates = [{
+    'id': task_id,
+    'status': normalize_status_to_title_case('done')
+}]
+update_todos_mcp(updates)
+
+# ❌ WRONG
+updates = [{'id': task_id, 'status': 'done'}]  # Will be normalized by update_todos_mcp, but inconsistent
+```
+
+**Direct File Access:**
+```python
+# ✅ CORRECT
+from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
+task['status'] = normalize_status_to_title_case(new_status)
+
+# ❌ WRONG
+task['status'] = new_status  # May be wrong case
+```
+
+### Status Mapping
+
+The normalization function handles:
+- `"todo"`, `"Todo"`, `"TODO"`, `"pending"` → `"Todo"`
+- `"in_progress"`, `"in-progress"`, `"In Progress"`, `"working"` → `"In Progress"`
+- `"review"`, `"Review"`, `"needs review"` → `"Review"`
+- `"done"`, `"Done"`, `"DONE"`, `"completed"` → `"Done"`
+- `"blocked"`, `"Blocked"` → `"Blocked"`
+- `"cancelled"`, `"Cancelled"`, `"canceled"` → `"Cancelled"`
+
+### Why This Matters
+
+- **Consistency**: All statuses use same capitalization
+- **Filtering**: Status filters work correctly
+- **Reporting**: Accurate task counts by status
+- **Integration**: Works with Todo2 MCP and other systems
+
+**Remember: Always normalize status to Title Case before updating!**

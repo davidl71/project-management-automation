@@ -120,6 +120,20 @@ mcp_agentic-tools_create_task(
 #     data['todos'].append(new_task)
 ```
 
+## 🚨 CRITICAL: Task Status Standardization
+
+**ALL task status updates MUST use Title Case normalization.**
+
+**ALWAYS use `normalize_status_to_title_case()` before setting task status:**
+```python
+from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
+task['status'] = normalize_status_to_title_case('done')  # → "Done"
+```
+
+**Standard statuses:** `"Todo"`, `"In Progress"`, `"Review"`, `"Done"`, `"Blocked"`, `"Cancelled"`
+
+See `.cursor/rules/task-status-standardization.mdc` for complete rules.
+
 ## 🚨 CRITICAL: FastMCP Return Type Requirements
 
 **ALL MCP tools and resources MUST return JSON strings, NEVER dicts.**

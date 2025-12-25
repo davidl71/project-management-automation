@@ -227,7 +227,8 @@ class IntelligentAutomationBase(ABC):
 
                 if reusable_task:
                     # Reuse existing task
-                    reusable_task['status'] = 'in_progress'
+                    from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
+                    reusable_task['status'] = normalize_status_to_title_case('in_progress')
                     reusable_task['lastModified'] = datetime.now().isoformat()
                     annotate_task_project(reusable_task, self.project_id)
                     self.todo2_task = reusable_task
@@ -469,9 +470,10 @@ class IntelligentAutomationBase(ABC):
                 with open(todo2_path) as f:
                     todo2_data = json.load(f)
 
+                from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
                 for task in todo2_data.get('todos', []):
                     if task['id'] == self.todo2_task['id']:
-                        task['status'] = 'done'
+                        task['status'] = normalize_status_to_title_case('Done')
                         task['lastModified'] = datetime.now().isoformat()
                         break
 
@@ -495,7 +497,8 @@ class IntelligentAutomationBase(ABC):
 
                 for task in todo2_data.get('todos', []):
                     if task['id'] == self.todo2_task['id']:
-                        task['status'] = 'todo'
+                        from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
+                        task['status'] = normalize_status_to_title_case('todo')
                         task['lastModified'] = datetime.now().isoformat()
 
                         if 'comments' not in task:

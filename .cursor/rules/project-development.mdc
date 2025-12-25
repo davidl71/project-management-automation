@@ -241,8 +241,8 @@ Or for development with hot-reload:
 {
   "mcpServers": {
     "exarp": {
-      "command": "python3",
-      "args": ["-m", "project_management_automation.server"],
+      "command": "uv",
+      "args": ["run", "python", "-m", "project_management_automation.server"],
       "env": {
         "EXARP_DEV_MODE": "1"
       }
@@ -261,8 +261,8 @@ Or for development with hot-reload:
       "args": ["-y", "tractatus-thinking-mcp"]
     },
     "sequential_thinking": {
-      "command": "python3",
-      "args": ["-m", "sequential_thinking"]
+      "command": "uvx",
+      "args": ["sequential_thinking"]
     }
   }
 }
