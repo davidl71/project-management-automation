@@ -810,37 +810,12 @@ def register_tools():
                 tools.extend(
                     [
                         # NOTE: check_documentation_health removed - use health(action="docs") instead
-                        Tool(
-                            name="analyze_todo2_alignment",
-                            description="Analyze task alignment with project goals, find misaligned tasks.",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "create_followup_tasks": {
-                                        "type": "boolean",
-                                        "description": "Create follow-up tasks",
-                                        "default": True,
-                                    },
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                },
-                            },
-                        ),
                         # NOTE: Individual tools removed - use consolidated tools instead:
                         # - analyze_alignment (action=todo2|prd) replaces analyze_todo2_alignment + analyze_prd_alignment
                         # - task_analysis (action=duplicates) replaces detect_duplicate_tasks
                         # - security (action=scan) replaces scan_dependency_security
-                        # - run_discover_automation replaces find_automation_opportunities
+                        # - automation (action=discover) replaces run_discover_automation
                         # - task_workflow (action=sync) replaces sync_todo_tasks
-                        Tool(
-                            name="analyze_prd_alignment",
-                            description="Analyzes task alignment with PRD personas and user stories",
-                            inputSchema={
-                                "type": "object",
-                                "properties": {
-                                    "output_path": {"type": "string", "description": "Output file path"},
-                                },
-                            },
-                        ),
                         Tool(
                             name="add_external_tool_hints",
                             description="Automatically detect and add Context7/external tool hints to documentation.",
@@ -1079,11 +1054,11 @@ def register_tools():
                     ),
                     Tool(
                         name="task_workflow",
-                        description="[HINT: Task workflow. action=sync|approve|clarify. Manage task lifecycle.]",
+                        description="[HINT: Task workflow. action=sync|approve|clarify|clarity|cleanup. Manage task lifecycle.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
-                                "action": {"type": "string", "enum": ["sync", "approve", "clarify"], "default": "sync"},
+                                "action": {"type": "string", "enum": ["sync", "approve", "clarify", "clarity", "cleanup"], "default": "sync"},
                                 "dry_run": {"type": "boolean", "default": False},
                                 "status": {"type": "string", "default": "Review"},
                                 "new_status": {"type": "string", "default": "Todo"},
@@ -1096,6 +1071,9 @@ def register_tools():
                                 "decision": {"type": "string"},
                                 "decisions_json": {"type": "string"},
                                 "move_to_todo": {"type": "boolean", "default": True},
+                                "auto_apply": {"type": "boolean", "default": False},
+                                "output_format": {"type": "string", "default": "text"},
+                                "stale_threshold_hours": {"type": "number", "default": 2.0},
                                 "output_path": {"type": "string"},
                             },
                         },
@@ -1125,46 +1103,24 @@ def register_tools():
                         },
                     ),
                     Tool(
-                        name="run_daily_automation",
-                        description="[HINT: Daily automation. Run daily checks (docs_health, alignment, duplicates, security).]",
+                        name="automation",
+                        description="[HINT: Automation. action=daily|nightly|sprint|discover. Unified automation tool.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
+                                "action": {"type": "string", "enum": ["daily", "nightly", "sprint", "discover"], "default": "daily"},
                                 "tasks": {"type": "array", "items": {"type": "string"}},
                                 "include_slow": {"type": "boolean", "default": False},
-                                "dry_run": {"type": "boolean", "default": False},
-                                "output_path": {"type": "string"},
-                            },
-                        },
-                    ),
-                    Tool(
-                        name="run_nightly_automation",
-                        description="[HINT: Nightly automation. Process tasks automatically with host limits.]",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
                                 "max_tasks_per_host": {"type": "integer", "default": 5},
                                 "max_parallel_tasks": {"type": "integer", "default": 10},
                                 "priority_filter": {"type": "string"},
                                 "tag_filter": {"type": "array", "items": {"type": "string"}},
-                                "dry_run": {"type": "boolean", "default": False},
-                                "notify": {"type": "boolean", "default": False},
-                            },
-                        },
-                    ),
-                    Tool(
-                        name="run_sprint_automation",
-                        description="[HINT: Sprint automation. Full sprint automation with subtask extraction.]",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
                                 "max_iterations": {"type": "integer", "default": 10},
                                 "auto_approve": {"type": "boolean", "default": True},
                                 "extract_subtasks": {"type": "boolean", "default": True},
                                 "run_analysis_tools": {"type": "boolean", "default": True},
                                 "run_testing_tools": {"type": "boolean", "default": True},
-                                "priority_filter": {"type": "string"},
-                                "tag_filter": {"type": "array", "items": {"type": "string"}},
+                                "min_value_score": {"type": "number", "default": 0.7},
                                 "dry_run": {"type": "boolean", "default": False},
                                 "output_path": {"type": "string"},
                                 "notify": {"type": "boolean", "default": False},
@@ -1172,12 +1128,31 @@ def register_tools():
                         },
                     ),
                     Tool(
-                        name="run_discover_automation",
-                        description="[HINT: Discover automation. Find automation opportunities in codebase.]",
+                        name="estimation",
+                        description="[HINT: Estimation. action=estimate|analyze|stats. Unified task duration estimation tool.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
-                                "min_value_score": {"type": "number", "default": 0.7},
+                                "action": {"type": "string", "enum": ["estimate", "analyze", "stats"], "default": "estimate"},
+                                "name": {"type": "string"},
+                                "details": {"type": "string", "default": ""},
+                                "tags": {"type": "string"},
+                                "priority": {"type": "string", "default": "medium"},
+                                "use_historical": {"type": "boolean", "default": True},
+                                "detailed": {"type": "boolean", "default": False},
+                                "use_mlx": {"type": "boolean", "default": True},
+                                "mlx_weight": {"type": "number", "default": 0.3},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="analyze_alignment",
+                        description="[HINT: Alignment analysis. action=todo2|prd. Unified alignment analysis tool.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["todo2", "prd"], "default": "todo2"},
+                                "create_followup_tasks": {"type": "boolean", "default": True},
                                 "output_path": {"type": "string"},
                             },
                         },
@@ -1252,16 +1227,125 @@ def register_tools():
                             },
                         },
                     ),
+                ])
+            
+            # Add git-inspired tools if available (must match FastMCP conditional registration)
+            try:
+                from .tools.git_inspired_tools import (
+                    compare_task_diff,
+                    generate_graph,
+                    get_branch_commits,
+                    get_branch_tasks,
+                    get_task_commits,
+                    list_branches,
+                    merge_branch_tools,
+                    set_task_branch_tool,
+                )
+                GIT_INSPIRED_TOOLS_AVAILABLE = True
+            except ImportError:
+                GIT_INSPIRED_TOOLS_AVAILABLE = False
+                logger.warning("Git-inspired tools not available for stdio server")
+            
+            if GIT_INSPIRED_TOOLS_AVAILABLE:
+                tools.extend([
                     Tool(
-                        name="improve_task_clarity",
-                        description="[HINT: Task clarity improvement. Analyzes and improves task clarity metrics.] Improves task clarity by adding time estimates, renaming tasks, removing dependencies.",
+                        name="get_task_commits_tool",
+                        description="[HINT: Git-inspired tools. Get commit history for a task.] Get commit history for a task showing all changes over time.",
                         inputSchema={
                             "type": "object",
                             "properties": {
-                                "auto_apply": {"type": "boolean", "default": False, "description": "Apply improvements automatically"},
-                                "output_format": {"type": "string", "enum": ["text", "json"], "default": "text"},
-                                "output_path": {"type": "string", "description": "Optional file path to save results"},
+                                "task_id": {"type": "string"},
+                                "branch": {"type": "string"},
+                                "limit": {"type": "integer", "default": 50},
                             },
+                            "required": ["task_id"],
+                        },
+                    ),
+                    Tool(
+                        name="get_branch_commits_tool",
+                        description="[HINT: Git-inspired tools. Get all commits for a branch.] Get all commits across all tasks in a branch.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "branch": {"type": "string"},
+                                "limit": {"type": "integer", "default": 100},
+                            },
+                            "required": ["branch"],
+                        },
+                    ),
+                    Tool(
+                        name="list_branches_tool",
+                        description="[HINT: Git-inspired tools. List all branches with statistics.] List all branches (work streams) from tasks and their statistics.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {},
+                        },
+                    ),
+                    Tool(
+                        name="get_branch_tasks_tool",
+                        description="[HINT: Git-inspired tools. Get all tasks in a branch.] Get all tasks belonging to a specific branch.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "branch": {"type": "string"},
+                            },
+                            "required": ["branch"],
+                        },
+                    ),
+                    Tool(
+                        name="compare_task_diff_tool",
+                        description="[HINT: Git-inspired tools. Compare two versions of a task.] Compare task versions across commits or timestamps to see what changed.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "task_id": {"type": "string"},
+                                "commit1": {"type": "string"},
+                                "commit2": {"type": "string"},
+                                "time1": {"type": "string"},
+                                "time2": {"type": "string"},
+                            },
+                            "required": ["task_id"],
+                        },
+                    ),
+                    Tool(
+                        name="generate_graph_tool",
+                        description="[HINT: Git-inspired tools. Generate commit graph visualization.] Generate visual timeline of commits (text ASCII or Graphviz DOT format).",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "branch": {"type": "string"},
+                                "task_id": {"type": "string"},
+                                "format": {"type": "string", "default": "text"},
+                                "output_path": {"type": "string"},
+                                "max_commits": {"type": "integer", "default": 50},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="merge_branch_tools_tool",
+                        description="[HINT: Git-inspired tools. Merge tasks from one branch to another.] Merge tasks from source branch to target branch with conflict detection.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "source_branch": {"type": "string"},
+                                "target_branch": {"type": "string"},
+                                "conflict_strategy": {"type": "string", "default": "newer"},
+                                "author": {"type": "string", "default": "system"},
+                                "dry_run": {"type": "boolean", "default": False},
+                            },
+                            "required": ["source_branch", "target_branch"],
+                        },
+                    ),
+                    Tool(
+                        name="set_task_branch",
+                        description="[HINT: Git-inspired tools. Set branch for a task.] Assign a task to a branch (work stream) by adding branch: tag.",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "task_id": {"type": "string"},
+                                "branch": {"type": "string"},
+                            },
+                            "required": ["task_id", "branch"],
                         },
                     ),
                 ])
@@ -1610,8 +1694,19 @@ def register_tools():
                                 output_path=arguments.get("output_path"),
                                 notify=arguments.get("notify", False),
                             )
+                    elif name == "analyze_alignment":
+                        if _analyze_alignment is None:
+                            result = json.dumps({"success": False, "error": "analyze_alignment tool not available"}, indent=2)
+                        else:
+                            result = _analyze_alignment(
+                                action=arguments.get("action", "todo2"),
+                                create_followup_tasks=arguments.get("create_followup_tasks", True),
+                                output_path=arguments.get("output_path"),
+                            )
                     # NOTE: run_daily_automation, run_nightly_automation, run_sprint_automation, run_discover_automation removed
                     # Use automation(action=daily|nightly|sprint|discover) instead
+                    # NOTE: analyze_todo2_alignment, analyze_prd_alignment removed
+                    # Use analyze_alignment(action=todo2|prd) instead
                     elif name == "tool_catalog":
                         result = _tool_catalog(
                             arguments.get("action", "list"),
@@ -1659,6 +1754,99 @@ def register_tools():
                             log=arguments.get("log", True),
                             session_mode=None,
                         )
+                    # Git-inspired tools (conditionally available)
+                    elif name == "get_task_commits_tool":
+                        try:
+                            from .tools.git_inspired_tools import get_task_commits
+                            result = get_task_commits(
+                                arguments.get("task_id"),
+                                arguments.get("branch"),
+                                arguments.get("limit", 50),
+                            )
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "get_branch_commits_tool":
+                        try:
+                            from .tools.git_inspired_tools import get_branch_commits
+                            result = get_branch_commits(
+                                arguments.get("branch"),
+                                arguments.get("limit", 100),
+                            )
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "list_branches_tool":
+                        try:
+                            from .tools.git_inspired_tools import list_branches
+                            result = list_branches()
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "get_branch_tasks_tool":
+                        try:
+                            from .tools.git_inspired_tools import get_branch_tasks
+                            result = get_branch_tasks(arguments.get("branch"))
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "compare_task_diff_tool":
+                        try:
+                            from .tools.git_inspired_tools import compare_task_diff
+                            result = compare_task_diff(
+                                arguments.get("task_id"),
+                                arguments.get("commit1"),
+                                arguments.get("commit2"),
+                                arguments.get("time1"),
+                                arguments.get("time2"),
+                            )
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "generate_graph_tool":
+                        try:
+                            from .tools.git_inspired_tools import generate_graph
+                            result = generate_graph(
+                                arguments.get("branch"),
+                                arguments.get("task_id"),
+                                arguments.get("format", "text"),
+                                arguments.get("output_path"),
+                                arguments.get("max_commits", 50),
+                            )
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "merge_branch_tools_tool":
+                        try:
+                            from .tools.git_inspired_tools import merge_branch_tools
+                            result = merge_branch_tools(
+                                arguments.get("source_branch"),
+                                arguments.get("target_branch"),
+                                arguments.get("conflict_strategy", "newer"),
+                                arguments.get("author", "system"),
+                                arguments.get("dry_run", False),
+                            )
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
+                    elif name == "set_task_branch":
+                        try:
+                            from .tools.git_inspired_tools import set_task_branch_tool
+                            result = set_task_branch_tool(
+                                arguments.get("task_id"),
+                                arguments.get("branch"),
+                            )
+                            if not isinstance(result, str):
+                                result = json.dumps(result, indent=2)
+                        except ImportError:
+                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
                     else:
                         result = json.dumps({"error": f"Unknown tool: {name}"})
                 else:

@@ -1,13 +1,7 @@
 #!/bin/bash
-# Exarp MCP server switcher
-# Set EXARP_USE_PYPI=1 to use PyPI version, otherwise uses local dev
+# DEPRECATED: Use exarp.sh instead
+# This script is kept for backward compatibility
+# It now delegates to the unified exarp.sh script
 
-# Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-if [[ "${EXARP_USE_PYPI:-}" == "1" ]]; then
-    exec uvx exarp "$@"
-else
-    exec "${SCRIPT_DIR}/run_server.sh" "$@"
-fi
-
+exec "${SCRIPT_DIR}/exarp.sh" "$@"
