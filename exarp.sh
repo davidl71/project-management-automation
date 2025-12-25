@@ -3,17 +3,16 @@
 # Combines functionality from exarp-switch.sh, exarp-uvx-wrapper.sh, and run_server.sh
 #
 # Usage:
-#   exarp.sh                    # Use local dev code (default)
-#   EXARP_USE_PYPI=1 exarp.sh  # Use PyPI version
-#   EXARP_USE_VENV=1 exarp.sh  # Use venv (fallback)
+#   exarp.sh                    # Use local dev code via venv (default for local dev)
+#   EXARP_USE_PYPI=1 exarp.sh  # Use PyPI version via uvx
+#   EXARP_USE_UVX=1 exarp.sh   # Use uvx --from (may cache, not recommended for dev)
 #
 # Environment variables:
 #   EXARP_USE_PYPI=1    Use PyPI version via uvx (overrides local dev)
-#   EXARP_USE_VENV=1    Use venv Python (fallback if uvx not available)
-#   EXARP_FORCE_STDIO=1 Force stdio server mode (bypass FastMCP)
-
-# Force stdio server mode by default (bypass FastMCP static analysis issues)
-export EXARP_FORCE_STDIO="${EXARP_FORCE_STDIO:-1}"
+#   EXARP_USE_UVX=1     Use uvx --from (may cache, not recommended for dev)
+#   EXARP_FORCE_STDIO=1 Force stdio server mode (bypass FastMCP - default: FastMCP)
+#
+# Note: By default, FastMCP is used. Set EXARP_FORCE_STDIO=1 to use stdio mode instead.
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -95,39 +94,29 @@ if [[ "${EXARP_USE_PYPI:-}" == "1" ]]; then
     exec "$UVX_PATH" exarp "$@"
     
 elif [[ "${EXARP_USE_VENV:-}" == "1" ]]; then
-    # Use venv (fallback method)
-    VENV_PYTHON="${SCRIPT_DIR}/venv/bin/python3"
-    
-    if [ ! -f "$VENV_PYTHON" ]; then
-        echo "Error: Virtual environment not found at ${SCRIPT_DIR}/venv" >&2
-        echo "Run: python3 -m venv venv && source venv/bin/activate && pip install -e ." >&2
+    # Use venv (fallback method) - check .venv first (uv managed), then venv
+    if [ -f "${SCRIPT_DIR}/.venv/bin/python3" ]; then
+        VENV_PYTHON="${SCRIPT_DIR}/.venv/bin/python3"
+    elif [ -f "${SCRIPT_DIR}/venv/bin/python3" ]; then
+        VENV_PYTHON="${SCRIPT_DIR}/venv/bin/python3"
+    else
+        echo "Error: Virtual environment not found at ${SCRIPT_DIR}/.venv or ${SCRIPT_DIR}/venv" >&2
+        echo "Run: uv sync (creates .venv) or python3 -m venv venv" >&2
         exit 1
     fi
     
     cd "$SCRIPT_DIR"
     exec "$VENV_PYTHON" -m project_management_automation.server "$@"
     
-else
-    # Default: Use local dev code via uvx (recommended)
+elif [[ "${EXARP_USE_UVX:-}" == "1" ]]; then
+    # Use uvx --from (may have caching issues, not recommended for active development)
     UVX_PATH=$(find_uvx)
     
     if [ -z "$UVX_PATH" ]; then
-        # Fallback to venv if uvx not available
-        VENV_PYTHON="${SCRIPT_DIR}/venv/bin/python3"
-        if [ -f "$VENV_PYTHON" ]; then
-            echo "Warning: uvx not found, falling back to venv" >&2
-            cd "$SCRIPT_DIR"
-            exec "$VENV_PYTHON" -m project_management_automation.server "$@"
-        else
-            echo "Error: uvx not found and venv not available." >&2
-            echo "Please install uv:" >&2
-            echo "  Ubuntu/Linux: pip install uv" >&2
-            echo "  macOS: brew install uv" >&2
-            echo "" >&2
-            echo "Or create a venv:" >&2
-            echo "  python3 -m venv venv && source venv/bin/activate && pip install -e ." >&2
-            exit 1
-        fi
+        echo "Error: uvx not found. Please install uv:" >&2
+        echo "  Ubuntu/Linux: pip install uv" >&2
+        echo "  macOS: brew install uv" >&2
+        exit 1
     fi
     
     # Find project root
@@ -142,7 +131,21 @@ else
     
     # Execute uvx with exarp using local dev code
     # Use --from to explicitly point to local directory (prevents using PyPI version)
-    # This ensures the latest local development version is used
     exec "$UVX_PATH" --from "$SCRIPT_DIR" exarp "$@"
+else
+    # Default: Use local development code via venv (recommended for active development)
+    # This avoids uvx caching issues and ensures latest local code is always used
+    if [ -f "${SCRIPT_DIR}/.venv/bin/python3" ]; then
+        VENV_PYTHON="${SCRIPT_DIR}/.venv/bin/python3"
+    elif [ -f "${SCRIPT_DIR}/venv/bin/python3" ]; then
+        VENV_PYTHON="${SCRIPT_DIR}/venv/bin/python3"
+    else
+        echo "Error: Virtual environment not found at ${SCRIPT_DIR}/.venv or ${SCRIPT_DIR}/venv" >&2
+        echo "Run: uv sync (creates .venv) or python3 -m venv venv" >&2
+        exit 1
+    fi
+    
+    cd "$SCRIPT_DIR"
+    exec "$VENV_PYTHON" -m project_management_automation.server "$@"
 fi
 

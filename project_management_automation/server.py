@@ -394,15 +394,7 @@ if MCP_AVAILABLE:
         except Exception as e:
             logger.warning(f"Failed to register hint registry resources: {e}")
 
-        # Auto-primer tools for session start
-        try:
-            from .tools.auto_primer import register_auto_primer_tools
-            register_auto_primer_tools(mcp)
-            logger.debug("✅ Auto-primer tools registered")
-        except ImportError as e:
-            logger.debug(f"Auto-primer tools not available: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to register auto-primer tools: {e}")
+        # NOTE: Auto-primer tools removed - use session(action="prime") instead
         
         # Session mode resources (MODE-002)
         try:
@@ -414,27 +406,23 @@ if MCP_AVAILABLE:
         except Exception as e:
             logger.warning(f"Failed to register session mode resources: {e}")
         
-        # Prompt discovery resources and tools
+        # Prompt discovery resources (tools moved to session(action="prompts"))
         try:
             from .resources.prompt_discovery import (
                 register_prompt_discovery_resources,
-                register_prompt_discovery_tools,
             )
             register_prompt_discovery_resources(mcp)
-            register_prompt_discovery_tools(mcp)
-            logger.debug("✅ Prompt discovery resources and tools registered")
+            logger.debug("✅ Prompt discovery resources registered")
         except ImportError as e:
             logger.debug(f"Prompt discovery not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register prompt discovery: {e}")
 
-        # Assignee management resources and tools
+        # Assignee management resources (tools moved to session(action="assignee"))
         try:
             from .resources.assignees import register_assignee_resources
-            from .tools.task_assignee import register_assignee_tools
             register_assignee_resources(mcp)
-            register_assignee_tools(mcp)
-            logger.debug("✅ Assignee management resources and tools registered")
+            logger.debug("✅ Assignee management resources registered")
         except ImportError as e:
             logger.debug(f"Assignee management not available: {e}")
         except Exception as e:
@@ -450,45 +438,10 @@ if MCP_AVAILABLE:
         except Exception as e:
             logger.warning(f"Failed to register capabilities resources: {e}")
 
-        # Session handoff tool for multi-dev coordination
-        try:
-            from .tools.session_handoff import register_handoff_tools
-            register_handoff_tools(mcp)
-            logger.debug("✅ Session handoff tool registered")
-        except ImportError as e:
-            logger.debug(f"Session handoff not available: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to register session handoff: {e}")
+        # NOTE: Session handoff tool removed - use session(action="handoff") instead
 
-        # Ollama integration tools
-        try:
-            from .tools.ollama_integration import register_ollama_tools
-            register_ollama_tools(mcp)
-            logger.debug("✅ Ollama tools registered")
-        except ImportError as e:
-            logger.debug(f"Ollama tools not available: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to register Ollama tools: {e}")
-
-        # Ollama-enhanced tools (code documentation, quality analysis, etc.)
-        try:
-            from .tools.ollama_enhanced_tools import register_ollama_enhanced_tools
-            register_ollama_enhanced_tools(mcp)
-            logger.debug("✅ Ollama-enhanced tools registered")
-        except ImportError as e:
-            logger.debug(f"Ollama-enhanced tools not available: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to register Ollama-enhanced tools: {e}")
-
-        # MLX integration tools (Apple Silicon only)
-        try:
-            from .tools.mlx_integration import register_mlx_tools
-            register_mlx_tools(mcp)
-            logger.debug("✅ MLX tools registered")
-        except ImportError as e:
-            logger.debug(f"MLX tools not available: {e}")
-        except Exception as e:
-            logger.warning(f"Failed to register MLX tools: {e}")
+        # NOTE: Ollama tools removed - use ollama(action=status|models|generate|pull|hardware|docs|quality|summary) instead
+        # NOTE: MLX tools removed - use mlx(action=status|hardware|models|generate) instead
 
 # Import automation tools (handle both relative and absolute imports)
 try:
@@ -735,6 +688,10 @@ def register_tools():
             tool_catalog as _tool_catalog,
             workflow_mode as _workflow_mode,
             recommend as _recommend,
+            ollama as _ollama,
+            mlx as _mlx,
+            git_tools as _git_tools,
+            session as _session,
         )
         CONSOLIDATED_AVAILABLE = True
     except ImportError:
@@ -760,6 +717,10 @@ def register_tools():
         _tool_catalog = None
         _workflow_mode = None
         _recommend = None
+        _ollama = None
+        _mlx = None
+        _git_tools = None
+        _session = None
     
     if mcp:
         # FastMCP registration (decorator-based)
@@ -1236,105 +1197,104 @@ def register_tools():
                 logger.warning("Git-inspired tools not available for stdio server")
             
             if GIT_INSPIRED_TOOLS_AVAILABLE:
+                # Add new consolidated tools
                 tools.extend([
                     Tool(
-                        name="get_task_commits_tool",
-                        description="[HINT: Git-inspired tools. Get commit history for a task.] Get commit history for a task showing all changes over time.",
+                        name="ollama",
+                        description="[HINT: Ollama. action=status|models|generate|pull|hardware|docs|quality|summary. Unified Ollama tool.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
+                                "action": {"type": "string", "enum": ["status", "models", "generate", "pull", "hardware", "docs", "quality", "summary"], "default": "status"},
+                                "host": {"type": "string"},
+                                "prompt": {"type": "string"},
+                                "model": {"type": "string", "default": "llama3.2"},
+                                "stream": {"type": "boolean", "default": False},
+                                "options": {"type": "string"},
+                                "num_gpu": {"type": "integer"},
+                                "num_threads": {"type": "integer"},
+                                "context_size": {"type": "integer"},
+                                "file_path": {"type": "string"},
+                                "output_path": {"type": "string"},
+                                "style": {"type": "string", "default": "google"},
+                                "include_suggestions": {"type": "boolean", "default": True},
+                                "data": {"type": "string"},
+                                "level": {"type": "string", "default": "brief"},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="mlx",
+                        description="[HINT: MLX. action=status|hardware|models|generate. Unified MLX tool.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["status", "hardware", "models", "generate"], "default": "status"},
+                                "prompt": {"type": "string"},
+                                "model": {"type": "string", "default": "mlx-community/Phi-3.5-mini-instruct-4bit"},
+                                "max_tokens": {"type": "integer", "default": 512},
+                                "temperature": {"type": "number", "default": 0.7},
+                                "verbose": {"type": "boolean", "default": False},
+                            },
+                        },
+                    ),
+                    Tool(
+                        name="git_tools",
+                        description="[HINT: Git tools. action=commits|branches|tasks|diff|graph|merge|set_branch. Unified git-inspired tools.]",
+                        inputSchema={
+                            "type": "object",
+                            "properties": {
+                                "action": {"type": "string", "enum": ["commits", "branches", "tasks", "diff", "graph", "merge", "set_branch"], "default": "commits"},
                                 "task_id": {"type": "string"},
                                 "branch": {"type": "string"},
                                 "limit": {"type": "integer", "default": 50},
-                            },
-                            "required": ["task_id"],
-                        },
-                    ),
-                    Tool(
-                        name="get_branch_commits_tool",
-                        description="[HINT: Git-inspired tools. Get all commits for a branch.] Get all commits across all tasks in a branch.",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
-                                "branch": {"type": "string"},
-                                "limit": {"type": "integer", "default": 100},
-                            },
-                            "required": ["branch"],
-                        },
-                    ),
-                    Tool(
-                        name="list_branches_tool",
-                        description="[HINT: Git-inspired tools. List all branches with statistics.] List all branches (work streams) from tasks and their statistics.",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {},
-                        },
-                    ),
-                    Tool(
-                        name="get_branch_tasks_tool",
-                        description="[HINT: Git-inspired tools. Get all tasks in a branch.] Get all tasks belonging to a specific branch.",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
-                                "branch": {"type": "string"},
-                            },
-                            "required": ["branch"],
-                        },
-                    ),
-                    Tool(
-                        name="compare_task_diff_tool",
-                        description="[HINT: Git-inspired tools. Compare two versions of a task.] Compare task versions across commits or timestamps to see what changed.",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
-                                "task_id": {"type": "string"},
                                 "commit1": {"type": "string"},
                                 "commit2": {"type": "string"},
                                 "time1": {"type": "string"},
                                 "time2": {"type": "string"},
-                            },
-                            "required": ["task_id"],
-                        },
-                    ),
-                    Tool(
-                        name="generate_graph_tool",
-                        description="[HINT: Git-inspired tools. Generate commit graph visualization.] Generate visual timeline of commits (text ASCII or Graphviz DOT format).",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
-                                "branch": {"type": "string"},
-                                "task_id": {"type": "string"},
                                 "format": {"type": "string", "default": "text"},
                                 "output_path": {"type": "string"},
                                 "max_commits": {"type": "integer", "default": 50},
-                            },
-                        },
-                    ),
-                    Tool(
-                        name="merge_branch_tools_tool",
-                        description="[HINT: Git-inspired tools. Merge tasks from one branch to another.] Merge tasks from source branch to target branch with conflict detection.",
-                        inputSchema={
-                            "type": "object",
-                            "properties": {
                                 "source_branch": {"type": "string"},
                                 "target_branch": {"type": "string"},
                                 "conflict_strategy": {"type": "string", "default": "newer"},
                                 "author": {"type": "string", "default": "system"},
                                 "dry_run": {"type": "boolean", "default": False},
                             },
-                            "required": ["source_branch", "target_branch"],
                         },
                     ),
                     Tool(
-                        name="set_task_branch",
-                        description="[HINT: Git-inspired tools. Set branch for a task.] Assign a task to a branch (work stream) by adding branch: tag.",
+                        name="session",
+                        description="[HINT: Session. action=prime|handoff|prompts|assignee. Unified session management tools.]",
                         inputSchema={
                             "type": "object",
                             "properties": {
+                                "action": {"type": "string", "enum": ["prime", "handoff", "prompts", "assignee"], "default": "prime"},
+                                "include_hints": {"type": "boolean", "default": True},
+                                "include_tasks": {"type": "boolean", "default": True},
+                                "override_mode": {"type": "string"},
                                 "task_id": {"type": "string"},
-                                "branch": {"type": "string"},
+                                "summary": {"type": "string"},
+                                "blockers": {"type": "string"},
+                                "next_steps": {"type": "string"},
+                                "unassign_my_tasks": {"type": "boolean", "default": True},
+                                "include_git_status": {"type": "boolean", "default": True},
+                                "limit": {"type": "integer", "default": 5},
+                                "dry_run": {"type": "boolean", "default": False},
+                                "direction": {"type": "string", "default": "both"},
+                                "prefer_agentic_tools": {"type": "boolean", "default": True},
+                                "auto_commit": {"type": "boolean", "default": True},
+                                "mode": {"type": "string"},
+                                "category": {"type": "string"},
+                                "keywords": {"type": "string"},
+                                "assignee_name": {"type": "string"},
+                                "assignee_type": {"type": "string", "default": "agent"},
+                                "hostname": {"type": "string"},
+                                "status_filter": {"type": "string"},
+                                "priority_filter": {"type": "string"},
+                                "include_unassigned": {"type": "boolean", "default": False},
+                                "max_tasks_per_agent": {"type": "integer", "default": 5},
                             },
-                            "required": ["task_id", "branch"],
                         },
                     ),
                 ])
@@ -1743,99 +1703,139 @@ def register_tools():
                             log=arguments.get("log", True),
                             session_mode=None,
                         )
-                    # Git-inspired tools (conditionally available)
-                    elif name == "get_task_commits_tool":
-                        try:
-                            from .tools.git_inspired_tools import get_task_commits
-                            result = get_task_commits(
-                                arguments.get("task_id"),
-                                arguments.get("branch"),
-                                arguments.get("limit", 50),
+                    # Git-inspired tools - redirect to consolidated git_tools
+                    elif name in ["get_task_commits_tool", "get_branch_commits_tool", "list_branches_tool", 
+                                   "get_branch_tasks_tool", "compare_task_diff_tool", "generate_graph_tool",
+                                   "merge_branch_tools_tool", "set_task_branch"]:
+                        if _git_tools is None:
+                            result = json.dumps({"success": False, "error": "git_tools not available"}, indent=2)
+                        else:
+                            # Map old tool names to git_tools actions
+                            action_map = {
+                                "get_task_commits_tool": "commits",
+                                "get_branch_commits_tool": "commits",
+                                "list_branches_tool": "branches",
+                                "get_branch_tasks_tool": "tasks",
+                                "compare_task_diff_tool": "diff",
+                                "generate_graph_tool": "graph",
+                                "merge_branch_tools_tool": "merge",
+                                "set_task_branch": "set_branch",
+                            }
+                            action = action_map.get(name, "commits")
+                            result = _git_tools(
+                                action=action,
+                                task_id=arguments.get("task_id"),
+                                branch=arguments.get("branch"),
+                                limit=arguments.get("limit", 50),
+                                commit1=arguments.get("commit1"),
+                                commit2=arguments.get("commit2"),
+                                time1=arguments.get("time1"),
+                                time2=arguments.get("time2"),
+                                format=arguments.get("format", "text"),
+                                output_path=arguments.get("output_path"),
+                                max_commits=arguments.get("max_commits", 50),
+                                source_branch=arguments.get("source_branch"),
+                                target_branch=arguments.get("target_branch"),
+                                conflict_strategy=arguments.get("conflict_strategy", "newer"),
+                                author=arguments.get("author", "system"),
+                                dry_run=arguments.get("dry_run", False),
                             )
                             if not isinstance(result, str):
                                 result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "get_branch_commits_tool":
-                        try:
-                            from .tools.git_inspired_tools import get_branch_commits
-                            result = get_branch_commits(
-                                arguments.get("branch"),
-                                arguments.get("limit", 100),
+                    elif name == "ollama":
+                        if _ollama is None:
+                            result = json.dumps({"success": False, "error": "ollama tool not available"}, indent=2)
+                        else:
+                            result = _ollama(
+                                action=arguments.get("action", "status"),
+                                host=arguments.get("host"),
+                                prompt=arguments.get("prompt"),
+                                model=arguments.get("model", "llama3.2"),
+                                stream=arguments.get("stream", False),
+                                options=arguments.get("options"),
+                                num_gpu=arguments.get("num_gpu"),
+                                num_threads=arguments.get("num_threads"),
+                                context_size=arguments.get("context_size"),
+                                file_path=arguments.get("file_path"),
+                                output_path=arguments.get("output_path"),
+                                style=arguments.get("style", "google"),
+                                include_suggestions=arguments.get("include_suggestions", True),
+                                data=arguments.get("data"),
+                                level=arguments.get("level", "brief"),
                             )
                             if not isinstance(result, str):
                                 result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "list_branches_tool":
-                        try:
-                            from .tools.git_inspired_tools import list_branches
-                            result = list_branches()
-                            if not isinstance(result, str):
-                                result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "get_branch_tasks_tool":
-                        try:
-                            from .tools.git_inspired_tools import get_branch_tasks
-                            result = get_branch_tasks(arguments.get("branch"))
-                            if not isinstance(result, str):
-                                result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "compare_task_diff_tool":
-                        try:
-                            from .tools.git_inspired_tools import compare_task_diff
-                            result = compare_task_diff(
-                                arguments.get("task_id"),
-                                arguments.get("commit1"),
-                                arguments.get("commit2"),
-                                arguments.get("time1"),
-                                arguments.get("time2"),
+                    elif name == "mlx":
+                        if _mlx is None:
+                            result = json.dumps({"success": False, "error": "mlx tool not available"}, indent=2)
+                        else:
+                            result = _mlx(
+                                action=arguments.get("action", "status"),
+                                prompt=arguments.get("prompt"),
+                                model=arguments.get("model", "mlx-community/Phi-3.5-mini-instruct-4bit"),
+                                max_tokens=arguments.get("max_tokens", 512),
+                                temperature=arguments.get("temperature", 0.7),
+                                verbose=arguments.get("verbose", False),
                             )
                             if not isinstance(result, str):
                                 result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "generate_graph_tool":
-                        try:
-                            from .tools.git_inspired_tools import generate_graph
-                            result = generate_graph(
-                                arguments.get("branch"),
-                                arguments.get("task_id"),
-                                arguments.get("format", "text"),
-                                arguments.get("output_path"),
-                                arguments.get("max_commits", 50),
+                    elif name == "git_tools":
+                        if _git_tools is None:
+                            result = json.dumps({"success": False, "error": "git_tools not available"}, indent=2)
+                        else:
+                            result = _git_tools(
+                                action=arguments.get("action", "commits"),
+                                task_id=arguments.get("task_id"),
+                                branch=arguments.get("branch"),
+                                limit=arguments.get("limit", 50),
+                                commit1=arguments.get("commit1"),
+                                commit2=arguments.get("commit2"),
+                                time1=arguments.get("time1"),
+                                time2=arguments.get("time2"),
+                                format=arguments.get("format", "text"),
+                                output_path=arguments.get("output_path"),
+                                max_commits=arguments.get("max_commits", 50),
+                                source_branch=arguments.get("source_branch"),
+                                target_branch=arguments.get("target_branch"),
+                                conflict_strategy=arguments.get("conflict_strategy", "newer"),
+                                author=arguments.get("author", "system"),
+                                dry_run=arguments.get("dry_run", False),
                             )
                             if not isinstance(result, str):
                                 result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "merge_branch_tools_tool":
-                        try:
-                            from .tools.git_inspired_tools import merge_branch_tools
-                            result = merge_branch_tools(
-                                arguments.get("source_branch"),
-                                arguments.get("target_branch"),
-                                arguments.get("conflict_strategy", "newer"),
-                                arguments.get("author", "system"),
-                                arguments.get("dry_run", False),
+                    elif name == "session":
+                        if _session is None:
+                            result = json.dumps({"success": False, "error": "session tool not available"}, indent=2)
+                        else:
+                            result = _session(
+                                action=arguments.get("action", "prime"),
+                                include_hints=arguments.get("include_hints", True),
+                                include_tasks=arguments.get("include_tasks", True),
+                                override_mode=arguments.get("override_mode"),
+                                task_id=arguments.get("task_id"),
+                                summary=arguments.get("summary"),
+                                blockers=arguments.get("blockers"),
+                                next_steps=arguments.get("next_steps"),
+                                unassign_my_tasks=arguments.get("unassign_my_tasks", True),
+                                include_git_status=arguments.get("include_git_status", True),
+                                limit=arguments.get("limit", 5),
+                                dry_run=arguments.get("dry_run", False),
+                                direction=arguments.get("direction", "both"),
+                                prefer_agentic_tools=arguments.get("prefer_agentic_tools", True),
+                                auto_commit=arguments.get("auto_commit", True),
+                                mode=arguments.get("mode"),
+                                category=arguments.get("category"),
+                                keywords=arguments.get("keywords"),
+                                assignee_name=arguments.get("assignee_name"),
+                                assignee_type=arguments.get("assignee_type", "agent"),
+                                hostname=arguments.get("hostname"),
+                                status_filter=arguments.get("status_filter"),
+                                priority_filter=arguments.get("priority_filter"),
+                                include_unassigned=arguments.get("include_unassigned", False),
+                                max_tasks_per_agent=arguments.get("max_tasks_per_agent", 5),
                             )
                             if not isinstance(result, str):
                                 result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
-                    elif name == "set_task_branch":
-                        try:
-                            from .tools.git_inspired_tools import set_task_branch_tool
-                            result = set_task_branch_tool(
-                                arguments.get("task_id"),
-                                arguments.get("branch"),
-                            )
-                            if not isinstance(result, str):
-                                result = json.dumps(result, indent=2)
-                        except ImportError:
-                            result = json.dumps({"success": False, "error": "Git-inspired tools not available"}, indent=2)
                     else:
                         result = json.dumps({"error": f"Unknown tool: {name}"})
                 else:
@@ -2288,6 +2288,11 @@ if mcp:
 
         # NOTE: fetch_dependabot_alerts removed - use security(action="alerts")
         # NOTE: generate_security_report removed - use security(action="report")
+
+        # NOTE: Ollama tools removed - use ollama(action=status|models|generate|pull|hardware|docs|quality|summary) instead
+        # NOTE: MLX tools removed - use mlx(action=status|hardware|models|generate) instead
+        # NOTE: Git tools removed - use git_tools(action=commits|branches|tasks|diff|graph|merge|set_branch) instead
+        # NOTE: Session tools removed - use session(action=prime|handoff|prompts|assignee) instead
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # CONSOLIDATED TOOLS (Phase 3 consolidation)
@@ -2873,6 +2878,229 @@ if mcp:
 
         @ensure_json_string
         @mcp.tool()
+        def ollama(
+            action: str = "status",
+            host: Optional[str] = None,
+            prompt: Optional[str] = None,
+            model: str = "llama3.2",
+            stream: bool = False,
+            options: Optional[str] = None,
+            num_gpu: Optional[int] = None,
+            num_threads: Optional[int] = None,
+            context_size: Optional[int] = None,
+            file_path: Optional[str] = None,
+            output_path: Optional[str] = None,
+            style: str = "google",
+            include_suggestions: bool = True,
+            data: Optional[str] = None,
+            level: str = "brief",
+        ) -> str:
+            """
+            [HINT: Ollama. action=status|models|generate|pull|hardware|docs|quality|summary. Unified Ollama tool.]
+            
+            Unified Ollama tool consolidating integration and enhanced tools.
+            
+            Actions:
+            - action="status": Check if Ollama server is running
+            - action="models": List available models
+            - action="generate": Generate text with Ollama
+            - action="pull": Download/pull a model
+            - action="hardware": Get hardware info and recommended settings
+            - action="docs": Generate code documentation
+            - action="quality": Analyze code quality
+            - action="summary": Enhance context summary
+            """
+            if _ollama is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "ollama tool not available - import failed"
+                }, indent=2)
+            return _ollama(
+                action=action,
+                host=host,
+                prompt=prompt,
+                model=model,
+                stream=stream,
+                options=options,
+                num_gpu=num_gpu,
+                num_threads=num_threads,
+                context_size=context_size,
+                file_path=file_path,
+                output_path=output_path,
+                style=style,
+                include_suggestions=include_suggestions,
+                data=data,
+                level=level,
+            )
+
+        @ensure_json_string
+        @mcp.tool()
+        def mlx(
+            action: str = "status",
+            prompt: Optional[str] = None,
+            model: str = "mlx-community/Phi-3.5-mini-instruct-4bit",
+            max_tokens: int = 512,
+            temperature: float = 0.7,
+            verbose: bool = False,
+        ) -> str:
+            """
+            [HINT: MLX. action=status|hardware|models|generate. Unified MLX tool.]
+            
+            Unified MLX tool for Apple Silicon GPU acceleration.
+            
+            Actions:
+            - action="status": Check if MLX is available
+            - action="hardware": Get hardware info and recommended settings
+            - action="models": List recommended MLX models
+            - action="generate": Generate text with MLX
+            """
+            if _mlx is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "mlx tool not available - import failed"
+                }, indent=2)
+            return _mlx(
+                action=action,
+                prompt=prompt,
+                model=model,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                verbose=verbose,
+            )
+
+        @ensure_json_string
+        @mcp.tool()
+        def git_tools(
+            action: str = "commits",
+            task_id: Optional[str] = None,
+            branch: Optional[str] = None,
+            limit: int = 50,
+            commit1: Optional[str] = None,
+            commit2: Optional[str] = None,
+            time1: Optional[str] = None,
+            time2: Optional[str] = None,
+            format: str = "text",
+            output_path: Optional[str] = None,
+            max_commits: int = 50,
+            source_branch: Optional[str] = None,
+            target_branch: Optional[str] = None,
+            conflict_strategy: str = "newer",
+            author: str = "system",
+            dry_run: bool = False,
+        ) -> str:
+            """
+            [HINT: Git tools. action=commits|branches|tasks|diff|graph|merge|set_branch. Unified git-inspired tools.]
+            
+            Unified git-inspired task management tools.
+            
+            Actions:
+            - action="commits": Get commit history (task_id or branch required)
+            - action="branches": List all branches with statistics
+            - action="tasks": Get all tasks in a branch
+            - action="diff": Compare task versions
+            - action="graph": Generate commit graph visualization
+            - action="merge": Merge tasks from one branch to another
+            - action="set_branch": Assign task to a branch
+            """
+            if _git_tools is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "git_tools not available - import failed"
+                }, indent=2)
+            return _git_tools(
+                action=action,
+                task_id=task_id,
+                branch=branch,
+                limit=limit,
+                commit1=commit1,
+                commit2=commit2,
+                time1=time1,
+                time2=time2,
+                format=format,
+                output_path=output_path,
+                max_commits=max_commits,
+                source_branch=source_branch,
+                target_branch=target_branch,
+                conflict_strategy=conflict_strategy,
+                author=author,
+                dry_run=dry_run,
+            )
+
+        @ensure_json_string
+        @mcp.tool()
+        def session(
+            action: str = "prime",
+            include_hints: bool = True,
+            include_tasks: bool = True,
+            override_mode: Optional[str] = None,
+            task_id: Optional[str] = None,
+            summary: Optional[str] = None,
+            blockers: Optional[str] = None,
+            next_steps: Optional[str] = None,
+            unassign_my_tasks: bool = True,
+            include_git_status: bool = True,
+            limit: int = 5,
+            dry_run: bool = False,
+            direction: str = "both",
+            prefer_agentic_tools: bool = True,
+            auto_commit: bool = True,
+            mode: Optional[str] = None,
+            category: Optional[str] = None,
+            keywords: Optional[str] = None,
+            assignee_name: Optional[str] = None,
+            assignee_type: str = "agent",
+            hostname: Optional[str] = None,
+            status_filter: Optional[str] = None,
+            priority_filter: Optional[str] = None,
+            include_unassigned: bool = False,
+            max_tasks_per_agent: int = 5,
+        ) -> str:
+            """
+            [HINT: Session. action=prime|handoff|prompts|assignee. Unified session management tools.]
+            
+            Unified session management tool consolidating auto-primer, handoff, prompt discovery, and task assignee.
+            
+            Actions:
+            - action="prime": Auto-prime AI context at session start
+            - action="handoff": End/resume sessions for multi-device coordination
+            - action="prompts": Find relevant prompts by mode/persona/category/keywords
+            - action="assignee": Manage task assignments across agents/humans/hosts
+            """
+            if _session is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "session tool not available - import failed"
+                }, indent=2)
+            return _session(
+                action=action,
+                include_hints=include_hints,
+                include_tasks=include_tasks,
+                override_mode=override_mode,
+                task_id=task_id,
+                summary=summary,
+                blockers=blockers,
+                next_steps=next_steps,
+                unassign_my_tasks=unassign_my_tasks,
+                include_git_status=include_git_status,
+                limit=limit,
+                dry_run=dry_run,
+                direction=direction,
+                prefer_agentic_tools=prefer_agentic_tools,
+                auto_commit=auto_commit,
+                mode=mode,
+                category=category,
+                keywords=keywords,
+                assignee_name=assignee_name,
+                assignee_type=assignee_type,
+                hostname=hostname,
+                status_filter=status_filter,
+                priority_filter=priority_filter,
+                include_unassigned=include_unassigned,
+                max_tasks_per_agent=max_tasks_per_agent,
+            )
+
+        @ensure_json_string
+        @mcp.tool()
         def memory_maint(
             action: str = "health",
             max_age_days: int = 90,
@@ -2913,148 +3141,7 @@ if mcp:
         # ═══════════════════════════════════════════════════════════════════════════════
         # GIT-INSPIRED TASK MANAGEMENT TOOLS
         # ═══════════════════════════════════════════════════════════════════════════════
-        try:
-            from .tools.git_inspired_tools import (
-                compare_task_diff,
-                generate_graph,
-                get_branch_commits,
-                get_branch_tasks,
-                get_task_commits,
-                list_branches,
-                merge_branch_tools,
-                set_task_branch_tool,
-            )
-
-            GIT_INSPIRED_TOOLS_AVAILABLE = True
-        except ImportError:
-            GIT_INSPIRED_TOOLS_AVAILABLE = False
-            logger.warning("Git-inspired tools not available")
-
-        if GIT_INSPIRED_TOOLS_AVAILABLE:
-            @ensure_json_string
-            @mcp.tool()
-            def get_task_commits_tool(
-                task_id: str,
-                branch: Optional[str] = None,
-                limit: int = 50,
-            ) -> str:
-                """
-                [HINT: Git-inspired tools. Get commit history for a task.]
-
-                Get commit history for a task showing all changes over time.
-
-                📊 Output: JSON with commit list, timestamps, authors, and messages
-                """
-                return get_task_commits(task_id, branch, limit)
-
-            @ensure_json_string
-            @mcp.tool()
-            def get_branch_commits_tool(
-                branch: str,
-                limit: int = 100,
-            ) -> str:
-                """
-                [HINT: Git-inspired tools. Get all commits for a branch.]
-
-                Get all commits across all tasks in a branch.
-
-                📊 Output: JSON with commit list for the branch
-                """
-                return get_branch_commits(branch, limit)
-
-            @ensure_json_string
-            @mcp.tool()
-            def list_branches_tool() -> str:
-                """
-                [HINT: Git-inspired tools. List all branches with statistics.]
-
-                List all branches (work streams) from tasks and their statistics.
-
-                📊 Output: JSON with branch list and task counts per branch
-                """
-                return list_branches()
-
-            @ensure_json_string
-            @mcp.tool()
-            def get_branch_tasks_tool(branch: str) -> str:
-                """
-                [HINT: Git-inspired tools. Get all tasks in a branch.]
-
-                Get all tasks belonging to a specific branch.
-
-                📊 Output: JSON with task list for the branch
-                """
-                return get_branch_tasks(branch)
-
-            @ensure_json_string
-            @mcp.tool()
-            def compare_task_diff_tool(
-                task_id: str,
-                commit1: Optional[str] = None,
-                commit2: Optional[str] = None,
-                time1: Optional[str] = None,
-                time2: Optional[str] = None,
-            ) -> str:
-                """
-                [HINT: Git-inspired tools. Compare two versions of a task.]
-
-                Compare task versions across commits or timestamps to see what changed.
-
-                📊 Output: JSON with field-by-field differences
-                """
-                return compare_task_diff(task_id, commit1, commit2, time1, time2)
-
-            @ensure_json_string
-            @mcp.tool()
-            def generate_graph_tool(
-                branch: Optional[str] = None,
-                task_id: Optional[str] = None,
-                format: str = "text",
-                output_path: Optional[str] = None,
-                max_commits: int = 50,
-            ) -> str:
-                """
-                [HINT: Git-inspired tools. Generate commit graph visualization.]
-
-                Generate visual timeline of commits (text ASCII or Graphviz DOT format).
-
-                📊 Output: Graph visualization in text or DOT format
-                """
-                return generate_graph(branch, task_id, format, output_path, max_commits)
-
-            @ensure_json_string
-            @mcp.tool()
-            def merge_branch_tools_tool(
-                source_branch: str,
-                target_branch: str,
-                conflict_strategy: str = "newer",
-                author: str = "system",
-                dry_run: bool = False,
-            ) -> str:
-                """
-                [HINT: Git-inspired tools. Merge tasks from one branch to another.]
-
-                Merge tasks from source branch to target branch with conflict detection.
-
-                📊 Output: JSON with merge results, conflicts, and resolution
-                🔧 Side Effects: Modifies tasks if dry_run=False
-                """
-                return merge_branch_tools(source_branch, target_branch, conflict_strategy, author, dry_run)
-
-            @ensure_json_string
-            @mcp.tool()
-            def set_task_branch(task_id: str, branch: str) -> str:
-                """
-                [HINT: Git-inspired tools. Set branch for a task.]
-
-                Assign a task to a branch (work stream) by adding branch: tag.
-
-                📊 Output: JSON with result (old_branch, new_branch, success)
-                🔧 Side Effects: Modifies task tags
-                """
-                return set_task_branch_tool(task_id, branch)
-
-            logger.info("Git-inspired tools registered successfully")
+        # NOTE: Git-inspired tools removed - use git_tools(action=commits|branches|tasks|diff|graph|merge|set_branch) instead
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # AI SESSION MEMORY TOOLS
@@ -3128,14 +3215,11 @@ if mcp:
                 PROJECT_SCORECARD,
                 # Security
                 SECURITY_SCAN_ALL,
-                SECURITY_SCAN_PYTHON,
-                SECURITY_SCAN_RUST,
                 SPRINT_END,
                 SPRINT_START,
                 # Tasks
                 TASK_ALIGNMENT_ANALYSIS,
                 TASK_DISCOVERY,
-                TASK_REVIEW,
                 TASK_SYNC,
                 WEEKLY_MAINTENANCE,
             )
@@ -3183,14 +3267,11 @@ if mcp:
                 PROJECT_SCORECARD,
                 # Security
                 SECURITY_SCAN_ALL,
-                SECURITY_SCAN_PYTHON,
-                SECURITY_SCAN_RUST,
                 SPRINT_END,
                 SPRINT_START,
                 # Tasks
                 TASK_ALIGNMENT_ANALYSIS,
                 TASK_DISCOVERY,
-                TASK_REVIEW,
                 TASK_SYNC,
                 WEEKLY_MAINTENANCE,
             )
@@ -3224,18 +3305,8 @@ if mcp:
 
             @mcp.prompt()
             def scan() -> str:
-                """Scan all project dependencies for security vulnerabilities."""
+                """Scan project dependencies for security vulnerabilities. Supports all languages via tool parameter."""
                 return SECURITY_SCAN_ALL
-
-            @mcp.prompt()
-            def scan_py() -> str:
-                """Scan Python dependencies for security vulnerabilities."""
-                return SECURITY_SCAN_PYTHON
-
-            @mcp.prompt()
-            def scan_rs() -> str:
-                """Scan Rust dependencies for security vulnerabilities."""
-                return SECURITY_SCAN_RUST
 
             @mcp.prompt()
             def auto() -> str:
@@ -3277,11 +3348,6 @@ if mcp:
             def sprint_end() -> str:
                 """Sprint end workflow: test coverage, docs, security check."""
                 return SPRINT_END
-
-            @mcp.prompt()
-            def task_review() -> str:
-                """Comprehensive task review: duplicates, alignment, staleness."""
-                return TASK_REVIEW
 
             @mcp.prompt()
             def project_health() -> str:
@@ -3428,9 +3494,7 @@ if mcp:
                     Prompt(name="align", description="Analyze Todo2 task alignment with project goals.", arguments=[]),
                     Prompt(name="dups", description="Find and consolidate duplicate Todo2 tasks.", arguments=[]),
                     Prompt(name="sync", description="Synchronize tasks between shared TODO table and Todo2.", arguments=[]),
-                    Prompt(name="scan", description="Scan all project dependencies for security vulnerabilities.", arguments=[]),
-                    Prompt(name="scan_py", description="Scan Python dependencies for security vulnerabilities.", arguments=[]),
-                    Prompt(name="scan_rs", description="Scan Rust dependencies for security vulnerabilities.", arguments=[]),
+                    Prompt(name="scan", description="Scan project dependencies for security vulnerabilities. Supports all languages via tool parameter.", arguments=[]),
                     Prompt(name="auto", description="Discover new automation opportunities in the codebase.", arguments=[]),
                     Prompt(name="auto_high", description="Find only high-value automation opportunities.", arguments=[]),
                     Prompt(name="pre_sprint", description="Pre-sprint cleanup workflow: duplicates, alignment, documentation.", arguments=[]),
@@ -3439,7 +3503,6 @@ if mcp:
                     Prompt(name="daily_checkin", description="Daily check-in workflow: server status, blockers, git health.", arguments=[]),
                     Prompt(name="sprint_start", description="Sprint start workflow: clean backlog, align tasks, queue work.", arguments=[]),
                     Prompt(name="sprint_end", description="Sprint end workflow: test coverage, docs, security check.", arguments=[]),
-                    Prompt(name="task_review", description="Comprehensive task review: duplicates, alignment, staleness.", arguments=[]),
                     Prompt(name="project_health", description="Full project health assessment: code, docs, security, CI/CD.", arguments=[]),
                     Prompt(name="automation_setup", description="One-time automation setup: git hooks, triggers, cron.", arguments=[]),
                     Prompt(name="scorecard", description="Generate comprehensive project health scorecard with all metrics.", arguments=[]),
@@ -3475,8 +3538,6 @@ if mcp:
                     "dups": DUPLICATE_TASK_CLEANUP,
                     "sync": TASK_SYNC,
                     "scan": SECURITY_SCAN_ALL,
-                    "scan_py": SECURITY_SCAN_PYTHON,
-                    "scan_rs": SECURITY_SCAN_RUST,
                     "auto": AUTOMATION_DISCOVERY,
                     "auto_high": AUTOMATION_HIGH_VALUE,
                     "pre_sprint": PRE_SPRINT_CLEANUP,
@@ -3485,7 +3546,6 @@ if mcp:
                     "daily_checkin": DAILY_CHECKIN,
                     "sprint_start": SPRINT_START,
                     "sprint_end": SPRINT_END,
-                    "task_review": TASK_REVIEW,
                     "project_health": PROJECT_HEALTH,
                     "automation_setup": AUTOMATION_SETUP,
                     "scorecard": PROJECT_SCORECARD,
@@ -3526,7 +3586,7 @@ if mcp:
             
             logger.info("DEBUG: Both prompt decorators applied successfully")
             print("DEBUG PROMPT REG: Both decorators applied, registration complete", file=sys.stderr)
-            logger.info("Registered 41 prompts for stdio server successfully")
+            logger.info("Registered 34 prompts for stdio server successfully")
         except Exception as e:
             print(f"DEBUG PROMPT REG ERROR: {e}", file=sys.stderr)
             import traceback
