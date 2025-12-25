@@ -15,14 +15,15 @@
       "command": "npx"
     },
     "exarp": {
-      "command": "/Users/davidl/Projects/project-management-automation/exarp.sh",
+      "command": "uvx",
       "args": [
+        "exarp",
         "--mcp"
       ],
       "env": {
         "PROJECT_ROOT": "/Users/davidl/Projects/project-management-automation"
       },
-      "description": "Exarp Project Management Automation MCP Server (local dev via uv)"
+      "description": "Exarp Project Management Automation MCP Server (PyPI v0.2.2)"
     },
     "filesystem": {
       "args": [
