@@ -78,3 +78,8 @@ chrome_profile_notebooklm/
 .cursor/rules/todo2.mdc
 .cursor/mcp.json
 .todo2/
+
+# Coverage aggregation files
+.coverage.*
+.coverage.combined.tmp
+coverage-report/

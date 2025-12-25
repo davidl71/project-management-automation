@@ -1,61 +1,45 @@
-======================================================================
+# 📊 Exarp Project Score Card
 
-> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
-> - "How do I use Python patterns? use context7"
-> - "Show me Python examples examples use context7"
-> - "Python best practices 2025 use context7"
->
-> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+*Generated: 2025-12-25 22:41*
 
-  📊 EXARP PROJECT SCORE CARD
-  Generated: 2025-12-01 00:13
-======================================================================
+## Overall Score: **83.6%** 🟢
 
-  OVERALL SCORE: 81.5% 🟢
-  Production Ready: NO ❌
-  Blockers: Test coverage too low
+**Production Ready:** ❌ No
 
-  Component Scores:
-    documentation  [████████████████████] 100.0% 🟢 (×7%)
-    security       [████████████████████] 100.0% 🟢 (×20%)
-    ci_cd          [████████████████████] 100.0% 🟢 (×7%)
-    dogfooding     [████████████████████] 100.0% 🟢 (×13%)
-    uniqueness     [██████████████████░░]  90.0% 🟢 (×10%)
-    completion     [████████████████░░░░]  81.9% 🟢 (×5%)
-    codebase       [████████████████░░░░]  80.0% 🟢 (×7%)
-    alignment      [██████████████░░░░░░]  71.9% 🟢 (×7%)
-    parallelizable [███████████░░░░░░░░░]  55.6% 🟡 (×7%)
-    testing        [████████░░░░░░░░░░░░]  44.0% 🔴 (×10%)
-    clarity        [███████░░░░░░░░░░░░░]  35.6% 🔴 (×7%)
+**Blockers:** Test coverage too low
 
-  Key Metrics:
-    Tasks: 18 pending, 86 completed
-    Remaining work: 0h
-    Parallelizable: 10 tasks (55.6%)
-    Dogfooding: 10/10 self-checks
-    Uniqueness: 9/9 decisions justified, 55 deps
-    🔐 CodeQL: 0 alerts ✅
-    CodeQL Languages: python
+## Component Scores
 
-  Recommendations:
-    🟠 [Testing] Fix failing tests and increase coverage to 30%
+| Component | Score | Status | Weight |
+|-----------|-------|--------|--------|
+| Documentation | 100.0% | 🟢 | 6% |
+| Security | 100.0% | 🟢 | 20% |
+| Ci_Cd | 100.0% | 🟢 | 6% |
+| Performance | 90.0% | 🟢 | 8% |
+| Dogfooding | 90.0% | 🟢 | 13% |
+| Uniqueness | 90.0% | 🟢 | 10% |
+| Codebase | 80.0% | 🟢 | 6% |
+| Clarity | 80.0% | 🟢 | 6% |
+| Alignment | 74.8% | 🟢 | 6% |
+| Parallelizable | 66.7% | 🟡 | 6% |
+| Completion | 63.3% | 🟡 | 5% |
+| Testing | 24.5% | 🔴 | 10% |
 
-======================================================================
+## Key Metrics
 
-╔══════════════════════════════════════════════════════════════════════╗
-║  📜 DAILY WISDOM - Pistis Sophia (Gnostic)                          ║
-║  Project Status: Upper Aeons                                        ║
-╠══════════════════════════════════════════════════════════════════════╣
-║                                                                      ║
-║  "I have become as a man who is freed."
-║  
-║  
-║                                                                      ║
-║  — Chapter 62                                                   ║
-║                                                                      ║
-║  💡 Freedom to build, not just maintain.                           ║
-║                                                                      ║
-╠══════════════════════════════════════════════════════════════════════╣
-║  Change source: EXARP_WISDOM_SOURCE=bofh|tao|stoic|bible|murphy|...  ║
-║  Disable:       EXARP_DISABLE_WISDOM=1 or touch .exarp_no_wisdom     ║
-╚══════════════════════════════════════════════════════════════════════╝
+- **Tasks:** 24 pending, 50 completed
+- **Remaining work:** 38.0h
+- **Parallelizable:** 16 tasks (66.7%)
+- **Performance:** 9/10 optimizations (90%)
+- **Dogfooding:** 9/10 self-checks (90%)
+- **Uniqueness:** 9/9 decisions justified, 64 dependencies (90%)
+
+### 🔐 CodeQL Security
+
+- **Status:** ✅ No alerts
+- **Score:** 100%
+- **Languages:** python
+
+## Recommendations
+
+- 🟠 **Testing:** Fix failing tests and increase coverage to 30% (+15% to testing score)
