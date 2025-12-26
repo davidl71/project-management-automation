@@ -2156,7 +2156,10 @@ if mcp:
     # to stdio server's list_tools() function. This section is for FastMCP only.
     # The imports are duplicated in register_tools() for stdio server access.
 
-    if CONSOLIDATED_AVAILABLE:
+    # Always register all tools - they handle import failures gracefully at runtime
+    # by returning error JSON if the underlying function is None.
+    # Changed from "if CONSOLIDATED_AVAILABLE:" to always True for simplicity.
+    if True:  # Tools already handle None checks at runtime, so always register
         # NOTE: analyze_todo2_alignment, analyze_prd_alignment removed
         # Use analyze_alignment(action=todo2|prd) instead
 
