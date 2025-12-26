@@ -10,7 +10,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +151,7 @@ __snapshots__/
 
 def generate_cursorignore(
     include_indexing: bool = True,
-    custom_patterns: Optional[list[str]] = None,
+    custom_patterns: list[str] | None = None,
     analyze_project: bool = True,
     dry_run: bool = False,
 ) -> str:

@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +35,7 @@ except ImportError:
 
 def analyze_todo2_alignment(
     create_followup_tasks: bool = True,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     Analyze task alignment with project goals, find misaligned tasks.

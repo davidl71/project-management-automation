@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -34,20 +34,20 @@ except ImportError:
 
 
 def auto_update_task_status(
-    project_id: Optional[str] = None,
+    project_id: str | None = None,
     scan_depth: int = 3,
-    file_extensions: Optional[list[str]] = None,
+    file_extensions: list[str] | None = None,
     auto_update_tasks: bool = False,
     confidence_threshold: float = 0.7,
     dry_run: bool = True,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     Automatically infer and update task status based on codebase analysis.
-    
+
     Uses agentic-tools `infer_task_progress` to analyze codebase and detect
     completed tasks based on code changes, file creation, and implementation evidence.
-    
+
     Args:
         project_id: Filter to specific project (optional)
         scan_depth: Directory depth to scan (1-5, default: 3)
@@ -56,23 +56,23 @@ def auto_update_task_status(
         confidence_threshold: Minimum confidence for auto-updating (0-1, default: 0.7)
         dry_run: Preview changes without applying (default: True)
         output_path: Path for report output (default: docs/AUTO_UPDATE_TASK_STATUS_REPORT.md)
-    
+
     Returns:
         JSON string with inference results and update recommendations
     """
     start_time = time.time()
-    
+
     try:
         from project_management_automation.utils import find_project_root
         from project_management_automation.utils.agentic_tools_client import infer_task_progress_mcp
         from project_management_automation.utils.todo2_mcp_client import list_todos_mcp, update_todos_mcp
-        
+
         project_root = find_project_root()
-        
+
         # Default file extensions if not provided
         if file_extensions is None:
             file_extensions = ['.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.cs', '.go', '.rs']
-        
+
         # Call agentic-tools to infer task progress
         logger.info("Analyzing codebase to infer task progress...")
         inference_result = infer_task_progress_mcp(
@@ -83,34 +83,34 @@ def auto_update_task_status(
             confidence_threshold=confidence_threshold,
             project_root=project_root
         )
-        
+
         if not inference_result:
             return json.dumps(format_error_response(
                 "Failed to infer task progress from codebase",
                 ErrorCode.AUTOMATION_ERROR
             ), indent=2)
-        
+
         # Get current tasks from Todo2
         current_tasks = list_todos_mcp(project_root=project_root)
         task_map = {t.get('id'): t for t in current_tasks}
-        
+
         # Analyze inferred completions
         inferred_completions = inference_result.get('inferred_completions', [])
         discrepancies = []
         updates_needed = []
-        
+
         for inferred in inferred_completions:
             task_id = inferred.get('task_id')
             inferred_status = inferred.get('status', 'Done')
             confidence = inferred.get('confidence', 0.0)
             evidence = inferred.get('evidence', [])
-            
+
             if task_id not in task_map:
                 continue
-            
+
             current_task = task_map[task_id]
             current_status = current_task.get('status', 'Todo')
-            
+
             # Check for discrepancies
             if inferred_status == 'Done' and current_status not in ['Done', 'Review']:
                 if confidence >= confidence_threshold:
@@ -122,13 +122,13 @@ def auto_update_task_status(
                         'confidence': confidence,
                         'evidence': evidence
                     })
-                    
+
                     if not dry_run and auto_update_tasks:
                         updates_needed.append({
                             'id': task_id,
                             'status': 'Review'  # Move to Review, not directly to Done
                         })
-        
+
         # Apply updates if not dry run
         updated_count = 0
         if updates_needed and not dry_run and auto_update_tasks:
@@ -139,7 +139,7 @@ def auto_update_task_status(
                     logger.info(f"Updated {updated_count} task statuses")
             except Exception as e:
                 logger.error(f"Failed to update tasks: {e}")
-        
+
         # Generate report
         report_path = output_path or 'docs/AUTO_UPDATE_TASK_STATUS_REPORT.md'
         if report_path:
@@ -155,7 +155,7 @@ def auto_update_task_status(
             report_file.parent.mkdir(parents=True, exist_ok=True)
             with open(report_file, 'w') as f:
                 f.write(report)
-        
+
         # Format response
         response_data = {
             'total_tasks_analyzed': len(current_tasks),
@@ -168,12 +168,12 @@ def auto_update_task_status(
             'report_path': str(Path(report_path).absolute()),
             'discrepancies': discrepancies[:10]  # Limit to first 10 for response
         }
-        
+
         duration = time.time() - start_time
         log_automation_execution('auto_update_task_status', duration, True)
-        
+
         return json.dumps(format_success_response(response_data), indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('auto_update_task_status', duration, False, e)
@@ -182,9 +182,9 @@ def auto_update_task_status(
 
 
 def _generate_report(
-    inference_result: Dict[str, Any],
-    discrepancies: list[Dict[str, Any]],
-    updates_needed: list[Dict[str, Any]],
+    inference_result: dict[str, Any],
+    discrepancies: list[dict[str, Any]],
+    updates_needed: list[dict[str, Any]],
     updated_count: int,
     dry_run: bool,
     confidence_threshold: float
@@ -208,7 +208,7 @@ def _generate_report(
 Tasks where codebase suggests completion but status is not Done/Review:
 
 """
-    
+
     if not discrepancies:
         report += "✅ No discrepancies found - all tasks are properly tracked.\n"
     else:
@@ -221,11 +221,11 @@ Tasks where codebase suggests completion but status is not Done/Review:
 - **Evidence**: {len(disc.get('evidence', []))} items
 
 """
-    
+
     if updates_needed and not dry_run:
         report += f"\n## Updates Applied\n\n{updated_count} tasks moved to Review status.\n"
     elif updates_needed and dry_run:
         report += f"\n## Updates Pending (Dry Run)\n\n{len(updates_needed)} tasks would be updated.\n"
-    
+
     return report
 

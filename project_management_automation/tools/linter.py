@@ -13,7 +13,7 @@ import logging
 import subprocess
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -129,12 +129,12 @@ def _parse_ruff_output(output: str) -> list[dict[str, Any]]:
 
 
 def run_linter(
-    path: Optional[str] = None,
+    path: str | None = None,
     linter: str = "ruff",
     fix: bool = False,
     analyze: bool = True,
-    select: Optional[str] = None,
-    ignore: Optional[str] = None,
+    select: str | None = None,
+    ignore: str | None = None,
 ) -> str:
     """
     Run external linter and optionally analyze results.

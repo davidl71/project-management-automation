@@ -14,14 +14,14 @@ import os
 import platform
 import subprocess
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 def get_system_ram_gb() -> float:
     """
     Get total system RAM in GB.
-    
+
     Returns:
         Total RAM in GB, or 8.0 as default if detection fails
     """
@@ -38,7 +38,7 @@ def get_system_ram_gb() -> float:
             ram_gb = ram_bytes / (1024 ** 3)
             return ram_gb
         elif system == "Linux":
-            with open("/proc/meminfo", "r") as f:
+            with open("/proc/meminfo") as f:
                 for line in f:
                     if line.startswith("MemTotal:"):
                         parts = line.split()
@@ -52,7 +52,7 @@ def get_system_ram_gb() -> float:
 # Try to import MLX, handle gracefully if not available
 try:
     import mlx.core as mx
-    from mlx_lm import load, generate
+    from mlx_lm import generate, load
     MLX_AVAILABLE = True
 except ImportError:
     MLX_AVAILABLE = False
@@ -95,12 +95,12 @@ def check_metal_available() -> bool:
         return False
 
 
-def detect_hardware_config() -> Dict[str, Any]:
+def detect_hardware_config() -> dict[str, Any]:
     """
     Detect hardware platform and return optimal MLX configuration.
-    
+
     MLX only works on Apple Silicon, so this is focused on that platform.
-    
+
     Returns:
         Dict with hardware info and recommended settings
     """
@@ -108,7 +108,7 @@ def detect_hardware_config() -> Dict[str, Any]:
     arch = platform.machine()
     cpu_cores = os.cpu_count() or 4
     ram_gb = get_system_ram_gb()
-    
+
     config = {
         "architecture": arch,
         "cpu_cores": cpu_cores,
@@ -120,13 +120,13 @@ def detect_hardware_config() -> Dict[str, Any]:
         "recommended_context_size": 4096,
         "notes": [],
     }
-    
+
     # MLX only works on Apple Silicon
     if system == "Darwin" and arch == "arm64":
         config["platform"] = "apple_silicon"
         config["mlx_supported"] = True
         config["metal_available"] = check_metal_available()
-        
+
         # Try to detect chip model
         try:
             chip_model = subprocess.check_output(
@@ -135,7 +135,7 @@ def detect_hardware_config() -> Dict[str, Any]:
                 text=True,
                 timeout=1,
             ).strip().upper()
-            
+
             if "M4" in chip_model:
                 config["chip_model"] = "M4"
                 config["recommended_context_size"] = 8192
@@ -157,7 +157,7 @@ def detect_hardware_config() -> Dict[str, Any]:
                 config["recommended_context_size"] = 4096
         except Exception:
             config["chip_model"] = "Apple Silicon (detected)"
-        
+
         # RAM-based recommendations
         if ram_gb >= 32:
             config["recommended_model_size"] = "large"
@@ -178,26 +178,26 @@ def detect_hardware_config() -> Dict[str, Any]:
             config["notes"].append(f"Current platform: {system}")
         if arch != "arm64":
             config["notes"].append(f"Current architecture: {arch}")
-    
+
     return config
 
 
 def check_mlx_status() -> str:
     """
     [HINT: MLX status. Check if MLX is available and Metal GPU is accessible.]
-    
+
     Check MLX availability and Metal GPU status.
-    
+
     📁 Checks: MLX installation, Metal GPU availability
-    
+
     Use cases:
     "Is MLX available? Check MLX status"
-    
+
     Returns:
         JSON with MLX and Metal status
     """
     start_time = time.time()
-    
+
     if not MLX_AVAILABLE:
         error_response = format_error_response(
             "MLX package not installed. Install with: uv sync",
@@ -206,12 +206,12 @@ def check_mlx_status() -> str:
         error_response["available"] = False
         error_response["metal_available"] = False
         return json.dumps(error_response, indent=2)
-    
+
     try:
         metal_available = check_metal_available()
         is_apple = is_apple_silicon()
         hw_config = detect_hardware_config()
-        
+
         result = format_success_response({
             "mlx_available": True,
             "metal_available": metal_available,
@@ -226,12 +226,12 @@ def check_mlx_status() -> str:
             "recommended_context_size": hw_config.get("recommended_context_size", 4096),
             "notes": hw_config.get("notes", []),
         }, "MLX status checked successfully")
-        
+
         duration = time.time() - start_time
         log_automation_execution("check_mlx_status", duration, True)
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("check_mlx_status", duration, False, e)
@@ -245,29 +245,29 @@ def check_mlx_status() -> str:
 def list_mlx_models() -> str:
     """
     [HINT: MLX models. List recommended MLX models available on Hugging Face.]
-    
+
     List recommended MLX models available for download.
-    
+
     Note: This lists recommended models, not locally installed ones.
     MLX models are downloaded from Hugging Face on first use.
-    
+
     📁 Lists: MLX model recommendations from Hugging Face
-    
+
     Use cases:
     "What MLX models are available?"
-    
+
     Returns:
         JSON with recommended MLX models
     """
     start_time = time.time()
-    
+
     if not MLX_AVAILABLE:
         error_response = format_error_response(
             "MLX package not installed. Install with: uv sync",
             ErrorCode.AUTOMATION_ERROR,
         )
         return json.dumps(error_response, indent=2)
-    
+
     try:
         # Recommended MLX models from Hugging Face mlx-community
         # Verified model names as of 2025-01-25
@@ -327,19 +327,19 @@ def list_mlx_models() -> str:
                 },
             ],
         }
-        
+
         result = format_success_response({
             "models": recommended_models,
             "total_count": sum(len(models) for models in recommended_models.values()),
             "note": "Models are downloaded from Hugging Face on first use",
             "tip": "Use generate_with_mlx to generate text with a model",
         }, "MLX models listed successfully")
-        
+
         duration = time.time() - start_time
         log_automation_execution("list_mlx_models", duration, True)
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("list_mlx_models", duration, False, e)
@@ -359,53 +359,53 @@ def generate_with_mlx(
 ) -> str:
     """
     [HINT: MLX generation. Generate text using a local MLX model on Apple Silicon.]
-    
+
     Generate text using a local MLX model.
-    
+
     ⚠️ Requirements: Apple Silicon (M1/M2/M3/M4) Mac
     🔧 Side Effects: Downloads model on first use, uses GPU/CPU resources
     📁 Uses: Local MLX model or Hugging Face MLX models
-    
+
     Use cases:
     "Generate a summary using MLX Phi-3.5 model"
     "Analyze this code with MLX CodeLlama"
-    
+
     Args:
         prompt: Text prompt to send to the model
         model: Model identifier (Hugging Face repo ID or local path)
         max_tokens: Maximum tokens to generate
         temperature: Sampling temperature (0.0-1.0, higher = more creative)
         verbose: Print generation progress
-    
+
     Returns:
         JSON with generated text
     """
     start_time = time.time()
-    
+
     if not MLX_AVAILABLE:
         error_response = format_error_response(
             "MLX package not installed. Install with: uv sync",
             ErrorCode.AUTOMATION_ERROR,
         )
         return json.dumps(error_response, indent=2)
-    
+
     if not is_apple_silicon():
         error_response = format_error_response(
             "MLX only works on Apple Silicon (M1/M2/M3/M4) Macs",
             ErrorCode.AUTOMATION_ERROR,
         )
         return json.dumps(error_response, indent=2)
-    
+
     try:
         # Load model (will download from Hugging Face if not cached)
         if verbose:
             logger.info(f"Loading MLX model: {model}")
-        
+
         model_obj, tokenizer = load(model)
-        
+
         if verbose:
             logger.info(f"Generating with max_tokens={max_tokens}, temperature={temperature}")
-        
+
         # Generate text
         # Note: mlx_lm.generate() accepts max_tokens but temperature control
         # is not available in the current mlx_lm API. Temperature parameter
@@ -417,7 +417,7 @@ def generate_with_mlx(
             max_tokens=max_tokens,
             verbose=verbose,
         )
-        
+
         result = format_success_response({
             "generated_text": response,
             "model": model,
@@ -425,12 +425,12 @@ def generate_with_mlx(
             "max_tokens": max_tokens,
             "temperature": temperature,
         }, "Text generated successfully with MLX")
-        
+
         duration = time.time() - start_time
         log_automation_execution("generate_with_mlx", duration, True)
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("generate_with_mlx", duration, False, e)
@@ -446,29 +446,29 @@ def generate_with_mlx(
 def get_mlx_hardware_info() -> str:
     """
     [HINT: Hardware detection. Get hardware information and recommended MLX settings.]
-    
+
     Get hardware information and recommended MLX configuration.
-    
+
     ⚠️ Requirements: Apple Silicon (M1/M2/M3/M4) Mac
-    
+
     Use cases:
     "What hardware do I have? Check hardware for MLX"
-    
+
     Returns:
         JSON with hardware information and recommended MLX settings
     """
     start_time = time.time()
-    
+
     try:
         hw_config = detect_hardware_config()
-        
+
         result = format_success_response(hw_config, "Hardware information retrieved successfully")
-        
+
         duration = time.time() - start_time
         log_automation_execution("get_mlx_hardware_info", duration, True)
-        
+
         return json.dumps(result, indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("get_mlx_hardware_info", duration, False, e)
@@ -482,34 +482,34 @@ def get_mlx_hardware_info() -> str:
 def register_mlx_tools(mcp):
     """
     Register MLX tools with FastMCP server.
-    
+
     Args:
         mcp: FastMCP server instance
     """
     if not MLX_AVAILABLE:
         logger.warning("MLX tools not registered: MLX package not available")
         return
-    
+
     if not is_apple_silicon():
         logger.debug("MLX tools not registered: Not running on Apple Silicon")
         return
-    
+
     try:
         @mcp.tool()
         def check_mlx_status_tool() -> str:
             """Check if MLX is available and Metal GPU is accessible."""
             return check_mlx_status()
-        
+
         @mcp.tool()
         def get_mlx_hardware_info_tool() -> str:
             """Get hardware information and recommended MLX performance settings."""
             return get_mlx_hardware_info()
-        
+
         @mcp.tool()
         def list_mlx_models_tool() -> str:
             """List recommended MLX models available for download."""
             return list_mlx_models()
-        
+
         @mcp.tool()
         def generate_with_mlx_tool(
             prompt: str,
@@ -520,7 +520,7 @@ def register_mlx_tools(mcp):
         ) -> str:
             """
             Generate text using a local MLX model.
-            
+
             Args:
                 prompt: Text prompt to send to the model
                 model: Model identifier (default: mlx-community/Phi-3.5-mini-instruct-4bit)
@@ -529,9 +529,9 @@ def register_mlx_tools(mcp):
                 verbose: Print generation progress (default: False)
             """
             return generate_with_mlx(prompt, model, max_tokens, temperature, verbose)
-        
+
         logger.info("✅ MLX tools registered")
-        
+
     except Exception as e:
         logger.error(f"Failed to register MLX tools: {e}", exc_info=True)
 

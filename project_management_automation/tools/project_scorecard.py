@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from ..utils import find_project_root
-from ..utils.todo2_utils import is_pending_status, is_completed_status
+from ..utils.todo2_utils import is_completed_status, is_pending_status
 
 scorecard_logger = logging.getLogger(__name__)
 
@@ -67,18 +67,27 @@ Production Ready: {'✅ Yes' if result.get('production_ready') else '❌ No'}
 try:
     from ..utils.wisdom_client import (
         format_text as format_wisdom_text,
+    )
+    from ..utils.wisdom_client import (
         get_wisdom,
+    )
+    from ..utils.wisdom_client import (
         list_sources as list_available_sources,
     )
     # Load config is no longer needed (handled by external server)
-    load_wisdom_config = lambda: {"disabled": False}
+    def load_wisdom_config():
+        return {"disabled": False}
     WISDOM_AVAILABLE = True
 except ImportError:
     WISDOM_AVAILABLE = False
-    get_wisdom = lambda x, **kwargs: None
-    format_wisdom_text = lambda x: ""
-    load_wisdom_config = lambda: {"disabled": True}
-    list_available_sources = lambda: []
+    def get_wisdom(x, **kwargs):
+        return None
+    def format_wisdom_text(x):
+        return ""
+    def load_wisdom_config():
+        return {"disabled": True}
+    def list_available_sources():
+        return []
 
 
 def generate_project_scorecard(
@@ -101,7 +110,7 @@ def generate_project_scorecard(
         Dictionary with scorecard data and formatted output
     """
     project_root = find_project_root()
-    
+
     # Safety check: Ensure we're not scanning the entire home directory
     # If project_root is the home directory, something went wrong
     if str(project_root) == str(Path.home()) or str(project_root) == '/Users/davidl':
@@ -123,8 +132,8 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     # Add exclusions for system directories to prevent scanning home directory
     py_files = list(project_root.rglob('*.py'))
-    py_files = [f for f in py_files 
-                if 'venv' not in str(f) 
+    py_files = [f for f in py_files
+                if 'venv' not in str(f)
                 and '.build-env' not in str(f)
                 and '__pycache__' not in str(f)
                 and 'Library' not in str(f)  # Exclude macOS Library directories
@@ -166,7 +175,7 @@ def generate_project_scorecard(
     # Detect test files across multiple languages and locations
     test_files = []
     test_lines = 0
-    
+
     # Common test directories
     test_dirs = [
         project_root / 'tests',
@@ -177,19 +186,19 @@ def generate_project_scorecard(
         project_root / 'web' / 'src' / '__tests__',
         project_root / 'web' / '__tests__',
     ]
-    
+
     # Python tests: test_*.py
     for test_dir in test_dirs:
         if test_dir.exists():
             test_files.extend(test_dir.rglob('test_*.py'))
-    
+
     # C++ tests: test_*.cpp, *_test.cpp, *test*.cpp
     for test_dir in test_dirs:
         if test_dir.exists():
             test_files.extend(test_dir.rglob('test_*.cpp'))
             test_files.extend(test_dir.rglob('*_test.cpp'))
             test_files.extend(test_dir.rglob('*test*.cpp'))
-    
+
     # Rust tests: *_test.rs, test_*.rs, tests/*.rs (in Rust, tests are in tests/ directory)
     rust_test_dirs = [project_root / 'agents' / 'backend', project_root / 'native']
     for base_dir in rust_test_dirs:
@@ -201,7 +210,7 @@ def generate_project_scorecard(
             # Also check for inline tests: *_test.rs
             test_files.extend(base_dir.rglob('*_test.rs'))
             test_files.extend(base_dir.rglob('test_*.rs'))
-    
+
     # TypeScript/JavaScript tests: *.test.ts, *.test.tsx, *.spec.ts, *.spec.tsx
     ts_dirs = [project_root / 'web', project_root / 'agents' / 'web']
     for ts_dir in ts_dirs:
@@ -210,17 +219,17 @@ def generate_project_scorecard(
             test_files.extend(ts_dir.rglob('*.test.tsx'))
             test_files.extend(ts_dir.rglob('*.spec.ts'))
             test_files.extend(ts_dir.rglob('*.spec.tsx'))
-    
+
     # Swift tests: *Tests.swift, *Test.swift
     swift_dirs = [project_root / 'ios', project_root / 'desktop']
     for swift_dir in swift_dirs:
         if swift_dir.exists():
             test_files.extend(swift_dir.rglob('*Tests.swift'))
             test_files.extend(swift_dir.rglob('*Test.swift'))
-    
+
     # Remove duplicates
     test_files = list(set(test_files))
-    
+
     # Calculate total test lines
     for f in test_files:
         if f.exists():
@@ -228,16 +237,16 @@ def generate_project_scorecard(
                 test_lines += len(f.read_text().splitlines())
             except (OSError, UnicodeDecodeError):
                 pass
-    
+
     # Calculate test ratio - compare test lines to source code lines
     # For multi-language projects, use all source lines (Python + C++ + Rust + TypeScript + Swift)
-    
+
     # C++ source files (exclude tests)
     cpp_files = list(project_root.rglob('*.cpp'))
-    cpp_files = [f for f in cpp_files 
-                if 'venv' not in str(f) 
+    cpp_files = [f for f in cpp_files
+                if 'venv' not in str(f)
                 and '.build-env' not in str(f)
-                and '__pycache__' not in str(f) 
+                and '__pycache__' not in str(f)
                 and 'test' not in str(f).lower()
                 and 'target' not in str(f)
                 and 'Library' not in str(f)
@@ -249,11 +258,11 @@ def generate_project_scorecard(
             total_cpp_lines += len(f.read_text().splitlines())
         except (OSError, UnicodeDecodeError):
             pass
-    
+
     # Rust source files (exclude tests)
     rust_files = list(project_root.rglob('*.rs'))
-    rust_files = [f for f in rust_files 
-                 if 'target' not in str(f) 
+    rust_files = [f for f in rust_files
+                 if 'target' not in str(f)
                  and 'test' not in str(f).lower()
                  and 'tests' not in str(f)
                  and 'Library' not in str(f)
@@ -265,14 +274,14 @@ def generate_project_scorecard(
             total_rust_lines += len(f.read_text().splitlines())
         except (OSError, UnicodeDecodeError):
             pass
-    
+
     # TypeScript source files (exclude tests)
     ts_files = list(project_root.rglob('*.ts'))
     ts_files.extend(project_root.rglob('*.tsx'))
-    ts_files = [f for f in ts_files 
-                if 'node_modules' not in str(f) 
+    ts_files = [f for f in ts_files
+                if 'node_modules' not in str(f)
                 and 'test' not in str(f).lower()
-                and 'spec' not in str(f).lower() 
+                and 'spec' not in str(f).lower()
                 and '.test.' not in str(f)
                 and 'Library' not in str(f)
                 and 'Containers' not in str(f)
@@ -283,10 +292,10 @@ def generate_project_scorecard(
             total_ts_lines += len(f.read_text().splitlines())
         except (OSError, UnicodeDecodeError):
             pass
-    
+
     # Swift source files (exclude tests)
     swift_files = list(project_root.rglob('*.swift'))
-    swift_files = [f for f in swift_files 
+    swift_files = [f for f in swift_files
                   if 'Library' not in str(f)
                   and 'Containers' not in str(f)
                   and str(f).startswith(str(project_root))]
@@ -297,7 +306,7 @@ def generate_project_scorecard(
             total_swift_lines += len(f.read_text().splitlines())
         except (OSError, UnicodeDecodeError):
             pass
-    
+
     # Total source lines across all languages
     total_source_lines = total_py_lines + total_cpp_lines + total_rust_lines + total_ts_lines + total_swift_lines
     test_ratio = (test_lines / total_source_lines * 100) if total_source_lines > 0 else 0
@@ -314,7 +323,7 @@ def generate_project_scorecard(
     # ═══════════════════════════════════════════════════════════════
     project_root / 'docs'
     md_files = list(project_root.rglob('*.md'))
-    md_files = [f for f in md_files 
+    md_files = [f for f in md_files
                if 'Library' not in str(f)
                and 'Containers' not in str(f)
                and str(f).startswith(str(project_root))]
@@ -462,13 +471,13 @@ def generate_project_scorecard(
             'total': total_pending,
             'score': round(parallel_score, 1),
         }
-        
+
         # ═══════════════════════════════════════════════════════════
         # 6.5. PROGRESS INFERENCE METRICS (T-17)
         # ═══════════════════════════════════════════════════════════
         try:
             from project_management_automation.tools.auto_update_task_status import auto_update_task_status
-            
+
             # Call with dry_run=True to get metrics without updating
             inference_json = auto_update_task_status(
                 confidence_threshold=0.7,
@@ -476,13 +485,13 @@ def generate_project_scorecard(
                 output_path=None,
                 codebase_path=str(project_root)
             )
-            
+
             if inference_json:
                 inference_result = json.loads(inference_json)
                 if inference_result.get('success') and inference_result.get('data'):
                     inference_data = inference_result['data']
                     inferred_results = inference_data.get('inferred_results', [])
-                    
+
                     # Calculate inferred vs. marked completion comparison
                     inferred_done = sum(1 for r in inferred_results if r.get('inferred_status') == 'Done')
                     marked_done = len(completed)
@@ -490,10 +499,10 @@ def generate_project_scorecard(
                         1 for r in inferred_results
                         if r.get('current_status') != r.get('inferred_status')
                     )
-                    
+
                     # Calculate inferred completion rate
                     inferred_completion_rate = (inferred_done / len(todos) * 100) if todos else 0
-                    
+
                     metrics['progress_inference'] = {
                         'tasks_analyzed': inference_data.get('total_tasks_analyzed', 0),
                         'inferences_made': inference_data.get('inferences_made', 0),
@@ -617,19 +626,19 @@ def generate_project_scorecard(
     # 9. PERFORMANCE
     # ═══════════════════════════════════════════════════════════════
     # Check for performance optimizations and infrastructure
-    
+
     # Check for MCP connection pooling
     mcp_client_path = project_root / 'project_management_automation' / 'scripts' / 'base' / 'mcp_client.py'
     mcp_client_content = mcp_client_path.read_text() if mcp_client_path.exists() else ""
-    
+
     # Check for logging middleware with timing
     logging_middleware_path = project_root / 'project_management_automation' / 'middleware' / 'logging_middleware.py'
     logging_middleware_content = logging_middleware_path.read_text() if logging_middleware_path.exists() else ""
-    
+
     # Check for async operations
     server_path = project_root / 'project_management_automation' / 'server.py'
     server_content = server_path.read_text() if server_path.exists() else ""
-    
+
     performance_checks = {
         'mcp_connection_pooling': 'MCPSessionPool' in mcp_client_content or 'connection_pool' in mcp_client_content.lower(),
         'async_operations': 'async def' in server_content or 'asyncio' in server_content,
@@ -638,34 +647,34 @@ def generate_project_scorecard(
         'rate_limiting': 'RateLimiter' in server_content or 'rate_limit' in server_content,
         'caching': 'cache' in server_content.lower() or 'lru_cache' in server_content,
     }
-    
+
     # NetworkX-based dependency analysis for performance insights
     dependency_analysis = {}
     try:
         import networkx as nx
-        
+
         # Build task dependency graph if we have tasks
         if todo2_file.exists() and todos:
             G = nx.DiGraph()
-            
+
             # Add tasks as nodes
             for task in todos:
                 task_id = task.get('id', '')
                 if task_id:
                     G.add_node(task_id)
-            
+
             # Add dependencies as edges
             for task in todos:
                 task_id = task.get('id', '')
                 if not task_id:
                     continue
-                    
+
                 # Check both dependsOn and dependencies fields
                 deps = task.get('dependsOn', []) or task.get('dependencies', [])
                 for dep_id in deps:
                     if dep_id in G:
                         G.add_edge(dep_id, task_id)
-            
+
             if len(G.nodes()) > 0:
                 # Check for circular dependencies (performance killer)
                 try:
@@ -677,7 +686,7 @@ def generate_project_scorecard(
                     dependency_analysis['has_cycles'] = False
                     dependency_analysis['cycle_count'] = 0
                     performance_checks['no_circular_dependencies'] = True
-                
+
                 # Check for long dependency chains (potential bottlenecks)
                 if isinstance(G, nx.DiGraph):
                     longest_path = 0
@@ -697,14 +706,14 @@ def generate_project_scorecard(
                                             pass
                     except Exception:
                         pass
-                    
+
                     dependency_analysis['longest_chain'] = longest_path
                     # Long chains (>10) indicate potential performance issues
                     performance_checks['reasonable_dependency_chains'] = longest_path <= 10
                 else:
                     dependency_analysis['longest_chain'] = 0
                     performance_checks['reasonable_dependency_chains'] = True
-                
+
                 # Check for bottleneck tasks (high in-degree = many tasks depend on this)
                 if len(G.nodes()) > 0:
                     in_degrees = dict(G.in_degree())
@@ -715,7 +724,7 @@ def generate_project_scorecard(
                 else:
                     dependency_analysis['max_dependents'] = 0
                     performance_checks['no_bottleneck_tasks'] = True
-                
+
                 # Check parallelization opportunities (tasks with no dependencies)
                 independent_tasks = sum(1 for n in G.nodes() if G.in_degree(n) == 0)
                 dependency_analysis['independent_tasks'] = independent_tasks
@@ -750,10 +759,10 @@ def generate_project_scorecard(
         performance_checks['no_bottleneck_tasks'] = True
         performance_checks['good_parallelization'] = True
         dependency_analysis['error'] = str(e)
-    
+
     performance_passed = sum(1 for v in performance_checks.values() if v)
     scores['performance'] = performance_passed / len(performance_checks) * 100
-    
+
     metrics['performance'] = {
         'checks_passed': performance_passed,
         'checks_total': len(performance_checks),
@@ -1047,10 +1056,10 @@ def generate_project_scorecard(
             perf_metrics = metrics.get('performance', {})
             perf_details = perf_metrics.get('details', {})
             dep_analysis = perf_metrics.get('dependency_analysis', {})
-            
+
             missing = [k for k, v in perf_details.items() if not v]
             issues = []
-            
+
             # Check for dependency-related performance issues
             if dep_analysis.get('has_cycles'):
                 issues.append(f"{dep_analysis.get('cycle_count', 0)} circular dependencies")
@@ -1058,15 +1067,15 @@ def generate_project_scorecard(
                 issues.append(f"long dependency chain ({dep_analysis.get('longest_chain', 0)} tasks)")
             if dep_analysis.get('max_dependents', 0) > 5:
                 issues.append(f"bottleneck tasks ({dep_analysis.get('max_dependents', 0)} dependents)")
-            
+
             action_parts = []
             if missing:
                 action_parts.append(f"Enable: {', '.join(missing[:2])}")
             if issues:
                 action_parts.append(f"Fix: {', '.join(issues[:2])}")
-            
+
             action = ' | '.join(action_parts) if action_parts else 'Review performance optimizations'
-            
+
             recommendations.append({
                 'priority': 'medium',
                 'area': 'Performance',
@@ -1162,7 +1171,7 @@ def _format_text(data: dict) -> str:
         t = data['metrics']['tasks']
         lines.append(f"    Tasks: {t.get('pending', 0)} pending, {t.get('completed', 0)} completed")
         lines.append(f"    Remaining work: {t.get('remaining_hours', 0)}h")
-    
+
     # Progress Inference Metrics (T-17)
     if 'progress_inference' in data['metrics']:
         pi = data['metrics']['progress_inference']
@@ -1277,7 +1286,7 @@ def _format_markdown(data: dict) -> str:
         t = data['metrics']['tasks']
         lines.append(f"- **Tasks:** {t.get('pending', 0)} pending, {t.get('completed', 0)} completed")
         lines.append(f"- **Remaining work:** {t.get('remaining_hours', 0)}h")
-    
+
     # Progress Inference Metrics (T-17)
     if 'progress_inference' in data['metrics']:
         pi = data['metrics']['progress_inference']

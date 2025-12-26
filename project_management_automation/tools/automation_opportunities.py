@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +35,7 @@ except ImportError:
 
 def find_automation_opportunities(
     min_value_score: float = 0.7,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     Discover new automation opportunities in the codebase.

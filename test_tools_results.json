@@ -1,0 +1,223 @@
+{
+  "working": [
+    {
+      "name": "task_workflow",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    },
+    {
+      "name": "estimation",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    },
+    {
+      "name": "ollama",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    },
+    {
+      "name": "mlx",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    },
+    {
+      "name": "git_tools",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    },
+    {
+      "name": "session",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    },
+    {
+      "name": "memory_maint",
+      "type": "Text",
+      "details": {
+        "length": 46,
+        "preview": "'dict' object has no attribute 'to_mcp_result'"
+      }
+    }
+  ],
+  "broken": [
+    {
+      "name": "infer_session_mode",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "add_external_tool_hints",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "automation",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "tool_catalog",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "workflow_mode",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "context",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "recommend",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "analyze_alignment",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "security",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "generate_config",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "setup_hooks",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "prompt_tracking",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "health",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "check_attribution",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "report",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "task_analysis",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "testing",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "lint",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "memory",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    },
+    {
+      "name": "task_discovery",
+      "type": "FastMCP Error",
+      "details": {
+        "error": "object dict can't be used in 'await' expression",
+        "content": "object dict can't be used in 'await' expression"
+      }
+    }
+  ],
+  "errors": []
+}

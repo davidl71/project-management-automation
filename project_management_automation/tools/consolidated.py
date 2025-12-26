@@ -33,7 +33,7 @@ Consolidated tools:
 import asyncio
 import json
 import logging
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 def analyze_alignment(
     action: str = "todo2",
     create_followup_tasks: bool = True,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
 ) -> str:
     """
     Unified alignment analysis tool.
@@ -79,11 +79,11 @@ def analyze_alignment(
 async def security_async(
     action: str = "report",
     repo: str = "davidl71/project-management-automation",
-    languages: Optional[list[str]] = None,
-    config_path: Optional[str] = None,
+    languages: list[str] | None = None,
+    config_path: str | None = None,
     state: str = "open",
     include_dismissed: bool = False,
-    ctx: Optional[Any] = None,
+    ctx: Any | None = None,
     alert_critical: bool = False,
 ) -> str:
     """
@@ -126,11 +126,11 @@ async def security_async(
 def security(
     action: str = "report",
     repo: str = "davidl71/project-management-automation",
-    languages: Optional[list[str]] = None,
-    config_path: Optional[str] = None,
+    languages: list[str] | None = None,
+    config_path: str | None = None,
     state: str = "open",
     include_dismissed: bool = False,
-    ctx: Optional[Any] = None,
+    ctx: Any | None = None,
     alert_critical: bool = False,
 ) -> str:
     """
@@ -170,15 +170,15 @@ def security(
 def generate_config(
     action: str = "rules",
     # rules params
-    rules: Optional[str] = None,
+    rules: str | None = None,
     overwrite: bool = False,
     analyze_only: bool = False,
     # ignore params
     include_indexing: bool = True,
     analyze_project: bool = True,
     # simplify params
-    rule_files: Optional[str] = None,
-    output_dir: Optional[str] = None,
+    rule_files: str | None = None,
+    output_dir: str | None = None,
     # common
     dry_run: bool = False,
 ) -> str:
@@ -227,10 +227,10 @@ def generate_config(
 def setup_hooks(
     action: str = "git",
     # git hooks params
-    hooks: Optional[list[str]] = None,
+    hooks: list[str] | None = None,
     # pattern params
-    patterns: Optional[str] = None,
-    config_path: Optional[str] = None,
+    patterns: str | None = None,
+    config_path: str | None = None,
     # common
     install: bool = True,
     dry_run: bool = False,
@@ -273,10 +273,10 @@ def setup_hooks(
 def prompt_tracking(
     action: str = "analyze",
     # log params
-    prompt: Optional[str] = None,
-    task_id: Optional[str] = None,
-    mode: Optional[str] = None,
-    outcome: Optional[str] = None,
+    prompt: str | None = None,
+    task_id: str | None = None,
+    mode: str | None = None,
+    outcome: str | None = None,
     iteration: int = 1,
     # analyze params
     days: int = 7,
@@ -316,17 +316,17 @@ def prompt_tracking(
 def health(
     action: str = "server",
     # git params
-    agent_name: Optional[str] = None,
+    agent_name: str | None = None,
     check_remote: bool = True,
     # docs params
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     create_tasks: bool = True,
     # dod params
-    task_id: Optional[str] = None,
-    changed_files: Optional[str] = None,
+    task_id: str | None = None,
+    changed_files: str | None = None,
     auto_check: bool = True,
     # cicd params
-    workflow_path: Optional[str] = None,
+    workflow_path: str | None = None,
     check_runners: bool = True,
 ) -> str:
     """
@@ -399,7 +399,7 @@ def report(
     action: str = "overview",
     # common params
     output_format: str = "text",
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     # scorecard params
     include_recommendations: bool = True,
     # briefing params
@@ -410,7 +410,7 @@ def report(
     completion_score: float = 50.0,
     alignment_score: float = 50.0,
     # prd params
-    project_name: Optional[str] = None,
+    project_name: str | None = None,
     include_architecture: bool = True,
     include_metrics: bool = True,
     include_tasks: bool = True,
@@ -466,7 +466,7 @@ def report(
                 "status": "error",
                 "error": f"Unknown report action: {action}. Use 'overview', 'scorecard', 'briefing', or 'prd'.",
             }
-        
+
         # Ensure we always return a JSON string
         if isinstance(result, str):
             return result
@@ -489,15 +489,15 @@ def task_analysis(
     auto_fix: bool = False,
     # tags params
     dry_run: bool = True,
-    custom_rules: Optional[str] = None,
-    remove_tags: Optional[str] = None,
+    custom_rules: str | None = None,
+    remove_tags: str | None = None,
     # hierarchy params
     output_format: str = "text",
     include_recommendations: bool = True,
     # dependencies params (uses output_format)
     # parallelization params (uses output_format)
     # common
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
 ) -> str:
     """
     Unified task analysis tool.
@@ -547,22 +547,22 @@ def task_analysis(
 async def testing_async(
     action: str = "run",
     # run params
-    test_path: Optional[str] = None,
+    test_path: str | None = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
     # coverage params
-    coverage_file: Optional[str] = None,
+    coverage_file: str | None = None,
     min_coverage: int = 80,
     format: str = "html",
     # suggest params
-    target_file: Optional[str] = None,
+    target_file: str | None = None,
     min_confidence: float = 0.7,
     # validate params
-    framework: Optional[str] = None,
+    framework: str | None = None,
     # common
-    output_path: Optional[str] = None,
-    ctx: Optional[Any] = None,
+    output_path: str | None = None,
+    ctx: Any | None = None,
 ) -> str:
     """
     Unified testing tool (async with progress).
@@ -623,22 +623,22 @@ async def testing_async(
 def testing(
     action: str = "run",
     # run params
-    test_path: Optional[str] = None,
+    test_path: str | None = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
     # coverage params
-    coverage_file: Optional[str] = None,
+    coverage_file: str | None = None,
     min_coverage: int = 80,
     format: str = "html",
     # suggest params
-    target_file: Optional[str] = None,
+    target_file: str | None = None,
     min_confidence: float = 0.7,
     # validate params
-    framework: Optional[str] = None,
+    framework: str | None = None,
     # common
-    output_path: Optional[str] = None,
-    ctx: Optional[Any] = None,
+    output_path: str | None = None,
+    ctx: Any | None = None,
 ) -> str:
     """
     Unified testing tool (sync wrapper).
@@ -683,17 +683,17 @@ def testing(
 def lint(
     action: str = "run",
     # run params
-    path: Optional[str] = None,
+    path: str | None = None,
     linter: str = "ruff",
     fix: bool = False,
     analyze: bool = True,
-    select: Optional[str] = None,
-    ignore: Optional[str] = None,
+    select: str | None = None,
+    ignore: str | None = None,
     # analyze params
-    problems_json: Optional[str] = None,
+    problems_json: str | None = None,
     include_hints: bool = True,
     # common
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
 ) -> str:
     """
     Unified linting tool.
@@ -733,24 +733,24 @@ def lint(
             return result
         return json.dumps(result, indent=2)
     else:
-        return {
+        return json.dumps({
             "status": "error",
             "error": f"Unknown lint action: {action}. Use 'run' or 'analyze'.",
-        }
+        }, indent=2)
 
 
 def memory(
     action: str = "search",
     # save params
-    title: Optional[str] = None,
-    content: Optional[str] = None,
+    title: str | None = None,
+    content: str | None = None,
     category: str = "insight",
-    task_id: Optional[str] = None,
-    metadata: Optional[str] = None,  # JSON string
+    task_id: str | None = None,
+    metadata: str | None = None,  # JSON string
     # recall params
     include_related: bool = True,
     # search params
-    query: Optional[str] = None,
+    query: str | None = None,
     limit: int = 10,
 ) -> str:
     """
@@ -831,13 +831,13 @@ def memory(
 def context(
     action: str = "summarize",
     # summarize action params
-    data: Optional[str] = None,
+    data: str | None = None,
     level: str = "brief",
-    tool_type: Optional[str] = None,
-    max_tokens: Optional[int] = None,
+    tool_type: str | None = None,
+    max_tokens: int | None = None,
     include_raw: bool = False,
     # budget action params
-    items: Optional[str] = None,
+    items: str | None = None,
     budget_tokens: int = 4000,
     # batch action params
     combine: bool = True,
@@ -869,7 +869,7 @@ def context(
             }, indent=2)
         from .context_summarizer import summarize_context
         return summarize_context(data, level, tool_type, max_tokens, include_raw)
-    
+
     elif action == "budget":
         if not items:
             return json.dumps({
@@ -880,7 +880,7 @@ def context(
         parsed_items = json_lib.loads(items) if isinstance(items, str) else items
         from .context_summarizer import estimate_context_budget
         return estimate_context_budget(parsed_items, budget_tokens)
-    
+
     elif action == "batch":
         if not items:
             return json.dumps({
@@ -891,7 +891,7 @@ def context(
         parsed_items = json_lib.loads(items) if isinstance(items, str) else items
         from .context_summarizer import batch_summarize
         return batch_summarize(parsed_items, level, combine)
-    
+
     else:
         return json.dumps({
             "status": "error",
@@ -902,11 +902,11 @@ def context(
 def tool_catalog(
     action: str = "list",
     # list action params
-    category: Optional[str] = None,
-    persona: Optional[str] = None,
+    category: str | None = None,
+    persona: str | None = None,
     include_examples: bool = True,
     # help action params
-    tool_name: Optional[str] = None,
+    tool_name: str | None = None,
 ) -> str:
     """
     Unified tool catalog tool.
@@ -926,7 +926,7 @@ def tool_catalog(
     if action == "list":
         from .hint_catalog import list_tools
         return list_tools(category, persona, include_examples)
-    
+
     elif action == "help":
         if not tool_name:
             return json.dumps({
@@ -935,7 +935,7 @@ def tool_catalog(
             }, indent=2)
         from .hint_catalog import get_tool_help
         return get_tool_help(tool_name)
-    
+
     else:
         return json.dumps({
             "status": "error",
@@ -946,12 +946,12 @@ def tool_catalog(
 def workflow_mode(
     action: str = "focus",
     # focus action params
-    mode: Optional[str] = None,
-    enable_group: Optional[str] = None,
-    disable_group: Optional[str] = None,
+    mode: str | None = None,
+    enable_group: str | None = None,
+    disable_group: str | None = None,
     status: bool = False,
     # suggest action params
-    text: Optional[str] = None,
+    text: str | None = None,
     auto_switch: bool = False,
 ) -> str:
     """
@@ -974,15 +974,15 @@ def workflow_mode(
     if action == "focus":
         from .dynamic_tools import focus_mode
         return focus_mode(mode, enable_group, disable_group, status)
-    
+
     elif action == "suggest":
         from .dynamic_tools import suggest_mode
         return suggest_mode(text, auto_switch)
-    
+
     elif action == "stats":
         from .dynamic_tools import get_tool_usage_stats
         return get_tool_usage_stats()
-    
+
     else:
         return json.dumps({
             "status": "error",
@@ -993,21 +993,21 @@ def workflow_mode(
 def recommend(
     action: str = "model",
     # model action params
-    task_description: Optional[str] = None,
-    task_type: Optional[str] = None,
+    task_description: str | None = None,
+    task_type: str | None = None,
     optimize_for: str = "quality",
     include_alternatives: bool = True,
     # workflow action params
-    task_id: Optional[str] = None,
+    task_id: str | None = None,
     include_rationale: bool = True,
     # advisor action params
-    metric: Optional[str] = None,
-    tool: Optional[str] = None,
-    stage: Optional[str] = None,
+    metric: str | None = None,
+    tool: str | None = None,
+    stage: str | None = None,
     score: float = 50.0,
     context: str = "",
     log: bool = True,
-    session_mode: Optional[str] = None,
+    session_mode: str | None = None,
 ) -> str:
     """
     Unified recommendation tool.
@@ -1043,7 +1043,7 @@ def recommend(
             return json.dumps(result, indent=2)
         else:
             return json.dumps({"result": str(result)}, indent=2)
-    
+
     elif action == "workflow":
         from .workflow_recommender import recommend_workflow_mode
         result = recommend_workflow_mode(task_description, task_id, include_rationale)
@@ -1054,21 +1054,22 @@ def recommend(
             return json.dumps(result, indent=2)
         else:
             return json.dumps({"result": str(result)}, indent=2)
-    
+
     elif action == "advisor":
         # Use devwisdom-go MCP server instead of direct import
         from ..utils.wisdom_client import consult_advisor
         # Get session mode if not provided
         if session_mode is None:
             try:
-                from ..resources.session import get_session_mode_resource
                 import json as json_lib
+
+                from ..resources.session import get_session_mode_resource
                 mode_resource_json = get_session_mode_resource()
                 mode_data = json_lib.loads(mode_resource_json)
                 session_mode = mode_data.get("mode") or mode_data.get("inferred_mode")
             except Exception:
                 pass  # Fallback gracefully if mode inference unavailable
-        
+
         result = consult_advisor(
             metric=metric,
             tool=tool,
@@ -1080,7 +1081,7 @@ def recommend(
         if isinstance(result, dict):
             return json.dumps(result, indent=2)
         return result if result else json.dumps({"error": "Failed to consult advisor"}, indent=2)
-    
+
     else:
         return json.dumps({
             "status": "error",
@@ -1091,13 +1092,13 @@ def recommend(
 def task_discovery(
     action: str = "all",
     # comments params
-    file_patterns: Optional[str] = None,  # JSON list of glob patterns
+    file_patterns: str | None = None,  # JSON list of glob patterns
     include_fixme: bool = True,
     # markdown params
-    doc_path: Optional[str] = None,
+    doc_path: str | None = None,
     # orphans params (uses task_analysis internally)
     # common
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     create_tasks: bool = False,
 ) -> str:
     """
@@ -1227,13 +1228,13 @@ def task_discovery(
 def automation(
     action: str = "daily",
     # daily params
-    tasks: Optional[list[str]] = None,
+    tasks: list[str] | None = None,
     include_slow: bool = False,
     # nightly params
     max_tasks_per_host: int = 5,
     max_parallel_tasks: int = 10,
-    priority_filter: Optional[str] = None,
-    tag_filter: Optional[list[str]] = None,
+    priority_filter: str | None = None,
+    tag_filter: list[str] | None = None,
     # sprint params
     max_iterations: int = 10,
     auto_approve: bool = True,
@@ -1244,9 +1245,12 @@ def automation(
     min_value_score: float = 0.7,
     # common params
     dry_run: bool = False,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     notify: bool = False,
 ) -> str:
+    import sys
+    print("DEBUG [consolidated.py automation] ENTRY", file=sys.stderr, flush=True)
+    print(f"DEBUG [consolidated.py automation] action={action}, tasks={tasks}", file=sys.stderr, flush=True)
     """
     Unified automation tool.
 
@@ -1273,10 +1277,15 @@ def automation(
         JSON string with automation results
     """
     if action == "daily":
+        print("DEBUG [consolidated.py automation] action=daily branch", file=sys.stderr, flush=True)
         from .daily_automation import run_daily_automation
+        print("DEBUG [consolidated.py automation] Calling run_daily_automation", file=sys.stderr, flush=True)
         result = run_daily_automation(tasks, include_slow, dry_run, output_path)
-        return result if isinstance(result, str) else json.dumps(result, indent=2)
-    
+        print(f"DEBUG [consolidated.py automation] run_daily_automation returned: type={type(result)}", file=sys.stderr, flush=True)
+        final_result = result if isinstance(result, str) else json.dumps(result, indent=2)
+        print(f"DEBUG [consolidated.py automation] RETURNING (daily): type={type(final_result)}, len={len(final_result) if isinstance(final_result, str) else 'N/A'}", file=sys.stderr, flush=True)
+        return final_result
+
     elif action == "nightly":
         from .nightly_task_automation import run_nightly_task_automation
         result = run_nightly_task_automation(
@@ -1288,7 +1297,7 @@ def automation(
             notify=notify,  # sprint_automation uses notify parameter
         )
         return result if isinstance(result, str) else json.dumps(result, indent=2)
-    
+
     elif action == "sprint":
         from .sprint_automation import sprint_automation
         result = sprint_automation(
@@ -1304,12 +1313,12 @@ def automation(
             notify=notify,
         )
         return result if isinstance(result, str) else json.dumps(result, indent=2)
-    
+
     elif action == "discover":
         from .automation_opportunities import find_automation_opportunities
         result = find_automation_opportunities(min_value_score, output_path)
         return result if isinstance(result, str) else json.dumps(result, indent=2)
-    
+
     else:
         return json.dumps({
             "status": "error",
@@ -1320,9 +1329,11 @@ def automation(
 def estimation(
     action: str = "estimate",
     # estimate params
-    name: Optional[str] = None,
+    name: str | None = None,
     details: str = "",
-    tags: Optional[str] = None,
+    tags: str | None = None,
+    # BREAKING TEST: Add list[str] parameter like automation has
+    tag_list: list[str] | None = None,
     priority: str = "medium",
     use_historical: bool = True,
     detailed: bool = False,
@@ -1352,17 +1363,19 @@ def estimation(
     if action == "estimate":
         if not name:
             return json.dumps({"status": "error", "error": "name parameter required for estimate action"}, indent=2)
-        
+
         tag_list = [t.strip() for t in tags.split(",")] if tags else []
-        
+
         # Try MLX-enhanced estimator first (if enabled)
         if use_mlx:
             try:
                 from .mlx_task_estimator import (
                     estimate_task_duration_mlx_enhanced as _estimate_mlx_simple,
+                )
+                from .mlx_task_estimator import (
                     estimate_task_duration_mlx_enhanced_detailed,
                 )
-                
+
                 if detailed:
                     result = estimate_task_duration_mlx_enhanced_detailed(
                         name=name,
@@ -1373,7 +1386,7 @@ def estimation(
                         use_mlx=True,
                         mlx_weight=mlx_weight,
                     )
-                    return json.dumps(result, indent=2) if isinstance(result, dict) else result
+                    return result if isinstance(result, str) else json.dumps({"error": "Invalid return type"}, indent=2)
                 else:
                     hours = _estimate_mlx_simple(
                         name=name,
@@ -1393,13 +1406,15 @@ def estimation(
             except ImportError:
                 # MLX not available, fall through to statistical-only
                 pass
-        
+
         # Fallback to statistical-only estimator
         from .task_duration_estimator import (
             estimate_task_duration as _estimate_simple,
+        )
+        from .task_duration_estimator import (
             estimate_task_duration_detailed,
         )
-        
+
         if detailed:
             result = estimate_task_duration_detailed(
                 name=name,
@@ -1408,7 +1423,7 @@ def estimation(
                 priority=priority,
                 use_historical=use_historical,
             )
-            return json.dumps(result, indent=2) if isinstance(result, dict) else result
+            return result if isinstance(result, str) else json.dumps({"error": "Invalid return type"}, indent=2)
         else:
             hours = _estimate_simple(
                 name=name,
@@ -1423,19 +1438,20 @@ def estimation(
                 "priority": priority,
                 "method": "statistical",
             }, indent=2)
-    
+
     elif action == "analyze":
         from .estimation_learner import EstimationLearner
         learner = EstimationLearner()
         result = learner.analyze_estimation_accuracy()
         return json.dumps(result, indent=2) if isinstance(result, dict) else result
-    
+
     elif action == "stats":
         from .task_duration_estimator import TaskDurationEstimator
         estimator = TaskDurationEstimator()
         stats = estimator.get_statistics()
-        return json.dumps(stats, indent=2) if isinstance(stats, dict) else stats
-    
+        # get_statistics now returns JSON string directly
+        return stats if isinstance(stats, str) else json.dumps(stats, indent=2)
+
     else:
         return json.dumps({
             "status": "error",
@@ -1451,14 +1467,14 @@ def task_workflow(
     status: str = "Review",
     new_status: str = "Todo",
     clarification_none: bool = True,
-    filter_tag: Optional[str] = None,
-    task_ids: Optional[str] = None,  # JSON list
+    filter_tag: str | None = None,
+    task_ids: str | None = None,  # JSON list
     # clarify params
     sub_action: str = "list",  # list, resolve, batch (for clarify action)
-    task_id: Optional[str] = None,
-    clarification_text: Optional[str] = None,
-    decision: Optional[str] = None,
-    decisions_json: Optional[str] = None,
+    task_id: str | None = None,
+    clarification_text: str | None = None,
+    decision: str | None = None,
+    decisions_json: str | None = None,
     move_to_todo: bool = True,
     # clarity params
     auto_apply: bool = False,
@@ -1466,7 +1482,7 @@ def task_workflow(
     # cleanup params
     stale_threshold_hours: float = 2.0,
     # common
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
 ) -> str:
     """
     Unified task workflow management tool.
@@ -1547,12 +1563,12 @@ def task_workflow(
         return result if isinstance(result, str) else json.dumps(result, indent=2)
 
     elif action == "clarity":
-        from .task_clarity_improver import improve_task_clarity, analyze_task_clarity
+        from .task_clarity_improver import analyze_task_clarity, improve_task_clarity
         if auto_apply:
             result = improve_task_clarity(auto_apply=True, output_path=output_path)
         else:
             result = analyze_task_clarity(output_format=output_format, output_path=output_path, dry_run=True)
-        
+
         # Handle text format output
         if output_format == "text" and isinstance(result, dict) and "formatted_output" in result:
             return result["formatted_output"]
@@ -1585,13 +1601,13 @@ def memory_maint(
     merge_strategy: str = "newest",
     # dream params
     scope: str = "week",
-    advisors: Optional[str] = None,
+    advisors: str | None = None,
     generate_insights: bool = True,
     save_dream: bool = True,
     # common
     dry_run: bool = True,
     interactive: bool = True,
-) -> dict[str, Any]:
+) -> str:
     """
     Unified memory maintenance tool.
 
@@ -1670,4 +1686,358 @@ def memory_maint(
             "status": "error",
             "error": f"Unknown memory_maint action: {action}. Use 'health', 'gc', 'prune', 'consolidate', or 'dream'.",
         }, indent=2)
+
+
+def ollama(
+    action: str = "status",
+    host: str | None = None,
+    prompt: str | None = None,
+    model: str = "llama3.2",
+    stream: bool = False,
+    options: str | None = None,
+    num_gpu: int | None = None,
+    num_threads: int | None = None,
+    context_size: int | None = None,
+    file_path: str | None = None,
+    output_path: str | None = None,
+    style: str = "google",
+    include_suggestions: bool = True,
+    data: str | None = None,
+    level: str = "brief",
+) -> str:
+    """
+    [HINT: Ollama. action=status|models|generate|pull|hardware|docs|quality|summary. Unified Ollama tool.]
+
+    Unified Ollama tool consolidating integration and enhanced tools.
+
+    Actions:
+    - action="status": Check if Ollama server is running
+    - action="models": List available models
+    - action="generate": Generate text with Ollama
+    - action="pull": Download/pull a model
+    - action="hardware": Get hardware info and recommended settings
+    - action="docs": Generate code documentation
+    - action="quality": Analyze code quality
+    - action="summary": Enhance context summary
+
+    Returns JSON string (FastMCP requirement).
+    """
+    try:
+        if action == "status":
+            from .ollama_integration import check_ollama_status
+            return check_ollama_status(host)
+
+        elif action == "models":
+            from .ollama_integration import list_ollama_models
+            return list_ollama_models(host)
+
+        elif action == "generate":
+            from .ollama_integration import generate_with_ollama
+            if not prompt:
+                return json.dumps({"error": "prompt parameter required for generate action"}, indent=2)
+            parsed_options = None
+            if options:
+                try:
+                    parsed_options = json.loads(options)
+                except json.JSONDecodeError:
+                    pass
+            return generate_with_ollama(
+                prompt, model, host, stream, parsed_options,
+                num_gpu=num_gpu, num_threads=num_threads, context_size=context_size
+            )
+
+        elif action == "pull":
+            from .ollama_integration import pull_ollama_model
+            if not model:
+                return json.dumps({"error": "model parameter required for pull action"}, indent=2)
+            return pull_ollama_model(model, host)
+
+        elif action == "hardware":
+            from .ollama_integration import get_hardware_info
+            return get_hardware_info()
+
+        elif action == "docs":
+            from .ollama_enhanced_tools import generate_code_documentation
+            if not file_path:
+                return json.dumps({"error": "file_path parameter required for docs action"}, indent=2)
+            return generate_code_documentation(file_path, output_path, style, model)
+
+        elif action == "quality":
+            from .ollama_enhanced_tools import analyze_code_quality
+            if not file_path:
+                return json.dumps({"error": "file_path parameter required for quality action"}, indent=2)
+            return analyze_code_quality(file_path, include_suggestions, model)
+
+        elif action == "summary":
+            from .ollama_enhanced_tools import enhance_context_summary
+            if not data:
+                return json.dumps({"error": "data parameter required for summary action"}, indent=2)
+            try:
+                parsed_data = json.loads(data)
+            except json.JSONDecodeError:
+                parsed_data = data
+            return enhance_context_summary(parsed_data, level, model)
+
+        else:
+            return json.dumps({
+                "error": f"Unknown ollama action: {action}. Use 'status', 'models', 'generate', 'pull', 'hardware', 'docs', 'quality', or 'summary'."
+            }, indent=2)
+
+    except ImportError as e:
+        return json.dumps({"error": f"Ollama tools not available: {e}"}, indent=2)
+    except Exception as e:
+        logger.error(f"Ollama tool error: {e}", exc_info=True)
+        return json.dumps({"error": str(e)}, indent=2)
+
+
+def mlx(
+    action: str = "status",
+    prompt: str | None = None,
+    model: str = "mlx-community/Phi-3.5-mini-instruct-4bit",
+    max_tokens: int = 512,
+    temperature: float = 0.7,
+    verbose: bool = False,
+) -> str:
+    """
+    [HINT: MLX. action=status|hardware|models|generate. Unified MLX tool.]
+
+    Unified MLX tool for Apple Silicon GPU acceleration.
+
+    Actions:
+    - action="status": Check if MLX is available
+    - action="hardware": Get hardware info and recommended settings
+    - action="models": List recommended MLX models
+    - action="generate": Generate text with MLX
+
+    Returns JSON string (FastMCP requirement).
+    """
+    try:
+        if action == "status":
+            from .mlx_integration import check_mlx_status
+            return check_mlx_status()
+
+        elif action == "hardware":
+            from .mlx_integration import get_mlx_hardware_info
+            return get_mlx_hardware_info()
+
+        elif action == "models":
+            from .mlx_integration import list_mlx_models
+            return list_mlx_models()
+
+        elif action == "generate":
+            from .mlx_integration import generate_with_mlx
+            if not prompt:
+                return json.dumps({"error": "prompt parameter required for generate action"}, indent=2)
+            return generate_with_mlx(prompt, model, max_tokens, temperature, verbose)
+
+        else:
+            return json.dumps({
+                "error": f"Unknown mlx action: {action}. Use 'status', 'hardware', 'models', or 'generate'."
+            }, indent=2)
+
+    except ImportError as e:
+        return json.dumps({"error": f"MLX tools not available: {e}"}, indent=2)
+    except Exception as e:
+        logger.error(f"MLX tool error: {e}", exc_info=True)
+        return json.dumps({"error": str(e)}, indent=2)
+
+
+def git_tools(
+    action: str = "commits",
+    task_id: str | None = None,
+    branch: str | None = None,
+    limit: int = 50,
+    commit1: str | None = None,
+    commit2: str | None = None,
+    time1: str | None = None,
+    time2: str | None = None,
+    format: str = "text",
+    output_path: str | None = None,
+    max_commits: int = 50,
+    source_branch: str | None = None,
+    target_branch: str | None = None,
+    conflict_strategy: str = "newer",
+    author: str = "system",
+    dry_run: bool = False,
+) -> str:
+    """
+    [HINT: Git tools. action=commits|branches|diff|graph|merge|set_branch. Unified git-inspired tools.]
+
+    Unified git-inspired task management tools.
+
+    Actions:
+    - action="commits": Get commit history (task_id required for task commits, branch for branch commits)
+    - action="branches": List all branches with statistics
+    - action="diff": Compare task versions
+    - action="graph": Generate commit graph visualization
+    - action="merge": Merge tasks from one branch to another
+    - action="set_branch": Assign task to a branch
+
+    Returns JSON string (FastMCP requirement).
+    """
+    try:
+        if action == "commits":
+            from .git_inspired_tools import get_branch_commits, get_task_commits
+            if task_id:
+                return get_task_commits(task_id, branch, limit)
+            elif branch:
+                return get_branch_commits(branch, limit)
+            else:
+                return json.dumps({"error": "task_id or branch required for commits action"}, indent=2)
+
+        elif action == "branches":
+            from .git_inspired_tools import list_branches
+            return list_branches()
+
+        elif action == "tasks":
+            from .git_inspired_tools import get_branch_tasks
+            if not branch:
+                return json.dumps({"error": "branch parameter required for tasks action"}, indent=2)
+            return get_branch_tasks(branch)
+
+        elif action == "diff":
+            from .git_inspired_tools import compare_task_diff
+            if not task_id:
+                return json.dumps({"error": "task_id parameter required for diff action"}, indent=2)
+            return compare_task_diff(task_id, commit1, commit2, time1, time2)
+
+        elif action == "graph":
+            from .git_inspired_tools import generate_graph
+            return generate_graph(branch, task_id, format, output_path, max_commits)
+
+        elif action == "merge":
+            from .git_inspired_tools import merge_branch_tools
+            if not source_branch or not target_branch:
+                return json.dumps({"error": "source_branch and target_branch required for merge action"}, indent=2)
+            return merge_branch_tools(source_branch, target_branch, conflict_strategy, author, dry_run)
+
+        elif action == "set_branch":
+            from .git_inspired_tools import set_task_branch_tool
+            if not task_id or not branch:
+                return json.dumps({"error": "task_id and branch required for set_branch action"}, indent=2)
+            return set_task_branch_tool(task_id, branch)
+
+        else:
+            return json.dumps({
+                "error": f"Unknown git_tools action: {action}. Use 'commits', 'branches', 'tasks', 'diff', 'graph', 'merge', or 'set_branch'."
+            }, indent=2)
+
+    except ImportError as e:
+        return json.dumps({"error": f"Git tools not available: {e}"}, indent=2)
+    except Exception as e:
+        logger.error(f"Git tools error: {e}", exc_info=True)
+        return json.dumps({"error": str(e)}, indent=2)
+
+
+def session(
+    action: str = "prime",
+    include_hints: bool = True,
+    include_tasks: bool = True,
+    override_mode: str | None = None,
+    task_id: str | None = None,
+    summary: str | None = None,
+    blockers: str | None = None,
+    next_steps: str | None = None,
+    unassign_my_tasks: bool = True,
+    include_git_status: bool = True,
+    limit: int = 5,
+    dry_run: bool = False,
+    direction: str = "both",
+    prefer_agentic_tools: bool = True,
+    auto_commit: bool = True,
+    mode: str | None = None,
+    category: str | None = None,
+    keywords: str | None = None,
+    assignee_name: str | None = None,
+    assignee_type: str = "agent",
+    hostname: str | None = None,
+    status_filter: str | None = None,
+    priority_filter: str | None = None,
+    include_unassigned: bool = False,
+    max_tasks_per_agent: int = 5,
+) -> str:
+    """
+    [HINT: Session. action=prime|handoff|prompts|assignee. Unified session management tools.]
+
+    Unified session management tool consolidating auto-primer, handoff, prompt discovery, and task assignee.
+
+    Actions:
+    - action="prime": Auto-prime AI context at session start
+    - action="handoff": End/resume sessions for multi-device coordination
+    - action="prompts": Find relevant prompts by mode/persona/category/keywords
+    - action="assignee": Manage task assignments across agents/humans/hosts
+
+    Returns JSON string (FastMCP requirement).
+    """
+    try:
+        if action == "prime":
+            from .auto_primer import auto_prime
+            result = auto_prime(
+                include_hints=include_hints,
+                include_tasks=include_tasks,
+                override_mode=override_mode,
+            )
+            # auto_prime returns JSON string - return it directly
+            return result if isinstance(result, str) else json.dumps({"error": "Invalid return type from auto_prime"}, indent=2)
+
+        elif action == "handoff":
+            from .session_handoff import exarp_session_handoff
+            result = exarp_session_handoff(
+                action="end" if summary else "resume",
+                summary=summary,
+                blockers=json.loads(blockers) if blockers else None,
+                next_steps=json.loads(next_steps) if next_steps else None,
+                unassign_my_tasks=unassign_my_tasks,
+                include_git_status=include_git_status,
+                limit=limit,
+                dry_run=dry_run,
+                direction=direction,
+                prefer_agentic_tools=prefer_agentic_tools,
+                auto_commit=auto_commit,
+            )
+            return result if isinstance(result, str) else json.dumps({"error": "Invalid return type"}, indent=2)
+
+        elif action == "prompts":
+            from .resources.prompt_discovery import find_prompts
+            result = find_prompts(
+                mode=mode,
+                persona=category,  # Using category for persona
+                category=category,
+                keywords=keywords,
+            )
+            return result if isinstance(result, str) else json.dumps({"error": "Invalid return type"}, indent=2)
+
+        elif action == "assignee":
+            from .task_assignee import task_assignee_tool
+            # Map action to assignee tool actions
+            if assignee_name:
+                assignee_action = "assign"
+            elif task_id:
+                assignee_action = "unassign"
+            else:
+                assignee_action = "list"
+
+            result = task_assignee_tool(
+                action=assignee_action,
+                task_id=task_id,
+                assignee_name=assignee_name,
+                assignee_type=assignee_type,
+                hostname=hostname,
+                status_filter=status_filter,
+                priority_filter=priority_filter,
+                include_unassigned=include_unassigned,
+                max_tasks_per_agent=max_tasks_per_agent,
+            )
+            return result if isinstance(result, str) else json.dumps({"error": "Invalid return type"}, indent=2)
+
+        else:
+            return json.dumps({
+                "error": f"Unknown session action: {action}. Use 'prime', 'handoff', 'prompts', or 'assignee'."
+            }, indent=2)
+
+    except ImportError as e:
+        return json.dumps({"error": f"Session tools not available: {e}"}, indent=2)
+    except Exception as e:
+        logger.error(f"Session tool error: {e}", exc_info=True)
+        return json.dumps({"error": str(e)}, indent=2)
 

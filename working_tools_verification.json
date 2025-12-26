@@ -1,0 +1,33 @@
+{
+  "actually_working": [],
+  "actually_broken": [
+    {
+      "name": "task_workflow",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "estimation",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "ollama",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "mlx",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "git_tools",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "session",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "memory_maint",
+      "error": "object dict can't be used in 'await' expression"
+    }
+  ]
+}

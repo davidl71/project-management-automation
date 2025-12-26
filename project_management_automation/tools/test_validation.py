@@ -5,11 +5,10 @@ Validates test organization and patterns.
 Checks naming conventions, validates organization, and identifies missing test files.
 """
 
-import json
 import logging
 import re
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +35,9 @@ except ImportError:
 
 
 def validate_test_structure(
-    test_path: Optional[str] = None,
-    framework: Optional[str] = None,
-    output_path: Optional[str] = None,
+    test_path: str | None = None,
+    framework: str | None = None,
+    output_path: str | None = None,
 ) -> dict[str, Any]:
     """
     Validate test organization and patterns.

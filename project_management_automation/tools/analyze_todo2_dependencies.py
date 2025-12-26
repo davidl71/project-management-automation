@@ -7,9 +7,9 @@ Analyzes Todo2 task dependency chains, identifies circular dependencies, and vis
 import json
 import logging
 import time
-from collections import defaultdict, deque
+from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -36,44 +36,43 @@ except ImportError:
 
 def analyze_todo2_dependencies(
     output_format: str = "text",
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     Analyze Todo2 task dependency chains, identify circular dependencies, and visualize critical paths.
-    
+
     Args:
         output_format: Output format - "text" or "json" (default: "text")
         output_path: Path for report output (default: docs/TODO2_DEPENDENCY_ANALYSIS_REPORT.md)
-    
+
     Returns:
         JSON string with dependency analysis results
     """
     start_time = time.time()
-    
+
     try:
         from project_management_automation.utils import find_project_root
         from project_management_automation.utils.todo2_mcp_client import (
             list_todos_mcp,
-            get_todo_details_mcp,
         )
-        
+
         project_root = find_project_root()
-        
+
         # Get all tasks
         all_tasks = list_todos_mcp(project_root=project_root)
-        
+
         # Build dependency graph
         graph = _build_dependency_graph(all_tasks)
-        
+
         # Detect circular dependencies
         cycles = _detect_cycles(graph, all_tasks)
-        
+
         # Identify critical paths
         critical_paths = _find_critical_paths(graph, all_tasks)
-        
+
         # Calculate metrics
         metrics = _calculate_metrics(graph, all_tasks)
-        
+
         # Generate report
         report_path = output_path or 'docs/TODO2_DEPENDENCY_ANALYSIS_REPORT.md'
         if report_path:
@@ -89,28 +88,28 @@ def analyze_todo2_dependencies(
             report_file.parent.mkdir(parents=True, exist_ok=True)
             with open(report_file, 'w') as f:
                 f.write(report)
-        
+
         # Format response
         response_data = {
             'total_tasks': len(all_tasks),
             'tasks_with_dependencies': metrics['tasks_with_dependencies'],
             'circular_dependencies': len(cycles),
-            'critical_paths': len(critical_paths),
+            'critical_paths_count': len(critical_paths),
             'max_depth': metrics['max_depth'],
             'longest_chain': metrics['longest_chain'],
             'report_path': str(Path(report_path).absolute()),
             'cycles': cycles[:10],  # Limit to first 10 for response
             'critical_paths': critical_paths[:5]  # Limit to first 5 for response
         }
-        
+
         duration = time.time() - start_time
         log_automation_execution('analyze_todo2_dependencies', duration, True)
-        
+
         if output_format == "json":
             return json.dumps(response_data, indent=2)
         else:
             return json.dumps(format_success_response(response_data), indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('analyze_todo2_dependencies', duration, False, e)
@@ -118,31 +117,31 @@ def analyze_todo2_dependencies(
         return json.dumps(error_response, indent=2)
 
 
-def _build_dependency_graph(tasks: List[Dict[str, Any]]) -> Dict[str, List[str]]:
+def _build_dependency_graph(tasks: list[dict[str, Any]]) -> dict[str, list[str]]:
     """Build directed graph from task dependencies."""
     graph = defaultdict(list)
     task_ids = {task.get('id') for task in tasks}
-    
+
     for task in tasks:
         task_id = task.get('id')
         deps = task.get('dependencies', []) or task.get('dependsOn', [])
-        
+
         # Normalize dependencies (handle both string and dict formats)
         for dep in deps:
             dep_id = dep if isinstance(dep, str) else dep.get('id')
             if dep_id and dep_id in task_ids:
                 graph[dep_id].append(task_id)  # dep_id -> task_id (dependency -> dependent)
-    
+
     return dict(graph)
 
 
-def _detect_cycles(graph: Dict[str, List[str]], tasks: List[Dict[str, Any]]) -> List[List[str]]:
+def _detect_cycles(graph: dict[str, list[str]], tasks: list[dict[str, Any]]) -> list[list[str]]:
     """Detect circular dependencies using DFS."""
     cycles = []
     visited = set()
     rec_stack = set()
     path = []
-    
+
     def dfs(node: str) -> bool:
         if node in rec_stack:
             # Found cycle
@@ -150,104 +149,104 @@ def _detect_cycles(graph: Dict[str, List[str]], tasks: List[Dict[str, Any]]) -> 
             cycle = path[cycle_start:] + [node]
             cycles.append(cycle)
             return True
-        
+
         if node in visited:
             return False
-        
+
         visited.add(node)
         rec_stack.add(node)
         path.append(node)
-        
+
         for neighbor in graph.get(node, []):
             if dfs(neighbor):
                 return True
-        
+
         rec_stack.remove(node)
         path.pop()
         return False
-    
+
     task_ids = {task.get('id') for task in tasks}
     for task_id in task_ids:
         if task_id not in visited:
             dfs(task_id)
-    
+
     return cycles
 
 
-def _find_critical_paths(graph: Dict[str, List[str]], tasks: List[Dict[str, Any]]) -> List[List[str]]:
+def _find_critical_paths(graph: dict[str, list[str]], tasks: list[dict[str, Any]]) -> list[list[str]]:
     """Find critical paths (longest dependency chains) using topological sort."""
     # Build reverse graph for topological sort
     in_degree = defaultdict(int)
     task_ids = {task.get('id') for task in tasks}
-    
+
     for task_id in task_ids:
         in_degree[task_id] = 0
-    
-    for node, neighbors in graph.items():
+
+    for _node, neighbors in graph.items():
         for neighbor in neighbors:
             in_degree[neighbor] += 1
-    
+
     # Find longest paths
     longest_paths = []
     max_length = 0
-    
-    def dfs_longest(node: str, path: List[str], length: int):
+
+    def dfs_longest(node: str, path: list[str], length: int):
         nonlocal max_length, longest_paths
-        
+
         if length > max_length:
             max_length = length
             longest_paths = [path[:]]
         elif length == max_length:
             longest_paths.append(path[:])
-        
+
         for neighbor in graph.get(node, []):
             if neighbor not in path:  # Avoid cycles
                 path.append(neighbor)
                 dfs_longest(neighbor, path, length + 1)
                 path.pop()
-    
+
     # Start from nodes with no dependencies (in_degree == 0)
     for task_id in task_ids:
         if in_degree[task_id] == 0:
             dfs_longest(task_id, [task_id], 1)
-    
+
     return longest_paths
 
 
-def _calculate_metrics(graph: Dict[str, List[str]], tasks: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _calculate_metrics(graph: dict[str, list[str]], tasks: list[dict[str, Any]]) -> dict[str, Any]:
     """Calculate dependency metrics."""
     task_ids = {task.get('id') for task in tasks}
-    
+
     tasks_with_deps = sum(
         1 for task in tasks
         if task.get('dependencies') or task.get('dependsOn')
     )
-    
+
     # Calculate max depth
-    def get_depth(node: str, visited: Set[str] = None) -> int:
+    def get_depth(node: str, visited: set[str] = None) -> int:
         if visited is None:
             visited = set()
         if node in visited:
             return 0
         visited.add(node)
-        
+
         max_dep_depth = 0
         for dep in graph.get(node, []):
             max_dep_depth = max(max_dep_depth, get_depth(dep, visited.copy()))
-        
+
         return max_dep_depth + 1
-    
+
     max_depth = 0
     for task_id in task_ids:
         depth = get_depth(task_id)
         max_depth = max(max_depth, depth)
-    
+
     # Find longest chain
     longest_chain = []
     longest_paths = _find_critical_paths(graph, tasks)
     if longest_paths:
         longest_chain = max(longest_paths, key=len)
-    
+
     return {
         'tasks_with_dependencies': tasks_with_deps,
         'max_depth': max_depth,
@@ -257,16 +256,16 @@ def _calculate_metrics(graph: Dict[str, List[str]], tasks: List[Dict[str, Any]])
 
 
 def _generate_report(
-    graph: Dict[str, List[str]],
-    cycles: List[List[str]],
-    critical_paths: List[List[str]],
-    metrics: Dict[str, Any],
-    tasks: List[Dict[str, Any]],
+    graph: dict[str, list[str]],
+    cycles: list[list[str]],
+    critical_paths: list[list[str]],
+    metrics: dict[str, Any],
+    tasks: list[dict[str, Any]],
     output_format: str
 ) -> str:
     """Generate markdown report."""
     task_map = {task.get('id'): task for task in tasks}
-    
+
     report = f"""# Todo2 Dependency Analysis Report
 
 **Generated**: {time.strftime('%Y-%m-%d %H:%M:%S')}
@@ -283,7 +282,7 @@ def _generate_report(
 ## Circular Dependencies
 
 """
-    
+
     if not cycles:
         report += "✅ **No circular dependencies found!**\n\n"
     else:
@@ -291,7 +290,7 @@ def _generate_report(
             report += f"### Cycle {i}\n\n"
             cycle_names = [task_map.get(tid, {}).get('name', tid) for tid in cycle]
             report += " → ".join(cycle_names) + "\n\n"
-    
+
     report += "## Critical Paths\n\n"
     if critical_paths:
         for i, path in enumerate(critical_paths[:5], 1):  # Show top 5
@@ -300,31 +299,31 @@ def _generate_report(
             report += " → ".join(path_names) + "\n\n"
     else:
         report += "No critical paths found.\n\n"
-    
+
     report += "## Dependency Tree\n\n"
     # Build tree structure
     roots = [tid for tid in task_map.keys() if not any(tid in deps for deps in graph.values())]
-    
-    def build_tree(node: str, depth: int = 0, visited: Set[str] = None) -> str:
+
+    def build_tree(node: str, depth: int = 0, visited: set[str] = None) -> str:
         if visited is None:
             visited = set()
         if node in visited:
             return ""
         visited.add(node)
-        
+
         task = task_map.get(node, {})
         name = task.get('name', node)
         indent = "  " * depth
         result = f"{indent}- {name} ({node})\n"
-        
+
         for child in graph.get(node, []):
             result += build_tree(child, depth + 1, visited.copy())
-        
+
         return result
-    
+
     for root in roots[:10]:  # Show first 10 root tasks
         report += build_tree(root)
         report += "\n"
-    
+
     return report
 

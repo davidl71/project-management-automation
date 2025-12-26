@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +35,7 @@ except ImportError:
 
 def add_external_tool_hints(
     dry_run: bool = False,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     min_file_size: int = 50
 ) -> str:
     """

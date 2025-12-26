@@ -112,8 +112,8 @@ except ImportError:
 
 
 async def scan_dependency_security_async(
-    languages: Optional[list[str]] = None,
-    config_path: Optional[str] = None,
+    languages: list[str] | None = None,
+    config_path: str | None = None,
     ctx: Optional["Context"] = None,
     alert_critical: bool = False,
 ) -> str:
@@ -205,17 +205,17 @@ async def scan_dependency_security_async(
 
         total_vulns = response_data['total_vulnerabilities']
         critical_count = response_data.get('critical_vulnerabilities', 0)
-        
+
         if total_vulns == 0:
             await _log_info(ctx, "✅ No vulnerabilities found!")
         else:
             await _log_info(ctx, f"⚠️ Found {total_vulns} vulnerabilities")
-            
+
             # Alert on critical vulnerabilities if requested
             if alert_critical and critical_count > 0:
                 try:
-                    from ..interactive import message_complete_notification, is_available
-                    
+                    from ..interactive import is_available, message_complete_notification
+
                     if is_available():
                         message = (
                             f"🚨 {critical_count} CRITICAL vulnerabilities found! "
@@ -248,8 +248,8 @@ async def scan_dependency_security_async(
 
 
 def scan_dependency_security(
-    languages: Optional[list[str]] = None,
-    config_path: Optional[str] = None,
+    languages: list[str] | None = None,
+    config_path: str | None = None,
     ctx: Optional["Context"] = None,
     alert_critical: bool = False,
 ) -> str:

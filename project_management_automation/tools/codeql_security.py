@@ -12,12 +12,12 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from ..utils import find_project_root
 
 
-def get_codeql_status(project_root: Optional[Path] = None) -> dict[str, Any]:
+def get_codeql_status(project_root: Path | None = None) -> dict[str, Any]:
     """
     Get comprehensive CodeQL security status for the project.
 
@@ -99,7 +99,7 @@ def _parse_codeql_languages(workflow_path: Path) -> list[str]:
         lang_match = re.search(r"language:\s*\[([^\]]+)\]", content)
         if lang_match:
             langs = lang_match.group(1)
-            return [l.strip().strip("'\"") for l in langs.split(',')]
+            return [lang.strip().strip("'\"") for lang in langs.split(',')]
 
         # Look for single language
         lang_match = re.search(r"languages:\s*['\"]?(\w+)['\"]?", content)
@@ -218,7 +218,7 @@ def _get_sarif_location(result: dict) -> str:
     return ''
 
 
-def _fetch_github_security_alerts(project_root: Path) -> Optional[dict[str, Any]]:
+def _fetch_github_security_alerts(project_root: Path) -> dict[str, Any] | None:
     """
     Fetch security alerts from GitHub API.
 

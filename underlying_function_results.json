@@ -1,0 +1,25 @@
+{
+  "working": [
+    {
+      "name": "test_call_underlying",
+      "result": "underlying result"
+    },
+    {
+      "name": "test_decorator_underlying",
+      "result": "underlying result"
+    },
+    {
+      "name": "test_decorator_underlying_dict",
+      "result": "Output validation error: {'status': 'success', 'message': 'from underlying'} is not of type 'string'"
+    },
+    {
+      "name": "test_decorator_underlying_json",
+      "result": "{\"status\": \"success\", \"message\": \"json from underlying\"}"
+    },
+    {
+      "name": "test_complex_chain",
+      "result": "Output validation error: {'level': 2, 'nested': {'level': 1, 'data': 'test'}} is not of type 'string'"
+    }
+  ],
+  "broken": []
+}

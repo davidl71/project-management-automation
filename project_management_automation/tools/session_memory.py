@@ -14,7 +14,7 @@ Trusted Advisor: 🎓 Confucius (Documentation)
 import json
 import logging
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +55,8 @@ def save_session_insight(
     title: str,
     content: str,
     category: str = "insight",
-    task_id: Optional[str] = None,
-    metadata: Optional[dict[str, Any]] = None,
+    task_id: str | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """
     Save a session insight/discovery to persistent memory.
@@ -202,7 +202,7 @@ def recall_task_context(
 
 def search_session_memories(
     query: str,
-    category: Optional[str] = None,
+    category: str | None = None,
     limit: int = 10,
 ) -> dict[str, Any]:
     """
@@ -254,7 +254,7 @@ def search_session_memories(
 
 
 def generate_session_summary(
-    date: Optional[str] = None,
+    date: str | None = None,
     include_consultations: bool = True,
 ) -> dict[str, Any]:
     """
@@ -317,7 +317,7 @@ def generate_session_summary(
 
 def _build_session_narrative(
     memories: list[dict[str, Any]],
-    wisdom: Optional[dict[str, Any]] = None,
+    wisdom: dict[str, Any] | None = None,
 ) -> str:
     """Build a narrative summary of the session."""
     parts = []

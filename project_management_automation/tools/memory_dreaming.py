@@ -12,15 +12,17 @@ Trusted Advisor: 📜 Chacham (Wisdom)
 import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
 from ..resources.memories import (
     MEMORY_CATEGORIES,
     _load_all_memories,
     create_memory,
 )
+
 # Use devwisdom-go MCP server instead of direct import
 from ..utils.wisdom_client import consult_advisor
+
 # METRIC_ADVISORS no longer needed (handled by external server)
 
 logger = logging.getLogger(__name__)
@@ -73,7 +75,7 @@ DREAM_ADVISORS = {
 def _detect_patterns(memories: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Analyze memories to detect patterns.
-    
+
     Returns dict with:
     - recurring_topics: Topics that appear multiple times
     - blockers: Mentions of blocking issues
@@ -190,26 +192,26 @@ def _generate_dream_narrative(
 
 def memory_dream(
     scope: str = "week",
-    advisors: Optional[list[str]] = None,
+    advisors: list[str] | None = None,
     generate_insights: bool = True,
     save_dream: bool = True,
 ) -> dict[str, Any]:
     """
     Dream on memories - reflect with advisor wisdom.
-    
+
     This process:
     1. Loads memories from the specified time scope
     2. Analyzes patterns across memories
     3. Consults relevant advisors for wisdom
     4. Generates consolidated insights
     5. Optionally saves the dream as a new memory
-    
+
     Args:
         scope: "day", "week", "month", or "all" (default "week")
         advisors: Specific advisors to consult, or None for auto-select
         generate_insights: Whether to extract actionable insights
         save_dream: Whether to save the dream as a new memory
-    
+
     Returns:
         Dream results with patterns, advisor wisdom, and insights
     """
@@ -277,8 +279,8 @@ def memory_dream(
         # Try to get METRIC_ADVISORS from MCP server, fallback to old module
         metric = None
         try:
-            from ..utils.wisdom_client import read_wisdom_resource_sync
             from ..utils.project_root import find_project_root
+            from ..utils.wisdom_client import read_wisdom_resource_sync
             project_root = find_project_root()
             advisors_json = read_wisdom_resource_sync("wisdom://advisors", project_root)
             if advisors_json:
@@ -288,7 +290,7 @@ def memory_dream(
         except Exception:
             # Fallback to old implementation
             from ..tools.wisdom.advisors import METRIC_ADVISORS
-        
+
         for m, info in METRIC_ADVISORS.items():
             if info.get("advisor") == advisor_key:
                 metric = m
@@ -303,14 +305,14 @@ def memory_dream(
             score=score,
             context=f"Dreaming on {len(memories)} memories from last {days} days",
         )
-        
+
         # consult_advisor now returns dict (from MCP server), convert to JSON string if needed
         if isinstance(consultation_result, dict):
             import json
             consultation_json = json.dumps(consultation_result, indent=2)
         else:
             consultation_json = consultation_result or "{}"
-        
+
         # Parse JSON string to dict
         import json
         consultation = json.loads(consultation_json)
@@ -419,12 +421,12 @@ def dream_with_focus(
 ) -> dict[str, Any]:
     """
     Dream with focus on a specific memory category.
-    
+
     Args:
         focus_category: Category to focus on (debug, research, architecture, preference, insight)
         scope: Time scope for memories
         save_dream: Whether to save the dream
-    
+
     Returns:
         Focused dream results
     """

@@ -13,7 +13,7 @@ import os
 import random
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Quotes organized by project "Aeon" (health level)
 PISTIS_SOPHIA_QUOTES = {
@@ -168,7 +168,7 @@ def is_wisdom_disabled() -> bool:
     return False
 
 
-def check_first_run_and_prompt() -> Optional[str]:
+def check_first_run_and_prompt() -> str | None:
     """
     Check if this is the first time showing wisdom and return a friendly prompt.
     Creates a marker file after first run.
@@ -207,7 +207,7 @@ def check_first_run_and_prompt() -> Optional[str]:
 """
 
 
-def get_daily_wisdom(health_score: float, seed_date: bool = True) -> Optional[dict[str, Any]]:
+def get_daily_wisdom(health_score: float, seed_date: bool = True) -> dict[str, Any] | None:
     """
     Get a Pistis Sophia quote based on project health.
 

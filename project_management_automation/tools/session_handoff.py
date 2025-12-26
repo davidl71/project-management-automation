@@ -14,16 +14,15 @@ The handoff is stored in .todo2/ so it's visible to all machines via git sync.
 """
 
 import asyncio
-import concurrent.futures
 import json
 import logging
 import os
 import socket
 import subprocess
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -31,23 +30,23 @@ logger = logging.getLogger(__name__)
 def _run_async_safe(coro):
     """
     Safely run an async coroutine, handling cases where an event loop may already be running.
-    
+
     Based on FastMCP best practices: avoid asyncio.run() in running event loops.
     Uses asyncio.ensure_future() when loop exists, asyncio.run() when it doesn't.
-    
+
     Args:
         coro: The coroutine to run
-        
+
     Returns:
         The result of the coroutine
     """
     try:
         # Check if there's already a running event loop
-        loop = asyncio.get_running_loop()
+        asyncio.get_running_loop()
         # If we get here, there's already a loop - use ensure_future to schedule
         # Then run in a separate thread to avoid blocking
         import concurrent.futures
-        
+
         def run_in_thread():
             """Run the coroutine in a new event loop in a separate thread"""
             new_loop = asyncio.new_event_loop()
@@ -56,7 +55,7 @@ def _run_async_safe(coro):
                 return new_loop.run_until_complete(coro)
             finally:
                 new_loop.close()
-        
+
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(run_in_thread)
             return future.result()
@@ -209,9 +208,9 @@ def _save_handoff(handoff: dict[str, Any]) -> bool:
 
 
 def end_session(
-    summary: Optional[str] = None,
-    blockers: Optional[list[str]] = None,
-    next_steps: Optional[list[str]] = None,
+    summary: str | None = None,
+    blockers: list[str] | None = None,
+    next_steps: list[str] | None = None,
     unassign_my_tasks: bool = True,
     include_git_status: bool = True,
     dry_run: bool = False
@@ -248,7 +247,7 @@ def end_session(
     """
     start_time = time.time()
     current_host = _get_current_hostname()
-    timestamp = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    timestamp = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     try:
         # Load state
@@ -520,35 +519,35 @@ def list_handoffs(limit: int = 5) -> str:
 def _try_agentic_tools_sync(direction: str = "pull") -> dict[str, Any]:
     """
     Try to sync using agentic-tools MCP.
-    
+
     Args:
         direction: "pull" to fetch remote state, "push" to sync local state, "both" for pull then push
-        
+
     Returns:
         Result dict with success status and details
     """
     try:
         from ..scripts.base.mcp_client import get_mcp_client
         from ..utils.todo2_utils import get_repo_project_id
-        
+
         project_root = _find_project_root()
         project_id = get_repo_project_id(project_root)
-        
+
         if not project_id:
             return {
                 "success": False,
                 "method": "agentic-tools",
                 "error": "Could not determine project ID",
             }
-        
+
         mcp_client = get_mcp_client(project_root)
         working_dir = str(project_root)
-        
+
         # Agentic-tools MCP handles its own state file (.agentic-tools-mcp/tasks/tasks.json)
         # The MCP server automatically syncs when operations are performed
         # For pull: we can list tasks to ensure we have latest
         # For push: operations already update the state file
-        
+
         if direction in ("pull", "both"):
             # List todos to ensure we have latest state
             try:
@@ -567,7 +566,7 @@ def _try_agentic_tools_sync(direction: str = "pull") -> dict[str, Any]:
                     "method": "agentic-tools",
                     "error": str(e),
                 }
-        
+
         # For push, agentic-tools MCP operations already update state
         return {
             "success": True,
@@ -575,7 +574,7 @@ def _try_agentic_tools_sync(direction: str = "pull") -> dict[str, Any]:
             "direction": direction,
             "message": "Agentic-tools MCP operations automatically sync state",
         }
-        
+
     except ImportError:
         return {
             "success": False,
@@ -594,18 +593,18 @@ def _try_agentic_tools_sync(direction: str = "pull") -> dict[str, Any]:
 def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[str, Any]:
     """
     Sync Todo2 state using git with automatic commit/push.
-    
+
     Args:
         direction: "pull" to fetch remote, "push" to commit and push local, "both" for pull then push
         auto_commit: Whether to auto-commit state changes (default: True)
-        
+
     Returns:
         Result dict with success status and details
     """
     project_root = _find_project_root()
-    todo2_file = project_root / ".todo2" / "state.todo2.json"
-    handoff_file = project_root / ".todo2" / "handoffs.json"
-    
+    project_root / ".todo2" / "state.todo2.json"
+    project_root / ".todo2" / "handoffs.json"
+
     results = {
         "success": True,
         "method": "git-auto",
@@ -613,7 +612,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
         "operations": [],
         "errors": [],
     }
-    
+
     try:
         # Check if we're in a git repo
         git_check = subprocess.run(
@@ -629,7 +628,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                 "method": "git-auto",
                 "error": "Not in a git repository",
             }
-        
+
         # Pull remote changes first if requested
         if direction in ("pull", "both"):
             try:
@@ -641,10 +640,10 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                     text=True,
                     timeout=30
                 )
-                
+
                 if fetch_result.returncode == 0:
                     results["operations"].append("fetched")
-                    
+
                     # Check if there are remote changes to merge
                     status_result = subprocess.run(
                         ["git", "status", "-sb"],
@@ -653,7 +652,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                         text=True,
                         timeout=5
                     )
-                    
+
                     if "behind" in status_result.stdout:
                         # Get current branch name
                         branch_result = subprocess.run(
@@ -664,7 +663,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                             timeout=5
                         )
                         current_branch = branch_result.stdout.strip()
-                        
+
                         # Merge remote changes
                         merge_result = subprocess.run(
                             ["git", "merge", f"origin/{current_branch}", "--no-edit"],
@@ -673,7 +672,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                             text=True,
                             timeout=30
                         )
-                        
+
                         if merge_result.returncode == 0:
                             results["operations"].append("merged")
                         else:
@@ -689,14 +688,14 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                 else:
                     results["errors"].append(f"Fetch failed: {fetch_result.stderr}")
                     results["success"] = False
-                    
+
             except subprocess.TimeoutExpired:
                 results["errors"].append("Git pull operation timed out")
                 results["success"] = False
             except Exception as e:
                 results["errors"].append(f"Pull error: {str(e)}")
                 results["success"] = False
-        
+
         # Push local changes if requested
         if direction in ("push", "both") and results["success"]:
             try:
@@ -708,9 +707,9 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                     text=True,
                     timeout=5
                 )
-                
+
                 has_changes = bool(status_result.stdout.strip())
-                
+
                 if has_changes and auto_commit:
                     # Stage Todo2 files
                     add_result = subprocess.run(
@@ -720,14 +719,14 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                         text=True,
                         timeout=10
                     )
-                    
+
                     if add_result.returncode == 0:
                         results["operations"].append("staged")
-                        
+
                         # Auto-commit with descriptive message
                         current_host = _get_current_hostname()
-                        commit_msg = f"Auto-sync Todo2 state from {current_host} [{datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')}]"
-                        
+                        commit_msg = f"Auto-sync Todo2 state from {current_host} [{datetime.now(UTC).isoformat().replace('+00:00', 'Z')}]"
+
                         commit_result = subprocess.run(
                             ["git", "commit", "-m", commit_msg],
                             cwd=str(project_root),
@@ -735,7 +734,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                             text=True,
                             timeout=10
                         )
-                        
+
                         if commit_result.returncode == 0:
                             results["operations"].append("committed")
                         else:
@@ -746,7 +745,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                                 results["errors"].append(f"Commit failed: {commit_result.stderr}")
                                 results["success"] = False
                                 return results
-                
+
                 # Push if we have commits to push
                 push_check = subprocess.run(
                     ["git", "status", "-sb"],
@@ -755,7 +754,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                     text=True,
                     timeout=5
                 )
-                
+
                 if "ahead" in push_check.stdout:
                     push_result = subprocess.run(
                         ["git", "push", "origin", "HEAD"],
@@ -764,7 +763,7 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                         text=True,
                         timeout=30
                     )
-                    
+
                     if push_result.returncode == 0:
                         results["operations"].append("pushed")
                     else:
@@ -772,16 +771,16 @@ def _git_auto_sync(direction: str = "pull", auto_commit: bool = True) -> dict[st
                         results["success"] = False
                 else:
                     results["operations"].append("nothing_to_push")
-                    
+
             except subprocess.TimeoutExpired:
                 results["errors"].append("Git push operation timed out")
                 results["success"] = False
             except Exception as e:
                 results["errors"].append(f"Push error: {str(e)}")
                 results["success"] = False
-        
+
         return results
-        
+
     except Exception as e:
         return {
             "success": False,
@@ -798,27 +797,27 @@ def sync_todo2_state(
 ) -> str:
     """
     [HINT: Sync Todo2 state. Syncs task state across agents without manual commits. Directions: pull, push, both.]
-    
+
     Sync Todo2 state across multiple agents/machines without requiring manual git commits.
-    
+
     This tool provides multiple sync methods:
     1. **Agentic-Tools MCP** (preferred): Uses MCP server which handles its own state sync
     2. **Git Auto-Sync** (fallback): Automatically commits and pushes state changes
-    
+
     Directions:
     - pull: Fetch and merge remote state changes
-    - push: Auto-commit and push local state changes  
+    - push: Auto-commit and push local state changes
     - both: Pull remote changes, then push local changes
-    
+
     Args:
         direction: Sync direction - "pull", "push", or "both" (default: "both")
         prefer_agentic_tools: Try agentic-tools MCP first (default: True)
         auto_commit: Auto-commit state changes for git sync (default: True)
         dry_run: Preview sync operations without making changes (default: False)
-        
+
     Returns:
         JSON with sync results and details
-        
+
     Examples:
         sync_todo2_state(direction="pull")  # Pull latest state from remote
         sync_todo2_state(direction="push")  # Push local state changes
@@ -826,7 +825,7 @@ def sync_todo2_state(
     """
     start_time = time.time()
     current_host = _get_current_hostname()
-    
+
     if dry_run:
         return json.dumps({
             "success": True,
@@ -838,21 +837,21 @@ def sync_todo2_state(
                 "git-auto": "Would use git auto-commit/push as fallback",
             },
         }, indent=2)
-    
+
     results = {
         "success": False,
         "host": current_host,
-        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "direction": direction,
         "methods_tried": [],
         "final_method": None,
     }
-    
+
     # Try agentic-tools MCP first if preferred
     if prefer_agentic_tools:
         agentic_result = _try_agentic_tools_sync(direction)
         results["methods_tried"].append(agentic_result)
-        
+
         if agentic_result.get("success"):
             results["success"] = True
             results["final_method"] = "agentic-tools"
@@ -861,11 +860,11 @@ def sync_todo2_state(
             duration = time.time() - start_time
             results["duration_ms"] = round(duration * 1000, 2)
             return json.dumps(results, indent=2)
-    
+
     # Fallback to git auto-sync
     git_result = _git_auto_sync(direction, auto_commit)
     results["methods_tried"].append(git_result)
-    
+
     if git_result.get("success"):
         results["success"] = True
         results["final_method"] = "git-auto"
@@ -876,10 +875,10 @@ def sync_todo2_state(
         results["final_method"] = "git-auto"
         results["message"] = f"Sync failed: {', '.join(git_result.get('errors', []))}"
         results["errors"] = git_result.get("errors", [])
-    
+
     duration = time.time() - start_time
     results["duration_ms"] = round(duration * 1000, 2)
-    
+
     return json.dumps(results, indent=2)
 
 
@@ -935,7 +934,7 @@ def resume_session() -> str:
         context = {
             "success": True,
             "current_host": current_host,
-            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         }
 
         # Add handoff info
@@ -995,9 +994,9 @@ def resume_session() -> str:
 # Consolidated tool for MCP registration
 def session_handoff(
     action: str,
-    summary: Optional[str] = None,
-    blockers: Optional[list[str]] = None,
-    next_steps: Optional[list[str]] = None,
+    summary: str | None = None,
+    blockers: list[str] | None = None,
+    next_steps: list[str] | None = None,
     unassign_my_tasks: bool = True,
     include_git_status: bool = True,
     limit: int = 5,
@@ -1083,9 +1082,9 @@ def register_handoff_tools(mcp) -> None:
         @mcp.tool()
         def exarp_session_handoff(
             action: str,
-            summary: Optional[str] = None,
-            blockers: Optional[list[str]] = None,
-            next_steps: Optional[list[str]] = None,
+            summary: str | None = None,
+            blockers: list[str] | None = None,
+            next_steps: list[str] | None = None,
             unassign_my_tasks: bool = True,
             include_git_status: bool = True,
             limit: int = 5,
@@ -1102,7 +1101,7 @@ def register_handoff_tools(mcp) -> None:
             - Multi-device coordination
             - Auto-commit functionality
             - Todo2 state synchronization
-            
+
             This is an enhanced wrapper around agentic-tools' session_handoff_tool with exarp-specific features.
             """
             return session_handoff(

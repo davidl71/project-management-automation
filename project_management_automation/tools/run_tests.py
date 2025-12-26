@@ -114,11 +114,11 @@ except ImportError:
 
 
 async def run_tests_async(
-    test_path: Optional[str] = None,
+    test_path: str | None = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     ctx: Optional["Context"] = None,
 ) -> str:
     """
@@ -215,11 +215,11 @@ async def run_tests_async(
 
 
 def run_tests(
-    test_path: Optional[str] = None,
+    test_path: str | None = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     ctx: Optional["Context"] = None,
 ) -> str:
     """

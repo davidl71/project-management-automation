@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -35,10 +34,10 @@ except ImportError:
 
 
 def run_daily_automation(
-    tasks: Optional[list[str]] = None,
+    tasks: list[str] | None = None,
     include_slow: bool = False,
     dry_run: bool = False,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     [HINT: Daily automation. Returns tasks run, success rate, summary, report path.]

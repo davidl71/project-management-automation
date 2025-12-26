@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +34,7 @@ except ImportError:
 
 
 def check_documentation_health(
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     create_tasks: bool = True
 ) -> str:
     """

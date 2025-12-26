@@ -11,10 +11,13 @@ These are TYPE STUBS and DOCUMENTATION - actual implementations go in:
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any
 
+if TYPE_CHECKING:
+    # Forward reference for ToolUsageTracker (defined in dynamic_tools.py)
+    # This is only for type checking, not runtime
+    pass
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # INTERFACE 1: FileEditTracker (Agent A)
@@ -24,70 +27,70 @@ from typing import Any, Optional
 class FileEditTracker:
     """
     Tracks file edits during tool calls to detect multi-file vs single-file patterns.
-    
+
     Interface Contract (Agent A must implement):
     - Must track edited files in a set
     - Must record timestamps for edit frequency analysis
     - Must provide methods for multi-file detection
     - Must be serializable for persistence
-    
+
     Usage:
         tracker = FileEditTracker()
         tracker.record_file_edit("/path/to/file.py")
         count = tracker.get_unique_files_count()
         is_multi = tracker.is_multi_file_session(threshold=2)
     """
-    
+
     edited_files: set[str] = field(default_factory=set)
     edit_timestamps: list[tuple[str, float]] = field(default_factory=list)
     max_tracked: int = 100
-    
+
     def record_file_edit(self, file_path: str) -> None:
         """
         Record that a file was edited.
-        
+
         Args:
             file_path: Path to the edited file (can be relative or absolute)
         """
         raise NotImplementedError("Agent A must implement this")
-    
+
     def get_unique_files_count(self) -> int:
         """
         Get the number of unique files edited.
-        
+
         Returns:
             Number of unique files edited in this session
         """
         raise NotImplementedError("Agent A must implement this")
-    
+
     def get_edit_frequency(self, window_seconds: float = 60) -> float:
         """
         Get the frequency of file edits in edits per minute.
-        
+
         Args:
             window_seconds: Time window to analyze (default: 60 seconds)
-            
+
         Returns:
             Edits per minute in the specified window
         """
         raise NotImplementedError("Agent A must implement this")
-    
+
     def is_multi_file_session(self, threshold: int = 2) -> bool:
         """
         Check if this session involves editing multiple files.
-        
+
         Args:
             threshold: Minimum number of files to consider "multi-file" (default: 2)
-            
+
         Returns:
             True if more than threshold files have been edited
         """
         raise NotImplementedError("Agent A must implement this")
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Serialize for persistence."""
         raise NotImplementedError("Agent A must implement this")
-    
+
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "FileEditTracker":
         """Deserialize from persisted data."""
@@ -101,7 +104,7 @@ class FileEditTracker:
 class SessionMode(str, Enum):
     """
     Cursor session modes inferred from tool patterns.
-    
+
     Interface Contract (Agent B must implement):
     - Must be a string enum compatible with JSON serialization
     - Must include all three modes: AGENT, ASK, MANUAL
@@ -121,7 +124,7 @@ class SessionMode(str, Enum):
 class ModeInferenceResult:
     """
     Result of mode inference with confidence and reasoning.
-    
+
     Interface Contract (Agent B must implement):
     - Must include mode (SessionMode enum)
     - Must include confidence score (0.0 to 1.0)
@@ -132,7 +135,7 @@ class ModeInferenceResult:
     confidence: float  # 0.0 to 1.0
     reasoning: list[str]
     metrics: dict[str, Any]
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Serialize for JSON/API responses."""
         return {
@@ -150,13 +153,13 @@ class ModeInferenceResult:
 class SessionModeInference:
     """
     Analyzes patterns to infer AGENT/ASK/MANUAL modes with confidence scores.
-    
+
     Interface Contract (Agent B must implement):
     - Must accept ToolUsageTracker and FileEditTracker as inputs
     - Must return ModeInferenceResult with confidence scores
     - Must implement sliding window analysis
     - Must handle edge cases (insufficient data, etc.)
-    
+
     Usage:
         inference = SessionModeInference()
         result = inference.infer_mode(
@@ -166,47 +169,47 @@ class SessionModeInference:
         )
         print(f"Mode: {result.mode.value}, Confidence: {result.confidence}")
     """
-    
+
     def infer_mode(
         self,
-        tool_tracker: "ToolUsageTracker",  # From dynamic_tools.py
+        tool_tracker: Any,  # ToolUsageTracker from dynamic_tools.py
         file_tracker: FileEditTracker,
         session_duration_seconds: float
     ) -> ModeInferenceResult:
         """
         Infer session mode from tool and file patterns.
-        
+
         Args:
             tool_tracker: ToolUsageTracker instance with tool call data
             file_tracker: FileEditTracker instance with file edit data
             session_duration_seconds: Current session duration in seconds
-            
+
         Returns:
             ModeInferenceResult with inferred mode, confidence, and reasoning
-            
+
         Detection Heuristics:
         - AGENT: High tool frequency (>5/min), multi-file (>2), longer sessions (>5min)
         - ASK: Lower frequency (1-3/min), single/few files (≤2), shorter (<5min)
         - MANUAL: Very low/no tool calls (<1/min), direct file edits
         """
         raise NotImplementedError("Agent B must implement this")
-    
+
     def analyze_sliding_window(
         self,
-        tool_tracker: "ToolUsageTracker",
+        tool_tracker: Any,  # ToolUsageTracker from dynamic_tools.py
         file_tracker: FileEditTracker,
         window_size_seconds: float = 300,  # 5 minutes
         step_size_seconds: float = 60     # 1 minute
     ) -> list[ModeInferenceResult]:
         """
         Analyze mode changes over time using a sliding window.
-        
+
         Args:
             tool_tracker: ToolUsageTracker instance
             file_tracker: FileEditTracker instance
             window_size_seconds: Size of analysis window (default: 300s = 5min)
             step_size_seconds: Step size between windows (default: 60s = 1min)
-            
+
         Returns:
             List of ModeInferenceResult for each window
         """
@@ -220,7 +223,7 @@ class SessionModeInference:
 class SessionModeStorage:
     """
     Persists inferred mode and makes it available via MCP resources/tools.
-    
+
     Interface Contract (Agent C must implement):
     - Must store mode in .exarp/session_mode.json
     - Must track mode history per session
@@ -228,18 +231,18 @@ class SessionModeStorage:
     - Must provide MCP resource: automation://session/mode
     - Must provide MCP tool: infer_session_mode
     """
-    
+
     def save_mode(
         self,
         mode: SessionMode,
         confidence: float,
         reasoning: list[str],
         metrics: dict[str, Any],
-        session_id: Optional[str] = None
+        session_id: str | None = None
     ) -> None:
         """
         Save inferred mode to persistent storage.
-        
+
         Args:
             mode: Inferred session mode
             confidence: Confidence score (0.0 to 1.0)
@@ -248,23 +251,23 @@ class SessionModeStorage:
             session_id: Optional session identifier
         """
         raise NotImplementedError("Agent C must implement this")
-    
-    def get_current_mode(self) -> Optional[dict[str, Any]]:
+
+    def get_current_mode(self) -> dict[str, Any] | None:
         """
         Get the current inferred session mode.
-        
+
         Returns:
             Dict with mode, confidence, reasoning, metrics, or None if not available
         """
         raise NotImplementedError("Agent C must implement this")
-    
-    def get_mode_history(self, session_id: Optional[str] = None) -> list[dict[str, Any]]:
+
+    def get_mode_history(self, session_id: str | None = None) -> list[dict[str, Any]]:
         """
         Get mode history for a session.
-        
+
         Args:
             session_id: Optional session identifier (default: current session)
-            
+
         Returns:
             List of mode inference results over time
         """
@@ -278,9 +281,9 @@ class SessionModeStorage:
 def get_session_mode_resource() -> str:
     """
     MCP Resource: automation://session/mode
-    
+
     Returns current inferred session mode as JSON.
-    
+
     Expected JSON format:
     {
         "inferred_mode": "AGENT|ASK|MANUAL|UNKNOWN",
@@ -305,14 +308,14 @@ def get_session_mode_resource() -> str:
 def infer_session_mode_tool(force_recompute: bool = False) -> str:
     """
     MCP Tool: infer_session_mode
-    
+
     [HINT: Session mode inference. Returns AGENT/ASK/MANUAL with confidence.]
-    
+
     Infer current session mode from tool patterns.
-    
+
     Args:
         force_recompute: If True, recompute even if recent result exists
-        
+
     Returns:
         JSON string with mode inference result
     """

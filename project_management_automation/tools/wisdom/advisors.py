@@ -38,7 +38,7 @@ Design Philosophy:
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from .sources import WISDOM_SOURCES, get_wisdom
 
@@ -277,9 +277,9 @@ def log_consultation(consultation: dict[str, Any]) -> None:
 
 def get_consultation_log(
     days: int = 30,
-    advisor: Optional[str] = None,
-    metric: Optional[str] = None,
-    stage: Optional[str] = None,
+    advisor: str | None = None,
+    metric: str | None = None,
+    stage: str | None = None,
 ) -> list[dict[str, Any]]:
     """
     Retrieve consultation log entries.
@@ -332,7 +332,7 @@ def get_consultation_log(
 
 def get_consultation_mode(score: float) -> str:
     """Get consultation mode based on score.
-    
+
     Returns:
         JSON string with mode information
     """
@@ -345,29 +345,29 @@ def get_consultation_mode(score: float) -> str:
     return json.dumps(result, indent=2)
 
 
-def get_advisor_for_metric(metric: str) -> Optional[dict[str, Any]]:
+def get_advisor_for_metric(metric: str) -> dict[str, Any] | None:
     """Get the trusted advisor for a scorecard metric."""
     return METRIC_ADVISORS.get(metric)
 
 
-def get_advisor_for_tool(tool: str) -> Optional[dict[str, Any]]:
+def get_advisor_for_tool(tool: str) -> dict[str, Any] | None:
     """Get the trusted advisor for a tool."""
     return TOOL_ADVISORS.get(tool)
 
 
-def get_advisor_for_stage(stage: str) -> Optional[dict[str, Any]]:
+def get_advisor_for_stage(stage: str) -> dict[str, Any] | None:
     """Get the trusted advisor for a workflow stage."""
     return STAGE_ADVISORS.get(stage)
 
 
 def consult_advisor(
-    metric: Optional[str] = None,
-    tool: Optional[str] = None,
-    stage: Optional[str] = None,
+    metric: str | None = None,
+    tool: str | None = None,
+    stage: str | None = None,
     score: float = 50.0,
     context: str = "",
     log: bool = True,
-    session_mode: Optional[str] = None,
+    session_mode: str | None = None,
 ) -> str:
     """
     Consult an advisor and get wisdom.
@@ -428,7 +428,7 @@ def consult_advisor(
                 "focus": "encouragement and reflection",
             },
         }
-        
+
         mode_config = mode_adjustments.get(session_mode, {})
         if mode_config and consultation_type == "random":
             # Prefer mode-appropriate advisors for random consultations
@@ -449,7 +449,7 @@ def consult_advisor(
             "source": "Unknown",
             "encouragement": "Sometimes reflection is the answer.",
         }
-    
+
     # Immediately extract fields to avoid dict exposure to FastMCP static analysis
     wisdom = {
         "quote": wisdom_dict.get("quote", ""),
@@ -484,7 +484,7 @@ def consult_advisor(
         "context": context,
         "session_mode": session_mode,  # Include session mode in result
     }
-    
+
     # Add mode-specific guidance hints
     if session_mode:
         mode_hints = {
@@ -592,7 +592,7 @@ def get_daily_briefing(overall_score: float, metric_scores: dict[str, float]) ->
 
 def export_for_podcast(
     days: int = 7,
-    output_path: Optional[Path] = None,
+    output_path: Path | None = None,
 ) -> dict[str, Any]:
     """
     Export consultation data formatted for AI podcast/video generation.

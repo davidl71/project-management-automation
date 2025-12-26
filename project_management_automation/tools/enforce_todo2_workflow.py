@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -33,67 +33,84 @@ except ImportError:
             AUTOMATION_ERROR = "AUTOMATION_ERROR"
 
 
+def _format_queries_as_research(queries: list[dict[str, Any]], task_name: str) -> str:
+    """Format generated queries as research_with_links comment."""
+    lines = ["**MANDATORY RESEARCH COMPLETED** ✅", "", f"## Auto-Generated Research Queries for: {task_name}", ""]
+
+    for i, query in enumerate(queries, 1):
+        query_text = query.get('query', '')
+        query_type = query.get('type', 'general')
+        lines.append(f"### Query {i}: {query_type}")
+        lines.append(f"- **Query**: {query_text}")
+        if query.get('rationale'):
+            lines.append(f"- **Rationale**: {query['rationale']}")
+        lines.append("")
+
+    lines.append("**Note**: These queries were auto-generated. Execute via web search to gather research links.")
+
+    return "\n".join(lines)
+
+
 def enforce_todo2_workflow(
     auto_fix: bool = False,
     dry_run: bool = True,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     Verify Todo2 tasks comply with workflow requirements.
-    
+
     Workflow Rules:
     - "In Progress" status requires research_with_links comment
     - "Review" status requires result comment
     - "Done" status requires human approval (cannot auto-advance)
-    
+
     Args:
         auto_fix: Whether to automatically fix violations (default: False)
         dry_run: Preview changes without applying (default: True)
         output_path: Path for report output (default: docs/TODO2_WORKFLOW_ENFORCEMENT_REPORT.md)
-    
+
     Returns:
         JSON string with workflow validation results
     """
     start_time = time.time()
-    
+
     try:
         from project_management_automation.utils import find_project_root
         from project_management_automation.utils.todo2_mcp_client import (
-            list_todos_mcp,
-            get_todo_details_mcp,
-            update_todos_mcp,
             add_comments_mcp,
+            get_todo_details_mcp,
+            list_todos_mcp,
         )
-        
+
         project_root = find_project_root()
-        
+
         # Get all tasks
         all_tasks = list_todos_mcp(project_root=project_root)
-        
+
         violations = []
         fixes_applied = []
-        
+
         # Check each task for workflow compliance
         for task in all_tasks:
             task_id = task.get('id')
             task_name = task.get('name', '')
             status = task.get('status', 'Todo')
-            
+
             # Get detailed task info including comments
             task_details = get_todo_details_mcp([task_id], project_root=project_root)
             if not task_details:
                 continue
-            
+
             task_detail = task_details[0] if task_details else {}
             comments = task_detail.get('comments', [])
-            
+
             # Check workflow violations
             task_violations = []
-            
+
             # Rule 1: In Progress requires research_with_links (T-16)
             if status == 'In Progress':
                 has_research = any(
-                    c.get('type') == 'research_with_links' 
+                    c.get('type') == 'research_with_links'
                     for c in comments
                 )
                 if not has_research:
@@ -102,11 +119,13 @@ def enforce_todo2_workflow(
                         'violation': 'Missing research_with_links comment',
                         'fix': 'Add research_with_links comment or move back to Todo'
                     })
-                    
+
                     # Auto-generate research queries if auto_fix enabled (T-16)
                     if auto_fix and not dry_run:
                         try:
-                            from project_management_automation.utils.agentic_tools_client import generate_research_queries_mcp
+                            from project_management_automation.utils.agentic_tools_client import (
+                                generate_research_queries_mcp,
+                            )
                             queries_result = generate_research_queries_mcp(
                                 task_id=task_id,
                                 project_root=project_root,
@@ -130,24 +149,6 @@ def enforce_todo2_workflow(
                         except Exception as e:
                             logger.debug(f"Failed to auto-generate research: {e}")
 
-
-def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -> str:
-    """Format generated queries as research_with_links comment."""
-    lines = ["**MANDATORY RESEARCH COMPLETED** ✅", "", f"## Auto-Generated Research Queries for: {task_name}", ""]
-    
-    for i, query in enumerate(queries, 1):
-        query_text = query.get('query', '')
-        query_type = query.get('type', 'general')
-        lines.append(f"### Query {i}: {query_type}")
-        lines.append(f"- **Query**: {query_text}")
-        if query.get('rationale'):
-            lines.append(f"- **Rationale**: {query['rationale']}")
-        lines.append("")
-    
-    lines.append("**Note**: These queries were auto-generated. Execute via web search to gather research links.")
-    
-    return "\n".join(lines)
-            
             # Rule 2: Review requires result comment
             if status == 'Review':
                 has_result = any(
@@ -160,10 +161,10 @@ def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -
                         'violation': 'Missing result comment',
                         'fix': 'Add result comment or move back to In Progress'
                     })
-            
+
             # Rule 3: Done requires human approval (cannot auto-advance)
             # This is informational only - we don't block Done status
-            
+
             if task_violations:
                 violations.append({
                     'task_id': task_id,
@@ -171,7 +172,7 @@ def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -
                     'status': status,
                     'violations': task_violations
                 })
-                
+
                 # Auto-fix if enabled
                 if auto_fix and not dry_run:
                     fix_applied = _apply_workflow_fix(
@@ -186,7 +187,7 @@ def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -
                             'task_name': task_name,
                             'fixes': fix_applied
                         })
-        
+
         # Generate report
         report_path = output_path or 'docs/TODO2_WORKFLOW_ENFORCEMENT_REPORT.md'
         if report_path:
@@ -201,7 +202,7 @@ def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -
             report_file.parent.mkdir(parents=True, exist_ok=True)
             with open(report_file, 'w') as f:
                 f.write(report)
-        
+
         # Format response
         response_data = {
             'total_tasks_checked': len(all_tasks),
@@ -212,12 +213,12 @@ def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -
             'report_path': str(Path(report_path).absolute()),
             'violations': violations[:20]  # Limit to first 20 for response
         }
-        
+
         duration = time.time() - start_time
         log_automation_execution('enforce_todo2_workflow', duration, True)
-        
+
         return json.dumps(format_success_response(response_data), indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('enforce_todo2_workflow', duration, False, e)
@@ -227,23 +228,21 @@ def _format_queries_as_research(queries: List[Dict[str, Any]], task_name: str) -
 
 def _apply_workflow_fix(
     task_id: str,
-    violations: List[Dict[str, Any]],
+    violations: list[dict[str, Any]],
     current_status: str,
     project_root: Path
-) -> Optional[List[str]]:
+) -> list[str] | None:
     """Apply workflow fixes to a task."""
     from project_management_automation.utils.todo2_mcp_client import (
         update_todos_mcp,
-        add_comments_mcp,
     )
-    
+
     fixes_applied = []
-    
+
     try:
         for violation in violations:
             rule = violation.get('rule', '')
-            fix = violation.get('fix', '')
-            
+
             # Fix 1: Missing research_with_links - move back to Todo
             if 'research_with_links' in rule and current_status == 'In Progress':
                 update_todos_mcp(
@@ -254,7 +253,7 @@ def _apply_workflow_fix(
                     project_root=project_root
                 )
                 fixes_applied.append(f"Moved {task_id} from In Progress to Todo (missing research)")
-            
+
             # Fix 2: Missing result - move back to In Progress
             elif 'result' in rule and current_status == 'Review':
                 update_todos_mcp(
@@ -265,17 +264,17 @@ def _apply_workflow_fix(
                     project_root=project_root
                 )
                 fixes_applied.append(f"Moved {task_id} from Review to In Progress (missing result)")
-        
+
         return fixes_applied if fixes_applied else None
-        
+
     except Exception as e:
         logger.error(f"Failed to apply workflow fix for {task_id}: {e}")
         return None
 
 
 def _generate_report(
-    violations: List[Dict[str, Any]],
-    fixes_applied: List[Dict[str, Any]],
+    violations: list[dict[str, Any]],
+    fixes_applied: list[dict[str, Any]],
     total_tasks: int,
     dry_run: bool,
     auto_fix: bool
@@ -302,7 +301,7 @@ def _generate_report(
 ## Violations
 
 """
-    
+
     if not violations:
         report += "✅ **No violations found!** All tasks comply with workflow requirements.\n"
     else:
@@ -316,9 +315,9 @@ def _generate_report(
                 report += f"  - **{v['rule']}**: {v['violation']}\n"
                 report += f"    - *Fix*: {v['fix']}\n"
             report += "\n"
-    
+
     if fixes_applied and not dry_run:
-        report += f"\n## Fixes Applied\n\n"
+        report += "\n## Fixes Applied\n\n"
         for fix in fixes_applied:
             report += f"### {fix['task_name']} ({fix['task_id']})\n\n"
             for f in fix['fixes']:
@@ -326,6 +325,6 @@ def _generate_report(
             report += "\n"
     elif fixes_applied and dry_run:
         report += f"\n## Fixes Pending (Dry Run)\n\n{len(fixes_applied)} fixes would be applied.\n"
-    
+
     return report
 

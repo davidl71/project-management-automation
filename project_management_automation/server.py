@@ -25,19 +25,27 @@ Recommended workflow:
 
 import os
 import sys
+import tempfile
 
 # Set MCP mode flag BEFORE any logging imports
 # This tells our logging utilities to suppress console output
 os.environ["EXARP_MCP_MODE"] = "1"
 
-import asyncio
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Import our MCP-aware logging utilities
 from .utils.logging_config import configure_logging, suppress_noisy_loggers
+
+# Import security utilities
+from .utils.security import (
+    AccessController,
+    PathValidator,
+    set_access_controller,
+    set_default_path_validator,
+)
 
 # Dynamic version from version.py
 from .version import __version__
@@ -56,15 +64,6 @@ if log_file:
     fastmcp_handler = logging.FileHandler(log_file)
     fastmcp_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
     fastmcp_logger.addHandler(fastmcp_handler)
-
-# Import security utilities
-from .utils.security import (
-    AccessController,
-    PathValidator,
-    set_access_controller,
-    set_default_path_validator,
-)
-
 
 # Robust project root detection
 def _find_project_root(start_path: Path) -> Path:
@@ -99,7 +98,6 @@ sys.path.insert(0, str(project_root))
 
 # Initialize security controls
 # Path boundary: only allow access within project root and common temp dirs
-import tempfile
 _temp_dir = Path(tempfile.gettempdir())  # Cross-platform temp directory
 _path_validator = PathValidator(
     allowed_roots=[project_root, _temp_dir],
@@ -124,7 +122,7 @@ logger.debug(f"Security initialized: path_boundaries={len(_path_validator.allowe
 
 # Validate project ownership (compare PROJECT_ROOT with Todo2 project.path)
 try:
-    from .utils.todo2_utils import validate_project_ownership, get_current_project_id
+    from .utils.todo2_utils import get_current_project_id, validate_project_ownership
     is_valid, error_msg = validate_project_ownership(project_root, warn_only=True)
     if error_msg:
         logger.warning(f"⚠️  {error_msg}")
@@ -140,32 +138,8 @@ server_dir = Path(__file__).parent
 sys.path.insert(0, str(server_dir))
 
 # Import error handling (handle both relative and absolute imports)
-try:
-    # Try relative imports first (when run as module)
-    try:
-        from .error_handler import (
-            AutomationError,
-            ErrorCode,
-            format_error_response,
-            format_success_response,
-            handle_automation_error,
-            log_automation_execution,
-        )
-    except ImportError:
-        # Fallback to absolute imports (when run as script)
-        from error_handler import (
-            AutomationError,
-            ErrorCode,
-            format_error_response,
-            format_success_response,
-            handle_automation_error,
-            log_automation_execution,
-        )
-
-    ERROR_HANDLING_AVAILABLE = True
-except ImportError as e:
-    ERROR_HANDLING_AVAILABLE = False
-    logger.warning(f"Error handling module not available - using basic error handling: {e}")
+# NOTE: Error handler imports removed - not used in current codebase
+ERROR_HANDLING_AVAILABLE = False  # Not currently used
 
 # Import tool wrapper utility (ensures all tools return JSON strings per FastMCP requirements)
 try:
@@ -183,13 +157,12 @@ except ImportError:
             if isinstance(result, str):
                 return result
             return json.dumps(result, indent=2) if isinstance(result, (dict, list)) else json.dumps({"result": str(result)}, indent=2)
-        
+
         def ensure_json_string(func):
             """Decorator to ensure function returns JSON string."""
             import functools
-            import asyncio
             import inspect
-            
+
             if inspect.iscoroutinefunction(func):
                 @functools.wraps(func)
                 async def async_wrapper(*args, **kwargs):
@@ -213,6 +186,143 @@ except ImportError:
 # Check for environment variable to force stdio mode (bypass FastMCP)
 FORCE_STDIO = os.environ.get("EXARP_FORCE_STDIO", "").lower() in ("1", "true", "yes")
 
+# ═══════════════════════════════════════════════════════════════════════
+# WORKAROUND: Monkey-patch inspect.isawaitable to always return False
+# ═══════════════════════════════════════════════════════════════════════
+# FastMCP has a bug where it tries to await dict results even though
+# inspect.isawaitable(dict) returns False. This workaround forces
+# inspect.isawaitable to always return False, preventing FastMCP from
+# trying to await non-coroutine results.
+#
+# WARNING: This is a hack/workaround. It may break async functions that
+# actually return coroutines. Use with caution.
+PATCH_ISAWAITABLE = os.environ.get("EXARP_PATCH_ISAWAITABLE", "").lower() in ("1", "true", "yes")
+
+if PATCH_ISAWAITABLE and not FORCE_STDIO:
+    import inspect as _inspect_module
+    _original_isawaitable = _inspect_module.isawaitable
+
+    def _patched_isawaitable(obj):
+        """Patched version that always returns False to prevent FastMCP from awaiting dicts."""
+        # Always return False - prevents FastMCP from trying to await dicts/strings
+        return False
+
+    _inspect_module.isawaitable = _patched_isawaitable
+    logger.info("⚠️  WORKAROUND: Patched inspect.isawaitable() to always return False")
+    logger.warning("This may break async functions that return coroutines!")
+
+# NOTE: TypeAdapter cache clearing removed - not needed and may interfere with FastMCP
+
+# ═══════════════════════════════════════════════════════════════════════
+# IMPORT CONSOLIDATED TOOLS (BEFORE FastMCP initialization)
+# ═══════════════════════════════════════════════════════════════════════
+# Import consolidated tools at module level, before FastMCP is created
+# This matches the minimal server pattern that works
+CONSOLIDATED_AVAILABLE = False
+try:
+    from .tools.consolidated import (
+        analyze_alignment as _analyze_alignment,
+    )
+    from .tools.consolidated import (
+        automation as _automation,
+    )
+    from .tools.consolidated import (
+        context as _context,
+    )
+    from .tools.consolidated import (
+        estimation as _estimation,
+    )
+    from .tools.consolidated import (
+        generate_config as _generate_config,
+    )
+    from .tools.consolidated import (
+        git_tools as _git_tools,
+    )
+    from .tools.consolidated import (
+        health as _health,
+    )
+    from .tools.consolidated import (
+        lint as _lint,
+    )
+    from .tools.consolidated import (
+        memory as _memory,
+    )
+    from .tools.consolidated import (
+        memory_maint as _memory_maint,
+    )
+    from .tools.consolidated import (
+        mlx as _mlx,
+    )
+    from .tools.consolidated import (
+        ollama as _ollama,
+    )
+    from .tools.consolidated import (
+        prompt_tracking as _prompt_tracking,
+    )
+    from .tools.consolidated import (
+        recommend as _recommend,
+    )
+    from .tools.consolidated import (
+        report as _report,
+    )
+    from .tools.consolidated import (
+        security as _security,
+    )
+    from .tools.consolidated import (
+        session as _session,
+    )
+    from .tools.consolidated import (
+        setup_hooks as _setup_hooks,
+    )
+    from .tools.consolidated import (
+        task_analysis as _task_analysis,
+    )
+    from .tools.consolidated import (
+        task_discovery as _task_discovery,
+    )
+    from .tools.consolidated import (
+        task_workflow as _task_workflow,
+    )
+    from .tools.consolidated import (
+        testing as _testing,
+    )
+    from .tools.consolidated import (
+        tool_catalog as _tool_catalog,
+    )
+    from .tools.consolidated import (
+        workflow_mode as _workflow_mode,
+    )
+    CONSOLIDATED_AVAILABLE = True
+    logger.debug("✅ Consolidated tools imported successfully")
+except ImportError as e:
+    CONSOLIDATED_AVAILABLE = False
+    # Set dummy functions to avoid NameError
+    _generate_config = None
+    _health = None
+    _lint = None
+    _memory = None
+    _memory_maint = None
+    _prompt_tracking = None
+    _report = None
+    _security = None
+    _setup_hooks = None
+    _task_analysis = None
+    _task_discovery = None
+    _analyze_alignment = None
+    _automation = None
+    _estimation = None
+    _task_workflow = None
+    _testing = None
+    _context = None
+    _tool_catalog = None
+    _workflow_mode = None
+    _recommend = None
+    _ollama = None
+    _mlx = None
+    _git_tools = None
+    _session = None
+    logger.warning(f"Consolidated tools not available: {e}")
+
 # Try FastMCP first, fall back to stdio if FastMCP is not available or forced
 MCP_AVAILABLE = False
 USE_STDIO = False
@@ -224,7 +334,7 @@ if FORCE_STDIO:
     try:
         from mcp.server import Server
         from mcp.server.stdio import stdio_server
-        from mcp.types import TextContent, Tool, Prompt, PromptArgument
+        from mcp.types import Prompt, TextContent, Tool
 
         MCP_AVAILABLE = True
         USE_STDIO = True
@@ -255,7 +365,7 @@ else:
             # Fallback to stdio server if FastMCP not available
             from mcp.server import Server
             from mcp.server.stdio import stdio_server
-            from mcp.types import TextContent, Tool, Prompt, PromptArgument
+            from mcp.types import Prompt, TextContent, Tool
 
             MCP_AVAILABLE = True
             USE_STDIO = True
@@ -279,27 +389,7 @@ RESOURCES_AVAILABLE = False
 mcp = None
 stdio_server_instance = None
 if MCP_AVAILABLE:
-    # Suppress FastMCP/stdio server initialization logging
-    # FastMCP logs "Starting MCP server" messages to stderr during initialization
-    # We temporarily redirect stderr to suppress these during initialization
-    import contextlib
-    import io
-
-    @contextlib.contextmanager
-    def suppress_fastmcp_output():
-        """Temporarily suppress stdout and stderr during FastMCP initialization"""
-        original_stdout = sys.stdout
-        original_stderr = sys.stderr
-        try:
-            # Redirect both stdout and stderr to suppress FastMCP banner and startup messages
-            sys.stdout = io.StringIO()
-            sys.stderr = io.StringIO()
-            yield
-        finally:
-            sys.stdout = original_stdout
-            sys.stderr = original_stderr
-
-    # Import lifespan for FastMCP
+    # Import lifespan for FastMCP (simplified)
     try:
         from .lifespan import exarp_lifespan
         LIFESPAN_AVAILABLE = True
@@ -307,24 +397,19 @@ if MCP_AVAILABLE:
         exarp_lifespan = None
         LIFESPAN_AVAILABLE = False
 
-    # Suppress FastMCP output during initialization (banner, startup messages)
-    with suppress_fastmcp_output():
-        if not USE_STDIO and FastMCP:
-            # Initialize with lifespan if available
-            if LIFESPAN_AVAILABLE and exarp_lifespan:
-                mcp = FastMCP("exarp", lifespan=exarp_lifespan)
-            else:
-                mcp = FastMCP("exarp")
-        elif USE_STDIO and Server:
-            # Initialize stdio server
-            stdio_server_instance = Server("exarp")
-            # Note: Tools will be registered below using stdio server API
+    # Initialize FastMCP or stdio server (simplified - no output suppression)
+    if not USE_STDIO and FastMCP:
+        # Initialize with lifespan if available, otherwise without
+        if LIFESPAN_AVAILABLE and exarp_lifespan:
+            mcp = FastMCP("exarp", lifespan=exarp_lifespan)
+        else:
+            mcp = FastMCP("exarp")
 
-    # Log initialization after suppressing FastMCP output
-    if not USE_STDIO and FastMCP and mcp:
-        pass  # Version info logged after banner in main()
-    elif USE_STDIO and Server and stdio_server_instance:
-        pass  # Version info logged after banner
+        # Tools will be registered immediately after middleware/resources (see below)
+    elif USE_STDIO and Server:
+        # Initialize stdio server
+        stdio_server_instance = Server("exarp")
+        # Note: Tools will be registered below using stdio server API
 
     # Re-apply logger suppression after initialization (in case FastMCP added new loggers)
     suppress_noisy_loggers()
@@ -332,7 +417,10 @@ if MCP_AVAILABLE:
     # ═══════════════════════════════════════════════════════════════════════
     # MIDDLEWARE REGISTRATION (FastMCP 2 feature)
     # ═══════════════════════════════════════════════════════════════════════
-    if not USE_STDIO and FastMCP and mcp:
+    # Check if middleware is disabled via environment variable
+    DISABLE_MIDDLEWARE = os.environ.get("EXARP_DISABLE_MIDDLEWARE", "").lower() in ("1", "true", "yes")
+
+    if not USE_STDIO and FastMCP and mcp and not DISABLE_MIDDLEWARE:
         try:
             from .middleware import LoggingMiddleware, SecurityMiddleware, ToolFilterMiddleware
 
@@ -360,6 +448,8 @@ if MCP_AVAILABLE:
             logger.debug(f"Middleware not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register middleware: {e}")
+    elif DISABLE_MIDDLEWARE:
+        logger.info("Middleware disabled via EXARP_DISABLE_MIDDLEWARE=1")
 
     # ═══════════════════════════════════════════════════════════════════════
     # RESOURCE TEMPLATES (FastMCP 2 feature)
@@ -395,7 +485,7 @@ if MCP_AVAILABLE:
             logger.warning(f"Failed to register hint registry resources: {e}")
 
         # NOTE: Auto-primer tools removed - use session(action="prime") instead
-        
+
         # Session mode resources (MODE-002)
         try:
             from .resources.session import register_session_resources
@@ -405,7 +495,7 @@ if MCP_AVAILABLE:
             logger.debug(f"Session mode resources not available: {e}")
         except Exception as e:
             logger.warning(f"Failed to register session mode resources: {e}")
-        
+
         # Prompt discovery resources (tools moved to session(action="prompts"))
         try:
             from .resources.prompt_discovery import (
@@ -447,210 +537,28 @@ if MCP_AVAILABLE:
 try:
     # Try relative imports first (when run as module)
     try:
-        from .tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
-        from .tools.batch_task_approval import batch_approve_tasks as _batch_approve_tasks
-        from .tools.ci_cd_validation import validate_ci_cd_workflow as _validate_ci_cd_workflow
-        from .tools.context_summarizer import (
-            batch_summarize as _batch_summarize,
-        )
-        from .tools.context_summarizer import (
-            estimate_context_budget as _estimate_context_budget,
-        )
-        from .tools.context_summarizer import (
-            summarize_context as _summarize_context,
-        )
-        from .tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
-        from .tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
-        from .tools.daily_automation import run_daily_automation as _run_daily_automation
-        from .tools.definition_of_done import check_definition_of_done as _check_definition_of_done
-        from .tools.dependency_security import scan_dependency_security as _scan_dependency_security
         from .tools.attribution_check import check_attribution_compliance as _check_attribution_compliance
+        from .tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
+        from .tools.dependency_security import scan_dependency_security as _scan_dependency_security
         from .tools.docs_health import check_documentation_health as _check_documentation_health
         from .tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
-        from .tools.dynamic_tools import (
-            focus_mode as _focus_mode,
-        )
-        from .tools.dynamic_tools import (
-            get_tool_manager,
-        )
-        from .tools.dynamic_tools import (
-            get_tool_usage_stats as _get_tool_usage_stats,
-        )
-        from .tools.dynamic_tools import (
-            suggest_mode as _suggest_mode,
-        )
         from .tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
-        from .tools.git_hooks import setup_git_hooks as _setup_git_hooks
-        from .tools.hint_catalog import (
-            get_tool_help as _get_tool_help,
-        )
-        from .tools.hint_catalog import (
-            list_tools as _list_tools,
-        )
-        from .tools.linter import get_linter_status as _get_linter_status
-        from .tools.linter import run_linter as _run_linter
-        from .tools.model_recommender import (
-            list_available_models as _list_available_models,
-        )
-        from .tools.model_recommender import (
-            recommend_model as _recommend_model,
-        )
-        from .tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
-        from .tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
-        from .tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
-        from .tools.prd_generator import generate_prd as _generate_prd
-        from .tools.problems_advisor import analyze_problems_tool as _analyze_problems
-        from .tools.problems_advisor import list_problem_categories as _list_problem_categories
         from .tools.project_overview import generate_project_overview as _generate_project_overview
         from .tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
-        from .tools.prompt_iteration_tracker import (
-            analyze_prompt_iterations as _analyze_prompt_iterations,
-        )
-        from .tools.prompt_iteration_tracker import (
-            log_prompt_iteration as _log_prompt_iteration,
-        )
-        from .tools.run_tests import run_tests as _run_tests
-        from .tools.simplify_rules import simplify_rules as _simplify_rules
-        from .tools.sprint_automation import sprint_automation as _sprint_automation
-        from .tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
-        from .tools.task_assignee import (
-            assign_task as _assign_task,
-        )
-        from .tools.task_assignee import (
-            auto_assign_background_tasks as _auto_assign_background_tasks,
-        )
-        from .tools.task_assignee import (
-            bulk_assign_tasks as _bulk_assign_tasks,
-        )
-        from .tools.task_assignee import (
-            get_workload_summary as _get_workload_summary,
-        )
-        from .tools.task_assignee import (
-            list_tasks_by_assignee as _list_tasks_by_assignee,
-        )
-        from .tools.task_assignee import (
-            unassign_task as _unassign_task,
-        )
-        from .tools.task_clarification_resolution import (
-            list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification,
-        )
-        from .tools.task_clarification_resolution import (
-            resolve_multiple_clarifications as _resolve_multiple_clarifications,
-        )
-        from .tools.task_clarification_resolution import resolve_task_clarification as _resolve_task_clarification
-        from .tools.task_hierarchy_analyzer import analyze_task_hierarchy as _analyze_task_hierarchy
-        from .tools.task_clarity_improver import (
-            analyze_task_clarity as _analyze_task_clarity,
-            improve_task_clarity as _improve_task_clarity,
-        )
-        from .tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
-        from .tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from .tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
-        from .tools.stale_task_cleanup import cleanup_stale_tasks as _cleanup_stale_tasks
-        from .tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
-        from .tools.working_copy_health import check_working_copy_health as _check_working_copy_health
 
         TOOLS_AVAILABLE = True
     except ImportError:
         # Fallback to absolute imports (when run as script)
-        from tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
-        from tools.batch_task_approval import batch_approve_tasks as _batch_approve_tasks
-        from tools.ci_cd_validation import validate_ci_cd_workflow as _validate_ci_cd_workflow
-        from tools.context_summarizer import (
-            batch_summarize as _batch_summarize,
-        )
-        from tools.context_summarizer import (
-            estimate_context_budget as _estimate_context_budget,
-        )
-        from tools.context_summarizer import (
-            summarize_context as _summarize_context,
-        )
-        from tools.cursor_rules_generator import generate_cursor_rules as _generate_cursor_rules
-        from tools.cursorignore_generator import generate_cursorignore as _generate_cursorignore
-        from tools.daily_automation import run_daily_automation as _run_daily_automation
-        from tools.definition_of_done import check_definition_of_done as _check_definition_of_done
-        from tools.dependency_security import scan_dependency_security as _scan_dependency_security
         from tools.attribution_check import check_attribution_compliance as _check_attribution_compliance
+        from tools.automation_opportunities import find_automation_opportunities as _find_automation_opportunities
+        from tools.dependency_security import scan_dependency_security as _scan_dependency_security
         from tools.docs_health import check_documentation_health as _check_documentation_health
         from tools.duplicate_detection import detect_duplicate_tasks as _detect_duplicate_tasks
-        from tools.dynamic_tools import (
-            focus_mode as _focus_mode,
-        )
-        from tools.dynamic_tools import (
-            get_tool_manager,
-        )
-        from tools.dynamic_tools import (
-            get_tool_usage_stats as _get_tool_usage_stats,
-        )
-        from tools.dynamic_tools import (
-            suggest_mode as _suggest_mode,
-        )
         from tools.external_tool_hints import add_external_tool_hints as _add_external_tool_hints
-        from tools.git_hooks import setup_git_hooks as _setup_git_hooks
-        from tools.hint_catalog import (
-            get_tool_help as _get_tool_help,
-        )
-        from tools.hint_catalog import (
-            list_tools as _list_tools,
-        )
-        from tools.linter import get_linter_status as _get_linter_status
-        from tools.linter import run_linter as _run_linter
-        from tools.model_recommender import (
-            list_available_models as _list_available_models,
-        )
-        from tools.model_recommender import (
-            recommend_model as _recommend_model,
-        )
-        from tools.nightly_task_automation import run_nightly_task_automation as _run_nightly_task_automation
-        from tools.pattern_triggers import setup_pattern_triggers as _setup_pattern_triggers
-        from tools.prd_alignment import analyze_prd_alignment as _analyze_prd_alignment
-        from tools.prd_generator import generate_prd as _generate_prd
-        from tools.problems_advisor import analyze_problems_tool as _analyze_problems
-        from tools.problems_advisor import list_problem_categories as _list_problem_categories
         from tools.project_overview import generate_project_overview as _generate_project_overview
         from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
-        from tools.prompt_iteration_tracker import (
-            analyze_prompt_iterations as _analyze_prompt_iterations,
-        )
-        from tools.prompt_iteration_tracker import (
-            log_prompt_iteration as _log_prompt_iteration,
-        )
-        from tools.run_tests import run_tests as _run_tests
-        from tools.simplify_rules import simplify_rules as _simplify_rules
-        from tools.sprint_automation import sprint_automation as _sprint_automation
-        from tools.tag_consolidation import tag_consolidation_tool as _tag_consolidation
-        from tools.task_assignee import (
-            assign_task as _assign_task,
-        )
-        from tools.task_assignee import (
-            auto_assign_background_tasks as _auto_assign_background_tasks,
-        )
-        from tools.task_assignee import (
-            bulk_assign_tasks as _bulk_assign_tasks,
-        )
-        from tools.task_assignee import (
-            get_workload_summary as _get_workload_summary,
-        )
-        from tools.task_assignee import (
-            list_tasks_by_assignee as _list_tasks_by_assignee,
-        )
-        from tools.task_assignee import (
-            unassign_task as _unassign_task,
-        )
-        from tools.task_clarification_resolution import (
-            list_tasks_awaiting_clarification as _list_tasks_awaiting_clarification,
-        )
-        from tools.task_clarification_resolution import (
-            resolve_multiple_clarifications as _resolve_multiple_clarifications,
-        )
-        from tools.task_clarification_resolution import resolve_task_clarification as _resolve_task_clarification
-        from tools.task_hierarchy_analyzer import analyze_task_hierarchy as _analyze_task_hierarchy
-        from tools.test_coverage import analyze_test_coverage as _analyze_test_coverage
-        from tools.todo2_alignment import analyze_todo2_alignment as _analyze_todo2_alignment
         from tools.todo_sync import sync_todo_tasks as _sync_todo_tasks
-        from tools.stale_task_cleanup import cleanup_stale_tasks as _cleanup_stale_tasks
-        from tools.workflow_recommender import recommend_workflow_mode as _recommend_workflow_mode
-        from tools.working_copy_health import check_working_copy_health as _check_working_copy_health
 
         TOOLS_AVAILABLE = True
     logger.info("All tools loaded successfully")
@@ -658,72 +566,15 @@ except ImportError as e:
     TOOLS_AVAILABLE = False
     logger.warning(f"Some tools not available: {e}")
 
-# Module-level variable for consolidated tools availability (needed for stdio server)
-CONSOLIDATED_AVAILABLE = False
-
 # Tool registration - support both FastMCP and stdio Server
 def register_tools():
     """Register tools with the appropriate MCP server instance."""
-    # Import consolidated tools early (needed for stdio server)
-    global CONSOLIDATED_AVAILABLE
-    try:
-        from .tools.consolidated import (
-            analyze_alignment as _analyze_alignment,
-            automation as _automation,
-            estimation as _estimation,
-            generate_config as _generate_config,
-            health as _health,
-            lint as _lint,
-            memory as _memory,
-            memory_maint as _memory_maint,
-            prompt_tracking as _prompt_tracking,
-            report as _report,
-            security as _security,
-            setup_hooks as _setup_hooks,
-            task_analysis as _task_analysis,
-            task_discovery as _task_discovery,
-            task_workflow as _task_workflow,
-            testing as _testing,
-            context as _context,
-            tool_catalog as _tool_catalog,
-            workflow_mode as _workflow_mode,
-            recommend as _recommend,
-            ollama as _ollama,
-            mlx as _mlx,
-            git_tools as _git_tools,
-            session as _session,
-        )
-        CONSOLIDATED_AVAILABLE = True
-    except ImportError:
-        CONSOLIDATED_AVAILABLE = False
-        # Set dummy functions to avoid NameError
-        _generate_config = None
-        _health = None
-        _lint = None
-        _memory = None
-        _memory_maint = None
-        _prompt_tracking = None
-        _report = None
-        _security = None
-        _setup_hooks = None
-        _task_analysis = None
-        _task_discovery = None
-        _analyze_alignment = None
-        _automation = None
-        _estimation = None
-        _task_workflow = None
-        _testing = None
-        _context = None
-        _tool_catalog = None
-        _workflow_mode = None
-        _recommend = None
-        _ollama = None
-        _mlx = None
-        _git_tools = None
-        _session = None
-    
+    # NOTE: Consolidated tools are now imported at module level (before FastMCP init)
+    # This function now only handles stdio server registration
+
     if mcp:
         # FastMCP registration (decorator-based)
+        # NOTE: Tools are registered immediately after FastMCP creation (see below)
         # NOTE: server_status removed - use health(type="server")
         # NOTE: dev_reload removed - use watchdog script for automatic reloads on file changes
         pass  # Tool registrations continue below with @mcp.tool() decorators
@@ -735,7 +586,7 @@ def register_tools():
         async def list_tools() -> list[Tool]:
             """List all available tools."""
             tools = []
-            
+
             # Add server_status tool (stdio-only utility)
             tools.append(
                 Tool(
@@ -747,13 +598,13 @@ def register_tools():
                     },
                 ),
             )
-            
+
             # NOTE: dev_reload removed - use watchdog script for automatic reloads on file changes
-            
+
             # Note: FastMCP and stdio server are mutually exclusive (mcp is None when stdio is used)
             # So we maintain a manual list here that should match FastMCP's @mcp.tool() registrations
             # This ensures both interfaces expose the same tools
-            
+
             # Manual tool list (must be kept in sync with FastMCP @mcp.tool() registrations above)
             if TOOLS_AVAILABLE:
                 # Add tool definitions for all automation tools
@@ -789,7 +640,7 @@ def register_tools():
                         # NOTE: run_daily_automation moved to consolidated tools section below
                     ]
                 )
-            
+
             # Add consolidated tools if available
             if CONSOLIDATED_AVAILABLE:
                 tools.extend([
@@ -1178,24 +1029,15 @@ def register_tools():
                         },
                     ),
                 ])
-            
+
             # Add git-inspired tools if available (must match FastMCP conditional registration)
             try:
-                from .tools.git_inspired_tools import (
-                    compare_task_diff,
-                    generate_graph,
-                    get_branch_commits,
-                    get_branch_tasks,
-                    get_task_commits,
-                    list_branches,
-                    merge_branch_tools,
-                    set_task_branch_tool,
-                )
+                # NOTE: git_inspired_tools removed - use git_tools(action=commits|branches|tasks|diff|graph|merge|set_branch) instead
                 GIT_INSPIRED_TOOLS_AVAILABLE = True
             except ImportError:
                 GIT_INSPIRED_TOOLS_AVAILABLE = False
                 logger.warning("Git-inspired tools not available for stdio server")
-            
+
             if GIT_INSPIRED_TOOLS_AVAILABLE:
                 # Add new consolidated tools
                 tools.extend([
@@ -1298,7 +1140,7 @@ def register_tools():
                         },
                     ),
                 ])
-            
+
             return tools
 
         @stdio_server_instance.call_tool()
@@ -1340,7 +1182,7 @@ def register_tools():
                             create_followup_tasks=arguments.get("create_followup_tasks", True),
                             output_path=arguments.get("output_path"),
                         )
-                    
+
                     # Ensure JSON string (stdio server expects strings)
                     if not isinstance(result, str):
                         result = json.dumps(result, indent=2)
@@ -1704,7 +1546,7 @@ def register_tools():
                             session_mode=None,
                         )
                     # Git-inspired tools - redirect to consolidated git_tools
-                    elif name in ["get_task_commits_tool", "get_branch_commits_tool", "list_branches_tool", 
+                    elif name in ["get_task_commits_tool", "get_branch_commits_tool", "list_branches_tool",
                                    "get_branch_tasks_tool", "compare_task_diff_tool", "generate_graph_tool",
                                    "merge_branch_tools_tool", "set_task_branch"]:
                         if _git_tools is None:
@@ -1842,7 +1684,7 @@ def register_tools():
                     result = json.dumps({"error": f"Unknown tool: {name}"})
             else:
                 result = json.dumps({"error": "Tools not available"})
-            
+
             # Ensure result is always a JSON string
             if not isinstance(result, str):
                 result = json.dumps(result, indent=2)
@@ -1852,9 +1694,13 @@ def register_tools():
         return None
 
 
-# Register tools
+# Call register_tools() for stdio server setup (FastMCP tools registered below)
 register_tools()
 
+# ═══════════════════════════════════════════════════════════════════════
+# TOOL REGISTRATION (IMMEDIATELY AFTER FastMCP CREATION)
+# ═══════════════════════════════════════════════════════════════════════
+# Register tools immediately after FastMCP is created, matching minimal server pattern
 if mcp:
     # Register high-priority tools
     if TOOLS_AVAILABLE:
@@ -1869,10 +1715,9 @@ if mcp:
 
         # NOTE: cleanup_stale_tasks removed - use task_workflow(action="cleanup")
 
-        @ensure_json_string
         @mcp.tool()
         def add_external_tool_hints(
-            dry_run: bool = False, output_path: Optional[str] = None, min_file_size: int = 50
+            dry_run: bool = False, output_path: str | None = None, min_file_size: int = 50
         ) -> str:
             """[HINT: Tool hints. Files scanned, modified, hints added.]"""
             return _add_external_tool_hints(dry_run, output_path, min_file_size)
@@ -1884,16 +1729,15 @@ if mcp:
         # NOTE: run_daily_automation, run_nightly_automation, run_sprint_automation, run_discover_automation removed
         # Use automation(action=daily|nightly|sprint|discover) instead
 
-        @ensure_json_string
         @mcp.tool()
         def automation(
             action: str = "daily",
-            tasks: Optional[list[str]] = None,
+            tasks: list[str] | None = None,
             include_slow: bool = False,
             max_tasks_per_host: int = 5,
             max_parallel_tasks: int = 10,
-            priority_filter: Optional[str] = None,
-            tag_filter: Optional[list[str]] = None,
+            priority_filter: str | None = None,
+            tag_filter: list[str] | None = None,
             max_iterations: int = 10,
             auto_approve: bool = True,
             extract_subtasks: bool = True,
@@ -1901,9 +1745,12 @@ if mcp:
             run_testing_tools: bool = True,
             min_value_score: float = 0.7,
             dry_run: bool = False,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
             notify: bool = False,
         ) -> str:
+            import sys
+            print("DEBUG [server.py automation wrapper] ENTRY", file=sys.stderr, flush=True)
+            print(f"DEBUG [server.py automation wrapper] args: action={action}, tasks={tasks}", file=sys.stderr, flush=True)
             """
             [HINT: Automation. action=daily|nightly|sprint|discover. Unified automation tool.]
 
@@ -1948,28 +1795,39 @@ if mcp:
                 → Run sprint with fewer iterations
             """
             if _automation is None:
+                print("DEBUG [server.py automation wrapper] _automation is None", file=sys.stderr, flush=True)
                 return json.dumps({
                     "success": False,
                     "error": "automation tool not available - import failed"
                 }, indent=2)
-            return _automation(
-                action=action,
-                tasks=tasks,
-                include_slow=include_slow,
-                max_tasks_per_host=max_tasks_per_host,
-                max_parallel_tasks=max_parallel_tasks,
-                priority_filter=priority_filter,
-                tag_filter=tag_filter,
-                max_iterations=max_iterations,
-                auto_approve=auto_approve,
-                extract_subtasks=extract_subtasks,
-                run_analysis_tools=run_analysis_tools,
-                run_testing_tools=run_testing_tools,
-                min_value_score=min_value_score,
-                dry_run=dry_run,
-                output_path=output_path,
-                notify=notify,
-            )
+            print("DEBUG [server.py automation wrapper] Calling _automation", file=sys.stderr, flush=True)
+            try:
+                result = _automation(
+                    action=action,
+                    tasks=tasks,
+                    include_slow=include_slow,
+                    max_tasks_per_host=max_tasks_per_host,
+                    max_parallel_tasks=max_parallel_tasks,
+                    priority_filter=priority_filter,
+                    tag_filter=tag_filter,
+                    max_iterations=max_iterations,
+                    auto_approve=auto_approve,
+                    extract_subtasks=extract_subtasks,
+                    run_analysis_tools=run_analysis_tools,
+                    run_testing_tools=run_testing_tools,
+                    min_value_score=min_value_score,
+                    dry_run=dry_run,
+                    output_path=output_path,
+                    notify=notify,
+                )
+                print(f"DEBUG [server.py automation wrapper] _automation returned: type={type(result)}, len={len(result) if isinstance(result, str) else 'N/A'}", file=sys.stderr, flush=True)
+                print("DEBUG [server.py automation wrapper] RETURNING", file=sys.stderr, flush=True)
+                return result
+            except Exception as e:
+                print(f"DEBUG [server.py automation wrapper] EXCEPTION: {e}", file=sys.stderr, flush=True)
+                import traceback
+                traceback.print_exc(file=sys.stderr)
+                raise
 
         # NOTE: validate_ci_cd_workflow removed - use health(action="cicd")
         # NOTE: batch_approve_tasks removed - use task_workflow(action="approve")
@@ -1984,7 +1842,7 @@ if mcp:
         # NOTE: simplify_rules removed - use generate_config(action="simplify")
 
         # Helper for scorecard (shared implementation)
-        def _scorecard_impl(output_format: str, include_recommendations: bool, output_path: Optional[str]) -> str:
+        def _scorecard_impl(output_format: str, include_recommendations: bool, output_path: str | None) -> str:
             result = _generate_project_scorecard(output_format, include_recommendations, output_path)
             return json.dumps(
                 {
@@ -2001,7 +1859,7 @@ if mcp:
         # NOTE: generate_project_scorecard removed - use report(type="scorecard")
 
         # Helper for overview (shared implementation)
-        def _overview_impl(output_format: str, output_path: Optional[str]) -> str:
+        def _overview_impl(output_format: str, output_path: str | None) -> str:
             result = _generate_project_overview(output_format, output_path)
             return json.dumps(
                 {
@@ -2033,14 +1891,13 @@ if mcp:
         # DISCOVERY TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
-        @ensure_json_string
         @mcp.tool()
         def tool_catalog(
             action: str = "list",
-            category: Optional[str] = None,
-            persona: Optional[str] = None,
+            category: str | None = None,
+            persona: str | None = None,
             include_examples: bool = True,
-            tool_name: Optional[str] = None,
+            tool_name: str | None = None,
         ) -> str:
             """
             [HINT: Tool catalog. action=list|help. Unified tool catalog and help.]
@@ -2072,11 +1929,11 @@ if mcp:
         @mcp.tool()
         async def workflow_mode(
             action: str = "focus",
-            mode: Optional[str] = None,
-            enable_group: Optional[str] = None,
-            disable_group: Optional[str] = None,
+            mode: str | None = None,
+            enable_group: str | None = None,
+            disable_group: str | None = None,
             status: bool = False,
-            text: Optional[str] = None,
+            text: str | None = None,
             auto_switch: bool = False,
             ctx: Any = None,
         ) -> str:
@@ -2152,16 +2009,15 @@ if mcp:
         # CONTEXT MANAGEMENT TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
-        @ensure_json_string
         @mcp.tool()
         def context(
             action: str = "summarize",
-            data: Optional[str] = None,
+            data: str | None = None,
             level: str = "brief",
-            tool_type: Optional[str] = None,
-            max_tokens: Optional[int] = None,
+            tool_type: str | None = None,
+            max_tokens: int | None = None,
             include_raw: bool = False,
-            items: Optional[str] = None,
+            items: str | None = None,
             budget_tokens: int = 4000,
             combine: bool = True,
         ) -> str:
@@ -2207,19 +2063,18 @@ if mcp:
         # RECOMMENDATION TOOL (CONSOLIDATED)
         # ═══════════════════════════════════════════════════════════════════
 
-        @ensure_json_string
         @mcp.tool()
         def recommend(
             action: str = "model",
-            task_description: Optional[str] = None,
-            task_type: Optional[str] = None,
+            task_description: str | None = None,
+            task_type: str | None = None,
             optimize_for: str = "quality",
             include_alternatives: bool = True,
-            task_id: Optional[str] = None,
+            task_id: str | None = None,
             include_rationale: bool = True,
-            metric: Optional[str] = None,
-            tool: Optional[str] = None,
-            stage: Optional[str] = None,
+            metric: str | None = None,
+            tool: str | None = None,
+            stage: str | None = None,
             score: float = 50.0,
             context: str = "",
             log: bool = True,
@@ -2305,12 +2160,11 @@ if mcp:
         # NOTE: analyze_todo2_alignment, analyze_prd_alignment removed
         # Use analyze_alignment(action=todo2|prd) instead
 
-        @ensure_json_string
         @mcp.tool()
         def analyze_alignment(
             action: str = "todo2",
             create_followup_tasks: bool = True,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
         ) -> str:
             """
             [HINT: Alignment analysis. action=todo2|prd. Unified alignment analysis tool.]
@@ -2344,13 +2198,12 @@ if mcp:
                 }, indent=2)
             return _analyze_alignment(action, create_followup_tasks, output_path)
 
-        @ensure_json_string
         @mcp.tool()
         def security(
             action: str = "report",
             repo: str = "davidl71/project-management-automation",
-            languages: Optional[list[str]] = None,
-            config_path: Optional[str] = None,
+            languages: list[str] | None = None,
+            config_path: str | None = None,
             state: str = "open",
             include_dismissed: bool = False,
             alert_critical: bool = False,
@@ -2368,17 +2221,16 @@ if mcp:
             """
             return _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
 
-        @ensure_json_string
         @mcp.tool()
         def generate_config(
             action: str = "rules",
-            rules: Optional[str] = None,
+            rules: str | None = None,
             overwrite: bool = False,
             analyze_only: bool = False,
             include_indexing: bool = True,
             analyze_project: bool = True,
-            rule_files: Optional[str] = None,
-            output_dir: Optional[str] = None,
+            rule_files: str | None = None,
+            output_dir: str | None = None,
             dry_run: bool = False,
         ) -> str:
             """
@@ -2398,13 +2250,12 @@ if mcp:
                 rule_files, output_dir, dry_run
             )
 
-        @ensure_json_string
         @mcp.tool()
         def setup_hooks(
             action: str = "git",
-            hooks: Optional[list[str]] = None,
-            patterns: Optional[str] = None,
-            config_path: Optional[str] = None,
+            hooks: list[str] | None = None,
+            patterns: str | None = None,
+            config_path: str | None = None,
             install: bool = True,
             dry_run: bool = False,
         ) -> str:
@@ -2420,14 +2271,13 @@ if mcp:
             """
             return _setup_hooks(action, hooks, patterns, config_path, install, dry_run)
 
-        @ensure_json_string
         @mcp.tool()
         def prompt_tracking(
             action: str = "analyze",
-            prompt: Optional[str] = None,
-            task_id: Optional[str] = None,
-            mode: Optional[str] = None,
-            outcome: Optional[str] = None,
+            prompt: str | None = None,
+            task_id: str | None = None,
+            mode: str | None = None,
+            outcome: str | None = None,
             iteration: int = 1,
             days: int = 7,
         ) -> str:
@@ -2443,18 +2293,17 @@ if mcp:
             """
             return _prompt_tracking(action, prompt, task_id, mode, outcome, iteration, days)
 
-        @ensure_json_string
         @mcp.tool()
         def health(
             action: str = "server",
-            agent_name: Optional[str] = None,
+            agent_name: str | None = None,
             check_remote: bool = True,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
             create_tasks: bool = True,
-            task_id: Optional[str] = None,
-            changed_files: Optional[str] = None,
+            task_id: str | None = None,
+            changed_files: str | None = None,
             auto_check: bool = True,
-            workflow_path: Optional[str] = None,
+            workflow_path: str | None = None,
             check_runners: bool = True,
         ) -> str:
             """
@@ -2475,10 +2324,9 @@ if mcp:
                 task_id, changed_files, auto_check, workflow_path, check_runners
             )
 
-        @ensure_json_string
         @mcp.tool()
         def check_attribution(
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
             create_tasks: bool = True,
         ) -> str:
             """
@@ -2516,11 +2364,10 @@ if mcp:
             return result
 
         @mcp.tool()
-        @ensure_json_string
         def report(
             action: str = "overview",
             output_format: str = "text",
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
             include_recommendations: bool = True,
             overall_score: float = 50.0,
             security_score: float = 50.0,
@@ -2528,7 +2375,7 @@ if mcp:
             documentation_score: float = 50.0,
             completion_score: float = 50.0,
             alignment_score: float = 50.0,
-            project_name: Optional[str] = None,
+            project_name: str | None = None,
             include_architecture: bool = True,
             include_metrics: bool = True,
             include_tasks: bool = True,
@@ -2562,18 +2409,17 @@ if mcp:
             else:
                 return json.dumps({"result": str(result)}, indent=2)
 
-        @ensure_json_string
         @mcp.tool()
         def task_analysis(
             action: str = "duplicates",
             similarity_threshold: float = 0.85,
             auto_fix: bool = False,
             dry_run: bool = True,
-            custom_rules: Optional[str] = None,
-            remove_tags: Optional[str] = None,
+            custom_rules: str | None = None,
+            remove_tags: str | None = None,
             output_format: str = "text",
             include_recommendations: bool = True,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
         ) -> str:
             """
             [HINT: Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality and structure.]
@@ -2594,21 +2440,20 @@ if mcp:
                 include_recommendations, output_path
             )
 
-        @ensure_json_string
         @mcp.tool()
         def testing(
             action: str = "run",
-            test_path: Optional[str] = None,
+            test_path: str | None = None,
             test_framework: str = "auto",
             verbose: bool = True,
             coverage: bool = False,
-            coverage_file: Optional[str] = None,
+            coverage_file: str | None = None,
             min_coverage: int = 80,
             format: str = "html",
-            target_file: Optional[str] = None,
+            target_file: str | None = None,
             min_confidence: float = 0.7,
-            framework: Optional[str] = None,
-            output_path: Optional[str] = None,
+            framework: str | None = None,
+            output_path: str | None = None,
         ) -> str:
             """
             [HINT: Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest test cases, or validate test structure.]
@@ -2628,19 +2473,18 @@ if mcp:
                 framework, output_path
             )
 
-        @ensure_json_string
         @mcp.tool()
         def lint(
             action: str = "run",
-            path: Optional[str] = None,
+            path: str | None = None,
             linter: str = "ruff",
             fix: bool = False,
             analyze: bool = True,
-            select: Optional[str] = None,
-            ignore: Optional[str] = None,
-            problems_json: Optional[str] = None,
+            select: str | None = None,
+            ignore: str | None = None,
+            problems_json: str | None = None,
             include_hints: bool = True,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
         ) -> str:
             """
             [HINT: Linting tool. action=run|analyze. Run linter or analyze problems.]
@@ -2657,17 +2501,16 @@ if mcp:
                 problems_json, include_hints, output_path
             )
 
-        @ensure_json_string
         @mcp.tool()
         def memory(
             action: str = "search",
-            title: Optional[str] = None,
-            content: Optional[str] = None,
+            title: str | None = None,
+            content: str | None = None,
             category: str = "insight",
-            task_id: Optional[str] = None,
-            metadata: Optional[str] = None,
+            task_id: str | None = None,
+            metadata: str | None = None,
             include_related: bool = True,
-            query: Optional[str] = None,
+            query: str | None = None,
             limit: int = 10,
         ) -> str:
             """
@@ -2688,14 +2531,13 @@ if mcp:
                 include_related, query, limit
             )
 
-        @ensure_json_string
         @mcp.tool()
         def task_discovery(
             action: str = "all",
-            file_patterns: Optional[str] = None,
+            file_patterns: str | None = None,
             include_fixme: bool = True,
-            doc_path: Optional[str] = None,
-            output_path: Optional[str] = None,
+            doc_path: str | None = None,
+            output_path: str | None = None,
             create_tasks: bool = False,
         ) -> str:
             """
@@ -2717,7 +2559,6 @@ if mcp:
         # NOTE: improve_task_clarity removed - use task_workflow(action="clarity")
         # NOTE: cleanup_stale_tasks removed - use task_workflow(action="cleanup")
 
-        @ensure_json_string
         @mcp.tool()
         def task_workflow(
             action: str = "sync",
@@ -2725,18 +2566,18 @@ if mcp:
             status: str = "Review",
             new_status: str = "Todo",
             clarification_none: bool = True,
-            filter_tag: Optional[str] = None,
-            task_ids: Optional[str] = None,
+            filter_tag: str | None = None,
+            task_ids: str | None = None,
             sub_action: str = "list",
-            task_id: Optional[str] = None,
-            clarification_text: Optional[str] = None,
-            decision: Optional[str] = None,
-            decisions_json: Optional[str] = None,
+            task_id: str | None = None,
+            clarification_text: str | None = None,
+            decision: str | None = None,
+            decisions_json: str | None = None,
             move_to_todo: bool = True,
             auto_apply: bool = False,
             output_format: str = "text",
             stale_threshold_hours: float = 2.0,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
         ) -> str:
             """
             [HINT: Task workflow. action=sync|approve|clarify|clarity|cleanup. Manage task lifecycle.]
@@ -2811,13 +2652,14 @@ if mcp:
         # NOTE: estimate_task_duration, analyze_estimation_accuracy, get_estimation_statistics removed
         # Use estimation(action=estimate|analyze|stats) instead
 
-        @ensure_json_string
         @mcp.tool()
         def estimation(
             action: str = "estimate",
-            name: Optional[str] = None,
+            name: str | None = None,
             details: str = "",
-            tags: Optional[str] = None,
+            tags: str | None = None,
+            # BREAKING TEST: Add list[str] parameter like automation has
+            tag_list: list[str] | None = None,
             priority: str = "medium",
             use_historical: bool = True,
             detailed: bool = False,
@@ -2876,30 +2718,29 @@ if mcp:
                 mlx_weight=mlx_weight,
             )
 
-        @ensure_json_string
         @mcp.tool()
         def ollama(
             action: str = "status",
-            host: Optional[str] = None,
-            prompt: Optional[str] = None,
+            host: str | None = None,
+            prompt: str | None = None,
             model: str = "llama3.2",
             stream: bool = False,
-            options: Optional[str] = None,
-            num_gpu: Optional[int] = None,
-            num_threads: Optional[int] = None,
-            context_size: Optional[int] = None,
-            file_path: Optional[str] = None,
-            output_path: Optional[str] = None,
+            options: str | None = None,
+            num_gpu: int | None = None,
+            num_threads: int | None = None,
+            context_size: int | None = None,
+            file_path: str | None = None,
+            output_path: str | None = None,
             style: str = "google",
             include_suggestions: bool = True,
-            data: Optional[str] = None,
+            data: str | None = None,
             level: str = "brief",
         ) -> str:
             """
             [HINT: Ollama. action=status|models|generate|pull|hardware|docs|quality|summary. Unified Ollama tool.]
-            
+
             Unified Ollama tool consolidating integration and enhanced tools.
-            
+
             Actions:
             - action="status": Check if Ollama server is running
             - action="models": List available models
@@ -2933,11 +2774,10 @@ if mcp:
                 level=level,
             )
 
-        @ensure_json_string
         @mcp.tool()
         def mlx(
             action: str = "status",
-            prompt: Optional[str] = None,
+            prompt: str | None = None,
             model: str = "mlx-community/Phi-3.5-mini-instruct-4bit",
             max_tokens: int = 512,
             temperature: float = 0.7,
@@ -2945,9 +2785,9 @@ if mcp:
         ) -> str:
             """
             [HINT: MLX. action=status|hardware|models|generate. Unified MLX tool.]
-            
+
             Unified MLX tool for Apple Silicon GPU acceleration.
-            
+
             Actions:
             - action="status": Check if MLX is available
             - action="hardware": Get hardware info and recommended settings
@@ -2968,31 +2808,30 @@ if mcp:
                 verbose=verbose,
             )
 
-        @ensure_json_string
         @mcp.tool()
         def git_tools(
             action: str = "commits",
-            task_id: Optional[str] = None,
-            branch: Optional[str] = None,
+            task_id: str | None = None,
+            branch: str | None = None,
             limit: int = 50,
-            commit1: Optional[str] = None,
-            commit2: Optional[str] = None,
-            time1: Optional[str] = None,
-            time2: Optional[str] = None,
+            commit1: str | None = None,
+            commit2: str | None = None,
+            time1: str | None = None,
+            time2: str | None = None,
             format: str = "text",
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
             max_commits: int = 50,
-            source_branch: Optional[str] = None,
-            target_branch: Optional[str] = None,
+            source_branch: str | None = None,
+            target_branch: str | None = None,
             conflict_strategy: str = "newer",
             author: str = "system",
             dry_run: bool = False,
         ) -> str:
             """
             [HINT: Git tools. action=commits|branches|tasks|diff|graph|merge|set_branch. Unified git-inspired tools.]
-            
+
             Unified git-inspired task management tools.
-            
+
             Actions:
             - action="commits": Get commit history (task_id or branch required)
             - action="branches": List all branches with statistics
@@ -3026,17 +2865,16 @@ if mcp:
                 dry_run=dry_run,
             )
 
-        @ensure_json_string
         @mcp.tool()
         def session(
             action: str = "prime",
             include_hints: bool = True,
             include_tasks: bool = True,
-            override_mode: Optional[str] = None,
-            task_id: Optional[str] = None,
-            summary: Optional[str] = None,
-            blockers: Optional[str] = None,
-            next_steps: Optional[str] = None,
+            override_mode: str | None = None,
+            task_id: str | None = None,
+            summary: str | None = None,
+            blockers: str | None = None,
+            next_steps: str | None = None,
             unassign_my_tasks: bool = True,
             include_git_status: bool = True,
             limit: int = 5,
@@ -3044,22 +2882,22 @@ if mcp:
             direction: str = "both",
             prefer_agentic_tools: bool = True,
             auto_commit: bool = True,
-            mode: Optional[str] = None,
-            category: Optional[str] = None,
-            keywords: Optional[str] = None,
-            assignee_name: Optional[str] = None,
+            mode: str | None = None,
+            category: str | None = None,
+            keywords: str | None = None,
+            assignee_name: str | None = None,
             assignee_type: str = "agent",
-            hostname: Optional[str] = None,
-            status_filter: Optional[str] = None,
-            priority_filter: Optional[str] = None,
+            hostname: str | None = None,
+            status_filter: str | None = None,
+            priority_filter: str | None = None,
             include_unassigned: bool = False,
             max_tasks_per_agent: int = 5,
         ) -> str:
             """
             [HINT: Session. action=prime|handoff|prompts|assignee. Unified session management tools.]
-            
+
             Unified session management tool consolidating auto-primer, handoff, prompt discovery, and task assignee.
-            
+
             Actions:
             - action="prime": Auto-prime AI context at session start
             - action="handoff": End/resume sessions for multi-device coordination
@@ -3071,6 +2909,7 @@ if mcp:
                     "success": False,
                     "error": "session tool not available - import failed"
                 }, indent=2)
+            # _session returns JSON string - return it directly
             return _session(
                 action=action,
                 include_hints=include_hints,
@@ -3099,7 +2938,6 @@ if mcp:
                 max_tasks_per_agent=max_tasks_per_agent,
             )
 
-        @ensure_json_string
         @mcp.tool()
         def memory_maint(
             action: str = "health",
@@ -3112,7 +2950,7 @@ if mcp:
             similarity_threshold: float = 0.85,
             merge_strategy: str = "newest",
             scope: str = "week",
-            advisors: Optional[str] = None,
+            advisors: str | None = None,
             generate_insights: bool = True,
             save_dream: bool = True,
             dry_run: bool = True,
@@ -3139,6 +2977,75 @@ if mcp:
             )
 
         # ═══════════════════════════════════════════════════════════════════════════════
+        # MINIMAL TEST TOOLS - Simplest execution paths
+        # ═══════════════════════════════════════════════════════════════════════════════
+
+        # Test 1: Absolute simplest - no decorators, direct return
+        @mcp.tool()
+        def test_minimal_simple() -> str:
+            """Minimal test - simplest possible execution path."""
+            return "simple test result"
+
+        # Test 2: With @ensure_json_string decorator
+        @mcp.tool()
+        def test_minimal_with_decorator() -> str:
+            """Minimal test with @ensure_json_string decorator."""
+            return "decorator test result"
+
+        # Test 3: Returns JSON string directly
+        @mcp.tool()
+        def test_minimal_json_string() -> str:
+            """Minimal test returning JSON string."""
+            import json
+            return json.dumps({"status": "ok", "test": "minimal"})
+
+        # Test 4: With @ensure_json_string, returns JSON string
+        @mcp.tool()
+        def test_minimal_decorator_json() -> str:
+            """Minimal test with decorator returning JSON string."""
+            import json
+            return json.dumps({"status": "ok", "test": "decorator_json"})
+
+        # Test 5: Calls underlying function (like our tools do)
+        def _test_underlying_function() -> str:
+            """Underlying function that returns string."""
+            return "underlying function result"
+
+        @mcp.tool()
+        def test_minimal_underlying_call() -> str:
+            """Minimal test calling underlying function."""
+            return _test_underlying_function()
+
+        # Test 6: Underlying function returns dict, converted to JSON
+        def _test_underlying_dict() -> dict:
+            """Underlying function that returns dict."""
+            return {"status": "ok", "from": "dict"}
+
+        @mcp.tool()
+        def test_minimal_dict_conversion() -> str:
+            """Minimal test with dict conversion."""
+            import json
+            result = _test_underlying_dict()
+            return json.dumps(result)
+
+        # Test 7: FastMCP example pattern (for comparison)
+        @mcp.tool
+        def test_batch_process(items: list[str]) -> str:
+            """Process multiple items - FastMCP example pattern test."""
+            import sys
+            print("DEBUG: test_batch_process ENTRY", file=sys.stderr, flush=True)
+            print(f"DEBUG: items={items}, type={type(items)}", file=sys.stderr, flush=True)
+
+            try:
+                result = f"Processed {len(items)} items"
+                print(f"DEBUG: result={result}, type={type(result)}", file=sys.stderr, flush=True)
+                print("DEBUG: test_batch_process RETURN", file=sys.stderr, flush=True)
+                return result
+            except Exception as e:
+                print(f"DEBUG: test_batch_process EXCEPTION: {e}", file=sys.stderr, flush=True)
+                raise
+
+        # ═══════════════════════════════════════════════════════════════════════════════
         # GIT-INSPIRED TASK MANAGEMENT TOOLS
         # ═══════════════════════════════════════════════════════════════════════════════
         # NOTE: Git-inspired tools removed - use git_tools(action=commits|branches|tasks|diff|graph|merge|set_branch) instead
@@ -3147,20 +3054,8 @@ if mcp:
     # AI SESSION MEMORY TOOLS
     # ═══════════════════════════════════════════════════════════════════════════════
 
-    try:
-        from .tools.session_memory import (
-            generate_session_summary,
-            get_memories_for_sprint,
-            link_memory_to_task,
-            recall_task_context,
-            save_session_insight,
-            search_session_memories,
-        )
-
-        MEMORY_TOOLS_AVAILABLE = True
-    except ImportError:
-        MEMORY_TOOLS_AVAILABLE = False
-        logger.warning("Memory tools not available")
+    # NOTE: Session memory imports removed - not used in current codebase
+    MEMORY_TOOLS_AVAILABLE = False  # Not currently used
 
     if MEMORY_TOOLS_AVAILABLE:
         # NOTE: save_memory, recall_context, search_memories removed - use memory(action=save|recall|search)
@@ -3174,9 +3069,6 @@ if mcp:
         # Try relative imports first (when run as module)
         try:
             from .prompts import (
-                ADVISOR_BRIEFING,
-                # Wisdom
-                ADVISOR_CONSULT,
                 # Automation
                 AUTOMATION_DISCOVERY,
                 AUTOMATION_HIGH_VALUE,
@@ -3185,14 +3077,12 @@ if mcp:
                 # Context Management
                 CONTEXT_MANAGEMENT,
                 DAILY_CHECKIN,
-                # Session Handoff
-                END_OF_DAY,
-                RESUME_SESSION,
-                VIEW_HANDOFFS,
                 # Documentation
                 DOCUMENTATION_HEALTH_CHECK,
                 DOCUMENTATION_QUICK_CHECK,
                 DUPLICATE_TASK_CLEANUP,
+                # Session Handoff
+                END_OF_DAY,
                 # Memory
                 MEMORY_SYSTEM,
                 # Mode Suggestion
@@ -3213,6 +3103,7 @@ if mcp:
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
+                RESUME_SESSION,
                 # Security
                 SECURITY_SCAN_ALL,
                 SPRINT_END,
@@ -3221,14 +3112,12 @@ if mcp:
                 TASK_ALIGNMENT_ANALYSIS,
                 TASK_DISCOVERY,
                 TASK_SYNC,
+                VIEW_HANDOFFS,
                 WEEKLY_MAINTENANCE,
             )
         except ImportError:
             # Fallback to absolute imports (when run as script)
             from prompts import (
-                ADVISOR_BRIEFING,
-                # Wisdom
-                ADVISOR_CONSULT,
                 # Automation
                 AUTOMATION_DISCOVERY,
                 AUTOMATION_HIGH_VALUE,
@@ -3237,14 +3126,12 @@ if mcp:
                 # Context Management
                 CONTEXT_MANAGEMENT,
                 DAILY_CHECKIN,
-                # Session Handoff
-                END_OF_DAY,
-                RESUME_SESSION,
-                VIEW_HANDOFFS,
                 # Documentation
                 DOCUMENTATION_HEALTH_CHECK,
                 DOCUMENTATION_QUICK_CHECK,
                 DUPLICATE_TASK_CLEANUP,
+                # Session Handoff
+                END_OF_DAY,
                 # Memory
                 MEMORY_SYSTEM,
                 # Mode Suggestion
@@ -3265,6 +3152,7 @@ if mcp:
                 # Reports
                 PROJECT_OVERVIEW,
                 PROJECT_SCORECARD,
+                RESUME_SESSION,
                 # Security
                 SECURITY_SCAN_ALL,
                 SPRINT_END,
@@ -3273,6 +3161,7 @@ if mcp:
                 TASK_ALIGNMENT_ANALYSIS,
                 TASK_DISCOVERY,
                 TASK_SYNC,
+                VIEW_HANDOFFS,
                 WEEKLY_MAINTENANCE,
             )
 
@@ -3481,9 +3370,9 @@ if mcp:
         logger.info(f"DEBUG: hasattr list_prompts: {hasattr(stdio_server_instance, 'list_prompts')}")
         logger.info(f"DEBUG: hasattr get_prompt: {hasattr(stdio_server_instance, 'get_prompt')}")
         try:
-            from mcp.types import Prompt, PromptArgument
+            from mcp.types import GetPromptResult, Prompt
             logger.info("DEBUG: Successfully imported Prompt types")
-            
+
             logger.info("DEBUG: About to apply @stdio_server_instance.list_prompts() decorator")
             @stdio_server_instance.list_prompts()
             async def list_prompts() -> list[Prompt]:
@@ -3524,13 +3413,13 @@ if mcp:
                     Prompt(name="qa", description="QA Engineer workflow for quality assurance.", arguments=[]),
                     Prompt(name="writer", description="Technical Writer workflow for documentation.", arguments=[]),
                 ]
-            
+
             logger.info("DEBUG: list_prompts decorator applied, about to apply get_prompt decorator")
             @stdio_server_instance.get_prompt()
-            async def get_prompt(name: str, arguments: dict[str, Any] | None = None) -> "GetPromptResult":
+            async def get_prompt(name: str, arguments: dict[str, Any] | None = None) -> GetPromptResult:
                 """Get prompt template by name."""
-                from mcp.types import GetPromptResult, PromptMessage, TextContent
-                
+                from mcp.types import PromptMessage, TextContent
+
                 prompt_map = {
                     "doc_check": DOCUMENTATION_HEALTH_CHECK,
                     "doc_quick": DOCUMENTATION_QUICK_CHECK,
@@ -3583,7 +3472,7 @@ if mcp:
                     )
                 else:
                     raise ValueError(f"Unknown prompt: {name}")
-            
+
             logger.info("DEBUG: Both prompt decorators applied successfully")
             print("DEBUG PROMPT REG: Both decorators applied, registration complete", file=sys.stderr)
             logger.info("Registered 34 prompts for stdio server successfully")
@@ -3617,7 +3506,7 @@ if mcp:
                 get_memories_resource,
                 get_recent_memories_resource,
                 get_session_memories_resource,
-                get_wisdom_resource,
+                # get_wisdom_resource removed - imported locally where needed
             )
             from .resources.status import get_status_resource
             from .resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
@@ -4447,7 +4336,7 @@ def main():
         if not MCP_AVAILABLE:
             print("Error: MCP not available. Install with: uv sync (or uv pip install mcp>=1.0.0)", file=sys.stderr)
             sys.exit(1)
-        
+
         if not USE_STDIO and mcp:
             # FastMCP mode
             _print_banner()
@@ -4527,7 +4416,7 @@ if stdio_server_instance:
                 get_memories_resource,
                 get_recent_memories_resource,
                 get_session_memories_resource,
-                get_wisdom_resource,
+                # get_wisdom_resource removed - imported locally where needed
             )
             from .resources.status import get_status_resource
             from .resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
@@ -4547,7 +4436,7 @@ if stdio_server_instance:
             from resources.status import get_status_resource
             from resources.tasks import get_agent_tasks_resource, get_agents_resource, get_tasks_resource
             from tools.project_scorecard import generate_project_scorecard as _generate_project_scorecard
-            
+
             try:
                 from resources.memories import (
                     get_memories_by_category_resource,
@@ -4634,7 +4523,7 @@ if stdio_server_instance:
                     mimeType="application/json",
                 ),
             ]
-            
+
             # Add memory resources if available
             if MEMORIES_AVAILABLE:
                 resources.extend([
@@ -4659,7 +4548,7 @@ if stdio_server_instance:
                     # Note: Pattern-based resources (category/{category}, task/{task_id}, session/{date})
                     # are handled dynamically in read_resource() but not listed here as they require parameters
                 ])
-            
+
             return resources
 
         @stdio_server_instance.read_resource()

@@ -9,7 +9,7 @@ import logging
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from ..utils.todo2_utils import (
     filter_tasks_by_project,
@@ -183,7 +183,7 @@ def apply_consolidations(
     plan: dict[str, Any],
     todo2_file: Path,
     dry_run: bool = True,
-    project_id: Optional[str] = None,
+    project_id: str | None = None,
 ) -> dict[str, Any]:
     """Apply tag consolidations to Todo2 tasks."""
     todos = data.get('todos', [])
@@ -325,9 +325,9 @@ def format_report(
 
 def consolidate_tags(
     dry_run: bool = True,
-    custom_rules: Optional[dict[str, str]] = None,
-    remove_tags: Optional[list[str]] = None,
-    output_path: Optional[str] = None,
+    custom_rules: dict[str, str] | None = None,
+    remove_tags: list[str] | None = None,
+    output_path: str | None = None,
 ) -> str:
     """
     Main function to consolidate Todo2 tags.
@@ -378,9 +378,9 @@ def consolidate_tags(
 # MCP Tool wrapper
 def tag_consolidation_tool(
     dry_run: bool = True,
-    custom_rules: Optional[str] = None,
-    remove_tags: Optional[str] = None,
-    output_path: Optional[str] = None,
+    custom_rules: str | None = None,
+    remove_tags: str | None = None,
+    output_path: str | None = None,
 ) -> str:
     """
     [HINT: Tag consolidation. Returns renames, removals, stats, task changes.]

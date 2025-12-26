@@ -19,7 +19,7 @@ import random
 import urllib.error
 import urllib.request
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 # Sefaria API base URL
 SEFARIA_API = "https://www.sefaria.org/api"
@@ -149,7 +149,7 @@ SEFARIA_SELECTIONS = {
 }
 
 
-def fetch_sefaria_text(ref: str, language: str = "en", include_hebrew: bool = False) -> Optional[dict[str, Any]]:
+def fetch_sefaria_text(ref: str, language: str = "en", include_hebrew: bool = False) -> dict[str, Any] | None:
     """
     Fetch text from Sefaria API.
 
@@ -229,7 +229,7 @@ def get_sefaria_wisdom(
     fetch_live: bool = True,
     include_hebrew: bool = False,
     hebrew_only: bool = False,
-) -> Optional[dict[str, Any]]:
+) -> dict[str, Any] | None:
     """
     Get wisdom from Sefaria based on project health.
 

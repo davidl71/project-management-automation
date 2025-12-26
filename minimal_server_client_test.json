@@ -1,0 +1,21 @@
+{
+  "working": [
+    {
+      "name": "test_simple",
+      "result": "simple result"
+    },
+    {
+      "name": "test_dict",
+      "result": "{\"status\":\"success\",\"message\":\"dict result\"}"
+    },
+    {
+      "name": "test_json_string",
+      "result": "{\"status\": \"success\", \"message\": \"json string result\"}"
+    },
+    {
+      "name": "test_list_param",
+      "result": "Processed 3 items"
+    }
+  ],
+  "broken": []
+}

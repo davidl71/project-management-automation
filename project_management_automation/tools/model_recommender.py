@@ -8,7 +8,6 @@ Based on Cursor IDE Best Practice #4.
 import json
 import logging
 import time
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -186,8 +185,8 @@ MODEL_RECOMMENDATIONS = {
 
 
 def recommend_model(
-    task_description: Optional[str] = None,
-    task_type: Optional[str] = None,
+    task_description: str | None = None,
+    task_type: str | None = None,
     optimize_for: str = "quality",
     include_alternatives: bool = True,
 ) -> str:

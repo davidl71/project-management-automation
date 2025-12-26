@@ -6,7 +6,7 @@ MCP Tool wrapper for batch approving TODO2 tasks using the batch update script.
 
 import subprocess
 import sys
-from typing import Any, Optional
+from typing import Any
 
 from ..utils import find_project_root
 
@@ -15,8 +15,8 @@ def batch_approve_tasks(
     status: str = "Review",
     new_status: str = "Todo",
     clarification_none: bool = True,
-    filter_tag: Optional[str] = None,
-    task_ids: Optional[list[str]] = None,
+    filter_tag: str | None = None,
+    task_ids: list[str] | None = None,
     dry_run: bool = False,
     confirm: bool = False
 ) -> dict[str, Any]:
@@ -67,8 +67,8 @@ def batch_approve_tasks(
     # Request user confirmation if requested
     if confirm and not dry_run:
         try:
-            from ..interactive import request_user_input, is_available
-            
+            from ..interactive import is_available, request_user_input
+
             if is_available():
                 # Count tasks that would be approved (quick preview)
                 preview_cmd = [
@@ -83,7 +83,7 @@ def batch_approve_tasks(
                     preview_cmd.extend(['--filter-tag', filter_tag])
                 if task_ids:
                     preview_cmd.extend(['--task-ids', ','.join(task_ids)])
-                
+
                 preview_result = subprocess.run(
                     preview_cmd,
                     cwd=str(project_root),
@@ -91,20 +91,20 @@ def batch_approve_tasks(
                     text=True,
                     timeout=10
                 )
-                
+
                 # Count tasks from preview
                 preview_count = 0
                 if preview_result.returncode == 0:
                     preview_lines = preview_result.stdout.split('\n')
                     preview_count = sum(1 for line in preview_lines if line.strip().startswith('•'))
-                
+
                 # Request confirmation
                 response = request_user_input(
                     project_name="Exarp",
                     message=f"About to approve {preview_count} tasks from '{status}' to '{new_status}'. Proceed?",
                     predefined_options=["yes", "no", "review"]
                 )
-                
+
                 if response == "no":
                     return {
                         "success": False,
@@ -131,7 +131,7 @@ def batch_approve_tasks(
             import logging
             logger = logging.getLogger(__name__)
             logger.debug(f"Confirmation request failed: {e}")
-    
+
     if dry_run:
         # For dry run, use list command instead
         cmd = [

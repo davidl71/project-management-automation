@@ -9,7 +9,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,7 +23,7 @@ except ImportError:
 
 
 def setup_git_hooks(
-    hooks: Optional[list[str]] = None,
+    hooks: list[str] | None = None,
     install: bool = True,
     dry_run: bool = False
 ) -> str:
@@ -186,16 +186,15 @@ def _generate_hook_script(
         # Parse tool command (e.g., "check_documentation_health_tool --quick")
         parts = tool_cmd.split()
         tool_name = parts[0]
-        tool_args = parts[1:] if len(parts) > 1 else []
+        parts[1:] if len(parts) > 1 else []
 
         # Convert tool name to Python function call
         # e.g., "check_documentation_health_tool" -> "check_documentation_health"
-        python_func = tool_name.replace("_tool", "")
+        tool_name.replace("_tool", "")
 
         # Build Python call with proper module path
         # Use project_management_automation.tools module path
-        module_path = f"project_management_automation.tools.{python_func}"
-        
+
         # For now, skip actual execution to avoid blocking commits
         # TODO: Implement proper MCP tool invocation or direct Python calls
         tools_section.append(f"  # Run {tool_name} (skipped for now)")

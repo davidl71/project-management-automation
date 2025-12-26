@@ -18,7 +18,7 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +159,7 @@ class PRDGenerator:
 
     def generate(
         self,
-        project_name: Optional[str] = None,
+        project_name: str | None = None,
         include_tasks: bool = True,
         include_architecture: bool = True,
         include_metrics: bool = True,
@@ -807,8 +807,8 @@ class PRDGenerator:
 
 
 def generate_prd(
-    project_name: Optional[str] = None,
-    output_path: Optional[str] = None,
+    project_name: str | None = None,
+    output_path: str | None = None,
     include_tasks: bool = True,
     include_architecture: bool = True,
     include_metrics: bool = True,
@@ -874,7 +874,7 @@ def generate_prd(
         try:
             from project_management_automation.utils.agentic_tools_client import parse_prd_mcp
             from project_management_automation.utils.todo2_mcp_client import create_todos_mcp
-            
+
             # Parse PRD to generate tasks
             parse_result = parse_prd_mcp(
                 prd_content=result["markdown"],
@@ -883,7 +883,7 @@ def generate_prd(
                 default_priority=5,
                 estimate_complexity=True
             )
-            
+
             if parse_result and parse_result.get('tasks'):
                 # Create tasks in Todo2
                 created_ids = create_todos_mcp(

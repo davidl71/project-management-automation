@@ -9,7 +9,6 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
 from ..utils import find_project_root
 
@@ -25,8 +24,8 @@ except ImportError:
 
 
 def setup_pattern_triggers(
-    patterns: Optional[dict[str, dict]] = None,
-    config_path: Optional[str] = None,
+    patterns: dict[str, dict] | None = None,
+    config_path: str | None = None,
     install: bool = True,
     dry_run: bool = False
 ) -> str:

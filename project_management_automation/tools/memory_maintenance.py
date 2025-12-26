@@ -61,7 +61,7 @@ def _get_task_ids() -> set[str]:
 def _calculate_memory_value(memory: dict[str, Any]) -> float:
     """
     Calculate a value score for a memory (0.0 - 1.0).
-    
+
     Scoring factors:
     - Has linked tasks: +0.2
     - Category weight: debug/architecture=0.3, research=0.2, insight/preference=0.1
@@ -114,7 +114,7 @@ def _find_duplicate_groups(
 ) -> list[list[dict[str, Any]]]:
     """
     Find groups of similar memories based on title similarity.
-    
+
     Returns list of groups, where each group has 2+ similar memories.
     """
     # Group by category first
@@ -124,7 +124,7 @@ def _find_duplicate_groups(
 
     all_groups = []
 
-    for category, cat_memories in by_category.items():
+    for _category, cat_memories in by_category.items():
         # Track which memories have been grouped
         grouped = set()
 
@@ -135,7 +135,7 @@ def _find_duplicate_groups(
             group = [m1]
             grouped.add(m1["id"])
 
-            for j, m2 in enumerate(cat_memories[i + 1:], start=i + 1):
+            for _j, m2 in enumerate(cat_memories[i + 1:], start=i + 1):
                 if m2["id"] in grouped:
                     continue
 
@@ -161,7 +161,7 @@ def _merge_memories(
 ) -> dict[str, Any]:
     """
     Merge multiple similar memories into one.
-    
+
     Strategies:
     - newest: Use newest memory as base, combine content
     - oldest: Use oldest memory as base, combine content
@@ -230,20 +230,20 @@ def memory_garbage_collect(
 ) -> dict[str, Any]:
     """
     Garbage collect stale and invalid memories.
-    
+
     Removes:
     - Memories older than max_age_days
     - Orphaned memories (linked to non-existent tasks)
     - Exact duplicate titles within same category
     - Auto-generated scorecard memories older than scorecard_max_age_days
-    
+
     Args:
         max_age_days: Delete memories older than this (default 90)
         delete_orphaned: Delete memories with broken task links
         delete_duplicates: Delete exact title duplicates (keep newest)
         scorecard_max_age_days: Max age for scorecard-type memories (default 7)
         dry_run: Preview without deleting (default True)
-    
+
     Returns:
         Summary of garbage collection with items found/deleted
     """
@@ -353,18 +353,18 @@ def memory_prune(
 ) -> dict[str, Any]:
     """
     Prune low-value memories based on scoring.
-    
+
     Each memory is scored based on:
     - Linked tasks (+0.2)
     - Category (debug/architecture=0.3, research=0.2, insight/preference=0.1)
     - Recency (< 7 days = +0.2)
     - Content length (normalized, up to +0.2)
-    
+
     Args:
         value_threshold: Minimum score to keep (0.0-1.0, default 0.3)
         keep_minimum: Always keep at least this many memories (default 50)
         dry_run: Preview without deleting (default True)
-    
+
     Returns:
         Summary of pruning with scored memories
     """
@@ -392,7 +392,7 @@ def memory_prune(
     # Execute pruning if not dry run
     pruned_ids = []
     if not dry_run:
-        for score, memory in to_prune:
+        for _score, memory in to_prune:
             if _delete_memory(memory["id"]):
                 pruned_ids.append(memory["id"])
 
@@ -444,15 +444,15 @@ def memory_consolidate(
 ) -> dict[str, Any]:
     """
     Consolidate similar memories by merging them.
-    
+
     Finds memories with similar titles (fuzzy match) within the same category
     and merges them into single, comprehensive memories.
-    
+
     Args:
         similarity_threshold: Title similarity threshold (0.0-1.0, default 0.85)
         merge_strategy: "newest", "oldest", or "longest" (default "newest")
         dry_run: Preview without merging (default True)
-    
+
     Returns:
         Summary of consolidation with groups found
     """
@@ -519,7 +519,7 @@ def memory_consolidate(
 def memory_health_check() -> dict[str, Any]:
     """
     Analyze memory system health and provide recommendations.
-    
+
     Returns:
         Health metrics and maintenance recommendations
     """

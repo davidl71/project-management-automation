@@ -9,7 +9,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional, Union
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +44,7 @@ except ImportError:
 
 def generate_code_documentation(
     file_path: str,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     style: str = "google",
     model: str = "codellama",
 ) -> str:
@@ -111,7 +110,7 @@ Generate the documented version of this code.
 
         # Use optimized settings for faster generation
         docs_result = generate_with_ollama(
-            prompt, 
+            prompt,
             model=model,
             stream=True,  # Enable streaming for faster perceived response
         )
@@ -218,7 +217,7 @@ Code:
 
         # Use optimized settings for faster generation
         analysis_result = generate_with_ollama(
-            prompt, 
+            prompt,
             model=model,
             stream=True,  # Enable streaming for faster perceived response
         )
@@ -264,7 +263,7 @@ Code:
 
 
 def enhance_context_summary(
-    data: Union[str, dict, list],
+    data: str | dict | list,
     level: str = "brief",
     model: str = "codellama",
 ) -> str:
@@ -319,7 +318,7 @@ Data:
 
         # Use optimized settings for faster generation
         summary_result = generate_with_ollama(
-            prompt, 
+            prompt,
             model=model,
             stream=True,  # Enable streaming for faster perceived response
         )
@@ -350,7 +349,7 @@ Data:
 def register_ollama_enhanced_tools(mcp):
     """
     Register Ollama-enhanced tools with FastMCP server.
-    
+
     Args:
         mcp: FastMCP server instance
     """
@@ -362,7 +361,7 @@ def register_ollama_enhanced_tools(mcp):
         @mcp.tool()
         def generate_code_documentation_tool(
             file_path: str,
-            output_path: Optional[str] = None,
+            output_path: str | None = None,
             style: str = "google",
             model: str = "codellama",
         ) -> str:
@@ -390,7 +389,7 @@ def register_ollama_enhanced_tools(mcp):
                 parsed_data = json.loads(data)
             except json.JSONDecodeError:
                 parsed_data = data
-            
+
             return enhance_context_summary(parsed_data, level, model)
 
         logger.info("✅ Ollama-enhanced tools registered")

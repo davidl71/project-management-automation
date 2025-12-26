@@ -15,10 +15,9 @@ Features:
 import json
 import logging
 import statistics
-from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from ..utils import find_project_root
 
@@ -27,37 +26,37 @@ logger = logging.getLogger(__name__)
 
 class TaskDurationEstimator:
     """Statistical task duration estimator."""
-    
-    def __init__(self, project_root: Optional[Path] = None):
+
+    def __init__(self, project_root: Path | None = None):
         """Initialize estimator with project root."""
         if project_root is None:
             project_root = find_project_root()
         self.project_root = project_root
         self.state_file = project_root / ".todo2" / "state.todo2.json"
-        self._historical_data: Optional[List[Dict]] = None
-    
-    def load_historical_data(self) -> List[Dict]:
+        self._historical_data: list[dict] | None = None
+
+    def load_historical_data(self) -> list[dict]:
         """Load and process historical task data."""
         if self._historical_data is not None:
             return self._historical_data
-        
+
         if not self.state_file.exists():
             logger.warning(f"State file not found: {self.state_file}")
             return []
-        
+
         try:
             with open(self.state_file) as f:
                 data = json.load(f)
-            
+
             todos = data.get('todos', [])
             historical = []
-            
+
             for task in todos:
                 # Only use completed tasks with time data
                 status = task.get('status', '').lower()
                 if status not in ['done', 'completed']:
                     continue
-                
+
                 # Get actual hours if available
                 actual_hours = task.get('actualHours')
                 if actual_hours and actual_hours > 0:
@@ -72,16 +71,16 @@ class TaskDurationEstimator:
                         'completed_at': task.get('completedAt'),
                     })
                     continue
-                
+
                 # Calculate duration from timestamps if available
                 created_str = task.get('created')
                 completed_str = task.get('completedAt') or task.get('lastModified')
-                
+
                 if created_str and completed_str:
                     try:
                         created = self._parse_datetime(created_str)
                         completed = self._parse_datetime(completed_str)
-                        
+
                         if created and completed and completed > created:
                             # Calculate hours (minimum 0.5 hours)
                             duration_hours = max(0.5, (completed - created).total_seconds() / 3600)
@@ -98,20 +97,20 @@ class TaskDurationEstimator:
                     except (ValueError, TypeError) as e:
                         logger.debug(f"Failed to parse timestamps for task: {e}")
                         continue
-            
+
             self._historical_data = historical
             logger.info(f"Loaded {len(historical)} historical task records")
             return historical
-            
+
         except Exception as e:
             logger.error(f"Failed to load historical data: {e}", exc_info=True)
             return []
-    
-    def _parse_datetime(self, dt_str: str) -> Optional[datetime]:
+
+    def _parse_datetime(self, dt_str: str) -> datetime | None:
         """Parse datetime string to datetime object."""
         if not dt_str:
             return None
-        
+
         # Try common formats
         formats = [
             '%Y-%m-%dT%H:%M:%S.%f',
@@ -120,7 +119,7 @@ class TaskDurationEstimator:
             '%Y-%m-%dT%H:%M:%S%z',
             '%Y-%m-%d %H:%M:%S',
         ]
-        
+
         for fmt in formats:
             try:
                 if fmt.endswith('z') or '+00:00' in dt_str:
@@ -128,28 +127,28 @@ class TaskDurationEstimator:
                 return datetime.strptime(dt_str, fmt)
             except ValueError:
                 continue
-        
+
         return None
-    
+
     def estimate(
         self,
         name: str,
         details: str = "",
-        tags: Optional[List[str]] = None,
+        tags: list[str] | None = None,
         priority: str = "medium",
         use_historical: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Estimate task duration using multiple statistical methods.
-        
+
         Returns:
             Dictionary with estimate, confidence, method, and metadata
         """
         if tags is None:
             tags = []
-        
+
         text = (name + " " + details).lower()
-        
+
         # Strategy 1: Historical data matching (if available)
         historical_estimate = None
         historical_confidence = 0.0
@@ -159,14 +158,14 @@ class TaskDurationEstimator:
                 historical_estimate, historical_confidence = self._estimate_from_history(
                     text, tags, priority, historical_data
                 )
-        
+
         # Strategy 2: Keyword-based heuristic (fallback)
         heuristic_estimate = self._estimate_from_keywords(text)
         heuristic_confidence = 0.3  # Lower confidence for heuristics
-        
+
         # Strategy 3: Priority-based adjustment
         priority_multiplier = self._get_priority_multiplier(priority)
-        
+
         # Combine estimates with weighted average
         if historical_estimate and historical_confidence > 0.2:
             # Use historical if we have good match
@@ -178,18 +177,18 @@ class TaskDurationEstimator:
             base_estimate = heuristic_estimate * priority_multiplier
             confidence = heuristic_confidence
             method = "keyword_heuristic"
-        
+
         # Apply priority multiplier
         final_estimate = base_estimate * priority_multiplier
-        
+
         # Round to reasonable precision
         final_estimate = round(final_estimate, 1)
-        
+
         # Calculate confidence interval (assuming normal distribution)
         std_dev = final_estimate * 0.3  # 30% coefficient of variation
         lower_bound = max(0.5, final_estimate - 1.96 * std_dev)  # 95% CI
         upper_bound = final_estimate + 1.96 * std_dev
-        
+
         return {
             'estimate_hours': final_estimate,
             'confidence': min(0.95, confidence),  # Cap at 95%
@@ -203,91 +202,91 @@ class TaskDurationEstimator:
                 'priority_multiplier': priority_multiplier,
             }
         }
-    
+
     def _estimate_from_history(
         self,
         text: str,
-        tags: List[str],
+        tags: list[str],
         priority: str,
-        historical: List[Dict]
-    ) -> Tuple[float, float]:
+        historical: list[dict]
+    ) -> tuple[float, float]:
         """Estimate using historical data matching."""
         matches = []
         text_words = set(text.split())
-        
+
         for record in historical:
             score = 0.0
             record_text = (record['name'] + " " + record['details']).lower()
             record_words = set(record_text.split())
-            
+
             # Text similarity (word overlap)
             if text_words and record_words:
                 word_overlap = len(text_words & record_words) / len(text_words | record_words)
                 score += word_overlap * 0.5
-            
+
             # Tag matching
             record_tags = [t.lower() for t in record.get('tags', [])]
             if tags and record_tags:
-                tag_overlap = len(set(t.lower() for t in tags) & set(record_tags))
+                tag_overlap = len({t.lower() for t in tags} & set(record_tags))
                 if record_tags:
                     score += (tag_overlap / len(record_tags)) * 0.3
-            
+
             # Priority matching
             if priority.lower() == record.get('priority', 'medium').lower():
                 score += 0.2
-            
+
             if score > 0.1:  # Minimum threshold
                 matches.append({
                     'actual_hours': record['actual_hours'],
                     'score': score,
                 })
-        
+
         if not matches:
             return None, 0.0
-        
+
         # Sort by score and take top matches
         matches.sort(key=lambda x: x['score'], reverse=True)
         top_matches = matches[:min(10, len(matches))]
-        
+
         # Weighted average of top matches
         total_weight = sum(m['score'] for m in top_matches)
         if total_weight == 0:
             return None, 0.0
-        
+
         weighted_sum = sum(m['actual_hours'] * m['score'] for m in top_matches)
         estimate = weighted_sum / total_weight
-        
+
         # Confidence based on number and quality of matches
         avg_score = total_weight / len(top_matches)
         confidence = min(0.9, 0.3 + avg_score * 0.6)
-        
+
         return estimate, confidence
-    
+
     def _estimate_from_keywords(self, text: str) -> float:
         """Estimate using keyword heuristics (improved version)."""
         # Quick/simple tasks
         quick_keywords = ['quick', 'simple', 'minor', 'small', 'fix typo', 'update version', 'bump']
         if any(kw in text for kw in quick_keywords):
             return 0.5
-        
+
         # Small tasks
         small_keywords = ['add', 'create', 'implement', 'setup', 'install', 'configure']
         if any(kw in text for kw in small_keywords):
             return 2.0
-        
+
         # Medium tasks
         medium_keywords = ['refactor', 'migrate', 'integrate', 'update', 'improve', 'enhance']
         if any(kw in text for kw in medium_keywords):
             return 3.0
-        
+
         # Large tasks
         large_keywords = ['complex', 'major', 'rewrite', 'redesign', 'architecture', 'system']
         if any(kw in text for kw in large_keywords):
             return 4.0
-        
+
         # Default
         return 2.0
-    
+
     def _get_priority_multiplier(self, priority: str) -> float:
         """Get time multiplier based on priority."""
         priority = priority.lower()
@@ -298,19 +297,20 @@ class TaskDurationEstimator:
             'critical': 1.5, # Critical tasks may have hidden complexity
         }
         return multipliers.get(priority, 1.0)
-    
-    def get_statistics(self) -> Dict[str, Any]:
-        """Get statistics about historical task durations."""
+
+    def get_statistics(self) -> str:
+        """Get statistics about historical task durations. Returns JSON string."""
+        import json
         historical = self.load_historical_data()
-        
+
         if not historical:
-            return {
+            return json.dumps({
                 'count': 0,
                 'message': 'No historical data available'
-            }
-        
+            }, indent=2)
+
         actual_hours = [r['actual_hours'] for r in historical]
-        
+
         try:
             stats = {
                 'count': len(actual_hours),
@@ -320,21 +320,21 @@ class TaskDurationEstimator:
                 'min': round(min(actual_hours), 2),
                 'max': round(max(actual_hours), 2),
             }
-            
+
             # Percentiles
             if len(actual_hours) > 1:
                 sorted_hours = sorted(actual_hours)
                 stats['p25'] = round(sorted_hours[len(sorted_hours) // 4], 2)
                 stats['p75'] = round(sorted_hours[3 * len(sorted_hours) // 4], 2)
                 stats['p90'] = round(sorted_hours[9 * len(sorted_hours) // 10], 2)
-            
+
             # Accuracy metrics (if estimated hours available)
             with_estimates = [
                 (r['estimated_hours'], r['actual_hours'])
                 for r in historical
                 if r.get('estimated_hours', 0) > 0
             ]
-            
+
             if with_estimates:
                 errors = [abs(est - act) / act for est, act in with_estimates]
                 stats['estimation_accuracy'] = {
@@ -342,28 +342,29 @@ class TaskDurationEstimator:
                     'mean_absolute_error': round(statistics.mean(errors), 2),
                     'mean_error': round(statistics.mean([est - act for est, act in with_estimates]), 2),
                 }
-            
-            return stats
-            
+
+            return json.dumps(stats, indent=2)
+
         except statistics.StatisticsError as e:
+            import json
             logger.warning(f"Statistics calculation failed: {e}")
-            return {
+            return json.dumps({
                 'count': len(actual_hours),
                 'error': str(e)
-            }
+            }, indent=2)
 
 
 def estimate_task_duration(
     name: str,
     details: str = "",
-    tags: Optional[List[str]] = None,
+    tags: list[str] | None = None,
     priority: str = "medium",
     use_historical: bool = True,
-    project_root: Optional[Path] = None
+    project_root: Path | None = None
 ) -> float:
     """
     Convenience function for simple duration estimation.
-    
+
     Returns just the estimated hours (backward compatible).
     """
     estimator = TaskDurationEstimator(project_root)
@@ -374,14 +375,14 @@ def estimate_task_duration(
 def estimate_task_duration_detailed(
     name: str,
     details: str = "",
-    tags: Optional[List[str]] = None,
+    tags: list[str] | None = None,
     priority: str = "medium",
     use_historical: bool = True,
-    project_root: Optional[Path] = None
-) -> Dict[str, Any]:
+    project_root: Path | None = None
+) -> dict[str, Any]:
     """
     Get detailed duration estimation with confidence and metadata.
-    
+
     Returns full estimation dictionary.
     """
     estimator = TaskDurationEstimator(project_root)

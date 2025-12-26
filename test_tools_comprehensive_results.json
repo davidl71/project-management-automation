@@ -1,0 +1,257 @@
+{
+  "results": {
+    "working": [
+      {
+        "name": "task_workflow",
+        "description": "[HINT: Task workflow. action=sync|approve|clarify|clarity|cleanup. Manage task lifecycle.]\n\nUnified ",
+        "result_type": "list",
+        "content_items": 1
+      },
+      {
+        "name": "estimation",
+        "description": "[HINT: Estimation. action=estimate|analyze|stats. Unified task duration estimation tool.]\n\nUnified t",
+        "result_type": "list",
+        "content_items": 1
+      },
+      {
+        "name": "ollama",
+        "description": "[HINT: Ollama. action=status|models|generate|pull|hardware|docs|quality|summary. Unified Ollama tool",
+        "result_type": "list",
+        "content_items": 1
+      },
+      {
+        "name": "mlx",
+        "description": "[HINT: MLX. action=status|hardware|models|generate. Unified MLX tool.]\n\nUnified MLX tool for Apple S",
+        "result_type": "list",
+        "content_items": 1
+      },
+      {
+        "name": "git_tools",
+        "description": "[HINT: Git tools. action=commits|branches|tasks|diff|graph|merge|set_branch. Unified git-inspired to",
+        "result_type": "list",
+        "content_items": 1
+      },
+      {
+        "name": "session",
+        "description": "[HINT: Session. action=prime|handoff|prompts|assignee. Unified session management tools.]\n\nUnified s",
+        "result_type": "list",
+        "content_items": 1
+      },
+      {
+        "name": "memory_maint",
+        "description": "[HINT: Memory maintenance. action=health|gc|prune|consolidate|dream. Lifecycle management.]\n\nUnified",
+        "result_type": "list",
+        "content_items": 1
+      }
+    ],
+    "await_dict_error": [
+      {
+        "name": "infer_session_mode",
+        "description": "[HINT: Session mode inference. Returns AGENT/ASK/MANUAL with confidence.]\n\nInfer current session mod",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "add_external_tool_hints",
+        "description": "[HINT: Tool hints. Files scanned, modified, hints added.]",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "automation",
+        "description": "[HINT: Automation. action=daily|nightly|sprint|discover. Unified automation tool.]\n\nUnified automati",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "tool_catalog",
+        "description": "[HINT: Tool catalog. action=list|help. Unified tool catalog and help.]\n\nUnified tool catalog tool co",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "workflow_mode",
+        "description": "[HINT: Workflow mode management. action=focus|suggest|stats. Unified workflow operations.]\n\nUnified ",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "context",
+        "description": "[HINT: Context management. action=summarize|budget|batch. Unified context operations.]\n\nUnified cont",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "recommend",
+        "description": "[HINT: Recommendations. action=model|workflow|advisor. Unified recommendation system.]\n\nUnified reco",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "analyze_alignment",
+        "description": "[HINT: Alignment analysis. action=todo2|prd. Unified alignment analysis tool.]\n\nUnified alignment an",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "security",
+        "description": "[HINT: Security. action=scan|alerts|report. Vulnerabilities, remediation.]\n\nUnified security analysi",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "generate_config",
+        "description": "[HINT: Config generation. action=rules|ignore|simplify. Creates IDE config files.]\n\nUnified config g",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "setup_hooks",
+        "description": "[HINT: Hooks setup. action=git|patterns. Install automation hooks.]\n\nUnified hooks setup:\n- action=\"",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "prompt_tracking",
+        "description": "[HINT: Prompt tracking. action=log|analyze. Track and analyze prompts.]\n\nUnified prompt tracking:\n- ",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "health",
+        "description": "[HINT: Health check. action=server|git|docs|dod|cicd. Status and health metrics.]\n\nUnified health ch",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "check_attribution",
+        "description": "[HINT: Attribution compliance check. Verify proper attribution for all third-party components.]\n\nChe",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "report",
+        "description": "[HINT: Report generation. action=overview|scorecard|briefing|prd. Project reports.]\n\nUnified report ",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "task_analysis",
+        "description": "[HINT: Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality an",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "testing",
+        "description": "[HINT: Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest ",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "lint",
+        "description": "[HINT: Linting tool. action=run|analyze. Run linter or analyze problems.]\n\nUnified linting:\n- action",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "memory",
+        "description": "[HINT: Memory tool. action=save|recall|search. Persist and retrieve AI discoveries.]\n\nUnified memory",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      },
+      {
+        "name": "task_discovery",
+        "description": "[HINT: Task discovery. action=comments|markdown|orphans|all. Find tasks from various sources.]\n\nDisc",
+        "error": "object dict can't be used in 'await' expression",
+        "result_type": "list",
+        "content_items": 1,
+        "category": "await_dict_error"
+      }
+    ],
+    "to_mcp_result_error": [],
+    "not_found": [],
+    "other_error": []
+  },
+  "analysis": {
+    "total_tools": 27,
+    "working_count": 7,
+    "broken_count": 20,
+    "working_percentage": 25.925925925925924,
+    "patterns": {
+      "working_prefixes": {
+        "estimation": 1,
+        "mlx": 1,
+        "memory": 1,
+        "ollama": 1,
+        "task": 1,
+        "git": 1,
+        "session": 1
+      },
+      "broken_prefixes": {
+        "lint": 1,
+        "context": 1,
+        "report": 1,
+        "health": 1,
+        "analyze": 1,
+        "task": 2,
+        "check": 1,
+        "memory": 1,
+        "add": 1,
+        "automation": 1,
+        "recommend": 1,
+        "testing": 1,
+        "workflow": 1,
+        "infer": 1,
+        "setup": 1,
+        "prompt": 1,
+        "security": 1,
+        "tool": 1,
+        "generate": 1
+      }
+    }
+  },
+  "summary": {
+    "total": 27,
+    "working": 7,
+    "broken": 20,
+    "working_percentage": 25.925925925925924
+  }
+}

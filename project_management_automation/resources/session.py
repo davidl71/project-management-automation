@@ -178,11 +178,20 @@ def get_session_mode_resource() -> str:
         "reasoning": ["reason1", "reason2"]
     }
     """
+    def ensure_json_string(result: Any) -> str:
+        """Ensure result is always a JSON string for FastMCP compatibility."""
+        if isinstance(result, str):
+            return result
+        elif isinstance(result, dict):
+            return json.dumps(result, separators=(',', ':'))
+        else:
+            return json.dumps({"result": str(result)}, separators=(',', ':'))
+    
     try:
         # Try to get from storage first
         current = _storage.get_current_mode()
         if current:
-            return json.dumps(current, separators=(',', ':'))
+            return ensure_json_string(current)
         
         # Fallback: compute from current manager state
         manager = get_tool_manager()
@@ -198,26 +207,26 @@ def get_session_mode_resource() -> str:
                 session_duration_seconds=session_duration
             )
             
-            return json.dumps(result.to_dict(), separators=(',', ':'))
+            return ensure_json_string(result.to_dict())
         
         # No data available
-        return json.dumps({
+        return ensure_json_string({
             "inferred_mode": "UNKNOWN",
             "confidence": 0.0,
             "signals": {},
             "last_updated": datetime.now().isoformat() + "Z",
             "reasoning": ["No session data available"]
-        }, separators=(',', ':'))
+        })
         
     except Exception as e:
         logger.warning(f"Failed to get session mode resource: {e}")
-        return json.dumps({
+        return ensure_json_string({
             "inferred_mode": "UNKNOWN",
             "confidence": 0.0,
             "signals": {},
             "last_updated": datetime.now().isoformat() + "Z",
             "reasoning": [f"Error: {str(e)}"]
-        }, separators=(',', ':'))
+        })
 
 
 def infer_session_mode_tool(force_recompute: bool = False) -> str:
@@ -234,16 +243,28 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
     Returns:
         JSON string with mode inference result
     """
+    def ensure_json_string(result: Any) -> str:
+        """Ensure result is always a JSON string for FastMCP compatibility."""
+        if isinstance(result, str):
+            # Already a string, return as-is (assume it's valid JSON)
+            return result
+        elif isinstance(result, dict):
+            # Convert dict to JSON string
+            return json.dumps(result, separators=(',', ':'))
+        else:
+            # Fallback: wrap in dict and convert
+            return json.dumps({"result": str(result)}, separators=(',', ':'))
+    
     try:
         manager = get_tool_manager()
         
         # Check if we have the required components
         if not hasattr(manager, "mode_inference") or not hasattr(manager, "file_tracker"):
-            return json.dumps({
+            return ensure_json_string({
                 "error": "Mode inference not initialized. Ensure DynamicToolManager has file_tracker and mode_inference.",
                 "mode": "UNKNOWN",
                 "confidence": 0.0
-            }, separators=(',', ':'))
+            })
         
         # Get cached result if available and not forcing recompute
         if not force_recompute:
@@ -256,7 +277,7 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
                         timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
                         age_seconds = (datetime.now(timestamp.tzinfo) - timestamp).total_seconds()
                         if age_seconds < 120:  # 2 minutes
-                            return json.dumps(current, separators=(',', ':'))
+                            return ensure_json_string(current)
                     except Exception:
                         pass  # Continue to recompute
         
@@ -281,15 +302,17 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
             session_id=None  # Could extract from context if available
         )
         
-        return json.dumps(result.to_dict(), separators=(',', ':'))
+        # Ensure we return a JSON string (defensive check)
+        result_dict = result.to_dict()
+        return ensure_json_string(result_dict)
         
     except Exception as e:
         logger.error(f"Failed to infer session mode: {e}", exc_info=True)
-        return json.dumps({
+        return ensure_json_string({
             "error": str(e),
             "mode": "UNKNOWN",
             "confidence": 0.0
-        }, indent=2)
+        })
 
 
 def register_session_resources(mcp) -> None:

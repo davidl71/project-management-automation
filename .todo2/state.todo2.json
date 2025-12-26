@@ -8118,6 +8118,156 @@
           "lastModified": "2025-12-25T23:11:30.675930"
         }
       ]
+    },
+    {
+      "id": "AUTO-20251226020011-571478",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-26T02:00:11.571488",
+      "lastModified": "2025-12-26T02:00:11.645120",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251226020011-571478-C-1",
+          "todoId": "AUTO-20251226020011-571478",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 87.0%**\n\u26a0\ufe0f 10 broken links need attention\n\u26a0\ufe0f 3 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":428,\"broken_internal\":[{\"url\":\"\\\\w+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"[^\\\\\\\"\\\\']+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"[^\\\\\\\"\\\\']+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"\\\\w+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"../PWA_CLEANUP.md\",\"source\":\"docs/OBSOLETE_TESTS_ANALYSIS.md\"},{\"url\":\"...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"self, ...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"self, ...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"./DAILY_AUTOMATION.md\",\"source\":\"docs/TASK_STATUS_WORKFLOW.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/ESTIMATION_LEARNING.md\",\"last_updated\":\"2025-01-25\",\"days_old\":335},{\"file\":\"docs/MLX_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-25\",\"days_old\":335},{\"file\":\"docs/MLX_TASK_ESTIMATION_IMPLEMENTATION.md\",\"last_updated\":\"2025-01-25\",\"days_old\":335}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":87.0}",
+          "created": "2025-12-26T02:00:11.638390",
+          "lastModified": "2025-12-26T02:00:11.638392"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251226020011-791377",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-26T02:00:11.791340",
+      "lastModified": "2025-12-26T02:00:11.842062",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251226020011-791377-C-1",
+          "todoId": "AUTO-20251226020011-791377",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\u26a0\ufe0f Tool count at limit (35/30) - no new tools should be created\n\n**Key Findings:**\n{\"total_tasks\":3,\"by_priority\":{\"high\":1,\"medium\":1,\"low\":1,\"critical\":0},\"by_status\":{\"todo\":3,\"in_progress\":0,\"review\":0,\"done\":0},\"by_phase\":{\"phase1\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase2\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase3\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase4\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase5\":{\"total\":2,\"high_priority\":0,\"aligned\":2}},\"strategy_critical\":[],\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[{\"id\":\"T-1\",\"content\":\"Review misaligned high-priority tasks\",\"priority\":\"high\",\"status\":\"todo\"}],\"constraint_violations\":[],\"current_tool_count\":35,\"tool_limit\":30,\"alignment_score\":60.0}",
+          "created": "2025-12-26T02:00:11.835092",
+          "lastModified": "2025-12-26T02:00:11.835098"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251226020011-989395",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-12-26T02:00:11.989332",
+      "lastModified": "2025-12-26T02:00:12.012140",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251226020011-989395-C-1",
+          "todoId": "AUTO-20251226020011-989395",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 **No duplicates found!** Your Todo2 task list is clean.\n\n**Key Findings:**\n{\"total_tasks\":3,\"duplicates_found\":0,\"duplicate_ids\":[],\"exact_name_matches\":[],\"similar_name_matches\":[],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-26T02:00:12.005244",
+          "lastModified": "2025-12-26T02:00:12.005250"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251226020427-226881",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "documentation-health-analysis"
+      ],
+      "created": "2025-12-26T02:04:27.226878",
+      "lastModified": "2025-12-26T02:04:27.288488",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251226020427-226881-C-1",
+          "todoId": "AUTO-20251226020427-226881",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 87.0%**\n\u26a0\ufe0f 10 broken links need attention\n\u26a0\ufe0f 3 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":428,\"broken_internal\":[{\"url\":\"\\\\w+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"[^\\\\\\\"\\\\']+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"[^\\\\\\\"\\\\']+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"\\\\w+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"../PWA_CLEANUP.md\",\"source\":\"docs/OBSOLETE_TESTS_ANALYSIS.md\"},{\"url\":\"...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"self, ...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"self, ...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"./DAILY_AUTOMATION.md\",\"source\":\"docs/TASK_STATUS_WORKFLOW.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/ESTIMATION_LEARNING.md\",\"last_updated\":\"2025-01-25\",\"days_old\":335},{\"file\":\"docs/MLX_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-25\",\"days_old\":335},{\"file\":\"docs/MLX_TASK_ESTIMATION_IMPLEMENTATION.md\",\"last_updated\":\"2025-01-25\",\"days_old\":335}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":87.0}",
+          "created": "2025-12-26T02:04:27.283050",
+          "lastModified": "2025-12-26T02:04:27.283051"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251226020427-818660",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-alignment-analysis"
+      ],
+      "created": "2025-12-26T02:04:27.818666",
+      "lastModified": "2025-12-26T02:04:27.915085",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251226020427-818660-C-1",
+          "todoId": "AUTO-20251226020427-818660",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 60.0%**\n\u26a0\ufe0f Alignment score is below target (80%+)\n\u26a0\ufe0f Tool count at limit (34/30) - no new tools should be created\n\n**Key Findings:**\n{\"total_tasks\":3,\"by_priority\":{\"high\":1,\"medium\":1,\"low\":1,\"critical\":0},\"by_status\":{\"todo\":3,\"in_progress\":0,\"review\":0,\"done\":0},\"by_phase\":{\"phase1\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase2\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase3\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase4\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase5\":{\"total\":2,\"high_priority\":0,\"aligned\":2}},\"strategy_critical\":[],\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[{\"id\":\"T-1\",\"content\":\"Review misaligned high-priority tasks\",\"priority\":\"high\",\"status\":\"todo\"}],\"constraint_violations\":[],\"current_tool_count\":34,\"tool_limit\":30,\"alignment_score\":60.0}",
+          "created": "2025-12-26T02:04:27.909539",
+          "lastModified": "2025-12-26T02:04:27.909542"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251226020428-447790",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "todo2-duplicate-detection"
+      ],
+      "created": "2025-12-26T02:04:28.447793",
+      "lastModified": "2025-12-26T02:04:28.471038",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251226020428-447790-C-1",
+          "todoId": "AUTO-20251226020428-447790",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 **No duplicates found!** Your Todo2 task list is clean.\n\n**Key Findings:**\n{\"total_tasks\":3,\"duplicates_found\":0,\"duplicate_ids\":[],\"exact_name_matches\":[],\"similar_name_matches\":[],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-26T02:04:28.465369",
+          "lastModified": "2025-12-26T02:04:28.465375"
+        }
+      ]
     }
   ],
   "lastModified": "2025-12-25T21:02:00.998Z",

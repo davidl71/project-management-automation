@@ -21,7 +21,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger("exarp.auto_primer")
 
@@ -47,10 +47,10 @@ def _find_project_root() -> Path:
 # AGENT DETECTION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def detect_agent_type() -> Dict[str, Any]:
+def detect_agent_type() -> dict[str, Any]:
     """
     Detect the current agent type from environment or config.
-    
+
     Detection sources (in order):
     1. EXARP_AGENT env var
     2. cursor-agent.json in current directory
@@ -108,10 +108,10 @@ def detect_agent_type() -> Dict[str, Any]:
 # TIME-BASED MODE SUGGESTION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def suggest_mode_by_time() -> Dict[str, Any]:
+def suggest_mode_by_time() -> dict[str, Any]:
     """
     Suggest workflow mode based on time of day.
-    
+
     Time-based suggestions:
     - 6am-9am: daily_checkin (morning review)
     - 9am-12pm: development (prime working hours)
@@ -165,7 +165,7 @@ def suggest_mode_by_time() -> Dict[str, Any]:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Agent type to recommended mode mapping
-AGENT_MODE_MAPPING: Dict[str, str] = {
+AGENT_MODE_MAPPING: dict[str, str] = {
     "backend": "development",
     "backend-agent": "development",
     "web": "development",
@@ -180,7 +180,7 @@ AGENT_MODE_MAPPING: Dict[str, str] = {
 }
 
 # Agent-specific context hints
-AGENT_CONTEXT: Dict[str, Dict[str, Any]] = {
+AGENT_CONTEXT: dict[str, dict[str, Any]] = {
     "backend": {
         "focus_areas": ["API development", "database", "services", "Rust"],
         "relevant_tools": ["run_tests", "scan_dependency_security", "analyze_test_coverage", "session_handoff", "task_assignee"],
@@ -208,7 +208,7 @@ AGENT_CONTEXT: Dict[str, Dict[str, Any]] = {
 }
 
 
-def get_agent_context(agent: str) -> Dict[str, Any]:
+def get_agent_context(agent: str) -> dict[str, Any]:
     """Get context specific to an agent type."""
     # Normalize agent name
     agent_lower = agent.lower().replace("-agent", "")
@@ -228,7 +228,7 @@ def get_agent_context(agent: str) -> Dict[str, Any]:
 # RECOMMENDED COMPANION MCPs
 # ═══════════════════════════════════════════════════════════════════════════════
 
-RECOMMENDED_COMPANIONS: Dict[str, Dict[str, Any]] = {
+RECOMMENDED_COMPANIONS: dict[str, dict[str, Any]] = {
     "human": {
         "description": "Human interaction for confirmations and clarifications",
         "benefit": "Enables confirmations for batch operations, task clarification",
@@ -278,13 +278,13 @@ RECOMMENDED_COMPANIONS: Dict[str, Dict[str, Any]] = {
 }
 
 
-def detect_companion_mcps(available_tools: Optional[List[str]] = None) -> Dict[str, Any]:
+def detect_companion_mcps(available_tools: list[str] | None = None) -> dict[str, Any]:
     """
     Detect which recommended companion MCPs are available.
-    
+
     Args:
         available_tools: List of available tool names (if known)
-    
+
     Returns:
         Dict with detected and missing companions
     """
@@ -340,24 +340,24 @@ def auto_prime(
     include_tasks: bool = True,
     include_prompts: bool = True,
     include_handoff: bool = True,
-    override_mode: Optional[str] = None,
+    override_mode: str | None = None,
     compact: bool = True,
 ) -> str:
     """
     [HINT: Auto-primer. Returns optimal context for session start. Detects agent/time/mode. Checks for handoffs.]
-    
+
     Automatically prime AI context at session start.
-    
+
     📊 Output: Compact context tailored to agent type and time of day
     🔧 Side Effects: None (read-only)
     ⏱️ Typical Runtime: < 100ms
-    
+
     This should be called at the start of each AI session to provide
     optimal context with minimal token usage.
-    
+
     **Multi-Dev Coordination**: Checks for handoff notes from other developers
     to ensure continuity across machines.
-    
+
     Args:
         include_hints: Include tool hints for detected mode
         include_tasks: Include recent task summary
@@ -365,16 +365,16 @@ def auto_prime(
         include_handoff: Check for handoff notes from other developers (default: True)
         override_mode: Override auto-detected mode
         compact: Return compact format (fewer tokens)
-    
+
     Returns:
-        JSON with primed context
-    
+        Dict with primed context (FastMCP will serialize)
+
     Example:
         # At session start
         auto_prime()
         → Returns context tailored to agent type and time of day
         → Includes any handoff notes from previous developer
-        
+
         # Force specific mode
         auto_prime(override_mode="security_review")
     """
@@ -489,40 +489,30 @@ def auto_prime(
         else:
             result.update(primer)
 
-        # Ensure we always return a JSON string
-        output = json.dumps(result, indent=2)
-        if not isinstance(output, str):
-            # Defensive: if json.dumps somehow fails, create a safe string
-            logger.warning(f"json.dumps returned non-string: {type(output)}")
-            output = json.dumps({
-                "auto_primed": False,
-                "error": "Serialization error",
-                "fallback_mode": "development",
-            }, indent=2)
-        return output
+        # Return JSON string - FastMCP requires strings, not dicts
+        return json.dumps(result, indent=2)
 
     except Exception as e:
         logger.error(f"Auto-prime error: {e}", exc_info=True)
-        # Ensure error response is always a string
-        error_response = {
+        # Return error response as JSON string
+        return json.dumps({
             "auto_primed": False,
             "error": str(e),
             "fallback_mode": "development",
-        }
-        return json.dumps(error_response, indent=2)
+        }, indent=2)
 
 
-def get_session_context(task_id: Optional[str] = None) -> str:
+def get_session_context(task_id: str | None = None) -> dict[str, Any]:
     """
     [HINT: Session context. Get context for a specific task or general session.]
-    
+
     Get context optimized for working on a specific task.
-    
+
     Args:
         task_id: Optional task ID to focus context on
-    
+
     Returns:
-        JSON with task-focused context
+        Dict with task-focused context (FastMCP will serialize)
     """
     try:
         # Get base auto-prime context
@@ -552,36 +542,26 @@ def get_session_context(task_id: Optional[str] = None) -> str:
                 except Exception:
                     pass
 
-        # Ensure we always return a JSON string
-        output = json.dumps(base, indent=2)
-        if not isinstance(output, str):
-            # Defensive: if json.dumps somehow fails, create a safe string
-            logger.warning(f"json.dumps returned non-string: {type(output)}")
-            output = json.dumps({"error": "Serialization error"}, indent=2)
-        return output
+        # Return dict directly - FastMCP will handle serialization
+        return base
 
     except Exception as e:
         logger.error(f"Session context error: {e}", exc_info=True)
-        # Ensure error response is always a string
-        error_response = {"error": str(e)}
-        output = json.dumps(error_response, indent=2)
-        if not isinstance(output, str):
-            # Defensive fallback
-            output = '{"error": "Serialization error"}'
-        return output
+        # Return error response as dict
+        return {"error": str(e)}
 
 
-def prime_for_mode(mode: str) -> str:
+def prime_for_mode(mode: str) -> dict[str, Any]:
     """
     [HINT: Mode primer. Prime context for a specific workflow mode.]
-    
+
     Quick primer for switching to a specific workflow mode.
-    
+
     Args:
         mode: Workflow mode (daily_checkin, security_review, task_management, etc.)
-    
+
     Returns:
-        JSON with mode-specific context
+        Dict with mode-specific context (FastMCP will serialize)
     """
     return auto_prime(override_mode=mode, compact=True)
 
@@ -594,11 +574,11 @@ def register_auto_primer_tools(mcp) -> None:
         def auto_prime_session(
             include_hints: bool = True,
             include_tasks: bool = True,
-            override_mode: Optional[str] = None,
+            override_mode: str | None = None,
         ) -> str:
             """
             [HINT: Auto-primer. Returns optimal context for session start. Detects agent/time/mode.]
-            
+
             Auto-prime AI context at session start.
             Call this at the beginning of each session for optimal context.
             """
@@ -626,10 +606,10 @@ def register_auto_primer_tools(mcp) -> None:
                 }, indent=2)
 
         @mcp.tool()
-        def get_task_context(task_id: Optional[str] = None) -> str:
+        def get_task_context(task_id: str | None = None) -> str:
             """
             [HINT: Task context. Get optimized context for working on a task.]
-            
+
             Get context optimized for a specific task.
             """
             try:

@@ -58,7 +58,6 @@ Design Note:
 from .sources import (
     WISDOM_SOURCES,
     get_aeon_level,
-    get_random_source,
     get_wisdom,
     list_hebrew_sources,  # NEW: Hebrew-specific source listing
     load_config,
@@ -74,9 +73,7 @@ from .sources import (
 # Sefaria integration (optional, graceful degradation)
 try:
     from .sefaria import (
-        SEFARIA_SELECTIONS,
         fetch_sefaria_text,
-        format_sefaria_wisdom,
         get_sefaria_wisdom,
     )
     SEFARIA_AVAILABLE = True
@@ -87,15 +84,6 @@ except ImportError:
 
 # Pistis Sophia (original source)
 try:
-    from .pistis_sophia import (
-        PISTIS_SOPHIA_QUOTES,
-    )
-    from .pistis_sophia import (
-        format_wisdom_ascii as format_pistis_sophia_ascii,
-    )
-    from .pistis_sophia import (
-        format_wisdom_markdown as format_pistis_sophia_markdown,
-    )
     from .pistis_sophia import (
         get_daily_wisdom as get_pistis_sophia_wisdom,
     )

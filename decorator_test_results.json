@@ -1,0 +1,21 @@
+{
+  "working": [
+    {
+      "name": "test_no_decorator",
+      "result": "no decorator result"
+    },
+    {
+      "name": "test_with_decorator",
+      "result": "decorator result"
+    },
+    {
+      "name": "test_decorator_dict",
+      "result": "Output validation error: {'status': 'success', 'message': 'dict result'} is not of type 'string'"
+    },
+    {
+      "name": "test_reversed_order",
+      "result": "reversed order result"
+    }
+  ],
+  "broken": []
+}

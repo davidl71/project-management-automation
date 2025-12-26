@@ -11,7 +11,7 @@ import json
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ CONSOLIDATION_CANDIDATES = {
 }
 
 
-def _count_registered_tools() -> Dict[str, Any]:
+def _count_registered_tools() -> dict[str, Any]:
     """Count tools registered in the MCP server (tools only, not resources or prompts)."""
     try:
         # Try to import from server to get actual count
@@ -66,7 +66,7 @@ def _count_registered_tools() -> Dict[str, Any]:
                         "source": "tool_manager",
                         "note": "Counts only callable tools, not resources or prompts",
                     }
-        
+
         # Fallback: try _tools attribute
         if hasattr(mcp, '_tools'):
             tools = mcp._tools
@@ -219,7 +219,7 @@ def check_tool_count_health(
         }, indent=2)
 
 
-def get_tool_count_for_context_primer() -> Dict[str, Any]:
+def get_tool_count_for_context_primer() -> dict[str, Any]:
     """
     Get tool count info for inclusion in context primer.
     Returns a compact dict suitable for context priming.

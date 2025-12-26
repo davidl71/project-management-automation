@@ -12,7 +12,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -88,10 +88,10 @@ def sprint_automation(
     extract_subtasks: bool = True,
     run_analysis_tools: bool = True,
     run_testing_tools: bool = True,
-    priority_filter: Optional[str] = None,
-    tag_filter: Optional[list[str]] = None,
+    priority_filter: str | None = None,
+    tag_filter: list[str] | None = None,
     dry_run: bool = False,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     notify: bool = False
 ) -> str:
     """
@@ -184,12 +184,12 @@ def sprint_automation(
                 'memories_recalled': sprint_context.get('total_memories', 0),
                 'blockers_from_memory': sprint_context.get('blockers_mentioned', 0),
             }
-        
+
         # Send notification if requested
         if notify and not dry_run:
             try:
-                from ..interactive import message_complete_notification, is_available
-                
+                from ..interactive import is_available, message_complete_notification
+
                 if is_available():
                     message = (
                         f"Sprint automation complete: "

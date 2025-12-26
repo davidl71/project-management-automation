@@ -1,0 +1,33 @@
+{
+  "working": [],
+  "broken": [
+    {
+      "name": "test_minimal_simple",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "test_minimal_with_decorator",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "test_minimal_json_string",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "test_minimal_decorator_json",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "test_minimal_underlying_call",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "test_minimal_dict_conversion",
+      "error": "object dict can't be used in 'await' expression"
+    },
+    {
+      "name": "test_batch_process",
+      "error": "object dict can't be used in 'await' expression"
+    }
+  ]
+}

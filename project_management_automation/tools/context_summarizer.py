@@ -14,7 +14,7 @@ Features:
 import json
 import logging
 import time
-from typing import Any, Optional, Union
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -89,10 +89,10 @@ TOKENS_PER_CHAR = 0.25
 
 
 def summarize_context(
-    data: Union[str, dict, list],
+    data: str | dict | list,
     level: str = "brief",
-    tool_type: Optional[str] = None,
-    max_tokens: Optional[int] = None,
+    tool_type: str | None = None,
+    max_tokens: int | None = None,
     include_raw: bool = False,
 ) -> str:
     """

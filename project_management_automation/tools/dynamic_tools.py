@@ -309,7 +309,7 @@ class ToolUsageTracker:
         sorted_tools = sorted(self.tool_counts.items(), key=lambda x: x[1], reverse=True)
         return sorted_tools[:limit]
 
-    def get_preferred_mode(self) -> Optional[str]:
+    def get_preferred_mode(self) -> str | None:
         """Get the most commonly used mode."""
         if not self.mode_counts:
             return None
@@ -344,7 +344,7 @@ class ToolUsageTracker:
 class FileEditTracker:
     """
     Tracks file edits during tool calls to detect multi-file vs single-file patterns.
-    
+
     Used by SessionModeInference to determine if a session involves editing
     multiple files (AGENT mode) vs single file (ASK/MANUAL mode).
     """
@@ -356,18 +356,18 @@ class FileEditTracker:
     def record_file_edit(self, file_path: str) -> None:
         """
         Record that a file was edited.
-        
+
         Args:
             file_path: Path to the edited file (can be relative or absolute)
         """
         # Normalize path (store as string for JSON serialization)
         normalized_path = str(Path(file_path).resolve())
         self.edited_files.add(normalized_path)
-        
+
         # Record timestamp
         current_time = time.time()
         self.edit_timestamps.append((normalized_path, current_time))
-        
+
         # Limit tracked timestamps to prevent memory bloat
         if len(self.edit_timestamps) > self.max_tracked:
             self.edit_timestamps = self.edit_timestamps[-self.max_tracked:]
@@ -375,7 +375,7 @@ class FileEditTracker:
     def get_unique_files_count(self) -> int:
         """
         Get the number of unique files edited.
-        
+
         Returns:
             Number of unique files edited in this session
         """
@@ -384,35 +384,35 @@ class FileEditTracker:
     def get_edit_frequency(self, window_seconds: float = 60) -> float:
         """
         Get the frequency of file edits in edits per minute.
-        
+
         Args:
             window_seconds: Time window to analyze (default: 60 seconds)
-            
+
         Returns:
             Edits per minute in the specified window
         """
         if not self.edit_timestamps:
             return 0.0
-        
+
         current_time = time.time()
         window_start = current_time - window_seconds
-        
+
         # Count edits in the window
         edits_in_window = sum(
             1 for _, timestamp in self.edit_timestamps
             if timestamp >= window_start
         )
-        
+
         # Convert to edits per minute
         return (edits_in_window / window_seconds) * 60.0
 
     def is_multi_file_session(self, threshold: int = 2) -> bool:
         """
         Check if this session involves editing multiple files.
-        
+
         Args:
             threshold: Minimum number of files to consider "multi-file" (default: 2)
-            
+
         Returns:
             True if more than threshold files have been edited
         """
@@ -470,18 +470,18 @@ class DynamicToolManager:
 
     # Tool usage tracking
     usage_tracker: ToolUsageTracker = field(default_factory=ToolUsageTracker)
-    
+
     # File edit tracking (MODE-002)
     file_tracker: FileEditTracker = field(default_factory=FileEditTracker)
-    
+
     # Session mode inference (MODE-002)
-    mode_inference: Optional[Any] = None  # SessionModeInference - lazy import to avoid circular deps
-    inferred_mode: Optional[Any] = None  # ModeInferenceResult - lazy import
+    mode_inference: Any | None = None  # SessionModeInference - lazy import to avoid circular deps
+    inferred_mode: Any | None = None  # ModeInferenceResult - lazy import
     mode_history: list[Any] = field(default_factory=list)  # List[ModeInferenceResult]
-    last_mode_update: Optional[float] = None  # Timestamp of last mode update
+    last_mode_update: float | None = None  # Timestamp of last mode update
 
     # Persistence path (optional)
-    persistence_path: Optional[Path] = None
+    persistence_path: Path | None = None
 
     def get_active_groups(self) -> set[ToolGroup]:
         """Get currently active tool groups."""
@@ -515,16 +515,16 @@ class DynamicToolManager:
 
         return group in self.get_active_groups()
 
-    def record_tool_usage(self, tool_name: str, tool_args: Optional[dict[str, Any]] = None) -> None:
+    def record_tool_usage(self, tool_name: str, tool_args: dict[str, Any] | None = None) -> None:
         """
         Record tool usage for adaptive recommendations.
-        
+
         Args:
             tool_name: Name of the tool being called
             tool_args: Optional tool arguments (used to extract file paths for MODE-002)
         """
         self.usage_tracker.record_tool_call(tool_name)
-        
+
         # Extract file paths from tool arguments (MODE-002)
         if tool_args:
             file_paths = self._extract_file_paths(tool_name, tool_args)
@@ -535,26 +535,26 @@ class DynamicToolManager:
         suggested_mode = TOOL_USAGE_MODE_HINTS.get(tool_name)
         if suggested_mode and suggested_mode != self.current_mode.value:
             logger.debug(f"Tool {tool_name} suggests mode: {suggested_mode}")
-    
+
     def _extract_file_paths(self, tool_name: str, tool_args: dict[str, Any]) -> list[str]:
         """
         Extract file paths from tool arguments.
-        
+
         Args:
             tool_name: Name of the tool
             tool_args: Tool arguments dictionary
-            
+
         Returns:
             List of file paths found in arguments
         """
         file_paths = []
-        
+
         # Common file path argument names
         file_arg_names = [
             "file_path", "target_file", "file", "path",
             "file_paths", "files", "paths"  # plural forms
         ]
-        
+
         # Check for direct file path arguments
         for arg_name in file_arg_names:
             if arg_name in tool_args:
@@ -563,7 +563,7 @@ class DynamicToolManager:
                     file_paths.append(value)
                 elif isinstance(value, list):
                     file_paths.extend([v for v in value if isinstance(v, str)])
-        
+
         # Tool-specific extraction
         if tool_name in ["search_replace", "write", "edit_file", "read_file"]:
             # These tools typically have file_path or target_file
@@ -571,13 +571,13 @@ class DynamicToolManager:
                 file_paths.append(tool_args["file_path"])
             if "target_file" in tool_args:
                 file_paths.append(tool_args["target_file"])
-        
+
         return file_paths
-    
-    def update_inferred_mode(self) -> Optional[Any]:
+
+    def update_inferred_mode(self) -> Any | None:
         """
         Update inferred session mode based on current tool and file patterns.
-        
+
         Returns:
             ModeInferenceResult or None if inference not available
         """
@@ -586,44 +586,44 @@ class DynamicToolManager:
             if self.mode_inference is None:
                 from .session_mode_inference import SessionModeInference
                 self.mode_inference = SessionModeInference()
-            
+
             # Calculate session duration
             from datetime import datetime
             session_start = datetime.fromisoformat(self.usage_tracker.session_start)
             session_duration = (datetime.now() - session_start).total_seconds()
-            
+
             # Infer mode
             result = self.mode_inference.infer_mode(
                 tool_tracker=self.usage_tracker,
                 file_tracker=self.file_tracker,
                 session_duration_seconds=session_duration
             )
-            
+
             # Store result
             self.inferred_mode = result
             self.mode_history.append(result)
-            
+
             # Limit history size
             if len(self.mode_history) > 50:
                 self.mode_history = self.mode_history[-50:]
-            
+
             self.last_mode_update = time.time()
-            
+
             logger.debug(
                 f"Inferred session mode: {result.mode.value} "
                 f"(confidence: {result.confidence:.1%})"
             )
-            
+
             return result
-            
+
         except Exception as e:
             logger.warning(f"Failed to update inferred mode: {e}")
             return None
-    
-    def get_current_mode(self) -> Optional[Any]:
+
+    def get_current_mode(self) -> Any | None:
         """
         Get current inferred session mode.
-        
+
         Returns:
             ModeInferenceResult or None
         """
@@ -634,7 +634,7 @@ class DynamicToolManager:
             or (current_time - self.last_mode_update) > 120  # 2 minutes
         ):
             self.update_inferred_mode()
-        
+
         return self.inferred_mode
 
     def get_recommended_groups(self) -> list[ToolGroup]:
@@ -657,7 +657,7 @@ class DynamicToolManager:
         self,
         text: str,
         threshold: float = 0.3
-    ) -> tuple[Optional[str], float, list[str]]:
+    ) -> tuple[str | None, float, list[str]]:
         """
         Infer the best workflow mode from conversation text.
 
@@ -705,7 +705,7 @@ class DynamicToolManager:
 
     def get_mode_suggestion(
         self,
-        text: Optional[str] = None,
+        text: str | None = None,
         include_rationale: bool = True
     ) -> dict[str, Any]:
         """
@@ -791,7 +791,7 @@ class DynamicToolManager:
     # PERSISTENCE
     # ═══════════════════════════════════════════════════════════════════════
 
-    def save_usage_data(self, path: Optional[Path] = None) -> bool:
+    def save_usage_data(self, path: Path | None = None) -> bool:
         """Save usage tracking data to disk."""
         save_path = path or self.persistence_path
         if not save_path:
@@ -813,7 +813,7 @@ class DynamicToolManager:
             logger.warning(f"Failed to save usage data: {e}")
             return False
 
-    def load_usage_data(self, path: Optional[Path] = None) -> bool:
+    def load_usage_data(self, path: Path | None = None) -> bool:
         """Load usage tracking data from disk."""
         load_path = path or self.persistence_path
         if not load_path:
@@ -956,7 +956,7 @@ class DynamicToolManager:
 
 
 # Global instance (singleton pattern for MCP server)
-_manager: Optional[DynamicToolManager] = None
+_manager: DynamicToolManager | None = None
 
 
 def get_tool_manager() -> DynamicToolManager:
@@ -978,9 +978,9 @@ def reset_tool_manager() -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def focus_mode(
-    mode: Optional[str] = None,
-    enable_group: Optional[str] = None,
-    disable_group: Optional[str] = None,
+    mode: str | None = None,
+    enable_group: str | None = None,
+    disable_group: str | None = None,
     status: bool = False,
 ) -> str:
     """
@@ -1106,7 +1106,7 @@ def focus_mode(
 
 
 def suggest_mode(
-    text: Optional[str] = None,
+    text: str | None = None,
     auto_switch: bool = False,
 ) -> str:
     """

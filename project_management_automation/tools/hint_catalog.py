@@ -8,7 +8,6 @@ Based on Cursor IDE Best Practice #5 (Detailed Prompts).
 import json
 import logging
 import time
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -650,8 +649,8 @@ TOOL_CATALOG = {
 
 
 def list_tools(
-    category: Optional[str] = None,
-    persona: Optional[str] = None,
+    category: str | None = None,
+    persona: str | None = None,
     include_examples: bool = True,
 ) -> str:
     """

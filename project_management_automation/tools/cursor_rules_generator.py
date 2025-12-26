@@ -9,7 +9,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -284,7 +284,7 @@ class CursorRulesGenerator:
 
     def generate_rules(
         self,
-        rules: Optional[list[str]] = None,
+        rules: list[str] | None = None,
         overwrite: bool = False,
     ) -> dict[str, Any]:
         """
@@ -335,7 +335,7 @@ class CursorRulesGenerator:
 
 
 def generate_cursor_rules(
-    rules: Optional[str] = None,
+    rules: str | None = None,
     overwrite: bool = False,
     analyze_only: bool = False,
 ) -> str:

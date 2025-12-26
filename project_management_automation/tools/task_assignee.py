@@ -25,10 +25,10 @@ import socket
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Literal, Optional
+from typing import Any, Literal
 
-from ..utils.todo2_utils import normalize_status, is_pending_status, is_review_status
-from ..utils.task_locking import atomic_assign_task, atomic_check_and_assign, atomic_batch_assign
+from ..utils.task_locking import atomic_assign_task, atomic_batch_assign
+from ..utils.todo2_utils import is_pending_status, normalize_status
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +152,7 @@ def assign_task(
     task_id: str,
     assignee_name: str,
     assignee_type: AssigneeType = "agent",
-    hostname: Optional[str] = None,
+    hostname: str | None = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -218,7 +218,7 @@ def assign_task(
 
         # Use atomic assignment to prevent race conditions
         old_assignee = task.get("assignee")
-        
+
         # Check if already assigned (atomic check)
         if old_assignee:
             existing_name = old_assignee.get("name", "unknown")
@@ -367,9 +367,9 @@ def unassign_task(task_id: str, dry_run: bool = False) -> str:
 
 
 def list_tasks_by_assignee(
-    assignee_name: Optional[str] = None,
-    assignee_type: Optional[AssigneeType] = None,
-    status_filter: Optional[str] = None,
+    assignee_name: str | None = None,
+    assignee_type: AssigneeType | None = None,
+    status_filter: str | None = None,
     include_unassigned: bool = False
 ) -> str:
     """
@@ -577,7 +577,7 @@ def bulk_assign_tasks(
     task_ids: list[str],
     assignee_name: str,
     assignee_type: AssigneeType = "agent",
-    hostname: Optional[str] = None,
+    hostname: str | None = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -675,7 +675,7 @@ def bulk_assign_tasks(
 
 def auto_assign_background_tasks(
     max_tasks_per_agent: int = 5,
-    priority_filter: Optional[str] = None,
+    priority_filter: str | None = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -783,7 +783,7 @@ def auto_assign_background_tasks(
                     assigned_by="auto_assign",
                     timeout=3.0,
                 )
-                
+
                 if not success:
                     # Task was assigned by another agent or assignment failed
                     logger.warning(f"Failed to assign {task.get('id')} to {agent}: {error}")
@@ -822,15 +822,15 @@ def auto_assign_background_tasks(
 
 def task_assignee(
     action: str,
-    task_id: Optional[str] = None,
-    task_ids: Optional[list[str]] = None,
-    assignee_name: Optional[str] = None,
+    task_id: str | None = None,
+    task_ids: list[str] | None = None,
+    assignee_name: str | None = None,
     assignee_type: str = "agent",
-    hostname: Optional[str] = None,
-    status_filter: Optional[str] = None,
+    hostname: str | None = None,
+    status_filter: str | None = None,
     include_unassigned: bool = False,
     max_tasks_per_agent: int = 5,
-    priority_filter: Optional[str] = None,
+    priority_filter: str | None = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -910,15 +910,15 @@ def register_assignee_tools(mcp) -> None:
         @mcp.tool()
         def task_assignee_tool(
             action: str,
-            task_id: Optional[str] = None,
-            task_ids: Optional[list[str]] = None,
-            assignee_name: Optional[str] = None,
+            task_id: str | None = None,
+            task_ids: list[str] | None = None,
+            assignee_name: str | None = None,
             assignee_type: str = "agent",
-            hostname: Optional[str] = None,
-            status_filter: Optional[str] = None,
+            hostname: str | None = None,
+            status_filter: str | None = None,
             include_unassigned: bool = False,
             max_tasks_per_agent: int = 5,
-            priority_filter: Optional[str] = None,
+            priority_filter: str | None = None,
             dry_run: bool = False
         ) -> str:
             """

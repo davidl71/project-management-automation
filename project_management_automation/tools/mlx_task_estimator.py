@@ -14,7 +14,7 @@ Features:
 import json
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from .task_duration_estimator import TaskDurationEstimator
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 # Try to import MLX integration
 try:
-    from .mlx_integration import generate_with_mlx, MLX_AVAILABLE
+    from .mlx_integration import MLX_AVAILABLE, generate_with_mlx
     MLX_ENABLED = MLX_AVAILABLE
 except ImportError:
     MLX_ENABLED = False
@@ -32,14 +32,14 @@ except ImportError:
 class MLXEnhancedTaskEstimator(TaskDurationEstimator):
     """
     Enhanced task duration estimator using MLX for semantic understanding.
-    
+
     Combines statistical methods (from parent class) with MLX semantic analysis
     for improved estimation accuracy, especially for novel tasks or tasks with
     semantic similarity but low word overlap.
-    
+
     Now includes adaptive learning from actual vs estimated completion times.
     """
-    
+
     def __init__(
         self,
         project_root=None,
@@ -50,7 +50,7 @@ class MLXEnhancedTaskEstimator(TaskDurationEstimator):
     ):
         """
         Initialize MLX-enhanced estimator.
-        
+
         Args:
             project_root: Project root path (defaults to find_project_root)
             use_mlx: Enable MLX enhancement (default: True)
@@ -65,7 +65,7 @@ class MLXEnhancedTaskEstimator(TaskDurationEstimator):
         self.statistical_weight = 1.0 - self.mlx_weight
         self.mlx_model = mlx_model
         self.use_learning = use_learning
-        
+
         # Initialize learner if enabled
         self.learner = None
         self.adjustment_factors = {}
@@ -79,69 +79,69 @@ class MLXEnhancedTaskEstimator(TaskDurationEstimator):
             except Exception as e:
                 logger.debug(f"Learning not available: {e}")
                 self.use_learning = False
-        
+
         if self.use_mlx:
             logger.debug(f"MLX enhancement enabled (weight: {self.mlx_weight})")
         else:
             logger.debug("MLX enhancement disabled or unavailable")
-    
+
     def estimate(
         self,
         name: str,
         details: str = "",
-        tags: Optional[List[str]] = None,
+        tags: list[str] | None = None,
         priority: str = "medium",
         use_historical: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Estimate task duration with MLX semantic enhancement.
-        
+
         Uses hybrid approach:
         - Statistical estimate (from parent class): Historical data + keyword matching
         - MLX estimate: Semantic understanding + complexity analysis
         - Combined: Weighted average of both
-        
+
         Falls back gracefully to statistical-only if MLX unavailable or fails.
-        
+
         Returns:
             Dictionary with estimate, confidence, method, and metadata
         """
         # Get base statistical estimate
         base_estimate = super().estimate(name, details, tags, priority, use_historical)
-        
+
         # If MLX disabled or unavailable, return statistical estimate
         if not self.use_mlx:
             return base_estimate
-        
+
         # Get MLX-enhanced estimate
         mlx_estimate = None
         try:
             mlx_estimate = self._mlx_semantic_estimate(name, details, tags or [], priority)
         except Exception as e:
             logger.debug(f"MLX estimation failed, using statistical only: {e}")
-        
+
         # Combine estimates if MLX estimate available
         if mlx_estimate and mlx_estimate.get('estimate_hours'):
             combined = self._combine_estimates(base_estimate, mlx_estimate)
         else:
             combined = base_estimate
-        
+
         # Apply learned adjustments if learning enabled
         if self.use_learning and self.adjustment_factors:
             combined = self._apply_learned_adjustments(combined, tags or [], priority)
-        
+
         return combined
-    
+
     def _mlx_semantic_estimate(
         self,
         name: str,
         details: str,
-        tags: List[str],
+        tags: list[str],
         priority: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """
         Get MLX-based semantic estimate.
-        
+
         Uses MLX to:
         1. Analyze task complexity and scope
         2. Understand semantic meaning (vs keyword matching)
@@ -178,7 +178,7 @@ Example response:
     "reasoning": "Moderate complexity feature requiring API integration and testing"
 }}
 """
-        
+
         try:
             # Call MLX generation
             result = generate_with_mlx(
@@ -187,7 +187,7 @@ Example response:
                 max_tokens=200,
                 verbose=False
             )
-            
+
             # Parse MLX response
             data = json.loads(result)
             if data.get('success') and 'data' in data:
@@ -196,20 +196,20 @@ Example response:
                 if parsed:
                     logger.debug(f"MLX estimate: {parsed.get('estimate_hours')}h (confidence: {parsed.get('confidence')})")
                     return parsed
-            
+
             logger.debug("MLX returned success but no parseable estimate")
-            
+
         except json.JSONDecodeError as e:
             logger.debug(f"Failed to parse MLX JSON response: {e}")
         except Exception as e:
             logger.debug(f"MLX estimation error: {e}")
-        
+
         return None
-    
-    def _parse_mlx_response(self, text: str) -> Optional[Dict[str, Any]]:
+
+    def _parse_mlx_response(self, text: str) -> dict[str, Any] | None:
         """
         Parse MLX response to extract estimation JSON.
-        
+
         MLX may return:
         - Raw JSON
         - JSON embedded in text
@@ -221,7 +221,7 @@ Example response:
             r'\{[^{}]*"estimate_hours"[^{}]*\}',  # Single-line JSON
             r'\{.*?"estimate_hours".*?\}',  # Multi-line JSON
         ]
-        
+
         for pattern in json_patterns:
             match = re.search(pattern, text, re.DOTALL)
             if match:
@@ -230,19 +230,19 @@ Example response:
                     # Clean up common formatting issues
                     json_str = json_str.replace('\n', ' ').strip()
                     parsed = json.loads(json_str)
-                    
+
                     # Validate required fields
                     if 'estimate_hours' in parsed:
                         # Ensure valid ranges
                         estimate_hours = float(parsed['estimate_hours'])
                         estimate_hours = max(0.5, min(20.0, estimate_hours))  # Clamp to reasonable range
-                        
+
                         confidence = float(parsed.get('confidence', 0.6))
                         confidence = max(0.0, min(1.0, confidence))
-                        
+
                         complexity = int(parsed.get('complexity', 5))
                         complexity = max(1, min(10, complexity))
-                        
+
                         return {
                             'estimate_hours': round(estimate_hours, 1),
                             'confidence': confidence,
@@ -253,7 +253,7 @@ Example response:
                 except (json.JSONDecodeError, ValueError, KeyError) as e:
                     logger.debug(f"Failed to parse JSON from pattern match: {e}")
                     continue
-        
+
         # Fallback: Try to extract just the estimate_hours number
         hours_match = re.search(r'"estimate_hours"\s*:\s*(\d+\.?\d*)', text)
         if hours_match:
@@ -268,42 +268,42 @@ Example response:
                 }
             except ValueError:
                 pass
-        
+
         return None
-    
+
     def _combine_estimates(
         self,
-        statistical_estimate: Dict[str, Any],
-        mlx_estimate: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        statistical_estimate: dict[str, Any],
+        mlx_estimate: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Combine statistical and MLX estimates using weighted average.
-        
+
         Args:
             statistical_estimate: Estimate from parent class
             mlx_estimate: Estimate from MLX semantic analysis
-            
+
         Returns:
             Combined estimate dictionary
         """
         stat_hours = statistical_estimate['estimate_hours']
         mlx_hours = mlx_estimate['estimate_hours']
-        
+
         # Weighted average
         combined_hours = (
             stat_hours * self.statistical_weight +
             mlx_hours * self.mlx_weight
         )
         combined_hours = round(combined_hours, 1)
-        
+
         # Combine confidence (take higher, with slight boost for hybrid)
         stat_confidence = statistical_estimate.get('confidence', 0.5)
         mlx_confidence = mlx_estimate.get('confidence', 0.5)
         combined_confidence = max(stat_confidence, mlx_confidence)
-        
+
         # Boost confidence slightly for hybrid approach (we have more information)
         combined_confidence = min(0.95, combined_confidence + 0.05)
-        
+
         # Calculate bounds (use statistical bounds as base, adjusted by MLX)
         lower_bound = min(
             statistical_estimate.get('lower_bound', combined_hours * 0.7),
@@ -313,7 +313,7 @@ Example response:
             statistical_estimate.get('upper_bound', combined_hours * 1.3),
             mlx_hours * 1.2
         )
-        
+
         return {
             'estimate_hours': combined_hours,
             'confidence': round(combined_confidence, 2),
@@ -332,54 +332,54 @@ Example response:
                 'enhancement': 'mlx_semantic_matching'
             }
         }
-    
+
     def _apply_learned_adjustments(
         self,
-        estimate: Dict[str, Any],
-        tags: List[str],
+        estimate: dict[str, Any],
+        tags: list[str],
         priority: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Apply learned adjustment factors based on past estimation accuracy.
-        
+
         Adjusts estimate based on patterns learned from actual vs estimated times.
         """
         if not self.adjustment_factors:
             return estimate
-        
+
         adjustments = []
-        
+
         # Apply tag-based adjustments
         for tag in tags:
             key = f'tag:{tag}'
             if key in self.adjustment_factors:
                 adjustments.append(self.adjustment_factors[key])
-        
+
         # Apply priority-based adjustments
         priority_key = f'priority:{priority.lower()}'
         if priority_key in self.adjustment_factors:
             adjustments.append(self.adjustment_factors[priority_key])
-        
+
         # Apply adjustments (average if multiple)
         if adjustments:
             import statistics
             avg_adjustment = statistics.mean(adjustments)
             adjusted_hours = estimate['estimate_hours'] * avg_adjustment
-            
+
             estimate['estimate_hours'] = round(adjusted_hours, 1)
             estimate['method'] = f"{estimate.get('method', 'unknown')}_with_learning"
-            
+
             if 'metadata' not in estimate:
                 estimate['metadata'] = {}
             estimate['metadata']['learning_adjustment'] = round(avg_adjustment, 3)
             estimate['metadata']['adjustment_count'] = len(adjustments)
-            
+
             # Recalculate bounds with adjustment
             estimate['lower_bound'] = round(estimate.get('lower_bound', adjusted_hours * 0.7) * avg_adjustment, 1)
             estimate['upper_bound'] = round(estimate.get('upper_bound', adjusted_hours * 1.3) * avg_adjustment, 1)
-            
+
             logger.debug(f"Applied learning adjustment: {avg_adjustment:.3f}x to {estimate['estimate_hours']}h")
-        
+
         return estimate
 
 
@@ -387,7 +387,7 @@ Example response:
 def estimate_task_duration_mlx_enhanced(
     name: str,
     details: str = "",
-    tags: Optional[List[str]] = None,
+    tags: list[str] | None = None,
     priority: str = "medium",
     use_historical: bool = True,
     use_mlx: bool = True,
@@ -396,7 +396,7 @@ def estimate_task_duration_mlx_enhanced(
 ) -> float:
     """
     Convenience function for MLX-enhanced duration estimation.
-    
+
     Returns just the estimated hours (backward compatible).
     """
     estimator = MLXEnhancedTaskEstimator(
@@ -411,16 +411,16 @@ def estimate_task_duration_mlx_enhanced(
 def estimate_task_duration_mlx_enhanced_detailed(
     name: str,
     details: str = "",
-    tags: Optional[List[str]] = None,
+    tags: list[str] | None = None,
     priority: str = "medium",
     use_historical: bool = True,
     use_mlx: bool = True,
     mlx_weight: float = 0.3,
     project_root=None
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Get detailed MLX-enhanced duration estimation with confidence and metadata.
-    
+
     Returns full estimation dictionary.
     """
     estimator = MLXEnhancedTaskEstimator(

@@ -14,14 +14,14 @@ import os
 import platform
 import subprocess
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 def get_system_ram_gb() -> float:
     """
     Get total system RAM in GB.
-    
+
     Returns:
         Total RAM in GB, or 8.0 as default if detection fails
     """
@@ -40,7 +40,7 @@ def get_system_ram_gb() -> float:
             return ram_gb
         elif system == "Linux":
             # Read from /proc/meminfo
-            with open("/proc/meminfo", "r") as f:
+            with open("/proc/meminfo") as f:
                 for line in f:
                     if line.startswith("MemTotal:"):
                         parts = line.split()
@@ -82,17 +82,17 @@ except ImportError:
         AUTOMATION_ERROR = "AUTOMATION_ERROR"
 
 
-def detect_hardware_config() -> Dict[str, Any]:
+def detect_hardware_config() -> dict[str, Any]:
     """
     Detect hardware platform and return optimal Ollama configuration.
-    
+
     Detects:
     - CPU architecture (Intel x86_64 vs Apple Silicon arm64)
     - CPU core count
     - Total system RAM
     - GPU availability (Metal on Apple Silicon, CUDA on NVIDIA, ROCm on AMD)
     - Optimal performance settings based on available resources
-    
+
     Returns:
         Dict with hardware info and recommended settings:
         {
@@ -112,7 +112,7 @@ def detect_hardware_config() -> Dict[str, Any]:
     arch = platform.machine()
     cpu_cores = os.cpu_count() or 4  # Fallback to 4 if detection fails
     ram_gb = get_system_ram_gb()
-    
+
     config = {
         "architecture": arch,
         "cpu_cores": cpu_cores,
@@ -124,7 +124,7 @@ def detect_hardware_config() -> Dict[str, Any]:
         "recommended_context_size": 4096,  # Default
         "ram_optimizations": {},
     }
-    
+
     # RAM-based optimizations
     # With more RAM, we can use larger context windows and higher quality models
     if ram_gb >= 32:
@@ -159,7 +159,7 @@ def detect_hardware_config() -> Dict[str, Any]:
             "can_use_larger_models": False,
             "enable_flash_attention": False,
         }
-    
+
     # macOS detection
     if system == "Darwin":
         if arch in ("arm64", "aarch64"):
@@ -169,7 +169,7 @@ def detect_hardware_config() -> Dict[str, Any]:
             # Apple Silicon: Metal GPU acceleration available
             # Recommend using GPU for most layers
             # Common Apple Silicon chips: M1 (8-core), M1 Pro/Max (8-10 core GPU), M2 (8-10 core GPU), M3/M4 (up to 40 GPU cores)
-            
+
             # Try to detect chip model for better optimization
             try:
                 chip_model = subprocess.check_output(
@@ -178,7 +178,7 @@ def detect_hardware_config() -> Dict[str, Any]:
                     text=True,
                     timeout=1,
                 ).strip().upper()
-                
+
                 # Detect M-series chip and estimate GPU cores
                 if "M4" in chip_model:
                     # M4 has up to 40 GPU cores (depending on model)
@@ -208,7 +208,7 @@ def detect_hardware_config() -> Dict[str, Any]:
                 # Fallback: reasonable defaults for Apple Silicon
                 config["recommended_num_gpu"] = 35
                 config["chip_model"] = "Apple Silicon (detected)"
-                
+
         else:
             # Intel Mac
             config["platform"] = "intel"
@@ -218,12 +218,12 @@ def detect_hardware_config() -> Dict[str, Any]:
             # Use RAM-based context size (larger if more RAM available)
             config["recommended_context_size"] = config["ram_optimizations"]["recommended_context_size"]
             # Intel Macs: CPU-only, but can use larger contexts if RAM available
-            
+
     # Linux detection
     elif system == "Linux":
         config["platform"] = "linux"
         gpu_detected = False
-        
+
         # Check for NVIDIA GPU (CUDA) first
         try:
             result = subprocess.run(
@@ -240,7 +240,7 @@ def detect_hardware_config() -> Dict[str, Any]:
                 gpu_detected = True
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             pass  # Try AMD GPU next
-        
+
         # Check for AMD GPU (ROCm) if NVIDIA not found
         if not gpu_detected:
             try:
@@ -260,14 +260,14 @@ def detect_hardware_config() -> Dict[str, Any]:
                         gpu_detected = True
             except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                 pass  # No AMD GPU or rocminfo not available
-        
+
         # Fallback to CPU-only if no GPU detected
         if not gpu_detected:
             config["gpu_available"] = False
             config["recommended_num_gpu"] = None
             # Use RAM-based context size (larger if more RAM available)
             config["recommended_context_size"] = config["ram_optimizations"]["recommended_context_size"]
-            
+
     elif system == "Windows":
         config["platform"] = "windows"
         # Check for AMD GPU (ROCm) on Windows (ROCm v6.1+)
@@ -293,39 +293,39 @@ def detect_hardware_config() -> Dict[str, Any]:
             config["gpu_available"] = False
             config["recommended_num_gpu"] = None
             config["recommended_context_size"] = 2048
-            
+
     else:
         # Unknown platform
         config["platform"] = "unknown"
         config["recommended_num_gpu"] = None
         config["recommended_context_size"] = 2048
-    
+
     return config
 
 
 def get_optimized_ollama_options(
-    num_gpu: Optional[int] = None,
-    num_threads: Optional[int] = None,
-    context_size: Optional[int] = None,
+    num_gpu: int | None = None,
+    num_threads: int | None = None,
+    context_size: int | None = None,
     use_auto_detect: bool = True,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Get optimized Ollama options based on hardware detection or provided parameters.
-    
+
     Args:
         num_gpu: Override GPU layers (None = auto-detect)
         num_threads: Override CPU threads (None = auto-detect)
         context_size: Override context size (None = auto-detect)
         use_auto_detect: If True, auto-detect hardware if parameters not provided
-    
+
     Returns:
         Dict with optimized options for Ollama
     """
     options = {}
-    
+
     if use_auto_detect:
         hw_config = detect_hardware_config()
-        
+
         # GPU layers
         if num_gpu is None:
             if hw_config["recommended_num_gpu"] is not None:
@@ -336,7 +336,7 @@ def get_optimized_ollama_options(
                 )
         else:
             options["num_gpu"] = num_gpu
-            
+
         # CPU threads
         if num_threads is None:
             options["num_threads"] = hw_config["recommended_num_threads"]
@@ -346,7 +346,7 @@ def get_optimized_ollama_options(
             )
         else:
             options["num_threads"] = num_threads
-            
+
         # Context size
         if context_size is None:
             options["num_ctx"] = hw_config["recommended_context_size"]
@@ -360,11 +360,11 @@ def get_optimized_ollama_options(
             options["num_threads"] = num_threads
         if context_size is not None:
             options["num_ctx"] = context_size
-    
+
     return options
 
 
-def check_ollama_status(host: Optional[str] = None) -> str:
+def check_ollama_status(host: str | None = None) -> str:
     """
     [HINT: Ollama status. Check if Ollama server is running and accessible.]
 
@@ -401,7 +401,7 @@ def check_ollama_status(host: Optional[str] = None) -> str:
         # Try to list models to check connection
         models_response = client.list()
         model_list = models_response.models if hasattr(models_response, 'models') else models_response.get("models", [])
-        
+
         # Extract model names
         model_names = []
         for model_obj in model_list[:10]:  # First 10
@@ -414,7 +414,7 @@ def check_ollama_status(host: Optional[str] = None) -> str:
                 model_names.append(model_obj.get("model", model_obj.get("name", "")))
             else:
                 model_names.append(str(model_obj))
-        
+
         result = {
             "status": "running",
             "host": host or "http://localhost:11434",
@@ -430,17 +430,17 @@ def check_ollama_status(host: Optional[str] = None) -> str:
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("check_ollama_status", duration, False, e)
-        
+
         # Check if it's a connection error
         error_msg = str(e)
         if "connection" in error_msg.lower() or "refused" in error_msg.lower():
             error_msg = "Ollama server not running. Start it with: ollama serve"
-        
+
         error_response = format_error_response(error_msg, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
 
 
-def list_ollama_models(host: Optional[str] = None) -> str:
+def list_ollama_models(host: str | None = None) -> str:
     """
     [HINT: Ollama models. List all available Ollama models on the local server.]
 
@@ -495,7 +495,7 @@ def list_ollama_models(host: Optional[str] = None) -> str:
                     "modified_at": getattr(model_obj, "modified_at", None),
                     "digest": getattr(model_obj, "digest", ""),
                 }
-            
+
             # Convert datetime to ISO string if present
             modified_at = model_dict.get("modified_at")
             if modified_at and hasattr(modified_at, 'isoformat'):
@@ -504,7 +504,7 @@ def list_ollama_models(host: Optional[str] = None) -> str:
                 modified_at_str = str(modified_at)
             else:
                 modified_at_str = ""
-            
+
             formatted_models.append({
                 "name": model_dict.get("model", ""),  # Note: Ollama uses "model" not "name"
                 "size": model_dict.get("size", 0),
@@ -526,11 +526,11 @@ def list_ollama_models(host: Optional[str] = None) -> str:
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("list_ollama_models", duration, False, e)
-        
+
         error_msg = str(e)
         if "connection" in error_msg.lower() or "refused" in error_msg.lower():
             error_msg = "Ollama server not running. Start it with: ollama serve"
-        
+
         error_response = format_error_response(error_msg, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
 
@@ -538,13 +538,13 @@ def list_ollama_models(host: Optional[str] = None) -> str:
 def generate_with_ollama(
     prompt: str,
     model: str = "llama3.2",
-    host: Optional[str] = None,
+    host: str | None = None,
     stream: bool = False,
-    options: Optional[dict] = None,
-    num_gpu: Optional[int] = None,
-    num_threads: Optional[int] = None,
-    context_size: Optional[int] = None,
-    use_flash_attention: Optional[bool] = None,
+    options: dict | None = None,
+    num_gpu: int | None = None,
+    num_threads: int | None = None,
+    context_size: int | None = None,
+    use_flash_attention: bool | None = None,
     use_ram_optimizations: bool = True,
 ) -> str:
     """
@@ -604,16 +604,16 @@ def generate_with_ollama(
 
         # Prepare generation parameters with performance optimizations
         gen_options = options.copy() if options else {}
-        
+
         # Auto-detect hardware and apply optimizations (unless explicitly overridden)
         # Priority: explicit args > env vars > auto-detection
         auto_detect = True
-        
+
         # Check if any performance params are explicitly set (via args or env)
         has_explicit_gpu = num_gpu is not None or os.getenv("OLLAMA_NUM_GPU")
         has_explicit_threads = num_threads is not None or os.getenv("OLLAMA_NUM_THREADS")
         has_explicit_ctx = context_size is not None or os.getenv("OLLAMA_NUM_CTX")
-        
+
         # GPU layers: explicit arg > env var > auto-detect
         if num_gpu is not None:
             gen_options["num_gpu"] = num_gpu
@@ -632,7 +632,7 @@ def generate_with_ollama(
                         f"🚀 Auto-configured GPU: {hw_config['platform']} with {hw_config['gpu_type']} GPU, "
                         f"using {hw_config['recommended_num_gpu']} layers"
                     )
-        
+
         # CPU threads: explicit arg > env var > auto-detect
         if num_threads is not None:
             gen_options["num_threads"] = num_threads
@@ -650,7 +650,7 @@ def generate_with_ollama(
                     f"🚀 Auto-configured CPU: {hw_config['cpu_cores']} cores, "
                     f"using {hw_config['recommended_num_threads']} threads"
                 )
-        
+
         # Context size: explicit arg > env var > auto-detect (with RAM optimization)
         if context_size is not None:
             gen_options["num_ctx"] = context_size
@@ -666,7 +666,7 @@ def generate_with_ollama(
                 gen_options["num_ctx"] = hw_config["recommended_context_size"]
                 if hw_config.get("ram_gb", 0) >= 16:
                     logger.info(f"💾 Large RAM detected ({hw_config['ram_gb']:.1f}GB) - using larger context size ({hw_config['recommended_context_size']})")
-        
+
         # Flash Attention: explicit > env var > auto-detect (based on RAM)
         if use_flash_attention is not None:
             if use_flash_attention:
@@ -679,7 +679,7 @@ def generate_with_ollama(
                 if not os.getenv("OLLAMA_FLASH_ATTENTION"):
                     os.environ["OLLAMA_FLASH_ATTENTION"] = "1"
                     logger.info("💾 Flash Attention enabled (RAM optimization)")
-        
+
         # KV Cache quantization for memory efficiency (optional)
         if use_ram_optimizations and auto_detect:
             hw_config = detect_hardware_config()
@@ -712,7 +712,7 @@ def generate_with_ollama(
                 }
             except Exception:
                 pass  # Don't fail if hardware detection fails
-        
+
         # Get RAM info if available
         try:
             hw_config = detect_hardware_config()
@@ -722,7 +722,7 @@ def generate_with_ollama(
             }
         except Exception:
             ram_info = None
-        
+
         result = {
             "model": model,
             "prompt": prompt[:200] + "..." if len(prompt) > 200 else prompt,  # Truncate for display
@@ -749,18 +749,18 @@ def generate_with_ollama(
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("generate_with_ollama", duration, False, e)
-        
+
         error_msg = str(e)
         if "connection" in error_msg.lower() or "refused" in error_msg.lower():
             error_msg = "Ollama server not running. Start it with: ollama serve"
         elif "model" in error_msg.lower() and "not found" in error_msg.lower():
             error_msg = f"Model '{model}' not found. Pull it with: ollama pull {model}"
-        
+
         error_response = format_error_response(error_msg, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
 
 
-def pull_ollama_model(model: str, host: Optional[str] = None) -> str:
+def pull_ollama_model(model: str, host: str | None = None) -> str:
     """
     [HINT: Ollama pull. Download/pull an Ollama model from the registry.]
 
@@ -797,7 +797,7 @@ def pull_ollama_model(model: str, host: Optional[str] = None) -> str:
 
         # Pull model (this may take a while)
         logger.info(f"Pulling model: {model} (this may take several minutes)")
-        response = client.pull(model)
+        client.pull(model)
 
         result = {
             "model": model,
@@ -813,11 +813,11 @@ def pull_ollama_model(model: str, host: Optional[str] = None) -> str:
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution("pull_ollama_model", duration, False, e)
-        
+
         error_msg = str(e)
         if "connection" in error_msg.lower() or "refused" in error_msg.lower():
             error_msg = "Ollama server not running. Start it with: ollama serve"
-        
+
         error_response = format_error_response(error_msg, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)
 
@@ -825,21 +825,21 @@ def pull_ollama_model(model: str, host: Optional[str] = None) -> str:
 def get_hardware_info() -> str:
     """
     [HINT: Hardware detection. Get hardware information and recommended Ollama settings.]
-    
+
     📊 Output: Hardware platform, GPU availability, recommended settings
     🔧 Side Effects: None (read-only hardware detection)
     📁 Detects: CPU architecture, GPU type, optimal performance settings
     ⏱️ Typical Runtime: <1 second
-    
+
     Example Prompt:
     "What hardware do I have? Check hardware configuration for Ollama"
-    
+
     Returns:
         JSON with hardware information and recommended Ollama settings
     """
     try:
         hw_config = detect_hardware_config()
-        
+
         result = {
             "platform": hw_config["platform"],
             "architecture": hw_config["architecture"],
@@ -856,7 +856,7 @@ def get_hardware_info() -> str:
             "ram_optimizations": hw_config.get("ram_optimizations", {}),
             "notes": []
         }
-        
+
         # Add RAM-specific notes
         ram_gb = hw_config.get("ram_gb", 0)
         if ram_gb >= 32:
@@ -867,7 +867,7 @@ def get_hardware_info() -> str:
             result["notes"].append(f"Moderate RAM ({ram_gb:.1f}GB) - Medium contexts recommended")
         else:
             result["notes"].append(f"Limited RAM ({ram_gb:.1f}GB) - Use smaller contexts and models")
-        
+
         # Add helpful notes
         if hw_config["platform"] == "apple_silicon":
             chip_info = f" ({hw_config.get('chip_model', '')})" if hw_config.get("chip_model") else ""
@@ -887,9 +887,9 @@ def get_hardware_info() -> str:
         else:
             result["notes"].append("CPU-only inference recommended")
             result["notes"].append("Recommendation: Use smaller models for faster inference")
-        
+
         return json.dumps(format_success_response(result), indent=2)
-        
+
     except Exception as e:
         error_response = format_error_response(
             f"Error detecting hardware: {str(e)}",
@@ -901,7 +901,7 @@ def get_hardware_info() -> str:
 def register_ollama_tools(mcp):
     """
     Register Ollama tools with FastMCP server.
-    
+
     Args:
         mcp: FastMCP server instance
     """
@@ -911,17 +911,17 @@ def register_ollama_tools(mcp):
 
     try:
         @mcp.tool()
-        def check_ollama_status_tool(host: Optional[str] = None) -> str:
+        def check_ollama_status_tool(host: str | None = None) -> str:
             """Check if Ollama server is running and accessible."""
             return check_ollama_status(host)
-        
+
         @mcp.tool()
         def get_hardware_info_tool() -> str:
             """Get hardware information and recommended Ollama performance settings."""
             return get_hardware_info()
 
         @mcp.tool()
-        def list_ollama_models_tool(host: Optional[str] = None) -> str:
+        def list_ollama_models_tool(host: str | None = None) -> str:
             """List all available Ollama models on the local server."""
             return list_ollama_models(host)
 
@@ -929,22 +929,22 @@ def register_ollama_tools(mcp):
         def generate_with_ollama_tool(
             prompt: str,
             model: str = "llama3.2",
-            host: Optional[str] = None,
+            host: str | None = None,
             stream: bool = False,
-            options: Optional[str] = None,  # JSON string
-            num_gpu: Optional[int] = None,
-            num_threads: Optional[int] = None,
-            context_size: Optional[int] = None,
+            options: str | None = None,  # JSON string
+            num_gpu: int | None = None,
+            num_threads: int | None = None,
+            context_size: int | None = None,
         ) -> str:
             """
             Generate text using a local Ollama model.
-            
+
             Performance optimization parameters:
             - num_gpu: Number of layers to offload to GPU (speeds up inference)
             - num_threads: Number of CPU threads (match your CPU cores)
             - context_size: Context window size (smaller = faster)
             - stream: Enable streaming for faster perceived response time
-            
+
             Args:
                 prompt: Text prompt to send to the model
                 model: Model name (default: llama3.2)
@@ -962,7 +962,7 @@ def register_ollama_tools(mcp):
                     parsed_options = json.loads(options)
                 except json.JSONDecodeError:
                     logger.warning(f"Invalid options JSON: {options}")
-            
+
             return generate_with_ollama(
                 prompt, model, host, stream, parsed_options,
                 num_gpu=num_gpu,
@@ -971,7 +971,7 @@ def register_ollama_tools(mcp):
             )
 
         @mcp.tool()
-        def pull_ollama_model_tool(model: str, host: Optional[str] = None) -> str:
+        def pull_ollama_model_tool(model: str, host: str | None = None) -> str:
             """Download/pull an Ollama model from the registry."""
             return pull_ollama_model(model, host)
 

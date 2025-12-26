@@ -13,7 +13,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -39,50 +38,50 @@ except ImportError:
 
 
 def check_attribution_compliance(
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     create_tasks: bool = True,
 ) -> str:
     """
     Check attribution compliance across the codebase.
-    
+
     Scans for:
     - Missing attribution in file headers
     - Missing entries in ATTRIBUTIONS.md
     - Uncredited third-party references
     - Dependency license compliance
-    
+
     Args:
         output_path: Path for report output (default: docs/ATTRIBUTION_COMPLIANCE_REPORT.md)
         create_tasks: Whether to create Todo2 tasks for issues found
-        
+
     Returns:
         JSON string with compliance check results
     """
     start_time = time.time()
-    
+
     try:
         # Import from automation script
         from project_management_automation.scripts.automate_attribution_check import AttributionComplianceChecker
-        
+
         # Find project root
         from project_management_automation.utils import find_project_root
         project_root = find_project_root()
-        
+
         # Build config
         config = {
             'output_path': output_path or 'docs/ATTRIBUTION_COMPLIANCE_REPORT.md',
             'create_tasks': create_tasks
         }
-        
+
         # Create checker and run
         checker = AttributionComplianceChecker(config, project_root)
         results = checker.run()
-        
+
         # Extract key metrics from results
         analysis_results = results.get('results', {})
         attribution_score = analysis_results.get('attribution_score', 0)
         status = analysis_results.get('status', 'unknown')
-        
+
         # Format response
         response_data = {
             'attribution_score': attribution_score,
@@ -94,15 +93,15 @@ def check_attribution_compliance(
             'tasks_created': len(results.get('followup_tasks', [])) if create_tasks else 0,
             'report_path': str(Path(config['output_path']).absolute()),
         }
-        
+
         duration = time.time() - start_time
         log_automation_execution('check_attribution_compliance', duration, True)
-        
+
         return json.dumps(format_success_response(response_data), indent=2)
-        
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('check_attribution_compliance', duration, False, e)
-        
+
         error_response = format_error_response(e, ErrorCode.AUTOMATION_ERROR)
         return json.dumps(error_response, indent=2)

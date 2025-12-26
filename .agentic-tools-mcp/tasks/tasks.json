@@ -3120,6 +3120,20 @@
         "gpu"
       ],
       "level": 0
+    },
+    {
+      "id": "984d1ebe-d9df-4ffc-ab19-f4468283b5ff",
+      "name": "Generate Project Scorecard Report",
+      "details": "Generate a comprehensive project health scorecard showing metrics across security, testing, documentation, completion, alignment, and overall project health.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-25T21:37:45.725Z",
+      "updatedAt": "2025-12-25T21:37:54.386Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [],
+      "level": 0
     }
   ],
   "subtasks": [],

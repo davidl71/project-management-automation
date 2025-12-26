@@ -16,7 +16,7 @@ import json
 import subprocess
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
@@ -25,13 +25,13 @@ class SecurityVulnerability:
 
     package: str
     severity: str  # critical, high, medium, low
-    cve: Optional[str]
+    cve: str | None
     source: str  # dependabot, pip-audit, cargo-audit, npm-audit
     state: str  # open, fixed, dismissed
     ecosystem: str  # python, rust, npm
-    description: Optional[str] = None
+    description: str | None = None
     fix_available: bool = False
-    fixed_version: Optional[str] = None
+    fixed_version: str | None = None
 
 
 def fetch_dependabot_alerts(
@@ -294,7 +294,7 @@ def get_unified_security_report(
 def dismiss_dependabot_alert(
     alert_number: int,
     reason: str = "tolerable_risk",
-    comment: Optional[str] = None,
+    comment: str | None = None,
     repo: str = "davidl71/project-management-automation",
 ) -> dict[str, Any]:
     """

@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 
@@ -37,9 +37,9 @@ except ImportError:
 
 
 def validate_ci_cd_workflow(
-    workflow_path: Optional[str] = None,
+    workflow_path: str | None = None,
     check_runners: bool = True,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     Validate CI/CD workflows and runner configurations.

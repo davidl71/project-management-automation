@@ -1,0 +1,17 @@
+{
+  "working": [
+    {
+      "name": "test_module_import",
+      "result": "{\"status\": \"success\", \"message\": \"from module\"}"
+    },
+    {
+      "name": "test_decorator_module_import",
+      "result": "{\"status\": \"success\", \"message\": \"from module\"}"
+    },
+    {
+      "name": "test_wrapper_pattern",
+      "result": "{\"status\": \"success\", \"message\": \"from module\"}"
+    }
+  ],
+  "broken": []
+}

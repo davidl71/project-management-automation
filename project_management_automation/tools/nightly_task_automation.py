@@ -19,7 +19,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 nightly_logger = logging.getLogger(__name__)
 
@@ -28,8 +28,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
     from tools.intelligent_automation_base import IntelligentAutomationBase
-    from utils.todo2_utils import normalize_status, is_pending_status, is_review_status
     from utils.task_locking import atomic_assign_task
+    from utils.todo2_utils import is_pending_status, is_review_status
 except ImportError:
     # Fallback if base class not available
     class IntelligentAutomationBase:
@@ -372,7 +372,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return result
 
-    def _update_task_status(self, task: dict[str, Any], new_status: str, result_comment: Optional[str] = None) -> dict[str, Any]:
+    def _update_task_status(self, task: dict[str, Any], new_status: str, result_comment: str | None = None) -> dict[str, Any]:
         """Update task status in TODO2 state."""
         from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
         old_status = task.get('status', 'Todo')
@@ -421,8 +421,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         self,
         max_tasks_per_host: int = 5,
         max_parallel_tasks: int = 10,
-        priority_filter: Optional[str] = None,
-        tag_filter: Optional[list[str]] = None,
+        priority_filter: str | None = None,
+        tag_filter: list[str] | None = None,
         dry_run: bool = False,
         notify: bool = False
     ) -> dict[str, Any]:
@@ -548,7 +548,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
                 # Reload task to get updated state
                 state = self._load_todo2_state()
                 todos = state.get('todos', [])
-                for i, t in enumerate(todos):
+                for _i, t in enumerate(todos):
                     if t.get('id') == task['id']:
                         task = t
                         break
@@ -637,17 +637,17 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         # ═══ MEMORY INTEGRATION: Save overall nightly results ═══
         if not dry_run:
             self._save_nightly_summary(results)
-        
+
         # Send notification if requested
         if notify and not dry_run:
             try:
-                from ..interactive import message_complete_notification, is_available
-                
+                from ..interactive import is_available, message_complete_notification
+
                 if is_available():
                     moved_count = len(moved_to_review)
                     assigned_count = len(assigned_tasks)
                     approved_count = batch_approved_count
-                    
+
                     message = (
                         f"Nightly automation complete: "
                         f"{assigned_count} tasks assigned, "
@@ -700,8 +700,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 def run_nightly_task_automation(
     max_tasks_per_host: int = 5,
     max_parallel_tasks: int = 10,
-    priority_filter: Optional[str] = None,
-    tag_filter: Optional[list[str]] = None,
+    priority_filter: str | None = None,
+    tag_filter: list[str] | None = None,
     dry_run: bool = False,
     notify: bool = False
 ) -> dict[str, Any]:

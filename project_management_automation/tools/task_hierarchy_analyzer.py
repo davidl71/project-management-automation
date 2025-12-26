@@ -15,10 +15,10 @@ import logging
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from ..utils import find_project_root
-from ..utils.todo2_utils import filter_tasks_by_project, get_repo_project_id, is_pending_status, is_completed_status
+from ..utils.todo2_utils import filter_tasks_by_project, get_repo_project_id, is_completed_status, is_pending_status
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +83,7 @@ HIERARCHY_THRESHOLDS = {
 
 def analyze_task_hierarchy(
     output_format: str = "text",
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     include_recommendations: bool = True,
 ) -> dict[str, Any]:
     """

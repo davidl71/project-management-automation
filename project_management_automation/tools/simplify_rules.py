@@ -9,7 +9,6 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Optional
 
 from ..utils import find_project_root
 
@@ -18,9 +17,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def simplify_rules(
-    rule_files: Optional[list[str]] = None,
+    rule_files: list[str] | None = None,
     dry_run: bool = True,
-    output_dir: Optional[str] = None
+    output_dir: str | None = None
 ) -> str:
     """
     Automatically simplify rules based on exarp automation capabilities.

@@ -9,7 +9,7 @@ import ast
 import json
 import logging
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +36,10 @@ except ImportError:
 
 
 def suggest_test_cases(
-    target_file: Optional[str] = None,
+    target_file: str | None = None,
     test_framework: str = "pytest",
     min_confidence: float = 0.7,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
 ) -> dict[str, Any]:
     """
     Suggest test cases based on code analysis.
@@ -131,7 +131,7 @@ def _analyze_file(file_path: Path, framework: str, min_confidence: float) -> lis
     suggestions = []
 
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
 
         tree = ast.parse(content, filename=str(file_path))

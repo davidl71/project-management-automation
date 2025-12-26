@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -37,47 +36,47 @@ except ImportError:
 def cleanup_stale_tasks(
     stale_threshold_hours: float = 2.0,
     dry_run: bool = False,
-    output_path: Optional[str] = None
+    output_path: str | None = None
 ) -> str:
     """
     [HINT: Stale task cleanup. Moves In Progress tasks back to Todo if no update in threshold hours.]
-    
+
     Automatically moves tasks that are "In Progress" but haven't been updated
     recently back to "Todo" status. This ensures accurate time tracking by only
     counting actual work time, not idle time.
-    
+
     📊 Output: Number of tasks moved, list of moved tasks, active tasks remaining
     🔧 Side Effects: Updates task status from In Progress to Todo
-    
+
     Args:
         stale_threshold_hours: Hours of inactivity before task is considered stale (default: 2.0)
         dry_run: Preview changes without applying (default: False)
         output_path: Path for report output (optional)
-    
+
     Returns:
         JSON string with cleanup results
     """
     start_time = time.time()
-    
+
     try:
         # Import from package
         from project_management_automation.scripts.automate_stale_task_cleanup import StaleTaskCleanupAutomation
         from project_management_automation.utils import find_project_root
-        
+
         # Find project root
         project_root = find_project_root()
-        
+
         # Build config
         config = {
             'stale_threshold_hours': stale_threshold_hours,
             'dry_run': dry_run,
             'output_path': output_path
         }
-        
+
         # Create cleanup automation and run
         cleanup = StaleTaskCleanupAutomation(config, project_root)
         results = cleanup.run()
-        
+
         # Format response
         response_data = {
             'stale_threshold_hours': stale_threshold_hours,
@@ -89,15 +88,15 @@ def cleanup_stale_tasks(
             'dry_run': dry_run,
             'status': results.get('status', 'unknown')
         }
-        
+
         if output_path:
             response_data['report_path'] = str(Path(output_path).absolute())
-        
+
         duration = time.time() - start_time
         log_automation_execution('cleanup_stale_tasks', duration, True)
-        
+
         return json.dumps(format_success_response(response_data), indent=2)
-    
+
     except Exception as e:
         duration = time.time() - start_time
         log_automation_execution('cleanup_stale_tasks', duration, False, e)

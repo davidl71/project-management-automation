@@ -1,0 +1,214 @@
+{
+  "summary": {
+    "total": 34,
+    "working": 0,
+    "broken": 34,
+    "errors": 0
+  },
+  "results": [
+    {
+      "tool": "infer_session_mode",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "add_external_tool_hints",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "automation",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "tool_catalog",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "workflow_mode",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "context",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "recommend",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "analyze_alignment",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "security",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "generate_config",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "setup_hooks",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "prompt_tracking",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "health",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "check_attribution",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "report",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "task_analysis",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "testing",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "lint",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "memory",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "task_discovery",
+      "status": "broken",
+      "error": "await dict error",
+      "content": "object dict can't be used in 'await' expression"
+    },
+    {
+      "tool": "task_workflow",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "estimation",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "ollama",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "mlx",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "git_tools",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "session",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "memory_maint",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_minimal_simple",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_minimal_with_decorator",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_minimal_json_string",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_minimal_decorator_json",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_minimal_underlying_call",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_minimal_dict_conversion",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    },
+    {
+      "tool": "test_batch_process",
+      "status": "broken",
+      "error": "to_mcp_result error",
+      "content": "'dict' object has no attribute 'to_mcp_result'"
+    }
+  ]
+}

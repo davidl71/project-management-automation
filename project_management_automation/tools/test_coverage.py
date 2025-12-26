@@ -8,7 +8,6 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +32,9 @@ except ImportError:
 
 
 def analyze_test_coverage(
-    coverage_file: Optional[str] = None,
+    coverage_file: str | None = None,
     min_coverage: int = 80,
-    output_path: Optional[str] = None,
+    output_path: str | None = None,
     format: str = "html"
 ) -> str:
     """
