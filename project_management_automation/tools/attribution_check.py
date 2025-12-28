@@ -82,6 +82,13 @@ def check_attribution_compliance(
         analysis_results = results.get('results', {})
         attribution_score = analysis_results.get('attribution_score', 0)
         status = analysis_results.get('status', 'unknown')
+        
+        # Write report to file if generated
+        report_path = Path(config['output_path'])
+        if 'report' in results:
+            report_path.parent.mkdir(parents=True, exist_ok=True)
+            report_path.write_text(results['report'], encoding='utf-8')
+            logger.info(f"Report written to {report_path}")
 
         # Format response
         response_data = {
@@ -92,7 +99,7 @@ def check_attribution_compliance(
             'warnings': len(analysis_results.get('warnings', [])),
             'missing_attribution': len(analysis_results.get('missing_attribution', [])),
             'tasks_created': len(results.get('followup_tasks', [])) if create_tasks else 0,
-            'report_path': str(Path(config['output_path']).absolute()),
+            'report_path': str(report_path.absolute()),
         }
 
         duration = time.time() - start_time
