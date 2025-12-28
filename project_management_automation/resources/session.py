@@ -229,7 +229,7 @@ def get_session_mode_resource() -> str:
         })
 
 
-def infer_session_mode_tool(force_recompute: bool = False) -> str:
+def infer_session_mode_tool(force_recompute: bool = False) -> dict:
     """
     MCP Tool: infer_session_mode
     
@@ -241,30 +241,18 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
         force_recompute: If True, recompute even if recent result exists
         
     Returns:
-        JSON string with mode inference result
+        Dict with mode inference result (let FastMCP handle serialization)
     """
-    def ensure_json_string(result: Any) -> str:
-        """Ensure result is always a JSON string for FastMCP compatibility."""
-        if isinstance(result, str):
-            # Already a string, return as-is (assume it's valid JSON)
-            return result
-        elif isinstance(result, dict):
-            # Convert dict to JSON string
-            return json.dumps(result, separators=(',', ':'))
-        else:
-            # Fallback: wrap in dict and convert
-            return json.dumps({"result": str(result)}, separators=(',', ':'))
-    
     try:
         manager = get_tool_manager()
         
         # Check if we have the required components
         if not hasattr(manager, "mode_inference") or not hasattr(manager, "file_tracker"):
-            return ensure_json_string({
+            return {
                 "error": "Mode inference not initialized. Ensure DynamicToolManager has file_tracker and mode_inference.",
                 "mode": "UNKNOWN",
                 "confidence": 0.0
-            })
+            }
         
         # Get cached result if available and not forcing recompute
         if not force_recompute:
@@ -277,7 +265,7 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
                         timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
                         age_seconds = (datetime.now(timestamp.tzinfo) - timestamp).total_seconds()
                         if age_seconds < 120:  # 2 minutes
-                            return ensure_json_string(current)
+                            return current
                     except Exception:
                         pass  # Continue to recompute
         
@@ -302,17 +290,16 @@ def infer_session_mode_tool(force_recompute: bool = False) -> str:
             session_id=None  # Could extract from context if available
         )
         
-        # Ensure we return a JSON string (defensive check)
-        result_dict = result.to_dict()
-        return ensure_json_string(result_dict)
+        # Return dict directly (let FastMCP handle serialization)
+        return result.to_dict()
         
     except Exception as e:
         logger.error(f"Failed to infer session mode: {e}", exc_info=True)
-        return ensure_json_string({
+        return {
             "error": str(e),
             "mode": "UNKNOWN",
             "confidence": 0.0
-        })
+        }
 
 
 def register_session_resources(mcp) -> None:
@@ -330,7 +317,7 @@ def register_session_resources(mcp) -> None:
             return get_session_mode_resource()
         
         @mcp.tool()
-        def infer_session_mode(force_recompute: bool = False) -> str:
+        def infer_session_mode(force_recompute: bool = False) -> dict:
             """
             [HINT: Session mode inference. Returns AGENT/ASK/MANUAL with confidence.]
             
