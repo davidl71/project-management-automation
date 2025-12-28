@@ -3354,7 +3354,7 @@ if mcp:
                 return PERSONA_TECH_WRITER
 
             PROMPTS_AVAILABLE = True
-            logger.info("Registered 41 prompts successfully (FastMCP)")
+            logger.info("Registered 34 prompts successfully (FastMCP)")
         else:
             PROMPTS_AVAILABLE = True
             logger.info("Prompts imported (will register for stdio server below)")
