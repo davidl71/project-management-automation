@@ -17,7 +17,7 @@ import logging
 import statistics
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 from ..utils import find_project_root
 
@@ -134,7 +134,7 @@ class TaskDurationEstimator:
         self,
         name: str,
         details: str = "",
-        tags: list[str] | None = None,
+        tags: Optional[List[str]] = None,
         priority: str = "medium",
         use_historical: bool = True,
     ) -> dict[str, Any]:
@@ -357,7 +357,7 @@ class TaskDurationEstimator:
 def estimate_task_duration(
     name: str,
     details: str = "",
-    tags: list[str] | None = None,
+    tags: Optional[List[str]] = None,
     priority: str = "medium",
     use_historical: bool = True,
     project_root: Path | None = None
@@ -375,7 +375,7 @@ def estimate_task_duration(
 def estimate_task_duration_detailed(
     name: str,
     details: str = "",
-    tags: list[str] | None = None,
+    tags: Optional[List[str]] = None,
     priority: str = "medium",
     use_historical: bool = True,
     project_root: Path | None = None

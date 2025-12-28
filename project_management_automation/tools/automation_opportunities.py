@@ -4,6 +4,7 @@ MCP Tool Wrapper for Automation Opportunity Finder
 Wraps AutomationOpportunityFinder to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -35,7 +36,7 @@ except ImportError:
 
 def find_automation_opportunities(
     min_value_score: float = 0.7,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Discover new automation opportunities in the codebase.

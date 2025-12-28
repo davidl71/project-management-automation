@@ -4,6 +4,7 @@ MCP Tool Wrapper for Todo Sync
 Wraps TodoSyncAutomation to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -35,7 +36,7 @@ except ImportError:
 
 def sync_todo_tasks(
     dry_run: bool = False,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Synchronize tasks between shared TODO table and Todo2.

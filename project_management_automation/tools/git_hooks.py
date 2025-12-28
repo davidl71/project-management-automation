@@ -9,7 +9,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -23,7 +23,7 @@ except ImportError:
 
 
 def setup_git_hooks(
-    hooks: list[str] | None = None,
+    hooks: Optional[List[str]] = None,
     install: bool = True,
     dry_run: bool = False
 ) -> str:

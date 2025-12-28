@@ -12,7 +12,7 @@ Trusted Advisor: 📜 Chacham (Wisdom)
 import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, List, Optional
 
 from ..resources.memories import (
     MEMORY_CATEGORIES,
@@ -192,7 +192,7 @@ def _generate_dream_narrative(
 
 def memory_dream(
     scope: str = "week",
-    advisors: list[str] | None = None,
+    advisors: Optional[List[str]] = None,
     generate_insights: bool = True,
     save_dream: bool = True,
 ) -> dict[str, Any]:

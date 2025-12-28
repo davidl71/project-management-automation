@@ -14,7 +14,7 @@ Features:
 import json
 import logging
 import re
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 from .task_duration_estimator import TaskDurationEstimator
 
@@ -89,7 +89,7 @@ class MLXEnhancedTaskEstimator(TaskDurationEstimator):
         self,
         name: str,
         details: str = "",
-        tags: list[str] | None = None,
+        tags: Optional[List[str]] = None,
         priority: str = "medium",
         use_historical: bool = True,
     ) -> dict[str, Any]:
@@ -138,7 +138,7 @@ class MLXEnhancedTaskEstimator(TaskDurationEstimator):
         details: str,
         tags: list[str],
         priority: str
-    ) -> dict[str, Any] | None:
+    ) -> Optional[Dict[str, Any]]:
         """
         Get MLX-based semantic estimate.
 
@@ -206,7 +206,7 @@ Example response:
 
         return None
 
-    def _parse_mlx_response(self, text: str) -> dict[str, Any] | None:
+    def _parse_mlx_response(self, text: str) -> Optional[Dict[str, Any]]:
         """
         Parse MLX response to extract estimation JSON.
 
@@ -387,7 +387,7 @@ Example response:
 def estimate_task_duration_mlx_enhanced(
     name: str,
     details: str = "",
-    tags: list[str] | None = None,
+    tags: Optional[List[str]] = None,
     priority: str = "medium",
     use_historical: bool = True,
     use_mlx: bool = True,
@@ -411,7 +411,7 @@ def estimate_task_duration_mlx_enhanced(
 def estimate_task_duration_mlx_enhanced_detailed(
     name: str,
     details: str = "",
-    tags: list[str] | None = None,
+    tags: Optional[List[str]] = None,
     priority: str = "medium",
     use_historical: bool = True,
     use_mlx: bool = True,

@@ -22,7 +22,7 @@ import subprocess
 import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -208,9 +208,9 @@ def _save_handoff(handoff: dict[str, Any]) -> bool:
 
 
 def end_session(
-    summary: str | None = None,
-    blockers: list[str] | None = None,
-    next_steps: list[str] | None = None,
+    summary: Optional[str] = None,
+    blockers: Optional[List[str]] = None,
+    next_steps: Optional[List[str]] = None,
     unassign_my_tasks: bool = True,
     include_git_status: bool = True,
     dry_run: bool = False
@@ -994,9 +994,9 @@ def resume_session() -> str:
 # Consolidated tool for MCP registration
 def session_handoff(
     action: str,
-    summary: str | None = None,
-    blockers: list[str] | None = None,
-    next_steps: list[str] | None = None,
+    summary: Optional[str] = None,
+    blockers: Optional[List[str]] = None,
+    next_steps: Optional[List[str]] = None,
     unassign_my_tasks: bool = True,
     include_git_status: bool = True,
     limit: int = 5,
@@ -1082,9 +1082,9 @@ def register_handoff_tools(mcp) -> None:
         @mcp.tool()
         def exarp_session_handoff(
             action: str,
-            summary: str | None = None,
-            blockers: list[str] | None = None,
-            next_steps: list[str] | None = None,
+            summary: Optional[str] = None,
+            blockers: Optional[List[str]] = None,
+            next_steps: Optional[List[str]] = None,
             unassign_my_tasks: bool = True,
             include_git_status: bool = True,
             limit: int = 5,

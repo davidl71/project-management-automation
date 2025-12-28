@@ -4,6 +4,7 @@ MCP Tool Wrapper for Todo2 Alignment Analysis
 Wraps Todo2AlignmentAnalyzerV2 to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -35,7 +36,7 @@ except ImportError:
 
 def analyze_todo2_alignment(
     create_followup_tasks: bool = True,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Analyze task alignment with project goals, find misaligned tasks.

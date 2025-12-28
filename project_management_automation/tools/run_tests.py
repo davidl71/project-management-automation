@@ -16,7 +16,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp.server.fastmcp import Context
@@ -114,11 +114,11 @@ except ImportError:
 
 
 async def run_tests_async(
-    test_path: str | None = None,
+    test_path: Optional[str] = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
 ) -> str:
     """
@@ -215,11 +215,11 @@ async def run_tests_async(
 
 
 def run_tests(
-    test_path: str | None = None,
+    test_path: Optional[str] = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
 ) -> str:
     """

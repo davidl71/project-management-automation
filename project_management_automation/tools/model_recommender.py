@@ -5,6 +5,7 @@ Recommends optimal AI model based on task type and complexity.
 Based on Cursor IDE Best Practice #4.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -185,8 +186,8 @@ MODEL_RECOMMENDATIONS = {
 
 
 def recommend_model(
-    task_description: str | None = None,
-    task_type: str | None = None,
+    task_description: Optional[str] = None,
+    task_type: Optional[str] = None,
     optimize_for: str = "quality",
     include_alternatives: bool = True,
 ) -> str:

@@ -12,7 +12,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Optional
 
 from ..utils import find_project_root
 
@@ -218,7 +218,7 @@ def _get_sarif_location(result: dict) -> str:
     return ''
 
 
-def _fetch_github_security_alerts(project_root: Path) -> dict[str, Any] | None:
+def _fetch_github_security_alerts(project_root: Path) -> Optional[Dict[str, Any]]:
     """
     Fetch security alerts from GitHub API.
 

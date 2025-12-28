@@ -12,7 +12,7 @@ These are TYPE STUBS and DOCUMENTATION - actual implementations go in:
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     # Forward reference for ToolUsageTracker (defined in dynamic_tools.py)
@@ -238,7 +238,7 @@ class SessionModeStorage:
         confidence: float,
         reasoning: list[str],
         metrics: dict[str, Any],
-        session_id: str | None = None
+        session_id: Optional[str] = None
     ) -> None:
         """
         Save inferred mode to persistent storage.
@@ -252,7 +252,7 @@ class SessionModeStorage:
         """
         raise NotImplementedError("Agent C must implement this")
 
-    def get_current_mode(self) -> dict[str, Any] | None:
+    def get_current_mode(self) -> Optional[Dict[str, Any]]:
         """
         Get the current inferred session mode.
 
@@ -261,7 +261,7 @@ class SessionModeStorage:
         """
         raise NotImplementedError("Agent C must implement this")
 
-    def get_mode_history(self, session_id: str | None = None) -> list[dict[str, Any]]:
+    def get_mode_history(self, session_id: Optional[str] = None) -> list[dict[str, Any]]:
         """
         Get mode history for a session.
 

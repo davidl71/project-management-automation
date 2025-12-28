@@ -33,7 +33,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     try:
@@ -309,7 +309,7 @@ class ToolUsageTracker:
         sorted_tools = sorted(self.tool_counts.items(), key=lambda x: x[1], reverse=True)
         return sorted_tools[:limit]
 
-    def get_preferred_mode(self) -> str | None:
+    def get_preferred_mode(self) -> Optional[str]:
         """Get the most commonly used mode."""
         if not self.mode_counts:
             return None
@@ -475,8 +475,8 @@ class DynamicToolManager:
     file_tracker: FileEditTracker = field(default_factory=FileEditTracker)
 
     # Session mode inference (MODE-002)
-    mode_inference: Any | None = None  # SessionModeInference - lazy import to avoid circular deps
-    inferred_mode: Any | None = None  # ModeInferenceResult - lazy import
+    mode_inference: Optional[Any] = None  # SessionModeInference - lazy import to avoid circular deps
+    inferred_mode: Optional[Any] = None  # ModeInferenceResult - lazy import
     mode_history: list[Any] = field(default_factory=list)  # List[ModeInferenceResult]
     last_mode_update: float | None = None  # Timestamp of last mode update
 
@@ -515,7 +515,7 @@ class DynamicToolManager:
 
         return group in self.get_active_groups()
 
-    def record_tool_usage(self, tool_name: str, tool_args: dict[str, Any] | None = None) -> None:
+    def record_tool_usage(self, tool_name: str, tool_args: Optional[Dict[str, Any]] = None) -> None:
         """
         Record tool usage for adaptive recommendations.
 
@@ -574,7 +574,7 @@ class DynamicToolManager:
 
         return file_paths
 
-    def update_inferred_mode(self) -> Any | None:
+    def update_inferred_mode(self) -> Optional[Any]:
         """
         Update inferred session mode based on current tool and file patterns.
 
@@ -620,7 +620,7 @@ class DynamicToolManager:
             logger.warning(f"Failed to update inferred mode: {e}")
             return None
 
-    def get_current_mode(self) -> Any | None:
+    def get_current_mode(self) -> Optional[Any]:
         """
         Get current inferred session mode.
 
@@ -657,7 +657,7 @@ class DynamicToolManager:
         self,
         text: str,
         threshold: float = 0.3
-    ) -> tuple[str | None, float, list[str]]:
+    ) -> tuple[Optional[str], float, list[str]]:
         """
         Infer the best workflow mode from conversation text.
 
@@ -705,7 +705,7 @@ class DynamicToolManager:
 
     def get_mode_suggestion(
         self,
-        text: str | None = None,
+        text: Optional[str] = None,
         include_rationale: bool = True
     ) -> dict[str, Any]:
         """
@@ -978,9 +978,9 @@ def reset_tool_manager() -> None:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def focus_mode(
-    mode: str | None = None,
-    enable_group: str | None = None,
-    disable_group: str | None = None,
+    mode: Optional[str] = None,
+    enable_group: Optional[str] = None,
+    disable_group: Optional[str] = None,
     status: bool = False,
 ) -> str:
     """
@@ -1106,7 +1106,7 @@ def focus_mode(
 
 
 def suggest_mode(
-    text: str | None = None,
+    text: Optional[str] = None,
     auto_switch: bool = False,
 ) -> str:
     """

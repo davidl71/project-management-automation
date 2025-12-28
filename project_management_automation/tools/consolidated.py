@@ -33,7 +33,7 @@ Consolidated tools:
 import asyncio
 import json
 import logging
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 def analyze_alignment(
     action: str = "todo2",
     create_followup_tasks: bool = True,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
 ) -> str:
     """
     Unified alignment analysis tool.
@@ -79,11 +79,11 @@ def analyze_alignment(
 async def security_async(
     action: str = "report",
     repo: str = "davidl71/project-management-automation",
-    languages: list[str] | None = None,
-    config_path: str | None = None,
+    languages: Optional[List[str]] = None,
+    config_path: Optional[str] = None,
     state: str = "open",
     include_dismissed: bool = False,
-    ctx: Any | None = None,
+    ctx: Optional[Any] = None,
     alert_critical: bool = False,
 ) -> str:
     """
@@ -126,11 +126,11 @@ async def security_async(
 def security(
     action: str = "report",
     repo: str = "davidl71/project-management-automation",
-    languages: list[str] | None = None,
-    config_path: str | None = None,
+    languages: Optional[List[str]] = None,
+    config_path: Optional[str] = None,
     state: str = "open",
     include_dismissed: bool = False,
-    ctx: Any | None = None,
+    ctx: Optional[Any] = None,
     alert_critical: bool = False,
 ) -> str:
     """
@@ -170,15 +170,15 @@ def security(
 def generate_config(
     action: str = "rules",
     # rules params
-    rules: str | None = None,
+    rules: Optional[str] = None,
     overwrite: bool = False,
     analyze_only: bool = False,
     # ignore params
     include_indexing: bool = True,
     analyze_project: bool = True,
     # simplify params
-    rule_files: str | None = None,
-    output_dir: str | None = None,
+    rule_files: Optional[str] = None,
+    output_dir: Optional[str] = None,
     # common
     dry_run: bool = False,
 ) -> str:
@@ -227,10 +227,10 @@ def generate_config(
 def setup_hooks(
     action: str = "git",
     # git hooks params
-    hooks: list[str] | None = None,
+    hooks: Optional[List[str]] = None,
     # pattern params
-    patterns: str | None = None,
-    config_path: str | None = None,
+    patterns: Optional[str] = None,
+    config_path: Optional[str] = None,
     # common
     install: bool = True,
     dry_run: bool = False,
@@ -273,10 +273,10 @@ def setup_hooks(
 def prompt_tracking(
     action: str = "analyze",
     # log params
-    prompt: str | None = None,
-    task_id: str | None = None,
-    mode: str | None = None,
-    outcome: str | None = None,
+    prompt: Optional[str] = None,
+    task_id: Optional[str] = None,
+    mode: Optional[str] = None,
+    outcome: Optional[str] = None,
     iteration: int = 1,
     # analyze params
     days: int = 7,
@@ -316,17 +316,17 @@ def prompt_tracking(
 def health(
     action: str = "server",
     # git params
-    agent_name: str | None = None,
+    agent_name: Optional[str] = None,
     check_remote: bool = True,
     # docs params
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     create_tasks: bool = True,
     # dod params
-    task_id: str | None = None,
-    changed_files: str | None = None,
+    task_id: Optional[str] = None,
+    changed_files: Optional[str] = None,
     auto_check: bool = True,
     # cicd params
-    workflow_path: str | None = None,
+    workflow_path: Optional[str] = None,
     check_runners: bool = True,
 ) -> str:
     """
@@ -399,7 +399,7 @@ def report(
     action: str = "overview",
     # common params
     output_format: str = "text",
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     # scorecard params
     include_recommendations: bool = True,
     # briefing params
@@ -410,7 +410,7 @@ def report(
     completion_score: float = 50.0,
     alignment_score: float = 50.0,
     # prd params
-    project_name: str | None = None,
+    project_name: Optional[str] = None,
     include_architecture: bool = True,
     include_metrics: bool = True,
     include_tasks: bool = True,
@@ -489,15 +489,15 @@ def task_analysis(
     auto_fix: bool = False,
     # tags params
     dry_run: bool = True,
-    custom_rules: str | None = None,
-    remove_tags: str | None = None,
+    custom_rules: Optional[str] = None,
+    remove_tags: Optional[str] = None,
     # hierarchy params
     output_format: str = "text",
     include_recommendations: bool = True,
     # dependencies params (uses output_format)
     # parallelization params (uses output_format)
     # common
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
 ) -> str:
     """
     Unified task analysis tool.
@@ -547,22 +547,22 @@ def task_analysis(
 async def testing_async(
     action: str = "run",
     # run params
-    test_path: str | None = None,
+    test_path: Optional[str] = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
     # coverage params
-    coverage_file: str | None = None,
+    coverage_file: Optional[str] = None,
     min_coverage: int = 80,
     format: str = "html",
     # suggest params
-    target_file: str | None = None,
+    target_file: Optional[str] = None,
     min_confidence: float = 0.7,
     # validate params
-    framework: str | None = None,
+    framework: Optional[str] = None,
     # common
-    output_path: str | None = None,
-    ctx: Any | None = None,
+    output_path: Optional[str] = None,
+    ctx: Optional[Any] = None,
 ) -> str:
     """
     Unified testing tool (async with progress).
@@ -623,22 +623,22 @@ async def testing_async(
 def testing(
     action: str = "run",
     # run params
-    test_path: str | None = None,
+    test_path: Optional[str] = None,
     test_framework: str = "auto",
     verbose: bool = True,
     coverage: bool = False,
     # coverage params
-    coverage_file: str | None = None,
+    coverage_file: Optional[str] = None,
     min_coverage: int = 80,
     format: str = "html",
     # suggest params
-    target_file: str | None = None,
+    target_file: Optional[str] = None,
     min_confidence: float = 0.7,
     # validate params
-    framework: str | None = None,
+    framework: Optional[str] = None,
     # common
-    output_path: str | None = None,
-    ctx: Any | None = None,
+    output_path: Optional[str] = None,
+    ctx: Optional[Any] = None,
 ) -> str:
     """
     Unified testing tool (sync wrapper).
@@ -683,17 +683,17 @@ def testing(
 def lint(
     action: str = "run",
     # run params
-    path: str | None = None,
+    path: Optional[str] = None,
     linter: str = "ruff",
     fix: bool = False,
     analyze: bool = True,
-    select: str | None = None,
-    ignore: str | None = None,
+    select: Optional[str] = None,
+    ignore: Optional[str] = None,
     # analyze params
-    problems_json: str | None = None,
+    problems_json: Optional[str] = None,
     include_hints: bool = True,
     # common
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
 ) -> str:
     """
     Unified linting tool.
@@ -742,15 +742,15 @@ def lint(
 def memory(
     action: str = "search",
     # save params
-    title: str | None = None,
-    content: str | None = None,
+    title: Optional[str] = None,
+    content: Optional[str] = None,
     category: str = "insight",
-    task_id: str | None = None,
-    metadata: str | None = None,  # JSON string
+    task_id: Optional[str] = None,
+    metadata: Optional[str] = None,  # JSON string
     # recall params
     include_related: bool = True,
     # search params
-    query: str | None = None,
+    query: Optional[str] = None,
     limit: int = 10,
 ) -> str:
     """
@@ -831,13 +831,13 @@ def memory(
 def context(
     action: str = "summarize",
     # summarize action params
-    data: str | None = None,
+    data: Optional[str] = None,
     level: str = "brief",
-    tool_type: str | None = None,
-    max_tokens: int | None = None,
+    tool_type: Optional[str] = None,
+    max_tokens: Optional[int] = None,
     include_raw: bool = False,
     # budget action params
-    items: str | None = None,
+    items: Optional[str] = None,
     budget_tokens: int = 4000,
     # batch action params
     combine: bool = True,
@@ -902,11 +902,11 @@ def context(
 def tool_catalog(
     action: str = "list",
     # list action params
-    category: str | None = None,
-    persona: str | None = None,
+    category: Optional[str] = None,
+    persona: Optional[str] = None,
     include_examples: bool = True,
     # help action params
-    tool_name: str | None = None,
+    tool_name: Optional[str] = None,
 ) -> str:
     """
     Unified tool catalog tool.
@@ -946,12 +946,12 @@ def tool_catalog(
 def workflow_mode(
     action: str = "focus",
     # focus action params
-    mode: str | None = None,
-    enable_group: str | None = None,
-    disable_group: str | None = None,
+    mode: Optional[str] = None,
+    enable_group: Optional[str] = None,
+    disable_group: Optional[str] = None,
     status: bool = False,
     # suggest action params
-    text: str | None = None,
+    text: Optional[str] = None,
     auto_switch: bool = False,
 ) -> str:
     """
@@ -993,21 +993,21 @@ def workflow_mode(
 def recommend(
     action: str = "model",
     # model action params
-    task_description: str | None = None,
-    task_type: str | None = None,
+    task_description: Optional[str] = None,
+    task_type: Optional[str] = None,
     optimize_for: str = "quality",
     include_alternatives: bool = True,
     # workflow action params
-    task_id: str | None = None,
+    task_id: Optional[str] = None,
     include_rationale: bool = True,
     # advisor action params
-    metric: str | None = None,
-    tool: str | None = None,
-    stage: str | None = None,
+    metric: Optional[str] = None,
+    tool: Optional[str] = None,
+    stage: Optional[str] = None,
     score: float = 50.0,
     context: str = "",
     log: bool = True,
-    session_mode: str | None = None,
+    session_mode: Optional[str] = None,
 ) -> str:
     """
     Unified recommendation tool.
@@ -1092,13 +1092,13 @@ def recommend(
 def task_discovery(
     action: str = "all",
     # comments params
-    file_patterns: str | None = None,  # JSON list of glob patterns
+    file_patterns: Optional[str] = None,  # JSON list of glob patterns
     include_fixme: bool = True,
     # markdown params
-    doc_path: str | None = None,
+    doc_path: Optional[str] = None,
     # orphans params (uses task_analysis internally)
     # common
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     create_tasks: bool = False,
 ) -> str:
     """
@@ -1228,13 +1228,13 @@ def task_discovery(
 def automation(
     action: str = "daily",
     # daily params
-    tasks: list[str] | None = None,
+    tasks: Optional[List[str]] = None,
     include_slow: bool = False,
     # nightly params
     max_tasks_per_host: int = 5,
     max_parallel_tasks: int = 10,
-    priority_filter: str | None = None,
-    tag_filter: list[str] | None = None,
+    priority_filter: Optional[str] = None,
+    tag_filter: Optional[List[str]] = None,
     # sprint params
     max_iterations: int = 10,
     auto_approve: bool = True,
@@ -1245,7 +1245,7 @@ def automation(
     min_value_score: float = 0.7,
     # common params
     dry_run: bool = False,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     notify: bool = False,
 ) -> str:
     import sys
@@ -1329,11 +1329,11 @@ def automation(
 def estimation(
     action: str = "estimate",
     # estimate params
-    name: str | None = None,
+    name: Optional[str] = None,
     details: str = "",
-    tags: str | None = None,
-    # BREAKING TEST: Add list[str] parameter like automation has
-    tag_list: list[str] | None = None,
+    tags: Optional[str] = None,
+    # BREAKING TEST: Add List[str] parameter like automation has
+    tag_list: Optional[List[str]] = None,
     priority: str = "medium",
     use_historical: bool = True,
     detailed: bool = False,
@@ -1467,14 +1467,14 @@ def task_workflow(
     status: str = "Review",
     new_status: str = "Todo",
     clarification_none: bool = True,
-    filter_tag: str | None = None,
-    task_ids: str | None = None,  # JSON list
+    filter_tag: Optional[str] = None,
+    task_ids: Optional[str] = None,  # JSON list
     # clarify params
     sub_action: str = "list",  # list, resolve, batch (for clarify action)
-    task_id: str | None = None,
-    clarification_text: str | None = None,
-    decision: str | None = None,
-    decisions_json: str | None = None,
+    task_id: Optional[str] = None,
+    clarification_text: Optional[str] = None,
+    decision: Optional[str] = None,
+    decisions_json: Optional[str] = None,
     move_to_todo: bool = True,
     # clarity params
     auto_apply: bool = False,
@@ -1482,7 +1482,7 @@ def task_workflow(
     # cleanup params
     stale_threshold_hours: float = 2.0,
     # common
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
 ) -> str:
     """
     Unified task workflow management tool.
@@ -1601,7 +1601,7 @@ def memory_maint(
     merge_strategy: str = "newest",
     # dream params
     scope: str = "week",
-    advisors: str | None = None,
+    advisors: Optional[str] = None,
     generate_insights: bool = True,
     save_dream: bool = True,
     # common
@@ -1690,19 +1690,19 @@ def memory_maint(
 
 def ollama(
     action: str = "status",
-    host: str | None = None,
-    prompt: str | None = None,
+    host: Optional[str] = None,
+    prompt: Optional[str] = None,
     model: str = "llama3.2",
     stream: bool = False,
-    options: str | None = None,
-    num_gpu: int | None = None,
-    num_threads: int | None = None,
-    context_size: int | None = None,
-    file_path: str | None = None,
-    output_path: str | None = None,
+    options: Optional[str] = None,
+    num_gpu: Optional[int] = None,
+    num_threads: Optional[int] = None,
+    context_size: Optional[int] = None,
+    file_path: Optional[str] = None,
+    output_path: Optional[str] = None,
     style: str = "google",
     include_suggestions: bool = True,
-    data: str | None = None,
+    data: Optional[str] = None,
     level: str = "brief",
 ) -> str:
     """
@@ -1792,7 +1792,7 @@ def ollama(
 
 def mlx(
     action: str = "status",
-    prompt: str | None = None,
+    prompt: Optional[str] = None,
     model: str = "mlx-community/Phi-3.5-mini-instruct-4bit",
     max_tokens: int = 512,
     temperature: float = 0.7,
@@ -1844,18 +1844,18 @@ def mlx(
 
 def git_tools(
     action: str = "commits",
-    task_id: str | None = None,
-    branch: str | None = None,
+    task_id: Optional[str] = None,
+    branch: Optional[str] = None,
     limit: int = 50,
-    commit1: str | None = None,
-    commit2: str | None = None,
-    time1: str | None = None,
-    time2: str | None = None,
+    commit1: Optional[str] = None,
+    commit2: Optional[str] = None,
+    time1: Optional[str] = None,
+    time2: Optional[str] = None,
     format: str = "text",
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     max_commits: int = 50,
-    source_branch: str | None = None,
-    target_branch: str | None = None,
+    source_branch: Optional[str] = None,
+    target_branch: Optional[str] = None,
     conflict_strategy: str = "newer",
     author: str = "system",
     dry_run: bool = False,
@@ -1933,11 +1933,11 @@ def session(
     action: str = "prime",
     include_hints: bool = True,
     include_tasks: bool = True,
-    override_mode: str | None = None,
-    task_id: str | None = None,
-    summary: str | None = None,
-    blockers: str | None = None,
-    next_steps: str | None = None,
+    override_mode: Optional[str] = None,
+    task_id: Optional[str] = None,
+    summary: Optional[str] = None,
+    blockers: Optional[str] = None,
+    next_steps: Optional[str] = None,
     unassign_my_tasks: bool = True,
     include_git_status: bool = True,
     limit: int = 5,
@@ -1945,14 +1945,14 @@ def session(
     direction: str = "both",
     prefer_agentic_tools: bool = True,
     auto_commit: bool = True,
-    mode: str | None = None,
-    category: str | None = None,
-    keywords: str | None = None,
-    assignee_name: str | None = None,
+    mode: Optional[str] = None,
+    category: Optional[str] = None,
+    keywords: Optional[str] = None,
+    assignee_name: Optional[str] = None,
     assignee_type: str = "agent",
-    hostname: str | None = None,
-    status_filter: str | None = None,
-    priority_filter: str | None = None,
+    hostname: Optional[str] = None,
+    status_filter: Optional[str] = None,
+    priority_filter: Optional[str] = None,
     include_unassigned: bool = False,
     max_tasks_per_agent: int = 5,
 ) -> str:

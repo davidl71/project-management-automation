@@ -9,7 +9,7 @@ import ast
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +36,10 @@ except ImportError:
 
 
 def suggest_test_cases(
-    target_file: str | None = None,
+    target_file: Optional[str] = None,
     test_framework: str = "pytest",
     min_confidence: float = 0.7,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     Suggest test cases based on code analysis.

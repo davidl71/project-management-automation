@@ -4,6 +4,7 @@ MCP Tool Wrapper for Documentation Health Check
 Wraps DocumentationHealthAnalyzerV2 to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -34,7 +35,7 @@ except ImportError:
 
 
 def check_documentation_health(
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     create_tasks: bool = True
 ) -> str:
     """

@@ -14,7 +14,7 @@ Usage:
 
 import json
 import logging
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -91,9 +91,9 @@ class SessionHandoffWrapper:
 
     def end(
         self,
-        summary: str | None = None,
-        blockers: list[str] | None = None,
-        next_steps: list[str] | None = None,
+        summary: Optional[str] = None,
+        blockers: Optional[List[str]] = None,
+        next_steps: Optional[List[str]] = None,
         unassign_my_tasks: bool = True,
         include_git_status: bool = True,
         dry_run: bool = False
@@ -200,9 +200,9 @@ def list_handoffs(limit: int = 5) -> dict[str, Any]:
     return get_wrapper().list(limit=limit)
 
 def end_session(
-    summary: str | None = None,
-    blockers: list[str] | None = None,
-    next_steps: list[str] | None = None,
+    summary: Optional[str] = None,
+    blockers: Optional[List[str]] = None,
+    next_steps: Optional[List[str]] = None,
     **kwargs
 ) -> dict[str, Any]:
     """End session - convenience function."""

@@ -5,6 +5,7 @@ Provides rich tool descriptions, examples, and usage guidance.
 Based on Cursor IDE Best Practice #5 (Detailed Prompts).
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -649,8 +650,8 @@ TOOL_CATALOG = {
 
 
 def list_tools(
-    category: str | None = None,
-    persona: str | None = None,
+    category: Optional[str] = None,
+    persona: Optional[str] = None,
     include_examples: bool = True,
 ) -> str:
     """

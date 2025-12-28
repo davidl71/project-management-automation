@@ -4,6 +4,7 @@ MCP Tool Wrapper for Stale Task Cleanup
 Wraps StaleTaskCleanupAutomation to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -36,7 +37,7 @@ except ImportError:
 def cleanup_stale_tasks(
     stale_threshold_hours: float = 2.0,
     dry_run: bool = False,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     [HINT: Stale task cleanup. Moves In Progress tasks back to Todo if no update in threshold hours.]

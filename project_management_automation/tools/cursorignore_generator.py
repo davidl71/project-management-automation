@@ -6,6 +6,7 @@ based on project structure and best practices.
 Based on Cursor IDE Best Practice #9.
 """
 
+from typing import Optional, List
 import json
 import logging
 import time
@@ -151,7 +152,7 @@ __snapshots__/
 
 def generate_cursorignore(
     include_indexing: bool = True,
-    custom_patterns: list[str] | None = None,
+    custom_patterns: Optional[List[str]] = None,
     analyze_project: bool = True,
     dry_run: bool = False,
 ) -> str:

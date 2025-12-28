@@ -10,7 +10,7 @@ import re
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ..utils import find_project_root
 from ..utils.todo2_utils import is_active_status, normalize_status
@@ -18,7 +18,7 @@ from ..utils.todo2_utils import is_active_status, normalize_status
 
 def generate_project_overview(
     output_format: str = "text",
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> dict[str, Any]:
     """
     Generate comprehensive one-page project overview.

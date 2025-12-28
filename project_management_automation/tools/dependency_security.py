@@ -16,7 +16,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from mcp.server.fastmcp import Context
@@ -112,8 +112,8 @@ except ImportError:
 
 
 async def scan_dependency_security_async(
-    languages: list[str] | None = None,
-    config_path: str | None = None,
+    languages: Optional[List[str]] = None,
+    config_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
     alert_critical: bool = False,
 ) -> str:
@@ -248,8 +248,8 @@ async def scan_dependency_security_async(
 
 
 def scan_dependency_security(
-    languages: list[str] | None = None,
-    config_path: str | None = None,
+    languages: Optional[List[str]] = None,
+    config_path: Optional[str] = None,
     ctx: Optional["Context"] = None,
     alert_critical: bool = False,
 ) -> str:

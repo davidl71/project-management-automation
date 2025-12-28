@@ -4,6 +4,7 @@ MCP Tool Wrapper for External Tool Hints Automation
 Wraps ExternalToolHintsAutomation to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -35,7 +36,7 @@ except ImportError:
 
 def add_external_tool_hints(
     dry_run: bool = False,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     min_file_size: int = 50
 ) -> str:
     """

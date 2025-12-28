@@ -9,7 +9,7 @@ import logging
 import time
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ except ImportError:
 
 def analyze_todo2_dependencies(
     output_format: str = "text",
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Analyze Todo2 task dependency chains, identify circular dependencies, and visualize critical paths.

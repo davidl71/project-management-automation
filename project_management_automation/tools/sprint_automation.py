@@ -12,7 +12,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -88,10 +88,10 @@ def sprint_automation(
     extract_subtasks: bool = True,
     run_analysis_tools: bool = True,
     run_testing_tools: bool = True,
-    priority_filter: str | None = None,
-    tag_filter: list[str] | None = None,
+    priority_filter: Optional[str] = None,
+    tag_filter: Optional[List[str]] = None,
     dry_run: bool = False,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     notify: bool = False
 ) -> str:
     """

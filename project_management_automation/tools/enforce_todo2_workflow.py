@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ def _format_queries_as_research(queries: list[dict[str, Any]], task_name: str) -
 def enforce_todo2_workflow(
     auto_fix: bool = False,
     dry_run: bool = True,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Verify Todo2 tasks comply with workflow requirements.
@@ -231,7 +231,7 @@ def _apply_workflow_fix(
     violations: list[dict[str, Any]],
     current_status: str,
     project_root: Path
-) -> list[str] | None:
+) -> Optional[List[str]]:
     """Apply workflow fixes to a task."""
     from project_management_automation.utils.todo2_mcp_client import (
         update_todos_mcp,

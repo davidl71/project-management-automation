@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ except ImportError:
 
 def optimize_todo2_parallelization(
     output_format: str = "markdown",
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Identify Todo2 tasks that can run in parallel based on dependency readiness and estimated time.

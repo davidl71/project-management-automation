@@ -12,7 +12,7 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ..utils.commit_tracking import get_commit_tracker
 
@@ -62,7 +62,7 @@ def diff_task_states(old_state: dict[str, Any], new_state: dict[str, Any]) -> di
     }
 
 
-def format_diff_output(diff: dict[str, Any], task_name: str | None = None) -> str:
+def format_diff_output(diff: dict[str, Any], task_name: Optional[str] = None) -> str:
     """
     Format diff output in human-readable format.
 
@@ -172,8 +172,8 @@ def compare_task_commits(task_id: str, commit1_id: str, commit2_id: str) -> dict
 
 def compare_task_versions(
     task_id: str,
-    version1_commit_id: str | None = None,
-    version2_commit_id: str | None = None,
+    version1_commit_id: Optional[str] = None,
+    version2_commit_id: Optional[str] = None,
     version1_time: datetime | None = None,
     version2_time: datetime | None = None,
 ) -> dict[str, Any]:
@@ -240,7 +240,7 @@ def compare_task_versions(
     }
 
 
-def get_task_history(task_id: str, branch: str | None = None) -> list[dict[str, Any]]:
+def get_task_history(task_id: str, branch: Optional[str] = None) -> list[dict[str, Any]]:
     """
     Get complete commit history for a task.
 
@@ -276,10 +276,10 @@ def get_task_history(task_id: str, branch: str | None = None) -> list[dict[str, 
 
 def task_diff(
     task_id: str,
-    commit1: str | None = None,
-    commit2: str | None = None,
-    time1: str | None = None,
-    time2: str | None = None,
+    commit1: Optional[str] = None,
+    commit2: Optional[str] = None,
+    time1: Optional[str] = None,
+    time2: Optional[str] = None,
     output_path: Path | None = None,
 ) -> str:
     """

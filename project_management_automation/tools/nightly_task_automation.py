@@ -19,7 +19,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 nightly_logger = logging.getLogger(__name__)
 
@@ -372,7 +372,7 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 
         return result
 
-    def _update_task_status(self, task: dict[str, Any], new_status: str, result_comment: str | None = None) -> dict[str, Any]:
+    def _update_task_status(self, task: dict[str, Any], new_status: str, result_comment: Optional[str] = None) -> dict[str, Any]:
         """Update task status in TODO2 state."""
         from project_management_automation.utils.todo2_utils import normalize_status_to_title_case
         old_status = task.get('status', 'Todo')
@@ -421,8 +421,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
         self,
         max_tasks_per_host: int = 5,
         max_parallel_tasks: int = 10,
-        priority_filter: str | None = None,
-        tag_filter: list[str] | None = None,
+        priority_filter: Optional[str] = None,
+        tag_filter: Optional[List[str]] = None,
         dry_run: bool = False,
         notify: bool = False
     ) -> dict[str, Any]:
@@ -700,8 +700,8 @@ class NightlyTaskAutomation(IntelligentAutomationBase):
 def run_nightly_task_automation(
     max_tasks_per_host: int = 5,
     max_parallel_tasks: int = 10,
-    priority_filter: str | None = None,
-    tag_filter: list[str] | None = None,
+    priority_filter: Optional[str] = None,
+    tag_filter: Optional[List[str]] = None,
     dry_run: bool = False,
     notify: bool = False
 ) -> dict[str, Any]:

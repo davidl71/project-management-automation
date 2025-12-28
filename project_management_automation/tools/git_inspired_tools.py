@@ -13,6 +13,7 @@ Licensed under GPL-3.0. This implementation is original Python code.
 See ATTRIBUTIONS.md for details.
 """
 
+from typing import Optional
 import json
 import logging
 from datetime import datetime
@@ -37,7 +38,7 @@ from .task_diff import compare_task_versions
 logger = logging.getLogger(__name__)
 
 
-def get_task_commits(task_id: str, branch: str | None = None, limit: int = 50) -> str:
+def get_task_commits(task_id: str, branch: Optional[str] = None, limit: int = 50) -> str:
     """
     Get commit history for a task.
 
@@ -176,10 +177,10 @@ def get_branch_tasks(branch: str) -> str:
 
 def compare_task_diff(
     task_id: str,
-    commit1: str | None = None,
-    commit2: str | None = None,
-    time1: str | None = None,
-    time2: str | None = None,
+    commit1: Optional[str] = None,
+    commit2: Optional[str] = None,
+    time1: Optional[str] = None,
+    time2: Optional[str] = None,
 ) -> str:
     """
     Compare two versions of a task.
@@ -202,10 +203,10 @@ def compare_task_diff(
 
 
 def generate_graph(
-    branch: str | None = None,
-    task_id: str | None = None,
+    branch: Optional[str] = None,
+    task_id: Optional[str] = None,
     format: str = "text",
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     max_commits: int = 50,
 ) -> str:
     """

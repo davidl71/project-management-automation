@@ -11,7 +11,7 @@ See ATTRIBUTIONS.md for details.
 import json
 import logging
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 from ..utils import find_project_root
 from ..utils.branch_utils import (
@@ -109,7 +109,7 @@ def detect_merge_conflicts(
 def resolve_conflict(
     conflict: MergeConflict,
     strategy: str = "newer",
-    preferred_branch: str | None = None,
+    preferred_branch: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     Resolve a merge conflict using a strategy.

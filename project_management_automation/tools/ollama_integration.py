@@ -14,7 +14,7 @@ import os
 import platform
 import subprocess
 import time
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -304,9 +304,9 @@ def detect_hardware_config() -> dict[str, Any]:
 
 
 def get_optimized_ollama_options(
-    num_gpu: int | None = None,
-    num_threads: int | None = None,
-    context_size: int | None = None,
+    num_gpu: Optional[int] = None,
+    num_threads: Optional[int] = None,
+    context_size: Optional[int] = None,
     use_auto_detect: bool = True,
 ) -> dict[str, Any]:
     """
@@ -364,7 +364,7 @@ def get_optimized_ollama_options(
     return options
 
 
-def check_ollama_status(host: str | None = None) -> str:
+def check_ollama_status(host: Optional[str] = None) -> str:
     """
     [HINT: Ollama status. Check if Ollama server is running and accessible.]
 
@@ -440,7 +440,7 @@ def check_ollama_status(host: str | None = None) -> str:
         return json.dumps(error_response, indent=2)
 
 
-def list_ollama_models(host: str | None = None) -> str:
+def list_ollama_models(host: Optional[str] = None) -> str:
     """
     [HINT: Ollama models. List all available Ollama models on the local server.]
 
@@ -538,13 +538,13 @@ def list_ollama_models(host: str | None = None) -> str:
 def generate_with_ollama(
     prompt: str,
     model: str = "llama3.2",
-    host: str | None = None,
+    host: Optional[str] = None,
     stream: bool = False,
     options: dict | None = None,
-    num_gpu: int | None = None,
-    num_threads: int | None = None,
-    context_size: int | None = None,
-    use_flash_attention: bool | None = None,
+    num_gpu: Optional[int] = None,
+    num_threads: Optional[int] = None,
+    context_size: Optional[int] = None,
+    use_flash_attention: Optional[bool] = None,
     use_ram_optimizations: bool = True,
 ) -> str:
     """
@@ -760,7 +760,7 @@ def generate_with_ollama(
         return json.dumps(error_response, indent=2)
 
 
-def pull_ollama_model(model: str, host: str | None = None) -> str:
+def pull_ollama_model(model: str, host: Optional[str] = None) -> str:
     """
     [HINT: Ollama pull. Download/pull an Ollama model from the registry.]
 
@@ -911,7 +911,7 @@ def register_ollama_tools(mcp):
 
     try:
         @mcp.tool()
-        def check_ollama_status_tool(host: str | None = None) -> str:
+        def check_ollama_status_tool(host: Optional[str] = None) -> str:
             """Check if Ollama server is running and accessible."""
             return check_ollama_status(host)
 
@@ -921,7 +921,7 @@ def register_ollama_tools(mcp):
             return get_hardware_info()
 
         @mcp.tool()
-        def list_ollama_models_tool(host: str | None = None) -> str:
+        def list_ollama_models_tool(host: Optional[str] = None) -> str:
             """List all available Ollama models on the local server."""
             return list_ollama_models(host)
 
@@ -929,12 +929,12 @@ def register_ollama_tools(mcp):
         def generate_with_ollama_tool(
             prompt: str,
             model: str = "llama3.2",
-            host: str | None = None,
+            host: Optional[str] = None,
             stream: bool = False,
-            options: str | None = None,  # JSON string
-            num_gpu: int | None = None,
-            num_threads: int | None = None,
-            context_size: int | None = None,
+            options: Optional[str] = None,  # JSON string
+            num_gpu: Optional[int] = None,
+            num_threads: Optional[int] = None,
+            context_size: Optional[int] = None,
         ) -> str:
             """
             Generate text using a local Ollama model.
@@ -971,7 +971,7 @@ def register_ollama_tools(mcp):
             )
 
         @mcp.tool()
-        def pull_ollama_model_tool(model: str, host: str | None = None) -> str:
+        def pull_ollama_model_tool(model: str, host: Optional[str] = None) -> str:
             """Download/pull an Ollama model from the registry."""
             return pull_ollama_model(model, host)
 

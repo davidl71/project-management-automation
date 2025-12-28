@@ -4,6 +4,7 @@ MCP Tool Wrapper for Test Coverage Analysis
 Wraps TestCoverageAnalyzer to expose as MCP tool.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -32,9 +33,9 @@ except ImportError:
 
 
 def analyze_test_coverage(
-    coverage_file: str | None = None,
+    coverage_file: Optional[str] = None,
     min_coverage: int = 80,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     format: str = "html"
 ) -> str:
     """

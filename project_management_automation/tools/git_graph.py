@@ -11,7 +11,7 @@ See ATTRIBUTIONS.md for details.
 import logging
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ..utils.branch_utils import MAIN_BRANCH
 from ..utils.commit_tracking import TaskCommit, get_commit_tracker
@@ -215,8 +215,8 @@ def generate_graphviz_dot(
 
 
 def generate_commit_graph(
-    branch: str | None = None,
-    task_id: str | None = None,
+    branch: Optional[str] = None,
+    task_id: Optional[str] = None,
     format: str = "text",
     output_path: Path | None = None,
     max_commits: int = 50,

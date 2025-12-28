@@ -11,7 +11,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ except ImportError:
 def detect_duplicate_tasks(
     similarity_threshold: float = 0.85,
     auto_fix: bool = False,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Find and consolidate duplicate Todo2 tasks.

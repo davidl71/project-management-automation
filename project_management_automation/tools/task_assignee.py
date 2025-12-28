@@ -25,7 +25,7 @@ import socket
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, List, Literal, Optional
 
 from ..utils.task_locking import atomic_assign_task, atomic_batch_assign
 from ..utils.todo2_utils import is_pending_status, normalize_status
@@ -152,7 +152,7 @@ def assign_task(
     task_id: str,
     assignee_name: str,
     assignee_type: AssigneeType = "agent",
-    hostname: str | None = None,
+    hostname: Optional[str] = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -367,9 +367,9 @@ def unassign_task(task_id: str, dry_run: bool = False) -> str:
 
 
 def list_tasks_by_assignee(
-    assignee_name: str | None = None,
+    assignee_name: Optional[str] = None,
     assignee_type: AssigneeType | None = None,
-    status_filter: str | None = None,
+    status_filter: Optional[str] = None,
     include_unassigned: bool = False
 ) -> str:
     """
@@ -577,7 +577,7 @@ def bulk_assign_tasks(
     task_ids: list[str],
     assignee_name: str,
     assignee_type: AssigneeType = "agent",
-    hostname: str | None = None,
+    hostname: Optional[str] = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -675,7 +675,7 @@ def bulk_assign_tasks(
 
 def auto_assign_background_tasks(
     max_tasks_per_agent: int = 5,
-    priority_filter: str | None = None,
+    priority_filter: Optional[str] = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -822,15 +822,15 @@ def auto_assign_background_tasks(
 
 def task_assignee(
     action: str,
-    task_id: str | None = None,
-    task_ids: list[str] | None = None,
-    assignee_name: str | None = None,
+    task_id: Optional[str] = None,
+    task_ids: Optional[List[str]] = None,
+    assignee_name: Optional[str] = None,
     assignee_type: str = "agent",
-    hostname: str | None = None,
-    status_filter: str | None = None,
+    hostname: Optional[str] = None,
+    status_filter: Optional[str] = None,
     include_unassigned: bool = False,
     max_tasks_per_agent: int = 5,
-    priority_filter: str | None = None,
+    priority_filter: Optional[str] = None,
     dry_run: bool = False
 ) -> str:
     """
@@ -910,15 +910,15 @@ def register_assignee_tools(mcp) -> None:
         @mcp.tool()
         def task_assignee_tool(
             action: str,
-            task_id: str | None = None,
-            task_ids: list[str] | None = None,
-            assignee_name: str | None = None,
+            task_id: Optional[str] = None,
+            task_ids: Optional[List[str]] = None,
+            assignee_name: Optional[str] = None,
             assignee_type: str = "agent",
-            hostname: str | None = None,
-            status_filter: str | None = None,
+            hostname: Optional[str] = None,
+            status_filter: Optional[str] = None,
             include_unassigned: bool = False,
             max_tasks_per_agent: int = 5,
-            priority_filter: str | None = None,
+            priority_filter: Optional[str] = None,
             dry_run: bool = False
         ) -> str:
             """

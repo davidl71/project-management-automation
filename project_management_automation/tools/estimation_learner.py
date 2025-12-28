@@ -10,7 +10,7 @@ import logging
 import statistics
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Optional
 
 from ..utils import find_project_root
 
@@ -442,7 +442,7 @@ class EstimationLearner:
 
         return None
 
-    def load_learning_data(self) -> dict[str, Any] | None:
+    def load_learning_data(self) -> Optional[Dict[str, Any]]:
         """Load learned patterns from cache file."""
         try:
             if self.learning_cache_file.exists():

@@ -10,7 +10,7 @@ import logging
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +49,9 @@ class PromptIterationTracker:
     def log_prompt(
         self,
         prompt: str,
-        task_id: str | None = None,
-        mode: str | None = None,
-        outcome: str | None = None,
+        task_id: Optional[str] = None,
+        mode: Optional[str] = None,
+        outcome: Optional[str] = None,
         iteration: int = 1,
     ) -> dict[str, Any]:
         """Log a prompt iteration."""
@@ -169,9 +169,9 @@ class PromptIterationTracker:
 
 def log_prompt_iteration(
     prompt: str,
-    task_id: str | None = None,
-    mode: str | None = None,
-    outcome: str | None = None,
+    task_id: Optional[str] = None,
+    mode: Optional[str] = None,
+    outcome: Optional[str] = None,
     iteration: int = 1,
 ) -> str:
     """

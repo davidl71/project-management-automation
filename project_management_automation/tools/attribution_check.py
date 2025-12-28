@@ -9,6 +9,7 @@ Licensed under GPL-3.0. This implementation is original Python code.
 See ATTRIBUTIONS.md for details.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -38,7 +39,7 @@ except ImportError:
 
 
 def check_attribution_compliance(
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     create_tasks: bool = True,
 ) -> str:
     """

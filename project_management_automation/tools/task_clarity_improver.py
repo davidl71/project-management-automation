@@ -17,7 +17,7 @@ Improves clarity score metrics:
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ..utils import find_project_root
 from .task_duration_estimator import estimate_task_duration, estimate_task_duration_detailed
@@ -35,7 +35,7 @@ ACTION_VERBS = [
 
 def analyze_task_clarity(
     output_format: str = "json",
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     dry_run: bool = True
 ) -> dict[str, Any]:
     """
@@ -503,7 +503,7 @@ def _format_text_output(result: dict) -> str:
 
 async def improve_task_clarity_async(
     auto_apply: bool = False,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> dict[str, Any]:
     """
     Improve task clarity by applying suggested improvements using MCP.
@@ -592,7 +592,7 @@ async def improve_task_clarity_async(
         return _apply_improvements_file_based(analysis_result, output_path)
 
 
-def _apply_improvements_file_based(analysis_result: dict, output_path: str | None) -> dict[str, Any]:
+def _apply_improvements_file_based(analysis_result: dict, output_path: Optional[str]) -> dict[str, Any]:
     """Fallback: Apply improvements via MCP (preferred) or file directly (fallback)."""
     from project_management_automation.utils.todo2_mcp_client import update_todos_mcp
 
@@ -685,7 +685,7 @@ def _apply_improvements_file_based(analysis_result: dict, output_path: str | Non
 
 def improve_task_clarity(
     auto_apply: bool = False,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     use_mcp: bool = False
 ) -> dict[str, Any]:
     """

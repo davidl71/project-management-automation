@@ -5,6 +5,7 @@ Automatically simplifies rules based on exarp automation capabilities.
 Replaces manual processes with exarp tool references.
 """
 
+from typing import Optional, List
 import json
 import re
 import sys
@@ -17,9 +18,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def simplify_rules(
-    rule_files: list[str] | None = None,
+    rule_files: Optional[List[str]] = None,
     dry_run: bool = True,
-    output_dir: str | None = None
+    output_dir: Optional[str] = None
 ) -> str:
     """
     Automatically simplify rules based on exarp automation capabilities.

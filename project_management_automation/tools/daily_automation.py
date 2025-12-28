@@ -4,6 +4,7 @@ MCP Tool Wrapper for Daily Automation
 Wraps DailyAutomation to expose as MCP tool.
 """
 
+from typing import Optional, List
 import json
 import logging
 import time
@@ -34,10 +35,10 @@ except ImportError:
 
 
 def run_daily_automation(
-    tasks: list[str] | None = None,
+    tasks: Optional[List[str]] = None,
     include_slow: bool = False,
     dry_run: bool = False,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     [HINT: Daily automation. Returns tasks run, success rate, summary, report path.]

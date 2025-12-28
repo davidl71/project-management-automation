@@ -33,7 +33,7 @@ import os
 import random
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Optional
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # WISDOM DATABASES BY SOURCE
@@ -687,7 +687,7 @@ def get_wisdom(
     seed_date: bool = True,
     include_hebrew: bool = None,
     hebrew_only: bool = None,
-) -> dict[str, Any] | None:
+) -> Optional[Dict[str, Any]]:
     """
     Get wisdom quote based on project health.
 

@@ -21,7 +21,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger("exarp.auto_primer")
 
@@ -278,7 +278,7 @@ RECOMMENDED_COMPANIONS: dict[str, dict[str, Any]] = {
 }
 
 
-def detect_companion_mcps(available_tools: list[str] | None = None) -> dict[str, Any]:
+def detect_companion_mcps(available_tools: Optional[List[str]] = None) -> dict[str, Any]:
     """
     Detect which recommended companion MCPs are available.
 
@@ -340,7 +340,7 @@ def auto_prime(
     include_tasks: bool = True,
     include_prompts: bool = True,
     include_handoff: bool = True,
-    override_mode: str | None = None,
+    override_mode: Optional[str] = None,
     compact: bool = True,
 ) -> str:
     """
@@ -502,7 +502,7 @@ def auto_prime(
         }, indent=2)
 
 
-def get_session_context(task_id: str | None = None) -> dict[str, Any]:
+def get_session_context(task_id: Optional[str] = None) -> dict[str, Any]:
     """
     [HINT: Session context. Get context for a specific task or general session.]
 
@@ -574,7 +574,7 @@ def register_auto_primer_tools(mcp) -> None:
         def auto_prime_session(
             include_hints: bool = True,
             include_tasks: bool = True,
-            override_mode: str | None = None,
+            override_mode: Optional[str] = None,
         ) -> str:
             """
             [HINT: Auto-primer. Returns optimal context for session start. Detects agent/time/mode.]
@@ -606,7 +606,7 @@ def register_auto_primer_tools(mcp) -> None:
                 }, indent=2)
 
         @mcp.tool()
-        def get_task_context(task_id: str | None = None) -> str:
+        def get_task_context(task_id: Optional[str] = None) -> str:
             """
             [HINT: Task context. Get optimized context for working on a task.]
 

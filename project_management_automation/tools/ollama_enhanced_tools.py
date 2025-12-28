@@ -5,6 +5,7 @@ Examples of how to integrate Ollama/CodeLlama into existing exarp_pma workflows.
 These tools enhance existing functionality with LLM-powered analysis.
 """
 
+from typing import Optional
 import json
 import logging
 import time
@@ -44,7 +45,7 @@ except ImportError:
 
 def generate_code_documentation(
     file_path: str,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
     style: str = "google",
     model: str = "codellama",
 ) -> str:
@@ -361,7 +362,7 @@ def register_ollama_enhanced_tools(mcp):
         @mcp.tool()
         def generate_code_documentation_tool(
             file_path: str,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
             style: str = "google",
             model: str = "codellama",
         ) -> str:

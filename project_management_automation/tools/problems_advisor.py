@@ -20,7 +20,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -326,7 +326,7 @@ def get_quick_fixes(category: str) -> list[str]:
     return fixes.get(category, ["Consult error message and documentation"])
 
 
-def analyze_problems_tool(problems_json: str, include_hints: bool = True, output_path: str | None = None) -> str:
+def analyze_problems_tool(problems_json: str, include_hints: bool = True, output_path: Optional[str] = None) -> str:
     """
     [HINT: Problems advisor. Analyzes linter errors, provides resolution hints, tracks metrics.]
 

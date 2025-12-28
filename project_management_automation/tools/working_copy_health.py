@@ -9,7 +9,7 @@ import os
 import socket
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 
 def _ssh_command(host: str, command: str, timeout: int = 10) -> subprocess.CompletedProcess:
@@ -156,7 +156,7 @@ def _find_project_root(start_path: Path) -> Path:
 
 
 def check_working_copy_health(
-    agent_name: str | None = None,
+    agent_name: Optional[str] = None,
     check_remote: bool = True
 ) -> dict[str, Any]:
     """

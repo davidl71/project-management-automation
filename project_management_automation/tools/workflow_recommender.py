@@ -12,7 +12,7 @@ import json
 import logging
 import re
 import time
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -120,8 +120,8 @@ ASK_INDICATORS = {
 
 
 def recommend_workflow_mode(
-    task_description: str | None = None,
-    task_id: str | None = None,
+    task_description: Optional[str] = None,
+    task_id: Optional[str] = None,
     include_rationale: bool = True,
 ) -> str:
     """
@@ -322,7 +322,7 @@ def generate_mode_suggestion_message(
 
 def get_mode_suggestion_for_task(
     task_description: str,
-    current_mode: str | None = None,
+    current_mode: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     Quick helper to get mode suggestion for a task.
@@ -398,7 +398,7 @@ def format_mode_switch_prompt(
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def suggest_mode_if_needed(task_description: str) -> str | None:
+def suggest_mode_if_needed(task_description: str) -> Optional[str]:
     """
     Check if mode suggestion should be appended to tool output.
 

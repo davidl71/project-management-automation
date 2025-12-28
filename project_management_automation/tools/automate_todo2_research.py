@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +34,10 @@ except ImportError:
 
 
 def automate_todo2_research(
-    task_ids: list[str] | None = None,
+    task_ids: Optional[List[str]] = None,
     auto_apply: bool = False,
     dry_run: bool = True,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Automatically add research_with_links comments to Todo2 tasks.
@@ -188,8 +188,8 @@ def _conduct_research(
     task_name: str,
     task_description: str,
     project_root: Path,
-    task_id: str | None = None
-) -> dict[str, Any] | None:
+    task_id: Optional[str] = None
+) -> Optional[Dict[str, Any]]:
     """Conduct research for a task using agentic-tools query generation (T-15, T-21)."""
     try:
         from project_management_automation.utils.agentic_tools_client import (

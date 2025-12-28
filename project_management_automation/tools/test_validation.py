@@ -8,7 +8,7 @@ Checks naming conventions, validates organization, and identifies missing test f
 import logging
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -35,9 +35,9 @@ except ImportError:
 
 
 def validate_test_structure(
-    test_path: str | None = None,
-    framework: str | None = None,
-    output_path: str | None = None,
+    test_path: Optional[str] = None,
+    framework: Optional[str] = None,
+    output_path: Optional[str] = None,
 ) -> dict[str, Any]:
     """
     Validate test organization and patterns.

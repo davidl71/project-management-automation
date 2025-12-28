@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -34,13 +34,13 @@ except ImportError:
 
 
 def auto_update_task_status(
-    project_id: str | None = None,
+    project_id: Optional[str] = None,
     scan_depth: int = 3,
-    file_extensions: list[str] | None = None,
+    file_extensions: Optional[List[str]] = None,
     auto_update_tasks: bool = False,
     confidence_threshold: float = 0.7,
     dry_run: bool = True,
-    output_path: str | None = None
+    output_path: Optional[str] = None
 ) -> str:
     """
     Automatically infer and update task status based on codebase analysis.

@@ -14,7 +14,7 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -278,7 +278,7 @@ class PRDAlignmentAnalyzer:
         return recommendations
 
 
-def analyze_prd_alignment(output_path: str | None = None) -> str:
+def analyze_prd_alignment(output_path: Optional[str] = None) -> str:
     """
     [HINT: PRD alignment. Task-to-persona mapping, advisor assignments, recommendations.]
 

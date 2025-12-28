@@ -11,7 +11,7 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -94,8 +94,8 @@ class DefinitionOfDoneChecker:
 
     def check(
         self,
-        task_id: str | None = None,
-        changed_files: list[str] | None = None,
+        task_id: Optional[str] = None,
+        changed_files: Optional[List[str]] = None,
         auto_check: bool = True,
     ) -> dict[str, Any]:
         """
@@ -166,7 +166,7 @@ class DefinitionOfDoneChecker:
         return results
 
     def _run_auto_check(
-        self, check_id: str, changed_files: list[str] | None
+        self, check_id: str, changed_files: Optional[List[str]]
     ) -> dict | None:
         """Run automated check for a specific criterion."""
         try:
@@ -223,7 +223,7 @@ class DefinitionOfDoneChecker:
         except FileNotFoundError:
             return {"status": "skipped", "message": "ruff not found"}
 
-    def _check_secrets(self, changed_files: list[str] | None) -> dict:
+    def _check_secrets(self, changed_files: Optional[List[str]]) -> dict:
         """Check for hardcoded secrets."""
         secret_patterns = [
             r"api[_-]?key\s*=\s*['\"][^'\"]+['\"]",
@@ -257,7 +257,7 @@ class DefinitionOfDoneChecker:
             return {"status": "failed", "message": f"Possible secrets in: {', '.join(secrets_found[:3])}"}
         return {"status": "passed", "message": "No obvious secrets detected"}
 
-    def _check_docstrings(self, changed_files: list[str] | None) -> dict:
+    def _check_docstrings(self, changed_files: Optional[List[str]]) -> dict:
         """Check for missing docstrings."""
         import ast
 
@@ -289,10 +289,10 @@ class DefinitionOfDoneChecker:
 
 
 def check_definition_of_done(
-    task_id: str | None = None,
-    changed_files: str | None = None,
+    task_id: Optional[str] = None,
+    changed_files: Optional[str] = None,
     auto_check: bool = True,
-    output_path: str | None = None,
+    output_path: Optional[str] = None,
 ) -> str:
     """
     [HINT: Definition of Done. Validates task completion criteria before review.]

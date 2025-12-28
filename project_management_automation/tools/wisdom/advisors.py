@@ -38,7 +38,7 @@ Design Philosophy:
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, Optional
 
 from .sources import WISDOM_SOURCES, get_wisdom
 
@@ -277,9 +277,9 @@ def log_consultation(consultation: dict[str, Any]) -> None:
 
 def get_consultation_log(
     days: int = 30,
-    advisor: str | None = None,
-    metric: str | None = None,
-    stage: str | None = None,
+    advisor: Optional[str] = None,
+    metric: Optional[str] = None,
+    stage: Optional[str] = None,
 ) -> list[dict[str, Any]]:
     """
     Retrieve consultation log entries.
@@ -345,29 +345,29 @@ def get_consultation_mode(score: float) -> str:
     return json.dumps(result, indent=2)
 
 
-def get_advisor_for_metric(metric: str) -> dict[str, Any] | None:
+def get_advisor_for_metric(metric: str) -> Optional[Dict[str, Any]]:
     """Get the trusted advisor for a scorecard metric."""
     return METRIC_ADVISORS.get(metric)
 
 
-def get_advisor_for_tool(tool: str) -> dict[str, Any] | None:
+def get_advisor_for_tool(tool: str) -> Optional[Dict[str, Any]]:
     """Get the trusted advisor for a tool."""
     return TOOL_ADVISORS.get(tool)
 
 
-def get_advisor_for_stage(stage: str) -> dict[str, Any] | None:
+def get_advisor_for_stage(stage: str) -> Optional[Dict[str, Any]]:
     """Get the trusted advisor for a workflow stage."""
     return STAGE_ADVISORS.get(stage)
 
 
 def consult_advisor(
-    metric: str | None = None,
-    tool: str | None = None,
-    stage: str | None = None,
+    metric: Optional[str] = None,
+    tool: Optional[str] = None,
+    stage: Optional[str] = None,
     score: float = 50.0,
     context: str = "",
     log: bool = True,
-    session_mode: str | None = None,
+    session_mode: Optional[str] = None,
 ) -> str:
     """
     Consult an advisor and get wisdom.

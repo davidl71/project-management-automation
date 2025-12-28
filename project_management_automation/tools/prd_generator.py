@@ -18,7 +18,7 @@ import re
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +159,7 @@ class PRDGenerator:
 
     def generate(
         self,
-        project_name: str | None = None,
+        project_name: Optional[str] = None,
         include_tasks: bool = True,
         include_architecture: bool = True,
         include_metrics: bool = True,
@@ -807,8 +807,8 @@ class PRDGenerator:
 
 
 def generate_prd(
-    project_name: str | None = None,
-    output_path: str | None = None,
+    project_name: Optional[str] = None,
+    output_path: Optional[str] = None,
     include_tasks: bool = True,
     include_architecture: bool = True,
     include_metrics: bool = True,
