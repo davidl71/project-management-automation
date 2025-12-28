@@ -267,6 +267,11 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
     },
 
     # Context Management
+    "context": {
+        "hint": "Context management. action=summarize|budget|batch. Unified context operations.",
+        "category": "context",
+        "outputs": ["summary", "token_reduction_percent", "budget_analysis", "batch_results"],
+    },
     "summarize_context": {
         "hint": "Context summarizer. Compresses verbose outputs to key metrics.",
         "category": "context",
@@ -277,6 +282,135 @@ TOOL_HINTS_REGISTRY: Dict[str, Dict[str, Any]] = {
         "category": "context",
         "outputs": ["total_tokens", "over_budget", "strategy"],
     },
+    
+    # Consolidated Tools
+    "analyze_alignment": {
+        "hint": "Alignment analysis. action=todo2|prd. Unified alignment analysis tool.",
+        "category": "tasks",
+        "outputs": ["misaligned_count", "average_score", "followup_tasks", "persona_coverage"],
+    },
+    "automation": {
+        "hint": "Automation. action=daily|nightly|sprint|discover. Unified automation tool.",
+        "category": "automation",
+        "outputs": ["checks_run", "tasks_assigned", "issues_found", "opportunities"],
+    },
+    "check_attribution": {
+        "hint": "Attribution compliance. Verifies proper attribution for third-party components.",
+        "category": "documentation",
+        "outputs": ["attribution_score", "compliant_files", "issues_found"],
+    },
+    "estimation": {
+        "hint": "Estimation. action=estimate|analyze|stats. Unified task duration estimation tool.",
+        "category": "tasks",
+        "outputs": ["estimate_hours", "confidence", "accuracy_metrics", "statistics"],
+    },
+    "generate_config": {
+        "hint": "Config generation. action=rules|ignore|simplify. Creates IDE config files.",
+        "category": "config",
+        "outputs": ["rules_generated", "patterns_detected", "files_created", "reduction_percent"],
+    },
+    "git_tools": {
+        "hint": "Git tools. action=commits|branches|diff|graph|merge|set_branch. Unified git-inspired tools.",
+        "category": "coordination",
+        "outputs": ["commits", "branches", "diff", "graph", "merge_results"],
+    },
+    "health": {
+        "hint": "Health check. action=server|git|docs|dod|cicd. Status and health metrics.",
+        "category": "health",
+        "outputs": ["status", "health_score", "issues", "recommendations"],
+    },
+    "lint": {
+        "hint": "Linting tool. action=run|analyze. Run linter or analyze problems.",
+        "category": "testing",
+        "outputs": ["issues", "fixed_count", "analysis", "hints"],
+    },
+    "memory": {
+        "hint": "Memory tool. action=save|recall|search. Persist and retrieve AI discoveries.",
+        "category": "memory",
+        "outputs": ["memory_id", "memories", "results", "match_count"],
+    },
+    "memory_maint": {
+        "hint": "Memory maintenance. action=health|gc|prune|consolidate|dream. Lifecycle management.",
+        "category": "memory",
+        "outputs": ["health_metrics", "deleted_count", "consolidated_count", "dream_insights"],
+    },
+    "mlx": {
+        "hint": "MLX. action=status|hardware|models|generate. Unified MLX tool.",
+        "category": "workflow",
+        "outputs": ["status", "hardware_info", "models", "generated_text"],
+    },
+    "ollama": {
+        "hint": "Ollama. action=status|models|generate|pull|hardware|docs|quality|summary. Unified Ollama tool.",
+        "category": "workflow",
+        "outputs": ["status", "models", "generated_text", "hardware_info", "docs", "quality_analysis"],
+    },
+    "prompt_tracking": {
+        "hint": "Prompt tracking. action=log|analyze. Track and analyze prompts.",
+        "category": "workflow",
+        "outputs": ["log_confirmation", "iteration_stats", "patterns"],
+    },
+    "recommend": {
+        "hint": "Recommendations. action=model|workflow|advisor. Unified recommendation system.",
+        "category": "workflow",
+        "outputs": ["recommended_model", "recommended_mode", "advisor_wisdom", "confidence"],
+    },
+    "report": {
+        "hint": "Report generation. action=overview|scorecard|briefing|prd. Project reports.",
+        "category": "health",
+        "outputs": ["overview", "scorecard", "briefing", "prd"],
+    },
+    "security": {
+        "hint": "Security. action=scan|alerts|report. Vulnerabilities, remediation.",
+        "category": "security",
+        "outputs": ["total_vulns", "by_severity", "remediation", "alerts"],
+    },
+    "session": {
+        "hint": "Session. action=prime|handoff|prompts|assignee. Unified session management tools.",
+        "category": "coordination",
+        "outputs": ["primed_context", "handoff_id", "prompts", "assignee_info"],
+    },
+    "setup_hooks": {
+        "hint": "Hooks setup. action=git|patterns. Install automation hooks.",
+        "category": "automation",
+        "outputs": ["hooks_installed", "patterns_configured", "triggers_configured"],
+    },
+    "task_analysis": {
+        "hint": "Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality and structure.",
+        "category": "tasks",
+        "outputs": ["duplicate_count", "tag_changes", "hierarchy_analysis", "dependency_chains", "parallelization_opportunities"],
+    },
+    "task_discovery": {
+        "hint": "Task discovery. action=comments|markdown|orphans|all. Find tasks from various sources.",
+        "category": "tasks",
+        "outputs": ["discoveries", "summary", "by_source", "by_type"],
+    },
+    "task_workflow": {
+        "hint": "Task workflow. action=sync|approve|clarify|clarity|cleanup. Manage task lifecycle.",
+        "category": "tasks",
+        "outputs": ["matches", "approved_count", "clarifications", "clarity_improvements", "cleaned_count"],
+    },
+    "testing": {
+        "hint": "Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest test cases, or validate test structure.",
+        "category": "testing",
+        "outputs": ["passed", "failed", "coverage_percent", "suggestions", "validation_results"],
+    },
+    "tool_catalog": {
+        "hint": "Tool catalog. action=list|help. Unified tool catalog and help.",
+        "category": "tool_catalog",
+        "outputs": ["tools", "categories", "tool_info", "examples"],
+    },
+    "workflow_mode": {
+        "hint": "Workflow mode management. action=focus|suggest|stats. Unified workflow operations.",
+        "category": "workflow",
+        "outputs": ["current_mode", "visible_tools", "suggested_mode", "usage_stats"],
+    },
+    "add_external_tool_hints": {
+        "hint": "External tool hints automation. Returns files scanned, modified, hints added, report path.",
+        "category": "documentation",
+        "outputs": ["files_scanned", "files_modified", "hints_added", "report_path"],
+    },
+    
+    # Legacy tool names (kept for backward compatibility, map to consolidated tools)
     "list_tools": {
         "hint": "Tool catalog. Lists all tools with rich descriptions and examples.",
         "category": "tool_catalog",

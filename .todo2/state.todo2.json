@@ -244,7 +244,7 @@
       ]
     },
     {
-      "id": "RESEARCH-0fb905eb",
+      "id": "T-SECURITY-RESEARCH-0fb905eb",
       "name": "Implement Research RHDA implementation patterns for Exarp enhancement",
       "status": "Todo",
       "priority": "low",
@@ -269,7 +269,7 @@
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2,
       "created": "1970-01-01T00:00:00.000Z",
-      "lastModified": "2025-12-25T20:35:44.032Z",
+      "lastModified": "2025-12-28T22:25:44.965766",
       "changes": [
         {
           "field": "status",
@@ -280,7 +280,7 @@
       ]
     },
     {
-      "id": "RESEARCH-c162d40f",
+      "id": "T-SECURITY-RESEARCH-c162d40f",
       "name": "Integrate interactive-mcp for human-in-the-loop Exarp workflows",
       "status": "Todo",
       "priority": "medium",
@@ -305,7 +305,7 @@
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 3,
       "created": "1970-01-01T00:00:00.000Z",
-      "lastModified": "2025-12-25T20:35:44.032Z",
+      "lastModified": "2025-12-28T22:25:44.965785",
       "changes": [
         {
           "field": "status",
@@ -316,7 +316,7 @@
       ]
     },
     {
-      "id": "RESEARCH-ca28a3e8",
+      "id": "T-TESTING-RESEARCH-ca28a3e8",
       "name": "Implement Research: Exarp Cursor Extension Architecture",
       "status": "Done",
       "priority": "high",
@@ -374,7 +374,7 @@
         }
       ],
       "project_id": "davidl71/project-management-automation",
-      "lastModified": "2025-12-25T15:35:27.328Z",
+      "lastModified": "2025-12-28T22:25:44.965786",
       "estimatedHours": 2,
       "created": "1970-01-01T00:00:00.000Z",
       "changes": [
@@ -393,7 +393,7 @@
       ]
     },
     {
-      "id": "ENHANCE-001",
+      "id": "T-SECURITY-ENHANCE-001",
       "name": "Update Exarp to validate and use Todo2 project ownership",
       "long_description": "Implement project ownership validation in Exarp to ensure it operates on the correct project and enable future \"one system to track them all\" capability.\n\n## Changes Made\n- Added `project` object to state.todo2.json root with: id, name, path, repository\n- Added `project_id` field to every task (538 tasks across 2 projects)\n\n## Required Exarp Enhancements\n\n### 1. Project Validation (High Priority)\n- On startup, compare PROJECT_ROOT env var with Todo2's project.path\n- Warn or fail if mismatch detected\n- Log project context for debugging\n\n### 2. Task Project Validation\n- When creating tasks, auto-populate project_id\n- When loading tasks, verify project_id matches current project\n- Flag cross-project tasks for attention\n\n### 3. Cross-Project Visibility (Future)\n- Resource to list tasks across all known projects\n- Filter by project_id in task queries\n- Dashboard showing all project task counts\n\n### 4. \"One System\" Foundation\n- Central registry of known projects\n- Cross-project task dependencies\n- Unified task search across projects\n\n## Files to Update\n- project_management_automation/server.py - Add validation on init\n- project_management_automation/utils/__init__.py - Add project info helpers\n- project_management_automation/tools/*.py - Use project_id in task operations\n- project_management_automation/resources/tasks.py - Add project filtering",
       "status": "Done",
@@ -420,11 +420,11 @@
         }
       ],
       "estimatedHours": 2,
-      "lastModified": "2025-12-25T16:15:44.363Z",
+      "lastModified": "2025-12-28T22:25:44.965787",
       "created": "1970-01-01T00:00:00.000Z"
     },
     {
-      "id": "TOOL-001",
+      "id": "T-SECURITY-TOOL-001",
       "name": "Problems Advisor MCP Tool",
       "status": "Done",
       "priority": "high",
@@ -444,10 +444,11 @@
         }
       ],
       "created": "1970-01-01T00:00:00.000Z",
-      "estimatedHours": 0.7
+      "estimatedHours": 0.7,
+      "lastModified": "2025-12-28T22:25:44.965788"
     },
     {
-      "id": "T-20251126180006-01",
+      "id": "T-METRICS-20251126180006-01",
       "name": "Implement generate_prd tool for PRD generation from codebase",
       "long_description": "Create a new MCP tool that generates Product Requirements Documents by analyzing the existing codebase.\n\n**Objective:** Help users create/maintain PRD files as their \"North Star\" document.\n\n## Research Summary\n\n### Key PRD AI Tools Analyzed\n1. **ChatPRD** - AI copilot specifically for PMs, $5/month, MCP integration available\n2. **MakePRD** - Generate detailed PRDs from product descriptions\n3. **Miro AI PRD Generator** - Visual PRD creation with collaboration\n4. **Leiga** - AI-assisted drafts with customizable frameworks\n5. **QuillBot AI PRD Generator** - Structured output generation\n\n### Best Practices from Research\n\n**From ChatPRD (chatprd.ai):**\n- Start with simple prompts, iterate with AI feedback\n- PRD should include: objectives, key features, user stories, technical requirements, success metrics, risks/dependencies\n- Use AI to identify gaps and strengthen narratives\n- Keep PRD updated as project evolves\n\n**Recommended PRD Sections:**\n1. Project Purpose / Problem Statement\n2. User Stories / Personas\n3. Key Features / Requirements\n4. Technical Requirements / Constraints\n5. Success Metrics / KPIs\n6. Risks and Dependencies\n7. Timeline / Milestones\n\n**AI PRD Generation Prompts:**\n```\nInitial Draft:\n\"You are a product management expert. Help me create a comprehensive Product Requirement Document (PRD) for [project name]. Include: project purpose, user stories, key features, technical requirements, success metrics, and potential risks.\"\n\nImprovement:\n\"Review this PRD for [project name]. Highlight areas for improvement, identify gaps, suggest stronger success metrics, and ensure alignment with best practices.\"\n```\n\n## Implementation Features\n\n**Core Capabilities:**\n- Analyze codebase structure and architecture\n- Extract requirements from existing Todo2 tasks\n- Integrate with PROJECT_GOALS.md alignment\n- Generate structured markdown PRD\n- Iterative refinement with AI feedback\n\n**Output Structure:**\n```markdown\n# PRD: [Project Name]\n\n## 1. Overview\n- Problem Statement\n- Product Vision\n- Target Users\n\n## 2. User Stories\n- [Extracted from Todo2 tasks]\n\n## 3. Key Features\n- [Derived from codebase analysis]\n\n## 4. Technical Requirements\n- Architecture constraints\n- Tech stack requirements\n- Integration needs\n\n## 5. Success Metrics\n- [Aligned with PROJECT_GOALS.md]\n\n## 6. Risks & Dependencies\n- [From task blockers and analysis]\n\n## 7. Timeline\n- [From task priorities and estimates]\n```\n\n**Acceptance Criteria:**\n- Tool generates valid PRD markdown\n- Includes user stories from existing tasks\n- Includes technical requirements from code analysis\n- Can update existing PRD incrementally\n- Provides AI-driven improvement suggestions\n\n## Research Links\n\n- [ChatPRD - Using AI to Write PRDs](https://www.chatprd.ai/resources/using-ai-to-write-prd)\n- [Medium: We Used AI Tools to Write Our PRD](https://medium.com/@rahul.sikder3/we-used-ai-tools-to-write-our-prd-here-are-the-results-8c6043014a9b)\n- [Reddit: Best PRD AI Tools Discussion](https://www.reddit.com/r/ProductManagement/comments/1meh0ox/best_prd_al_tool_projects_chatprd_reforge_etc/)\n- [MakePRD](https://www.makeprd.ai/)\n- [Miro AI PRD Generator](https://miro.com/ai/product-development/ai-prd/)\n- [Leiga PRD Writing Tool](https://www.leiga.com/free-tools/prd-writing-tool)\n\n**Reference:** Best Practice #1 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Done",
@@ -473,11 +474,11 @@
       ],
       "completedAt": "2025-11-27T03:40:00Z",
       "created": "1970-01-01T00:00:00.000Z",
-      "lastModified": "2025-12-25T16:16:06.772Z",
+      "lastModified": "2025-12-28T22:25:44.965789",
       "estimatedHours": 2.9
     },
     {
-      "id": "T-20251126180006-02",
+      "id": "T-METRICS-20251126180006-02",
       "name": "Implement recommend_workflow_mode tool for AGENT vs ASK guidance",
       "long_description": "Create a tool that recommends Cursor workflow mode (AGENT vs ASK) based on task description.\n\n**Objective:** Help users choose the right Cursor mode for each task.\n\n**Features:**\n- Analyze task description for implementation vs analysis intent\n- Map Exarp tools to recommended modes\n- Suggest relevant Exarp tools for the task\n- Integrate with tractatus \u2192 exarp \u2192 sequential workflow\n\n**Mode Mapping:**\n- ASK: project_scorecard, check_documentation_health, analyze_todo2_alignment\n- AGENT: sprint_automation, batch_approve_tasks, run_tests\n- CONDITIONAL: detect_duplicate_tasks (AGENT if auto_fix=True)\n\n**Reference:** Best Practice #3 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Done",
@@ -498,7 +499,7 @@
           "created": "2025-12-25T18:16:06.772919"
         }
       ],
-      "lastModified": "2025-12-25T16:16:06.772Z",
+      "lastModified": "2025-12-28T22:25:44.965789",
       "estimatedHours": 2.9
     },
     {
@@ -527,7 +528,7 @@
       "estimatedHours": 2.9
     },
     {
-      "id": "T-20251126180006-04",
+      "id": "T-METRICS-20251126180006-04",
       "name": "Implement generate_cursor_rules tool for .mdc generation",
       "long_description": "Create a tool that generates Cursor rules from codebase analysis.\n\n**Objective:** Automate creation of .cursor/rules/*.mdc files.\n\n**Features:**\n- Analyze existing code for patterns/conventions\n- Extract library preferences from imports/deps\n- Detect architecture patterns from structure\n- Generate tech-stack specific rules\n\n**Output Structure:**\n.cursor/rules/\n\u251c\u2500\u2500 general.mdc        # Project-wide conventions\n\u251c\u2500\u2500 python.mdc         # Python-specific rules\n\u251c\u2500\u2500 testing.mdc        # Testing patterns\n\u2514\u2500\u2500 architecture.mdc   # Architecture decisions\n\n**Reference:** Best Practice #2 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Done",
@@ -548,11 +549,11 @@
           "created": "2025-12-25T18:16:06.772923"
         }
       ],
-      "lastModified": "2025-12-25T16:16:06.772Z",
+      "lastModified": "2025-12-28T22:25:44.965790",
       "estimatedHours": 0.5
     },
     {
-      "id": "T-20251126180006-05",
+      "id": "T-METRICS-20251126180006-05",
       "name": "Enhance HINT system with rich tool descriptions",
       "long_description": "Expand the HINT system from minimal to comprehensive descriptions.\n\n**Objective:** Follow \"detailed prompts yield accurate results\" principle.\n\n**Current Format:**\n[HINT: Docs health. Score 0-100, broken links, tasks created.]\n\n**Enhanced Format:**\n[HINT: Docs health. Score 0-100, broken links, tasks created.]\n\n\ud83d\udcca Output: Health score, broken links list, recommended fixes\n\ud83d\udd27 Side Effects: Creates Todo2 tasks if create_tasks=True\n\ud83d\udcc1 Affected: docs/ directory analysis\n\u23f1\ufe0f Typical Runtime: 5-30 seconds\n\nExample Prompt: \"Check documentation health and create tasks\"\n\nRelated Tools: add_external_tool_hints, sync_todo_tasks\n\n**Scope:** Update all 22+ MCP tools with enhanced HINTs\n\n**Reference:** Best Practice #6 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Done",
@@ -573,11 +574,11 @@
           "created": "2025-12-25T18:16:06.772924"
         }
       ],
-      "lastModified": "2025-12-25T16:16:06.772Z",
+      "lastModified": "2025-12-28T22:25:44.965791",
       "estimatedHours": 0.5
     },
     {
-      "id": "T-20251126180006-06",
+      "id": "T-SECURITY-20251126180006-06",
       "name": "Implement generate_cursorignore tool",
       "long_description": "Create a tool that generates .cursorignore and .cursorindexignore files.\n\n**Objective:** Help users configure file exclusions to speed up Cursor.\n\n**Features:**\n- Analyze project for build artifacts\n- Detect dependency directories (node_modules, .venv)\n- Find large files (>100KB non-source)\n- Identify generated files (*.pyc, *.o)\n- Flag sensitive patterns (.env, credentials)\n\n**Output Files:**\n- .cursorignore: Complete exclusions (invisible to Cursor)\n- .cursorindexignore: Not indexed but referenceable\n\n**Default Patterns:**\n__pycache__/, *.pyc, node_modules/, build/, dist/, .venv/, *.log\n\n**Reference:** Best Practice #9 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Done",
@@ -598,11 +599,11 @@
           "created": "2025-12-25T18:16:06.772925"
         }
       ],
-      "lastModified": "2025-12-25T16:16:06.772Z",
+      "lastModified": "2025-12-28T22:25:44.965791",
       "estimatedHours": 0.5
     },
     {
-      "id": "T-20251126180006-07",
+      "id": "T-TESTING-20251126180006-07",
       "name": "Implement check_definition_of_done tool",
       "long_description": "Create a tool that verifies task completion quality.\n\n**Objective:** Ensure completed tasks include tests, logs, and docs.\n\n**Checks:**\n\u2705 Unit tests written for new code?\n\u2705 Logging statements in place?\n\u2705 Documentation updated?\n\u2705 Code follows project rules?\n\n**Features:**\n- Analyze git diff for task changes\n- Check for test files matching changed files\n- Verify logging imports/usage\n- Check docstrings presence\n\n**Output:**\n- DoD checklist with pass/fail\n- Suggestions for missing items\n- Can block task completion until satisfied\n\n**Reference:** Best Practice #7 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Done",
@@ -623,11 +624,11 @@
           "created": "2025-12-25T18:16:06.772928"
         }
       ],
-      "lastModified": "2025-12-25T16:16:06.772Z",
+      "lastModified": "2025-12-28T22:25:44.965792",
       "estimatedHours": 1.3
     },
     {
-      "id": "T-20251126180006-08",
+      "id": "T-METRICS-20251126180006-08",
       "name": "Add model selection recommendations to tool outputs",
       "long_description": "Enhance tool outputs with AI model recommendations.\n\n**Objective:** Help users choose appropriate models for different tasks.\n\n**Logic:**\n- Large context (>100K tokens): Recommend Claude-4 Sonnet Max, Gemini 2.5 Pro\n- High complexity: Recommend Claude-4 Sonnet, o3\n- Simple tasks: Recommend GPT-4o for speed/cost\n- Cost-sensitive: Recommend efficient models\n\n**Implementation:**\n- Add _format_model_recommendation() utility\n- Include in tool outputs when relevant\n- Consider task complexity and context size\n\n**Example Output:**\n\ud83d\udca1 Tip: This analysis covers 150K tokens. Use Claude-4 Sonnet Max for best results.\n\n**Reference:** Best Practice #4 from CURSOR_IDE_BEST_PRACTICES.md",
       "status": "Todo",
@@ -640,10 +641,11 @@
       "created_at": "2025-11-26T18:00:06.524795Z",
       "updated_at": "2025-11-26T18:00:06.524797Z",
       "estimatedHours": 2,
-      "created": "1970-01-01T00:00:00.000Z"
+      "created": "1970-01-01T00:00:00.000Z",
+      "lastModified": "2025-12-28T22:25:44.965794"
     },
     {
-      "id": "MODE-001",
+      "id": "T-METRICS-MODE-001",
       "name": "Implement Research: Cursor mode detection signals",
       "long_description": "Research how to detect/infer Cursor's current mode (Agent/Ask/Manual).\n\nPotential signals to investigate:\n1. Tool call frequency and patterns\n2. File edit patterns (multi-file vs single-file)\n3. Session duration and complexity\n4. MCP context or headers (if any)\n5. Environment variables (CURSOR_* vars)\n\nGoal: Document reliable signals for mode inference.",
       "status": "Done",
@@ -655,7 +657,7 @@
         "cursor-integration"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T16:13:09.965Z",
+      "lastModified": "2025-12-28T22:25:44.965794",
       "dependencies": [],
       "estimatedHours": 2,
       "comments": [
@@ -667,7 +669,7 @@
       ]
     },
     {
-      "id": "MODE-002",
+      "id": "T-METRICS-MODE-002",
       "name": "Implement: Session mode inference from tool patterns",
       "long_description": "Implement mode inference based on tool call patterns during a session.\n\nDetection heuristics:\n- AGENT mode: High tool call frequency, multi-file edits, longer sessions\n- ASK mode: Lower frequency, single queries, shorter interactions\n- MANUAL mode: No tool calls, direct file edits\n\nImplementation:\n1. Track tool calls in session\n2. Analyze patterns using sliding window\n3. Infer mode with confidence score\n4. Update session context\n\nDependencies: MODE-001 research findings",
       "status": "Done",
@@ -678,9 +680,9 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T21:00:03.105Z",
+      "lastModified": "2025-12-28T22:25:44.965796",
       "dependencies": [
-        "MODE-001"
+        "T-METRICS-MODE-001"
       ],
       "estimatedHours": 2,
       "changes": [
@@ -705,9 +707,9 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T16:04:03.540Z",
+      "lastModified": "2025-12-28T22:25:44.965797",
       "dependencies": [
-        "MODE-002"
+        "T-METRICS-MODE-002"
       ],
       "estimatedHours": 2
     },
@@ -724,9 +726,9 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T21:00:03.105Z",
+      "lastModified": "2025-12-28T22:25:44.965798",
       "dependencies": [
-        "MODE-002"
+        "T-METRICS-MODE-002"
       ],
       "estimatedHours": 2,
       "changes": [
@@ -739,7 +741,7 @@
       ]
     },
     {
-      "id": "MODE-005",
+      "id": "T-METRICS-MODE-005",
       "name": "Implement: Auto-log mode in memory system",
       "long_description": "**STATUS UPDATE**: Dependencies resolved - MODE-002 and MODE-004 are now complete.\n\n**Original Description:**\nAutomatically log inferred mode in the memory system for pattern analysis.\n\n**Features:**\n1. Save mode inference to memory after each significant action\n2. Track mode transitions during session\n3. Correlate mode with task outcomes\n4. Generate mode usage analytics\n\n**Memory format:**\n{\n  \"category\": \"insight\",\n  \"title\": \"Session Mode: AGENT\",\n  \"content\": \"Inferred AGENT mode at 85% confidence. 15 tool calls, 3 files edited.\"\n}\n\n**Dependencies**: MODE-002 \u2705, MODE-004 \u2705 (both complete)",
       "status": "Todo",
@@ -751,9 +753,9 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-12-25T21:00:03.977Z",
+      "lastModified": "2025-12-28T22:25:44.965800",
       "dependencies": [
-        "MODE-002",
+        "T-METRICS-MODE-002",
         "MODE-004"
       ],
       "estimatedHours": 2,
@@ -773,7 +775,7 @@
       ]
     },
     {
-      "id": "MODE-006",
+      "id": "T-TESTING-MODE-006",
       "name": "Add prompt template: mode-aware workflow selection",
       "long_description": "Create prompt template that helps users select appropriate mode.\n\nPrompt: mode_select\n\nContent:\n- Explains AGENT/ASK/Manual modes\n- Provides decision tree based on task type\n- References recommend_workflow_mode() logic\n- Includes examples for each mode\n\nIntegration with existing prompts:\n- Reference from persona workflows\n- Include in daily_checkin prompt\n- Add to sprint_start prompt",
       "status": "Todo",
@@ -785,7 +787,7 @@
         "enhancement"
       ],
       "created": "2025-11-26T23:33:04.132Z",
-      "lastModified": "2025-11-26T23:33:04.132Z",
+      "lastModified": "2025-12-28T22:25:44.965802",
       "dependencies": [],
       "estimatedHours": 2
     },
@@ -844,7 +846,7 @@
       "estimatedHours": 2
     },
     {
-      "id": "T-CONTEXT-3",
+      "id": "T-TESTING-CONTEXT-3",
       "name": "Testing: Verify context priming effectiveness",
       "description": "Test context priming system:\n- Created tests/test_context_priming.py\n- 41 tests covering all components\n- Tests for context primer, hint registry, auto-primer, prompt discovery\n- Integration tests for full workflow\n\nAll tests pass.",
       "status": "Done",
@@ -854,7 +856,7 @@
         "context-priming"
       ],
       "created": "2025-11-27T16:20:58.227Z",
-      "lastModified": "2025-12-25T16:16:24.509Z",
+      "lastModified": "2025-12-28T22:25:44.965804",
       "comments": [
         {
           "id": "c1",
@@ -897,7 +899,7 @@
       "estimatedHours": 2
     },
     {
-      "id": "GIT-20251130235805-001",
+      "id": "T-TESTING-GIT-20251130235805-001",
       "name": "Create unit tests for Git-inspired features",
       "content": "Create comprehensive unit tests for all Git-inspired task management features including commit tracking, branch utilities, task diff, git graph visualization, and branch merging.",
       "status": "Done",
@@ -909,7 +911,7 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T21:58:05.086Z",
-      "lastModified": "2025-12-25T16:15:44.363Z",
+      "lastModified": "2025-12-28T22:25:44.965805",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2,
@@ -922,7 +924,7 @@
       ]
     },
     {
-      "id": "GIT-20251130235805-002",
+      "id": "T-TESTING-GIT-20251130235805-002",
       "name": "Integrate Git-inspired tools into MCP server",
       "content": "Add Git-inspired task management tools to the MCP server (server.py) so they can be used by AI assistants. Register tools for commit tracking, branch management, task diff, visualization, and merging.",
       "status": "Done",
@@ -934,7 +936,7 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T21:58:05.086Z",
-      "lastModified": "2025-12-25T16:15:44.363Z",
+      "lastModified": "2025-12-28T22:25:44.965805",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 3,
@@ -947,7 +949,7 @@
       ]
     },
     {
-      "id": "GIT-20251130235805-003",
+      "id": "T-TESTING-GIT-20251130235805-003",
       "name": "Add examples and documentation for Git-inspired features",
       "content": "Create additional usage examples, integration guides, and comprehensive documentation for Git-inspired features. Include code examples, workflow diagrams, and best practices.",
       "status": "Todo",
@@ -959,13 +961,13 @@
         "branch:git-features"
       ],
       "created": "2025-11-30T21:58:05.086Z",
-      "lastModified": "2025-11-30T22:43:04.718Z",
+      "lastModified": "2025-12-28T22:25:44.965806",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2
     },
     {
-      "id": "DOC-20251201001656-002",
+      "id": "T-METRICS-DOC-20251201001656-002",
       "name": "Improve documentation health score (currently 36%)",
       "content": "Documentation health score is 36%. Need to address stale documents, cross-reference issues, and orphaned documents to reach target of 80%+. Review DOCUMENTATION_HEALTH_REPORT.md for details.",
       "status": "Todo",
@@ -976,16 +978,16 @@
         "improvement"
       ],
       "created": "2025-11-30T22:16:56.001Z",
-      "lastModified": "2025-11-30T22:43:04.718Z",
+      "lastModified": "2025-12-28T22:25:44.965807",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2
     },
     {
-      "id": "DOC-20251201001656-003",
+      "id": "T-METRICS-DOC-20251201001656-003",
       "name": "Update stale documentation files (>90 days old) identified in documentation health report. Update dates and content as needed.",
       "content": "Update stale documentation files (>90 days old) identified in documentation health report. Update dates and content as needed.",
-      "status": "Todo",
+      "status": "Done",
       "priority": "medium",
       "tags": [
         "docs",
@@ -993,7 +995,7 @@
         "stale"
       ],
       "created": "2025-11-30T22:16:56.001Z",
-      "lastModified": "2025-11-30T22:43:04.718Z",
+      "lastModified": "2025-12-28T22:29:27.509781",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 3
@@ -1035,7 +1037,7 @@
       "estimatedHours": 2.9
     },
     {
-      "id": "AUTO-20251201010005-004438",
+      "id": "T-METRICS-AUTO-20251201010005-004438",
       "name": "Automation: Test Coverage Analyzer",
       "content": "Automated Test Coverage Analyzer execution",
       "status": "Done",
@@ -1045,7 +1047,7 @@
         "coverage-analyzer"
       ],
       "created": "2025-11-30T23:00:05.004Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965808",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -1078,7 +1080,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251207212140-470354",
+      "id": "T-METRICS-AUTO-20251207212140-470354",
       "name": "Create Automated Test Coverage Analyzer execution",
       "content": "Create Automated Test Coverage Analyzer execution",
       "status": "Todo",
@@ -1088,7 +1090,7 @@
         "coverage-analyzer"
       ],
       "created": "2025-12-07T19:21:40.470Z",
-      "lastModified": "2025-12-25T16:06:42.170Z",
+      "lastModified": "2025-12-28T22:25:44.965809",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2,
@@ -1392,7 +1394,7 @@
       ]
     },
     {
-      "id": "AUTO-20251210230137-019115",
+      "id": "T-TESTING-AUTO-20251210230137-019115",
       "name": "Automation: Test Runner",
       "content": "Automated Test Runner execution",
       "status": "Done",
@@ -1402,7 +1404,7 @@
         "test-runner"
       ],
       "created": "2025-12-10T21:01:37.019Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965810",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -1851,7 +1853,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251210230639-396630",
+      "id": "T-TESTING-AUTO-20251210230639-396630",
       "name": "Create Automated Test Runner execution",
       "content": "Create Automated Test Runner execution",
       "status": "Todo",
@@ -1861,7 +1863,7 @@
         "test-runner"
       ],
       "created": "2025-12-10T21:06:39.396Z",
-      "lastModified": "2025-12-25T16:06:43.637Z",
+      "lastModified": "2025-12-28T22:25:44.965810",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 2,
@@ -1875,7 +1877,7 @@
       ]
     },
     {
-      "id": "AUTO-20251211002712-039279",
+      "id": "T-SECURITY-AUTO-20251211002712-039279",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
       "status": "Done",
@@ -1885,7 +1887,7 @@
         "security-scan"
       ],
       "created": "2025-12-10T22:27:12.039Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965813",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -6315,7 +6317,7 @@
       "id": "T-20251211010550-374783",
       "name": "Review skipped files for manual hint addition",
       "content": "102 files were skipped - review for manual hint addition if needed",
-      "status": "Todo",
+      "status": "Done",
       "priority": "low",
       "tags": [
         "docs",
@@ -6325,12 +6327,12 @@
         "AUTO-20251211010549-933185"
       ],
       "created": "2025-12-10T23:05:50.374Z",
-      "lastModified": "2025-12-25T15:46:41.842Z",
+      "lastModified": "2025-12-28T22:29:27.509795",
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 1.3
     },
     {
-      "id": "AUTO-20251211010550-453287",
+      "id": "T-METRICS-AUTO-20251211010550-453287",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
@@ -6340,7 +6342,7 @@
         "task-alignment"
       ],
       "created": "2025-12-10T23:05:50.453Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965815",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -6510,10 +6512,10 @@
         "review"
       ],
       "dependencies": [
-        "AUTO-20251211010550-453287"
+        "T-METRICS-AUTO-20251211010550-453287"
       ],
       "created": "2025-12-10T23:05:50.484Z",
-      "lastModified": "2025-12-25T16:16:24.509Z",
+      "lastModified": "2025-12-28T22:25:44.965816",
       "project_id": "davidl71/project-management-automation",
       "comments": [
         {
@@ -6530,7 +6532,7 @@
       "estimatedHours": 2.9
     },
     {
-      "id": "AUTO-20251211010551-447766",
+      "id": "T-METRICS-AUTO-20251211010551-447766",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
       "status": "Done",
@@ -6540,7 +6542,7 @@
         "docs-health"
       ],
       "created": "2025-12-10T23:05:51.447Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965816",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7198,7 +7200,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251211010556-595796",
+      "id": "T-METRICS-AUTO-20251211010556-595796",
       "name": "Automation: Automation Opportunity Finder",
       "content": "Automated Automation Opportunity Finder execution",
       "status": "Done",
@@ -7210,7 +7212,7 @@
         "automation"
       ],
       "created": "2025-12-10T23:05:56.595Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965817",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7318,10 +7320,10 @@
         "script_automation"
       ],
       "dependencies": [
-        "AUTO-20251211010556-595796"
+        "T-METRICS-AUTO-20251211010556-595796"
       ],
       "created": "2025-12-10T23:05:56.777Z",
-      "lastModified": "2025-12-25T15:46:41.842Z",
+      "lastModified": "2025-12-28T22:25:44.965818",
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 0.6
     },
@@ -7391,7 +7393,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251211010602-332024",
+      "id": "T-METRICS-AUTO-20251211010602-332024",
       "name": "Automation: Test Coverage Analyzer",
       "content": "Automated Test Coverage Analyzer execution",
       "status": "Todo",
@@ -7401,7 +7403,7 @@
         "coverage-analyzer"
       ],
       "created": "2025-12-10T23:06:02.332Z",
-      "lastModified": "2025-12-25T15:46:41.842Z",
+      "lastModified": "2025-12-28T22:25:44.965819",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7417,7 +7419,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "PERF-20251211011404-001",
+      "id": "T-METRICS-PERF-20251211011404-001",
       "name": "Complete Tool Performance Benchmarking",
       "content": "Completed performance testing of all 43 registered MCP tools. Successfully tested 26 tools (60.5% success rate) with median execution time of 1.96ms. Created test script (scripts/test_tool_performance.py) and comprehensive performance report (docs/TOOL_PERFORMANCE_REPORT.md).\n\nKey Results:\n- 19 tools are fast (<10ms): Git-inspired tools, simple lookups\n- 5 tools are medium (10ms-1s): Task analysis, estimation tools  \n- 2 tools are slow (>=1s): run_sprint_automation (306s), run_daily_automation (6s) - expected behavior\n\nPerformance improvements already applied:\n- Compact JSON serialization (6x faster)\n- Cache find_project_root() (2-5x faster)\n- Cache Todo2 state (149x faster on cached calls)\n\nTest results saved to scripts/.tool_performance_results.json",
       "status": "Done",
@@ -7429,13 +7431,13 @@
         "tool"
       ],
       "created": "2025-12-10T23:14:04.530Z",
-      "lastModified": "2025-12-25T16:11:46.973Z",
+      "lastModified": "2025-12-28T22:25:44.965819",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "estimatedHours": 0.7
     },
     {
-      "id": "PERF-20251211011404-002",
+      "id": "T-METRICS-PERF-20251211011404-002",
       "name": "Optimize Slow Automation Tools Performance",
       "content": "Two automation tools are slow and could benefit from optimization:\n\n1. run_sprint_automation: 306 seconds (5+ minutes)\n   - Runs multiple heavy analysis tools sequentially\n   - Recommendation: Implement parallelization or async execution\n   - Expected improvement: 2-3x speedup\n\n2. run_daily_automation: 6 seconds\n   - Runs 3+ automation scripts sequentially\n   - Could parallelize independent operations\n   - Already reasonable but has optimization potential\n\nInvestigate parallel execution opportunities in project_management_automation/scripts/automate_sprint.py and automate_daily.py.",
       "status": "Todo",
@@ -7447,14 +7449,15 @@
         "parallelization"
       ],
       "dependencies": [
-        "PERF-20251211011404-001"
+        "T-METRICS-PERF-20251211011404-001"
       ],
       "project_id": "davidl71/project-management-automation",
       "created": "1970-01-01T00:00:00.000Z",
-      "estimatedHours": 0.6
+      "estimatedHours": 0.6,
+      "lastModified": "2025-12-28T22:25:44.965821"
     },
     {
-      "id": "PERF-20251211011404-003",
+      "id": "T-METRICS-PERF-20251211011404-003",
       "name": "Fix Failed Tool Performance Tests (17 tools)",
       "content": "17 tools failed during performance testing due to parameter mismatches or import issues:\n\nCommon failures:\n- NameError: name '_tool_name' is not defined (missing imports)\n- TypeError: unexpected keyword arguments (parameter inference issues)\n\nTools needing fixes:\n- context, discovery, generate_config, health, lint\n- memory, memory_maint, prompt_tracking, recommend\n- run_nightly_automation (missing is_pending_status import)\n- Plus 7 more tools\n\nUpdate scripts/test_tool_performance.py to:\n1. Better handle import errors (try/except per tool)\n2. Improve parameter inference from function signatures\n3. Add tool-specific parameter sets for complex tools\n\nGoal: Achieve 90%+ success rate in performance tests.",
       "status": "Todo",
@@ -7466,14 +7469,15 @@
         "tool"
       ],
       "dependencies": [
-        "PERF-20251211011404-001"
+        "T-METRICS-PERF-20251211011404-001"
       ],
       "project_id": "davidl71/project-management-automation",
       "created": "1970-01-01T00:00:00.000Z",
-      "estimatedHours": 0.5
+      "estimatedHours": 0.5,
+      "lastModified": "2025-12-28T22:25:44.965823"
     },
     {
-      "id": "PERF-20251211011404-004",
+      "id": "T-TESTING-PERF-20251211011404-004",
       "name": "Set Up Performance Regression Testing",
       "content": "Create automated performance regression testing to catch performance degradations:\n\n1. Add performance test to CI/CD pipeline\n2. Set baseline performance thresholds per tool category:\n   - Fast tools: < 10ms\n   - Medium tools: < 1s\n   - Slow tools: < 2x baseline (with reason)\n3. Alert on performance regressions\n4. Track performance trends over time\n\nImplementation:\n- Add pytest performance test suite\n- Use pytest-benchmark for reliable timing\n- Create performance baseline file (git-tracked)\n- Add GitHub Actions workflow for periodic performance runs\n- Generate performance trend reports\n\nThis will help catch performance regressions before they reach production.",
       "status": "Todo",
@@ -7485,14 +7489,15 @@
         "automation"
       ],
       "dependencies": [
-        "PERF-20251211011404-001"
+        "T-METRICS-PERF-20251211011404-001"
       ],
       "project_id": "davidl71/project-management-automation",
       "created": "1970-01-01T00:00:00.000Z",
-      "estimatedHours": 0.5
+      "estimatedHours": 0.5,
+      "lastModified": "2025-12-28T22:25:44.965824"
     },
     {
-      "id": "PERF-20251211011404-005",
+      "id": "T-SECURITY-PERF-20251211011404-005",
       "name": "Investigate Additional Performance Optimizations",
       "content": "Based on performance test results, investigate additional optimization opportunities:\n\n1. Resource-level caching (with TTL)\n   - Cache expensive resource queries\n   - Add TTL-based invalidation\n\n2. Lazy loading\n   - Only load needed fields for large data structures\n   - Defer expensive computations until needed\n\n3. Streaming JSON for large outputs\n   - For tools that return very large JSON responses\n   - Use streaming serialization\n\n4. Database/indexing for frequent queries\n   - Consider SQLite or similar for frequent lookups\n   - Index commonly queried fields\n\nReview performance bottlenecks in slow/medium tools and apply appropriate optimizations.",
       "status": "Todo",
@@ -7503,11 +7508,12 @@
         "research"
       ],
       "dependencies": [
-        "PERF-20251211011404-001"
+        "T-METRICS-PERF-20251211011404-001"
       ],
       "project_id": "davidl71/project-management-automation",
       "created": "1970-01-01T00:00:00.000Z",
-      "estimatedHours": 1.3
+      "estimatedHours": 1.3,
+      "lastModified": "2025-12-28T22:25:44.965826"
     },
     {
       "id": "AUTO-20251214172149-096070",
@@ -7570,7 +7576,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251214172733-174210",
+      "id": "T-METRICS-AUTO-20251214172733-174210",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
@@ -7580,7 +7586,7 @@
         "task-alignment"
       ],
       "created": "2025-12-14T15:27:33.174Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965827",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7596,7 +7602,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251221012742-775443",
+      "id": "T-METRICS-AUTO-20251221012742-775443",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
@@ -7606,7 +7612,7 @@
         "task-alignment"
       ],
       "created": "2025-12-20T23:27:42.775Z",
-      "lastModified": "2025-12-25T15:50:30.953Z",
+      "lastModified": "2025-12-28T22:25:44.965827",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7726,7 +7732,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251225180643-051018",
+      "id": "T-METRICS-AUTO-20251225180643-051018",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
       "status": "Done",
@@ -7736,7 +7742,7 @@
         "docs-health"
       ],
       "created": "2025-12-25T16:06:43.051Z",
-      "lastModified": "2025-12-25T16:06:43.094Z",
+      "lastModified": "2025-12-28T22:25:44.965828",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7752,12 +7758,12 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "T-NaN",
+      "id": "T-METRICS-NaN",
       "name": "Parallel Research Work: Interactive-MCP Integration",
       "long_description": "\ud83c\udfaf **Objective:** Research and document interactive-mcp integration patterns for Exarp workflows\n\n\ud83d\udccb **Acceptance Criteria:**\n- Complete research_with_links comment with local codebase analysis\n- Include 2-10 verified web search links for 2025 information\n- Document integration opportunities and implementation patterns\n- Provide code examples and recommendations\n\n\ud83d\udeab **Scope Boundaries:**\n- **Included:** Research, documentation, integration patterns\n- **Excluded:** Actual implementation (separate task)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Search local codebase for existing MCP integration patterns\n- Research interactive-mcp documentation and examples\n- Identify integration points in Exarp tools\n\n\ud83d\udcc1 **Files/Components:**\n- Update: RESEARCH-c162d40f task with research findings\n\n\ud83e\uddea **Testing Requirements:**\n- Research findings validated with codebase search\n- Links verified from web search\n\n\u26a0\ufe0f **Edge Cases:**\n- Handle cases where interactive-mcp is unavailable\n- Consider graceful fallback patterns\n\n\ud83d\udcda **Dependencies:** None",
       "status": "Todo",
       "created": "2025-12-25T16:09:56.716Z",
-      "lastModified": "2025-12-25T16:09:56.716Z",
+      "lastModified": "2025-12-28T22:25:44.965829",
       "taskNumber": null,
       "priority": "medium",
       "tags": [
@@ -7769,7 +7775,7 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "AUTO-20251225193550-032363",
+      "id": "T-SECURITY-AUTO-20251225193550-032363",
       "name": "Automation: Dependency Security Scan",
       "content": "Automated Dependency Security Scan execution",
       "status": "Done",
@@ -7779,7 +7785,7 @@
         "security-scan"
       ],
       "created": "2025-12-25T17:35:50.032Z",
-      "lastModified": "2025-12-25T17:35:50.048Z",
+      "lastModified": "2025-12-28T22:25:44.965829",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -7847,12 +7853,12 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "T-0",
+      "id": "T-TESTING-0",
       "name": "Test Ollama Integration - Basic Tools",
       "long_description": "\ud83c\udfaf **Objective:** Test all basic Ollama integration tools to ensure they work correctly with the current implementation\n\n\ud83d\udccb **Acceptance Criteria:**\n- Test check_ollama_status with server running and stopped scenarios\n- Test list_ollama_models with various model configurations\n- Test generate_with_ollama with different models (llama3.2, codellama, mistral)\n- Test pull_ollama_model for a small model\n- Verify error handling for connection failures and missing models\n- Test with uv run python check_ollama.py script\n- Document test results\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Testing existing tools, verification, error scenarios\n- **Excluded:** Writing new tests (separate task), modifying tool code (unless bugs found)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Use existing check_ollama.py script\n- Test via MCP server registration\n- Verify all error paths work correctly\n- Test hardware detection features\n\n\ud83d\udcc1 **Files/Components:**\n- Test: project_management_automation/tools/ollama_integration.py\n- Script: check_ollama.py\n- Documentation: Update test results if issues found\n\n\ud83e\uddea **Testing Requirements:**\n- Manual testing of all basic tools\n- Verify server connection handling\n- Test model availability checks\n- Verify error messages are helpful\n- Test performance optimization features\n\n\u26a0\ufe0f **Edge Cases:**\n- Server not running (connection errors)\n- Model not installed (missing model errors)\n- Network timeouts\n- Invalid host configurations\n\n\ud83d\udcda **Dependencies:** None (foundation testing task)",
       "status": "Todo",
       "created": "2025-12-25T19:25:46.584Z",
-      "lastModified": "2025-12-25T19:25:46.584Z",
+      "lastModified": "2025-12-28T22:25:44.965830",
       "taskNumber": 0,
       "priority": "high",
       "tags": [
@@ -7865,12 +7871,12 @@
       "estimatedHours": 0.7
     },
     {
-      "id": "T-1",
+      "id": "T-METRICS-1",
       "name": "Add Ollama Integration Tests",
       "long_description": "\ud83c\udfaf **Objective:** Create comprehensive test suite for Ollama integration to ensure quality and prevent regressions\n\n\ud83d\udccb **Acceptance Criteria:**\n- Unit tests for ollama_integration.py functions\n- Unit tests for ollama_enhanced_tools.py functions\n- Integration tests for MCP tool registration\n- Mock tests for Ollama client interactions\n- Error handling tests (connection failures, missing models)\n- Performance tests for generation times (if applicable)\n- Hardware detection tests\n- RAM optimization tests\n- Tests follow project conventions in tests/ directory\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Test creation, mocking, error scenarios, integration testing\n- **Excluded:** Actual Ollama server setup in CI (separate task), modifying production code\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Use pytest framework\n- Mock ollama.Client to avoid requiring actual server\n- Test with uv run pytest\n- Follow existing test patterns in tests/ directory\n- Use pytest fixtures for common setup\n\n\ud83d\udcc1 **Files/Components:**\n- Create: tests/test_ollama_integration.py\n- Create: tests/test_ollama_enhanced_tools.py\n- Update: tests/__init__.py if needed\n- Documentation: Add test coverage notes\n\n\ud83e\uddea **Testing Requirements:**\n- All functions have unit tests\n- Error paths are tested\n- Mock Ollama client interactions\n- Test hardware detection logic\n- Test RAM optimization logic\n- Verify test coverage meets standards\n\n\u26a0\ufe0f **Edge Cases:**\n- Ollama package not available (ImportError handling)\n- Server connection failures\n- Model not found errors\n- Invalid parameter handling\n- Hardware detection failures\n\n\ud83d\udcda **Dependencies:** Task 1 (Test Ollama Integration - Basic Tools should be completed first to understand current behavior)",
       "status": "Done",
       "created": "2025-12-25T19:25:46.584Z",
-      "lastModified": "2025-12-25T20:46:37.720Z",
+      "lastModified": "2025-12-28T22:25:44.965831",
       "taskNumber": 1,
       "priority": "high",
       "tags": [
@@ -7897,12 +7903,12 @@
       "estimatedHours": 2.9
     },
     {
-      "id": "T-2",
+      "id": "T-METRICS-2",
       "name": "Complete Ollama Enhanced Tools Testing",
       "long_description": "\ud83c\udfaf **Objective:** Complete full functional testing of Ollama enhanced tools once basic integration is verified\n\n\ud83d\udccb **Acceptance Criteria:**\n- Full test of generate_code_documentation with various Python files\n- Full test of analyze_code_quality with different code samples\n- Full test of enhance_context_summary with various data types\n- Verify documentation quality and completeness\n- Verify quality scores are reasonable\n- Test different styles and levels\n- Performance testing and documentation\n- Integration testing with existing workflows\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Functional testing, quality verification, performance measurement\n- **Excluded:** Writing automated tests (separate task), modifying tool code\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Requires Ollama server running\n- Requires CodeLlama model installed\n- Use existing test scripts (test_ollama_enhanced_tools.py)\n- Test with real code samples\n- Measure execution times\n\n\ud83d\udcc1 **Files/Components:**\n- Test: project_management_automation/tools/ollama_enhanced_tools.py\n- Script: test_ollama_enhanced_tools.py\n- Documentation: docs/OLLAMA_ENHANCED_TOOLS_TEST_REPORT.md\n\n\ud83e\uddea **Testing Requirements:**\n- Test all three enhanced tools\n- Verify output quality\n- Test error scenarios\n- Measure performance\n- Document results\n\n\u26a0\ufe0f **Edge Cases:**\n- Server down scenarios\n- Model missing scenarios\n- Large file inputs\n- Invalid code inputs\n- Network timeouts\n\n\ud83d\udcda **Dependencies:** Task 1 (basic integration testing should be complete first)",
       "status": "Done",
       "created": "2025-12-25T19:25:46.584Z",
-      "lastModified": "2025-12-25T20:46:36.140Z",
+      "lastModified": "2025-12-28T22:25:44.965832",
       "taskNumber": 2,
       "priority": "medium",
       "tags": [
@@ -7929,12 +7935,12 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "T-3",
+      "id": "T-TESTING-3",
       "name": "Review and Update Ollama Documentation",
       "long_description": "\ud83c\udfaf **Objective:** Review and update all Ollama-related documentation to ensure completeness and accuracy\n\n\ud83d\udccb **Acceptance Criteria:**\n- Review OLLAMA_SETUP.md for completeness\n- Review OLLAMA_INTEGRATION_GUIDE.md if it exists\n- Add Ollama section to main README.md\n- Update USAGE.md with Ollama tool examples\n- Add troubleshooting section\n- Verify all documentation is accurate\n- Ensure examples work correctly\n\n\ud83d\udeab **Scope Boundaries (CRITICAL):**\n- **Included:** Documentation review, updates, examples\n- **Excluded:** Creating new features (documentation only), modifying code\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Review existing docs/\n- Test all examples in documentation\n- Follow project documentation style\n- Add code examples where helpful\n\n\ud83d\udcc1 **Files/Components:**\n- Review: OLLAMA_SETUP.md\n- Review: docs/OLLAMA_INTEGRATION_GUIDE.md (if exists)\n- Update: README.md\n- Update: USAGE.md\n- Create/Update: Troubleshooting documentation\n\n\ud83e\uddea **Testing Requirements:**\n- All examples in docs should work\n- All links should be valid\n- Documentation should be clear and accurate\n\n\u26a0\ufe0f **Edge Cases:**\n- Missing documentation files\n- Outdated examples\n- Broken links\n- Incomplete instructions\n\n\ud83d\udcda **Dependencies:** Tasks 1-3 (should have tested everything before documenting)",
       "status": "Todo",
       "created": "2025-12-25T19:25:46.584Z",
-      "lastModified": "2025-12-25T19:25:46.584Z",
+      "lastModified": "2025-12-28T22:25:44.965832",
       "taskNumber": 3,
       "priority": "medium",
       "tags": [
@@ -7972,12 +7978,12 @@
       "estimatedHours": 0.5
     },
     {
-      "id": "T-4",
+      "id": "T-SECURITY-4",
       "name": "Add error path tests for consolidated tools",
       "long_description": "\ud83c\udfaf **Objective:** Improve test coverage for consolidated tools by adding tests for error paths and edge cases.\n\n\ud83d\udccb **Acceptance Criteria:**\n- Add tests for error handling in automation() tool (invalid parameters, missing dependencies)\n- Add tests for error handling in estimation() tool (invalid inputs, missing data)\n- Add tests for error handling in task_workflow() tool (invalid actions, missing parameters)\n- Add tests for error handling in analyze_alignment() tool (invalid actions)\n- Achieve >60% coverage for consolidated.py\n\n\ud83d\udeab **Scope Boundaries:**\n- **Included:** Error path tests, edge case tests, parameter validation tests\n- **Excluded:** Integration tests, performance tests\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Use pytest and unittest.mock\n- Follow existing test patterns in test_consolidated_tools.py\n- Use parse_result() helper for JSON string parsing\n\n\ud83d\udcc1 **Files/Components:**\n- Update: tests/test_consolidated_tools.py (add error path tests)\n\n\ud83e\uddea **Testing Requirements:**\n- All new tests must pass\n- Coverage should increase from 35.36% to >60%\n- Verify error messages are properly formatted\n\n\u26a0\ufe0f **Edge Cases:**\n- Missing required parameters\n- Invalid action values\n- Import errors (when dependencies unavailable)\n- Network errors (for tools that make external calls)\n\n\ud83d\udcda **Dependencies:** None",
       "status": "Todo",
       "created": "2025-12-25T20:57:53.410Z",
-      "lastModified": "2025-12-25T20:57:53.410Z",
+      "lastModified": "2025-12-28T22:25:44.965833",
       "taskNumber": 4,
       "priority": "medium",
       "tags": [
@@ -7988,12 +7994,12 @@
       "dependencies": []
     },
     {
-      "id": "T-5",
+      "id": "T-SECURITY-5",
       "name": "Add async tool tests for consolidated tools",
       "long_description": "\ud83c\udfaf **Objective:** Add tests for async versions of consolidated tools (security_async, testing_async).\n\n\ud83d\udccb **Acceptance Criteria:**\n- Add async tests for security_async() function\n- Add async tests for testing_async() function\n- Verify async/await patterns work correctly\n- Test progress reporting (ctx parameter)\n- All async tests pass\n\n\ud83d\udeab **Scope Boundaries:**\n- **Included:** Async function tests, progress reporting tests\n- **Excluded:** Sync wrapper tests (already covered)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Use pytest-asyncio for async test support\n- Mock async dependencies properly\n- Test both success and error paths\n\n\ud83d\udcc1 **Files/Components:**\n- Update: tests/test_consolidated_tools.py (add async test classes)\n\n\ud83e\uddea **Testing Requirements:**\n- All async tests must pass\n- Verify proper async/await usage\n- Test error handling in async context\n\n\u26a0\ufe0f **Edge Cases:**\n- Async function errors\n- Progress reporting failures\n- Context cancellation\n\n\ud83d\udcda **Dependencies:** None",
       "status": "Todo",
       "created": "2025-12-25T20:57:53.410Z",
-      "lastModified": "2025-12-25T20:57:53.410Z",
+      "lastModified": "2025-12-28T22:25:44.965834",
       "taskNumber": 5,
       "priority": "low",
       "tags": [
@@ -8004,12 +8010,12 @@
       "dependencies": []
     },
     {
-      "id": "T-6",
+      "id": "T-SECURITY-6",
       "name": "Add parameter validation tests for consolidated tools",
       "long_description": "\ud83c\udfaf **Objective:** Add comprehensive parameter validation tests for all consolidated tools.\n\n\ud83d\udccb **Acceptance Criteria:**\n- Test parameter type validation (strings, lists, booleans, numbers)\n- Test parameter range validation (min/max values, enum values)\n- Test required parameter validation (missing required params)\n- Test parameter format validation (JSON strings, file paths)\n- All validation tests pass\n\n\ud83d\udeab **Scope Boundaries:**\n- **Included:** Parameter validation, type checking, range checking\n- **Excluded:** Business logic validation (covered in other tests)\n- **Clarification Required:** None\n\n\ud83d\udd27 **Technical Requirements:**\n- Test invalid parameter types\n- Test out-of-range values\n- Test malformed JSON strings\n- Test invalid file paths\n\n\ud83d\udcc1 **Files/Components:**\n- Update: tests/test_consolidated_tools.py (add validation test methods)\n\n\ud83e\uddea **Testing Requirements:**\n- All validation tests must pass\n- Verify proper error messages for invalid parameters\n- Test edge cases (empty strings, None values, etc.)\n\n\u26a0\ufe0f **Edge Cases:**\n- Empty strings for required parameters\n- None values for optional parameters\n- Invalid enum values\n- Out-of-range numeric values\n- Malformed JSON\n\n\ud83d\udcda **Dependencies:** None",
       "status": "Todo",
       "created": "2025-12-25T20:57:53.410Z",
-      "lastModified": "2025-12-25T20:57:53.410Z",
+      "lastModified": "2025-12-28T22:25:44.965834",
       "taskNumber": 6,
       "priority": "low",
       "tags": [
@@ -8020,17 +8026,17 @@
       "dependencies": []
     },
     {
-      "id": "AUTO-20251225231130-170991",
+      "id": "T-METRICS-AUTO-20251225231130-170991",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "documentation-health-analysis"
+        "docs-health"
       ],
       "created": "2025-12-25T23:11:30.170987",
-      "lastModified": "2025-12-25T23:11:30.210004",
+      "lastModified": "2025-12-28T22:25:44.965835",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8045,17 +8051,17 @@
       ]
     },
     {
-      "id": "AUTO-20251225231130-371016",
+      "id": "T-METRICS-AUTO-20251225231130-371016",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-alignment-analysis"
+        "task-alignment"
       ],
       "created": "2025-12-25T23:11:30.371088",
-      "lastModified": "2025-12-25T23:11:30.420797",
+      "lastModified": "2025-12-28T22:25:44.965836",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8077,7 +8083,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-duplicate-detection"
+        "duplicate-detect"
       ],
       "created": "2025-12-25T23:11:30.580053",
       "lastModified": "2025-12-25T23:11:30.604723",
@@ -8095,17 +8101,17 @@
       ]
     },
     {
-      "id": "AUTO-20251225231130-639358",
+      "id": "T-METRICS-AUTO-20251225231130-639358",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-alignment-analysis"
+        "task-alignment"
       ],
       "created": "2025-12-25T23:11:30.639413",
-      "lastModified": "2025-12-25T23:11:30.683316",
+      "lastModified": "2025-12-28T22:25:44.965836",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8120,17 +8126,17 @@
       ]
     },
     {
-      "id": "AUTO-20251226020011-571478",
+      "id": "T-METRICS-AUTO-20251226020011-571478",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "documentation-health-analysis"
+        "docs-health"
       ],
       "created": "2025-12-26T02:00:11.571488",
-      "lastModified": "2025-12-26T02:00:11.645120",
+      "lastModified": "2025-12-28T22:25:44.965837",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8145,17 +8151,17 @@
       ]
     },
     {
-      "id": "AUTO-20251226020011-791377",
+      "id": "T-METRICS-AUTO-20251226020011-791377",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-alignment-analysis"
+        "task-alignment"
       ],
       "created": "2025-12-26T02:00:11.791340",
-      "lastModified": "2025-12-26T02:00:11.842062",
+      "lastModified": "2025-12-28T22:25:44.965837",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8177,7 +8183,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-duplicate-detection"
+        "duplicate-detect"
       ],
       "created": "2025-12-26T02:00:11.989332",
       "lastModified": "2025-12-26T02:00:12.012140",
@@ -8195,17 +8201,17 @@
       ]
     },
     {
-      "id": "AUTO-20251226020427-226881",
+      "id": "T-METRICS-AUTO-20251226020427-226881",
       "name": "Automation: Documentation Health Analysis",
       "content": "Automated Documentation Health Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "documentation-health-analysis"
+        "docs-health"
       ],
       "created": "2025-12-26T02:04:27.226878",
-      "lastModified": "2025-12-26T02:04:27.288488",
+      "lastModified": "2025-12-28T22:25:44.965838",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8220,17 +8226,17 @@
       ]
     },
     {
-      "id": "AUTO-20251226020427-818660",
+      "id": "T-METRICS-AUTO-20251226020427-818660",
       "name": "Automation: Todo2 Alignment Analysis",
       "content": "Automated Todo2 Alignment Analysis execution",
       "status": "Done",
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-alignment-analysis"
+        "task-alignment"
       ],
       "created": "2025-12-26T02:04:27.818666",
-      "lastModified": "2025-12-26T02:04:27.915085",
+      "lastModified": "2025-12-28T22:25:44.965839",
       "dependencies": [],
       "project_id": "davidl71/project-management-automation",
       "comments": [
@@ -8252,7 +8258,7 @@
       "priority": "medium",
       "tags": [
         "automation",
-        "todo2-duplicate-detection"
+        "duplicate-detect"
       ],
       "created": "2025-12-26T02:04:28.447793",
       "lastModified": "2025-12-26T02:04:28.471038",
@@ -8266,6 +8272,192 @@
           "content": "**Automation Results:**\n\n\u2705 **No duplicates found!** Your Todo2 task list is clean.\n\n**Key Findings:**\n{\"total_tasks\":3,\"duplicates_found\":0,\"duplicate_ids\":[],\"exact_name_matches\":[],\"similar_name_matches\":[],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
           "created": "2025-12-26T02:04:28.465369",
           "lastModified": "2025-12-26T02:04:28.465375"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251228213426-355938",
+      "name": "Automation: Automation Opportunity Finder",
+      "content": "Automated Automation Opportunity Finder execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "automation-finder"
+      ],
+      "created": "2025-12-28T21:34:26.355980",
+      "lastModified": "2025-12-28T21:34:26.524274",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251228213426-355938-C-1",
+          "todoId": "AUTO-20251228213426-355938",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Found 3 automation opportunities:**\n- 3 high-priority (score \u2265 8)\n- 0 medium-priority (score 5-7)\n- 0 low-priority (score < 5)\n\n**Top High-Priority Opportunities:**\n1. Automate check_tool_conditional_logic (score: 9)\n2. Automate check_duplicate_test_names (score: 9)\n3. Automate check_tool_return_types (score: 9)\n\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.\n\n**Key Findings:**\n{\"existing_automations\":3,\"opportunities_found\":3,\"opportunities\":[{\"name\":\"Automate check_tool_conditional_logic\",\"description\":\"Script check_tool_conditional_logic.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_conditional_logic.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_conditional_logic.py\",\"score\":9},{\"name\":\"Automate check_duplicate_test_names\",\"description\":\"Script check_duplicate_test_names.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_duplicate_test_names.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_duplicate_test_names.py\",\"score\":9},{\"name\":\"Automate check_tool_return_types\",\"description\":\"Script check_tool_return_types.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_return_types.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_return_types.py\",\"score\":9}],\"high_priority\":[{\"name\":\"Automate check_tool_conditional_logic\",\"description\":\"Script check_tool_conditional_logic.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_conditional_logic.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_conditional_logic.py\",\"score\":9},{\"name\":\"Automate check_duplicate_test_names\",\"description\":\"Script check_duplicate_test_names.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_duplicate_test_names.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_duplicate_test_names.py\",\"score\":9},{\"name\":\"Automate check_tool_return_types\",\"description\":\"Script check_tool_return_types.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_return_types.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_return_types.py\",\"score\":9}],\"medium_priority\":[],\"low_priority\":[]}",
+          "created": "2025-12-28T21:34:26.508596",
+          "lastModified": "2025-12-28T21:34:26.508603"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251228213441-685898",
+      "name": "Automation: Automation Opportunity Finder",
+      "content": "Automated Automation Opportunity Finder execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "automation-finder"
+      ],
+      "created": "2025-12-28T21:34:41.685880",
+      "lastModified": "2025-12-28T21:34:41.862466",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251228213441-685898-C-1",
+          "todoId": "AUTO-20251228213441-685898",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Found 3 automation opportunities:**\n- 3 high-priority (score \u2265 8)\n- 0 medium-priority (score 5-7)\n- 0 low-priority (score < 5)\n\n**Top High-Priority Opportunities:**\n1. Automate check_tool_conditional_logic (score: 9)\n2. Automate check_duplicate_test_names (score: 9)\n3. Automate check_tool_return_types (score: 9)\n\n**Recommendation:** Focus on high-priority opportunities first for maximum impact.\n\n**Key Findings:**\n{\"existing_automations\":3,\"opportunities_found\":3,\"opportunities\":[{\"name\":\"Automate check_tool_conditional_logic\",\"description\":\"Script check_tool_conditional_logic.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_conditional_logic.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_conditional_logic.py\",\"score\":9},{\"name\":\"Automate check_duplicate_test_names\",\"description\":\"Script check_duplicate_test_names.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_duplicate_test_names.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_duplicate_test_names.py\",\"score\":9},{\"name\":\"Automate check_tool_return_types\",\"description\":\"Script check_tool_return_types.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_return_types.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_return_types.py\",\"score\":9}],\"high_priority\":[{\"name\":\"Automate check_tool_conditional_logic\",\"description\":\"Script check_tool_conditional_logic.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_conditional_logic.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_conditional_logic.py\",\"score\":9},{\"name\":\"Automate check_duplicate_test_names\",\"description\":\"Script check_duplicate_test_names.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_duplicate_test_names.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_duplicate_test_names.py\",\"score\":9},{\"name\":\"Automate check_tool_return_types\",\"description\":\"Script check_tool_return_types.py exists but runs manually\",\"type\":\"script_automation\",\"script\":\"scripts/check_tool_return_types.py\",\"frequency\":\"weekly\",\"effort\":\"low\",\"value\":\"high\",\"evidence\":\"Script exists: check_tool_return_types.py\",\"score\":9}],\"medium_priority\":[],\"low_priority\":[]}",
+          "created": "2025-12-28T21:34:41.845669",
+          "lastModified": "2025-12-28T21:34:41.845677"
+        }
+      ]
+    },
+    {
+      "id": "T-TESTING-20251228213441-855280",
+      "name": "Implement: Automate check_duplicate_test_names",
+      "content": "Script check_duplicate_test_names.py exists but runs manually",
+      "status": "todo",
+      "priority": "high",
+      "tags": [
+        "automation",
+        "implementation",
+        "script_automation"
+      ],
+      "dependencies": [
+        "AUTO-20251228213441-685898"
+      ],
+      "created": "2025-12-28T21:34:41.855241",
+      "lastModified": "2025-12-28T22:25:44.965840",
+      "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "T-20251228213441-855228",
+      "name": "Implement: Automate check_tool_return_types",
+      "content": "Script check_tool_return_types.py exists but runs manually",
+      "status": "todo",
+      "priority": "high",
+      "tags": [
+        "automation",
+        "implementation",
+        "script_automation"
+      ],
+      "dependencies": [
+        "AUTO-20251228213441-685898"
+      ],
+      "created": "2025-12-28T21:34:41.855250",
+      "lastModified": "2025-12-28T21:34:41.855251",
+      "project_id": "davidl71/project-management-automation"
+    },
+    {
+      "id": "T-METRICS-AUTO-20251228221355-243957",
+      "name": "Automation: Documentation Health Analysis",
+      "content": "Automated Documentation Health Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "docs-health"
+      ],
+      "created": "2025-12-28T22:13:55.244006",
+      "lastModified": "2025-12-28T22:25:44.965841",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251228221355-243957-C-1",
+          "todoId": "AUTO-20251228221355-243957",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Documentation Health Score: 87.0%**\n\u26a0\ufe0f 10 broken links need attention\n\u26a0\ufe0f 3 documents are stale (>90 days)\n\u2705 Documentation health is good!\n\n**Key Findings:**\n{\"link_validation\":{\"total_links\":428,\"broken_internal\":[{\"url\":\"\\\\w+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"[^\\\\\\\"\\\\']+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"[^\\\\\\\"\\\\']+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"\\\\w+\",\"source\":\"docs/MCP_SYNC_GUIDE.md\"},{\"url\":\"../PWA_CLEANUP.md\",\"source\":\"docs/OBSOLETE_TESTS_ANALYSIS.md\"},{\"url\":\"...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"self, ...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"self, ...\",\"source\":\"docs/TEST_ORGANIZATION_GUIDELINES.md\"},{\"url\":\"./DAILY_AUTOMATION.md\",\"source\":\"docs/TASK_STATUS_WORKFLOW.md\"}],\"broken_external\":[]},\"format_validation\":{\"format_errors\":[],\"missing_required_fields\":[]},\"date_currency\":{\"stale_files\":[{\"file\":\"docs/ESTIMATION_LEARNING.md\",\"last_updated\":\"2025-01-25\",\"days_old\":337},{\"file\":\"docs/MLX_INTEGRATION_OPPORTUNITIES.md\",\"last_updated\":\"2025-01-25\",\"days_old\":337},{\"file\":\"docs/MLX_TASK_ESTIMATION_IMPLEMENTATION.md\",\"last_updated\":\"2025-01-25\",\"days_old\":337}],\"missing_dates\":[]},\"cross_references\":{\"broken_references\":[],\"orphaned_files\":[]},\"health_score\":87.0}",
+          "created": "2025-12-28T22:13:55.306602",
+          "lastModified": "2025-12-28T22:13:55.306603"
+        }
+      ]
+    },
+    {
+      "id": "T-METRICS-AUTO-20251228221355-478191",
+      "name": "Automation: Todo2 Alignment Analysis",
+      "content": "Automated Todo2 Alignment Analysis execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "task-alignment"
+      ],
+      "created": "2025-12-28T22:13:55.478127",
+      "lastModified": "2025-12-28T22:25:44.965841",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251228221355-478191-C-1",
+          "todoId": "AUTO-20251228221355-478191",
+          "type": "result",
+          "content": "**Automation Results:**\n\n**Alignment Score: 90.0%**\n\u26a0\ufe0f Tool count approaching limit (29/30)\n\u2705 Task alignment is good!\n\n**Key Findings:**\n{\"total_tasks\":6,\"by_priority\":{\"high\":4,\"medium\":1,\"low\":1,\"critical\":0},\"by_status\":{\"todo\":6,\"in_progress\":0,\"review\":0,\"done\":0},\"by_phase\":{\"phase1\":{\"total\":2,\"high_priority\":2,\"aligned\":2},\"phase2\":{\"total\":0,\"high_priority\":0,\"aligned\":0},\"phase3\":{\"total\":3,\"high_priority\":3,\"aligned\":3},\"phase4\":{\"total\":1,\"high_priority\":1,\"aligned\":1},\"phase5\":{\"total\":2,\"high_priority\":0,\"aligned\":2}},\"strategy_critical\":[{\"id\":\"T-4\",\"content\":\"Implement: Automate check_tool_conditional_logic\",\"phases\":[\"phase1\",\"phase3\"],\"priority\":\"high\",\"status\":\"todo\"},{\"id\":\"T-6\",\"content\":\"Implement: Automate check_duplicate_test_names\",\"phases\":[\"phase3\",\"phase4\"],\"priority\":\"high\",\"status\":\"todo\"},{\"id\":\"T-8\",\"content\":\"Implement: Automate check_tool_return_types\",\"phases\":[\"phase1\",\"phase3\"],\"priority\":\"high\",\"status\":\"todo\"}],\"misaligned_tasks\":[],\"stale_tasks\":[],\"blocked_tasks\":[],\"infrastructure_tasks\":[{\"id\":\"T-1\",\"content\":\"Review misaligned high-priority tasks\",\"priority\":\"high\",\"status\":\"todo\"}],\"constraint_violations\":[],\"current_tool_count\":29,\"tool_limit\":30,\"alignment_score\":90.0}",
+          "created": "2025-12-28T22:13:55.505784",
+          "lastModified": "2025-12-28T22:13:55.505789"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251228221355-680423",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "duplicate-detect"
+      ],
+      "created": "2025-12-28T22:13:55.680436",
+      "lastModified": "2025-12-28T22:13:55.706834",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251228221355-680423-C-1",
+          "todoId": "AUTO-20251228221355-680423",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 **No duplicates found!** Your Todo2 task list is clean.\n\n**Key Findings:**\n{\"total_tasks\":6,\"duplicates_found\":0,\"duplicate_ids\":[],\"exact_name_matches\":[],\"similar_name_matches\":[],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-28T22:13:55.699284",
+          "lastModified": "2025-12-28T22:13:55.699290"
+        }
+      ]
+    },
+    {
+      "id": "AUTO-20251228222343-005376",
+      "name": "Automation: Todo2 Duplicate Detection",
+      "content": "Automated Todo2 Duplicate Detection execution",
+      "status": "Done",
+      "priority": "medium",
+      "tags": [
+        "automation",
+        "duplicate-detect"
+      ],
+      "created": "2025-12-28T22:23:43.005339",
+      "lastModified": "2025-12-28T22:23:43.031816",
+      "dependencies": [],
+      "project_id": "davidl71/project-management-automation",
+      "comments": [
+        {
+          "id": "AUTO-20251228222343-005376-C-1",
+          "todoId": "AUTO-20251228222343-005376",
+          "type": "result",
+          "content": "**Automation Results:**\n\n\u2705 **No duplicates found!** Your Todo2 task list is clean.\n\n**Key Findings:**\n{\"total_tasks\":6,\"duplicates_found\":0,\"duplicate_ids\":[],\"exact_name_matches\":[],\"similar_name_matches\":[],\"similar_description_matches\":[],\"self_dependencies\":[],\"auto_fix_applied\":false,\"tasks_removed\":0,\"tasks_merged\":0,\"dependencies_updated\":0}",
+          "created": "2025-12-28T22:23:43.025572",
+          "lastModified": "2025-12-28T22:23:43.025589"
         }
       ]
     }
@@ -8319,6 +8511,51 @@
       ],
       "dependencies": [],
       "estimatedHours": 1.5
+    },
+    {
+      "id": "T-4",
+      "name": "Implement: Automate check_tool_conditional_logic",
+      "long_description": "Script check_tool_conditional_logic.py exists but runs manually",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "automation",
+        "implementation",
+        "script_automation"
+      ],
+      "dependencies": [
+        "AUTO-20251228213426-355938"
+      ]
+    },
+    {
+      "id": "T-6",
+      "name": "Implement: Automate check_duplicate_test_names",
+      "long_description": "Script check_duplicate_test_names.py exists but runs manually",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "automation",
+        "implementation",
+        "script_automation"
+      ],
+      "dependencies": [
+        "AUTO-20251228213426-355938"
+      ]
+    },
+    {
+      "id": "T-8",
+      "name": "Implement: Automate check_tool_return_types",
+      "long_description": "Script check_tool_return_types.py exists but runs manually",
+      "status": "Todo",
+      "priority": "high",
+      "tags": [
+        "automation",
+        "implementation",
+        "script_automation"
+      ],
+      "dependencies": [
+        "AUTO-20251228213426-355938"
+      ]
     }
   ],
   "comments": [
