@@ -1,5 +1,12 @@
 # Estimation Learning from Actual vs Estimated Times
 
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python and MLX, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use MLX for machine learning? use context7"
+> - "Show me Python scikit-learn examples use context7"
+> - "Python machine learning best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date:** 2025-12-28  
 **Status:** ✅ Complete  
 **Last Updated:** 2025-12-28  

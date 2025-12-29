@@ -1,402 +1,324 @@
 # Test Organization Guidelines
 
-**Last Updated:** 2025-12-25  
-**Purpose:** Establish clear principles for organizing and maintaining tests in this project
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, pytest, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me pytest examples use context7"
+> - "Python pytest best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
+**Last Updated:** 2025-12-29  
+**Status:** Active Guidelines
 
 ---
 
-## Core Principles
+## Overview
 
-### 1. One Test File Per Tool/Module
+This document describes the shared test infrastructure and best practices for writing tests in the Exarp project.
 
-**Rule:** Each tool or module should have its own dedicated test file.
+---
 
-**Pattern:**
-- `project_management_automation/tools/automation_opportunities.py` → `tests/test_automation_opportunities.py`
-- `project_management_automation/utils/todo2_utils.py` → `tests/test_utils_todo2.py`
-- `project_management_automation/scripts/base/mcp_client.py` → `tests/test_mcp_client.py`
+## Shared Test Infrastructure
 
-**Rationale:**
-- Clear organization and easy navigation
-- Single source of truth for each module's tests
-- Easier to maintain and understand test coverage
+### Location
 
-### 2. Avoid Duplicate Tests Across Files
+- **Fixtures:** `tests/conftest.py`
+- **Helpers:** `tests/test_helpers.py`
 
-**Rule:** Never duplicate the same test in multiple files.
+### Available Fixtures
 
-**Anti-Pattern:**
+#### `mock_project_root`
+
+Mocks `find_project_root()` to return a test project path.
+
+**Usage:**
 ```python
-# ❌ BAD: Same test in multiple files
-# tests/test_tools.py
-def test_find_automation_opportunities_success(...):
-    ...
-
-# tests/test_tools_expanded.py
-def test_find_automation_opportunities_success(...):  # DUPLICATE!
-    ...
+@pytest.mark.usefixtures("mock_project_root")
+def test_something():
+    # mock_project_root is already patched
+    from project_management_automation.tools.some_tool import tool_function
+    result = tool_function()
 ```
 
-**Correct Pattern:**
+**Alternative (explicit):**
 ```python
-# ✅ GOOD: One test in the dedicated file
-# tests/test_automation_opportunities.py
-def test_find_automation_opportunities_success(...):
-    ...
+def test_something(mock_project_root):
+    # mock_project_root is the mock object
+    from project_management_automation.tools.some_tool import tool_function
+    result = tool_function()
 ```
 
-**Rationale:**
-- Prevents maintenance burden (fixing bugs in multiple places)
-- Reduces test execution time
-- Ensures single source of truth
+#### `mock_automation_run`
 
-### 3. Use Dedicated Test Files for Shared Utilities
+Helper to create mock automation instances with `run()` method.
 
-**Rule:** Test shared utility functions in dedicated utility test files.
+**Usage:**
+```python
+def test_tool(mock_automation_run):
+    mock_instance = mock_automation_run({'status': 'success', 'results': {}})
+    with patch('project_management_automation.scripts.automate_X.AutomationClass', return_value=mock_instance):
+        result = tool_function()
+```
 
-**Pattern:**
-- Shared network utilities → `tests/test_utils_network.py`
-- Shared security utilities → `tests/test_utils_security.py`
-- Shared Todo2 utilities → `tests/test_utils_todo2.py`
+#### `mock_mcp_client`
+
+Mock MCP client for testing MCP-dependent tools.
+
+**Usage:**
+```python
+def test_mcp_tool(mock_mcp_client):
+    mock_mcp_client.call_tool.return_value = {'result': 'test'}
+    # Test tool that uses MCP client
+```
+
+---
+
+## Test Helpers
+
+### `assert_success_response(result_str, expected_data_keys=None)`
+
+Assert that a tool response indicates success.
+
+**Parameters:**
+- `result_str`: JSON string response from tool
+- `expected_data_keys`: Optional list of keys that should exist in 'data'
+
+**Returns:** Parsed result dictionary
 
 **Example:**
 ```python
-# ✅ GOOD: Shared utility tests
-# tests/test_utils_network.py
-class TestGetLocalIPAddresses:
-    def test_get_local_ip_addresses_from_nightly_module(...):
-        from project_management_automation.tools.nightly_task_automation import _get_local_ip_addresses
-        ...
-    
-    def test_get_local_ip_addresses_from_working_copy_module(...):
-        from project_management_automation.tools.working_copy_health import _get_local_ip_addresses
-        ...
+from tests.test_helpers import assert_success_response
+
+result_str = tool_function()
+result = assert_success_response(result_str, ['total_opportunities', 'high_priority_count'])
+assert result['data']['total_opportunities'] == 3
 ```
-
-**Rationale:**
-- Centralizes testing of shared functionality
-- Makes it clear which utilities are shared across modules
-- Easier to identify code duplication opportunities
-
-### 4. Clear Test Naming
-
-**Rule:** Use descriptive test names that indicate what's being tested.
-
-**Pattern:**
-- `test_<function_name>_<scenario>` for function tests
-- `test_<class_name>_<method>_<scenario>` for class method tests
-- `test_<feature>_<condition>` for feature tests
-
-**Examples:**
-```python
-# ✅ GOOD: Clear and descriptive
-def test_detect_duplicate_tasks_success(...):
-def test_detect_duplicate_tasks_error(...):
-def test_detect_duplicate_tasks_custom_threshold(...):
-
-# ❌ BAD: Too generic
-def test_success(...):
-def test_error(...):
-```
-
-**Rationale:**
-- Makes test failures easier to understand
-- Helps identify test purpose without reading implementation
-- Prevents accidental duplicate test names
-
-### 5. Test Class Organization
-
-**Rule:** Group related tests into test classes.
-
-**Pattern:**
-```python
-class TestAutomationOpportunitiesTool:
-    """Tests for find_automation_opportunities tool."""
-    
-    def test_find_automation_opportunities_success(...):
-        ...
-    
-    def test_find_automation_opportunities_error(...):
-        ...
-    
-    def test_find_automation_opportunities_custom_threshold(...):
-        ...
-```
-
-**Rationale:**
-- Logical grouping of related tests
-- Easier to run subsets of tests
-- Better test organization and readability
 
 ---
 
-## File Naming Conventions
+### `assert_error_response(result_str, expected_error_contains=None)`
 
-### Test Files
+Assert that a tool response indicates an error.
 
-**Pattern:** `test_<module_name>.py`
+**Parameters:**
+- `result_str`: JSON string response from tool
+- `expected_error_contains`: Optional substring that should be in error message
 
-**Examples:**
-- `test_automation_opportunities.py` - Tests for `automation_opportunities.py`
-- `test_mcp_client.py` - Tests for `mcp_client.py`
-- `test_utils_todo2.py` - Tests for `todo2_utils.py`
-- `test_utils_network.py` - Tests for shared network utilities
+**Returns:** Parsed result dictionary
 
-### Test Classes
+**Example:**
+```python
+from tests.test_helpers import assert_error_response
 
-**Pattern:** `Test<ClassName>` or `Test<ModuleName>Tool`
-
-**Examples:**
-- `TestAutomationOpportunitiesTool` - Tests for automation opportunities tool
-- `TestMCPClient` - Tests for MCPClient class
-- `TestGetLocalIPAddresses` - Tests for get_local_ip_addresses function
+result_str = tool_function()
+assert_error_response(result_str, "Test error")
+```
 
 ---
 
-## Test Structure Template
+### `assert_dry_run_response(result_str)`
+
+Assert that a tool response indicates a dry run was performed.
+
+**Example:**
+```python
+from tests.test_helpers import assert_dry_run_response
+
+result_str = tool_function(dry_run=True)
+assert_dry_run_response(result_str)
+```
+
+---
+
+### `assert_custom_output_path(result_str, expected_path)`
+
+Assert that a tool response includes a custom output path.
+
+**Example:**
+```python
+from tests.test_helpers import assert_custom_output_path
+
+result_str = tool_function(output_path="/custom/path/report.md")
+assert_custom_output_path(result_str, "/custom/path/report.md")
+```
+
+---
+
+### `parse_json_response(result_str)`
+
+Parse a JSON string response, handling both dict and str inputs.
+
+**Example:**
+```python
+from tests.test_helpers import parse_json_response
+
+result = parse_json_response(result_str)
+# Works with both JSON strings and dicts
+```
+
+---
+
+## Migration Guide
+
+### Before (Old Pattern)
 
 ```python
-"""
-Unit Tests for [Module/Tool Name]
+@patch('project_management_automation.utils.find_project_root')
+@patch('project_management_automation.scripts.automate_X.AutomationClass')
+def test_tool_success(self, mock_class, mock_find_root):
+    mock_find_root.return_value = Path("/test/project")
+    mock_instance = Mock()
+    mock_instance.run.return_value = {'status': 'success', 'results': {}}
+    mock_class.return_value = mock_instance
+    
+    result_str = tool_function()
+    result = json.loads(result_str)
+    
+    assert result['success'] is True
+    assert 'data' in result
+    assert result['data']['key'] == 'value'
+```
 
-Tests for [module_name].py module.
-"""
+### After (New Pattern)
 
-import json
-import pytest
-from unittest.mock import Mock, patch
-from pathlib import Path
-import sys
+```python
+from tests.test_helpers import assert_success_response
 
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+@pytest.mark.usefixtures("mock_project_root")
+@patch('project_management_automation.scripts.automate_X.AutomationClass')
+def test_tool_success(self, mock_class):
+    mock_instance = Mock()
+    mock_instance.run.return_value = {'status': 'success', 'results': {}}
+    mock_class.return_value = mock_instance
+    
+    result_str = tool_function()
+    result = assert_success_response(result_str, ['key'])
+    
+    assert result['data']['key'] == 'value'
+```
 
+---
 
-class Test[ToolName]Tool:
-    """Tests for [tool_name] tool."""
+## Best Practices
 
-    @patch('...')
-    def test_[function]_success(self, ...):
-        """Test successful [function] execution."""
-        from project_management_automation.tools.[module] import [function]
-        
-        # Setup
-        ...
-        
-        # Execute
-        result = [function](...)
-        
-        # Assert
-        assert result['success'] is True
-        ...
+### 1. Use Shared Fixtures
 
-    def test_[function]_error(self, ...):
+✅ **DO:**
+```python
+@pytest.mark.usefixtures("mock_project_root")
+def test_something():
+    # mock_project_root is automatically available
+```
+
+❌ **DON'T:**
+```python
+@patch('project_management_automation.utils.find_project_root')
+def test_something(mock_find_root):
+    mock_find_root.return_value = Path("/test/project")
+    # Boilerplate repeated in every test
+```
+
+---
+
+### 2. Use Helper Functions
+
+✅ **DO:**
+```python
+from tests.test_helpers import assert_success_response, assert_error_response
+
+result = assert_success_response(result_str)
+assert_error_response(error_result_str, "Expected error")
+```
+
+❌ **DON'T:**
+```python
+result = json.loads(result_str)
+assert result['success'] is True
+assert 'data' in result
+# Repeated in every test
+```
+
+---
+
+### 3. Test Structure
+
+**Recommended test class structure:**
+```python
+class TestToolName:
+    """Tests for tool_name tool."""
+    
+    @pytest.mark.usefixtures("mock_project_root")
+    @patch('project_management_automation.scripts.automate_X.AutomationClass')
+    def test_tool_success(self, mock_class):
+        """Test successful execution."""
+        from tests.test_helpers import assert_success_response
+        # ... test implementation
+    
+    @pytest.mark.usefixtures("mock_project_root")
+    @patch('project_management_automation.scripts.automate_X.AutomationClass')
+    def test_tool_error(self, mock_class):
         """Test error handling."""
-        ...
-
-
-if __name__ == '__main__':
-    pytest.main([__file__, '-v'])
+        from tests.test_helpers import assert_error_response
+        # ... test implementation
+    
+    @pytest.mark.usefixtures("mock_project_root")
+    def test_tool_dry_run(self):
+        """Test dry run mode."""
+        from tests.test_helpers import assert_dry_run_response
+        # ... test implementation
 ```
 
 ---
 
 ## Common Patterns
 
-### Testing MCP Tools
+### Pattern 1: Success Test
 
 ```python
-@patch('project_management_automation.scripts.automate_[module].[Class]')
-def test_[tool]_success(self, mock_class):
-    """Test successful [tool] execution."""
-    from project_management_automation.tools.[module] import [tool]
+@pytest.mark.usefixtures("mock_project_root")
+@patch('project_management_automation.scripts.automate_X.AutomationClass')
+def test_tool_success(self, mock_class):
+    from tests.test_helpers import assert_success_response
     
     mock_instance = Mock()
-    mock_instance.run.return_value = {
-        'status': 'success',
-        'results': {...}
-    }
+    mock_instance.run.return_value = {'status': 'success', 'results': {}}
     mock_class.return_value = mock_instance
     
-    with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
-        result = [tool](...)
-        result_data = json.loads(result)
-        
-        assert result_data['success'] is True
-```
-
-### Testing Shared Utilities
-
-```python
-class Test[UtilityName]:
-    """Tests for [utility_name] utility function."""
+    result_str = tool_function()
+    result = assert_success_response(result_str, ['expected_key'])
     
-    def test_[utility]_from_[module1](self, ...):
-        """Test [utility] from [module1] module."""
-        from project_management_automation.tools.[module1] import [utility]
-        ...
+    assert result['data']['expected_key'] == 'expected_value'
+```
+
+### Pattern 2: Error Test
+
+```python
+@pytest.mark.usefixtures("mock_project_root")
+@patch('project_management_automation.scripts.automate_X.AutomationClass')
+def test_tool_error(self, mock_class):
+    from tests.test_helpers import assert_error_response
     
-    def test_[utility]_from_[module2](self, ...):
-        """Test [utility] from [module2] module."""
-        from project_management_automation.tools.[module2] import [utility]
-        ...
+    mock_class.side_effect = Exception("Test error")
+    
+    result_str = tool_function()
+    assert_error_response(result_str, "Test error")
 ```
 
----
+### Pattern 3: Dry Run Test
 
-## Anti-Patterns to Avoid
-
-### ❌ Catch-All Test Files
-
-**Don't create files like:**
-- `test_tools_expanded.py` - Contains duplicates of tests in dedicated files
-- `test_misc.py` - Unclear organization
-
-**Instead:**
-- Create dedicated test files for each tool/module
-- Use shared utility test files for common functionality
-
-### ❌ Duplicate Test Names
-
-**Don't use the same test name in multiple files:**
 ```python
-# ❌ BAD
-# tests/test_tools.py
-def test_success(...):
-
-# tests/test_tools_expanded.py
-def test_success(...):  # Same name!
+@pytest.mark.usefixtures("mock_project_root")
+def test_tool_dry_run(self):
+    from tests.test_helpers import assert_dry_run_response
+    
+    result_str = tool_function(dry_run=True)
+    assert_dry_run_response(result_str)
 ```
-
-**Instead:**
-- Use descriptive, unique names
-- Include context in the name (e.g., `test_find_automation_opportunities_success`)
-
-### ❌ Testing Shared Utilities in Tool Files
-
-**Don't test shared utilities in tool-specific test files:**
-```python
-# ❌ BAD
-# tests/test_nightly_task_automation.py
-def test_get_local_ip_addresses(...):  # This is a shared utility!
-    ...
-
-# tests/test_working_copy_health.py
-def test_get_local_ip_addresses(...):  # Duplicate!
-    ...
-```
-
-**Instead:**
-- Move to dedicated utility test file: `tests/test_utils_network.py`
-
----
-
-## Code Duplication Detection
-
-### Identifying Duplicate Code
-
-If you find identical functions in multiple modules:
-
-1. **Document the duplication** in the test file:
-   ```python
-   """
-   Tests for shared network utility functions.
-   
-   NOTE: These functions are currently duplicated in:
-   - project_management_automation.tools.nightly_task_automation
-   - project_management_automation.tools.working_copy_health
-   
-   TODO: Refactor to move these functions to a shared utils module.
-   """
-   ```
-
-2. **Test both implementations** to ensure consistency:
-   ```python
-   def test_get_local_ip_addresses_from_nightly_module(...):
-       from project_management_automation.tools.nightly_task_automation import _get_local_ip_addresses
-       ...
-   
-   def test_get_local_ip_addresses_from_working_copy_module(...):
-       from project_management_automation.tools.working_copy_health import _get_local_ip_addresses
-       ...
-   ```
-
-3. **Create a refactoring task** to consolidate the code duplication
-
----
-
-## Running Tests
-
-### Run All Tests
-```bash
-uv run pytest tests/ -v
-```
-
-### Run Specific Test File
-```bash
-uv run pytest tests/test_automation_opportunities.py -v
-```
-
-### Run Specific Test Class
-```bash
-uv run pytest tests/test_automation_opportunities.py::TestAutomationOpportunitiesTool -v
-```
-
-### Run Specific Test
-```bash
-uv run pytest tests/test_automation_opportunities.py::TestAutomationOpportunitiesTool::test_find_automation_opportunities_success -v
-```
-
-### Run with Coverage
-```bash
-uv run pytest tests/ --cov=project_management_automation --cov-report=html --cov-report=term
-```
-
----
-
-## Maintenance
-
-### Regular Checks
-
-1. **Check for duplicate test names:**
-   ```bash
-   uv run pytest tests/ --collect-only -q | grep "test_" | sort | uniq -d
-   ```
-
-2. **Check for duplicate tests:**
-   - Review test files for similar test implementations
-   - Use code search to find duplicate test patterns
-
-3. **Verify test organization:**
-   - Ensure each tool has its own test file
-   - Ensure shared utilities have dedicated test files
-
-### When Adding New Tests
-
-1. **Identify the module/tool** being tested
-2. **Find or create the appropriate test file:**
-   - Tool → `tests/test_<tool_name>.py`
-   - Utility → `tests/test_utils_<utility_name>.py`
-   - Script → `tests/test_<script_name>.py`
-3. **Follow the test structure template**
-4. **Use descriptive test names**
-5. **Group related tests into classes**
 
 ---
 
 ## References
 
-- [Redundant Tests Report](./REDUNDANT_TESTS_REPORT.md) - Analysis of redundant tests found
-- [Test Cleanup Plan](./TEST_CLEANUP_PLAN.md) - Plan for cleaning up redundant tests
-- [Pytest Documentation](https://docs.pytest.org/) - Official pytest documentation
-
----
-
-## Questions?
-
-If you're unsure about test organization:
-1. Check existing test files for patterns
-2. Review this guide
-3. Ask in project discussions or create an issue
-
+- [Additional Test Consolidation Opportunities](./ADDITIONAL_TEST_CONSOLIDATION_OPPORTUNITIES.md)
+- [Test Cleanup Plan](./TEST_CLEANUP_PLAN.md)
+- [Testing Improvement Plan](./TESTING_IMPROVEMENT_PLAN.md)

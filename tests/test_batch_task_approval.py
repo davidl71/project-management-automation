@@ -19,7 +19,7 @@ class TestBatchTaskApprovalTool:
     """Tests for batch task approval tool."""
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_success(self, mock_subprocess, mock_exists, mock_find_root):
         """Test successful batch task approval."""
@@ -44,7 +44,7 @@ class TestBatchTaskApprovalTool:
         assert result['dry_run'] is False
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_dry_run(self, mock_subprocess, mock_exists, mock_find_root):
         """Test dry run mode."""
@@ -66,7 +66,7 @@ class TestBatchTaskApprovalTool:
         assert result['approved_count'] == 2
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     def test_batch_approve_tasks_script_not_found(self, mock_exists, mock_find_root):
         """Test when batch script doesn't exist."""
         from project_management_automation.tools.batch_task_approval import batch_approve_tasks
@@ -81,7 +81,7 @@ class TestBatchTaskApprovalTool:
         assert result['approved_count'] == 0
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_with_filter_tag(self, mock_subprocess, mock_exists, mock_find_root):
         """Test with filter tag."""
@@ -100,7 +100,7 @@ class TestBatchTaskApprovalTool:
         assert 'research' in call_args
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_with_task_ids(self, mock_subprocess, mock_exists, mock_find_root):
         """Test with specific task IDs."""
@@ -118,7 +118,7 @@ class TestBatchTaskApprovalTool:
         assert '--task-ids' in call_args
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_script_failure(self, mock_subprocess, mock_exists, mock_find_root):
         """Test when script execution fails."""
@@ -139,7 +139,7 @@ class TestBatchTaskApprovalTool:
         assert result['approved_count'] == 0
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_timeout(self, mock_subprocess, mock_exists, mock_find_root):
         """Test timeout handling."""
@@ -152,11 +152,11 @@ class TestBatchTaskApprovalTool:
         result = batch_approve_tasks()
         
         assert result['success'] is False
-        assert 'timeout' in result['error'].lower()
+        assert 'timed out' in result['error'].lower()
         assert result['approved_count'] == 0
 
     @patch('project_management_automation.tools.batch_task_approval.find_project_root')
-    @patch('project_management_automation.tools.batch_task_approval.Path.exists')
+    @patch('pathlib.Path.exists')
     @patch('subprocess.run')
     def test_batch_approve_tasks_without_clarification_none(self, mock_subprocess, mock_exists, mock_find_root):
         """Test with clarification_none=False."""

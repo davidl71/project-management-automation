@@ -50,8 +50,11 @@ class TestDocumentationHealthTool:
             result = check_documentation_health(output_path="test_report.md", create_tasks=True)
         result_data = json.loads(result)
 
-        # Assertions
-        assert result_data['success'] is True
+        # Import shared test helpers
+        from tests.test_helpers import assert_success_response, assert_error_response
+        
+        # Assertions using helpers
+        result_data = assert_success_response(result, ['health_score', 'report_path'])
         assert result_data['data']['health_score'] == 85
         assert result_data['data']['report_path'] is not None
 
@@ -59,6 +62,7 @@ class TestDocumentationHealthTool:
     def test_check_documentation_health_error(self, mock_analyzer_class):
         """Test error handling in documentation health check."""
         from project_management_automation.tools.docs_health import check_documentation_health
+        from tests.test_helpers import assert_error_response
 
         # Mock analyzer to raise exception
         mock_analyzer_class.side_effect = Exception("Test error")
@@ -67,11 +71,9 @@ class TestDocumentationHealthTool:
         with patch('project_management_automation.utils.find_project_root', return_value=Path("/test")):
             # Call tool
             result = check_documentation_health()
-            result_data = json.loads(result)
-
-        # Assertions
-        assert result_data['success'] is False
-        assert 'error' in result_data
+        
+        # Assertions using helper
+        assert_error_response(result, "Test error")
 
 
 class TestTodo2AlignmentTool:

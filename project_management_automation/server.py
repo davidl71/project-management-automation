@@ -34,7 +34,7 @@ os.environ["EXARP_MCP_MODE"] = "1"
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, List
 
 # Import our MCP-aware logging utilities
 from .utils.logging_config import configure_logging, suppress_noisy_loggers
@@ -226,7 +226,7 @@ try:
     from .tools.consolidated import (
         automation as _automation,
     )
-    from .tools.consolidated import (
+    from .tools.context_tool import (
         context as _context,
     )
     from .tools.consolidated import (
@@ -1717,10 +1717,15 @@ if mcp:
 
         @mcp.tool()
         def add_external_tool_hints(
-            dry_run: bool = False, output_path: str | None = None, min_file_size: int = 50
+            dry_run: bool = False, output_path: Optional[str] = None, min_file_size: int = 50
         ) -> str:
             """[HINT: Tool hints. Files scanned, modified, hints added.]"""
-            return _add_external_tool_hints(dry_run, output_path, min_file_size)
+            # Type hint: _add_external_tool_hints always returns str (JSON string)
+            result: str = _add_external_tool_hints(dry_run, output_path, min_file_size)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # NOTE: analyze_problems, run_linter removed - use lint(action=analyze|run)
         # NOTE: list_problem_categories removed - use resource automation://problem-categories
@@ -1732,12 +1737,12 @@ if mcp:
         @mcp.tool()
         def automation(
             action: str = "daily",
-            tasks: list[str] | None = None,
+            tasks: Optional[List[str]] = None,
             include_slow: bool = False,
             max_tasks_per_host: int = 5,
             max_parallel_tasks: int = 10,
-            priority_filter: str | None = None,
-            tag_filter: list[str] | None = None,
+            priority_filter: Optional[str] = None,
+            tag_filter: Optional[List[str]] = None,
             max_iterations: int = 10,
             auto_approve: bool = True,
             extract_subtasks: bool = True,
@@ -1745,7 +1750,7 @@ if mcp:
             run_testing_tools: bool = True,
             min_value_score: float = 0.7,
             dry_run: bool = False,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
             notify: bool = False,
         ) -> str:
             import sys
@@ -1802,7 +1807,8 @@ if mcp:
                 }, indent=2)
             print("DEBUG [server.py automation wrapper] Calling _automation", file=sys.stderr, flush=True)
             try:
-                result = _automation(
+                # Type hint: _automation always returns str (JSON string)
+                result: str = _automation(
                     action=action,
                     tasks=tasks,
                     include_slow=include_slow,
@@ -1821,8 +1827,13 @@ if mcp:
                     notify=notify,
                 )
                 print(f"DEBUG [server.py automation wrapper] _automation returned: type={type(result)}, len={len(result) if isinstance(result, str) else 'N/A'}", file=sys.stderr, flush=True)
-                print("DEBUG [server.py automation wrapper] RETURNING", file=sys.stderr, flush=True)
-                return result
+                # Ensure we always return a JSON string (defensive check for FastMCP)
+                if isinstance(result, str):
+                    print("DEBUG [server.py automation wrapper] RETURNING string", file=sys.stderr, flush=True)
+                    return result
+                else:
+                    print(f"DEBUG [server.py automation wrapper] Converting {type(result)} to JSON string", file=sys.stderr, flush=True)
+                    return json.dumps(result, indent=2)
             except Exception as e:
                 print(f"DEBUG [server.py automation wrapper] EXCEPTION: {e}", file=sys.stderr, flush=True)
                 import traceback
@@ -1842,7 +1853,7 @@ if mcp:
         # NOTE: simplify_rules removed - use generate_config(action="simplify")
 
         # Helper for scorecard (shared implementation)
-        def _scorecard_impl(output_format: str, include_recommendations: bool, output_path: str | None) -> str:
+        def _scorecard_impl(output_format: str, include_recommendations: bool, output_path: Optional[str]) -> str:
             result = _generate_project_scorecard(output_format, include_recommendations, output_path)
             return json.dumps(
                 {
@@ -1859,7 +1870,7 @@ if mcp:
         # NOTE: generate_project_scorecard removed - use report(type="scorecard")
 
         # Helper for overview (shared implementation)
-        def _overview_impl(output_format: str, output_path: str | None) -> str:
+        def _overview_impl(output_format: str, output_path: Optional[str]) -> str:
             result = _generate_project_overview(output_format, output_path)
             return json.dumps(
                 {
@@ -1894,10 +1905,10 @@ if mcp:
         @mcp.tool()
         def tool_catalog(
             action: str = "list",
-            category: str | None = None,
-            persona: str | None = None,
+            category: Optional[str] = None,
+            persona: Optional[str] = None,
             include_examples: bool = True,
-            tool_name: str | None = None,
+            tool_name: Optional[str] = None,
         ) -> str:
             """
             [HINT: Tool catalog. action=list|help. Unified tool catalog and help.]
@@ -1922,18 +1933,23 @@ if mcp:
                 tool_catalog(action="help", tool_name="project_scorecard")
                 → Detailed tool documentation
             """
-            return _tool_catalog(action, category, persona, include_examples, tool_name)
+            # Type hint: _tool_catalog always returns str (JSON string)
+            result: str = _tool_catalog(action, category, persona, include_examples, tool_name)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # NOTE: focus_mode, suggest_mode, tool_usage_stats removed - use workflow_mode(action=focus|suggest|stats)
 
         @mcp.tool()
         async def workflow_mode(
             action: str = "focus",
-            mode: str | None = None,
-            enable_group: str | None = None,
-            disable_group: str | None = None,
+            mode: Optional[str] = None,
+            enable_group: Optional[str] = None,
+            disable_group: Optional[str] = None,
             status: bool = False,
-            text: str | None = None,
+            text: Optional[str] = None,
             auto_switch: bool = False,
             ctx: Any = None,
         ) -> str:
@@ -1980,7 +1996,8 @@ if mcp:
                 workflow_mode(action="stats")
                 → View usage analytics
             """
-            result = _workflow_mode(action, mode, enable_group, disable_group, status, text, auto_switch)
+            # Type hint: _workflow_mode always returns str (JSON string)
+            result: str = _workflow_mode(action, mode, enable_group, disable_group, status, text, auto_switch)
 
             # Send notification if mode changed (for focus or auto-switched suggest)
             if ctx:
@@ -2003,7 +2020,11 @@ if mcp:
                     except Exception as e:
                         logger.debug(f"Could not notify tools changed: {e}")
 
-            return result
+            # Ensure we always return a JSON string (defensive check for FastMCP)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # ═══════════════════════════════════════════════════════════════════
         # CONTEXT MANAGEMENT TOOL (CONSOLIDATED)
@@ -2012,12 +2033,12 @@ if mcp:
         @mcp.tool()
         def context(
             action: str = "summarize",
-            data: str | None = None,
+            data: Optional[str] = None,
             level: str = "brief",
-            tool_type: str | None = None,
-            max_tokens: int | None = None,
+            tool_type: Optional[str] = None,
+            max_tokens: Optional[int] = None,
             include_raw: bool = False,
-            items: str | None = None,
+            items: Optional[str] = None,
             budget_tokens: int = 4000,
             combine: bool = True,
         ) -> str:
@@ -2051,7 +2072,28 @@ if mcp:
                 context(action="batch", items=json_array, level="brief")
                 → Combined summaries of multiple items
             """
-            return _context(action, data, level, tool_type, max_tokens, include_raw, items, budget_tokens, combine)
+            if _context is None:
+                return json.dumps({
+                    "success": False,
+                    "error": "context tool not available - import failed"
+                }, indent=2)
+            try:
+                # Type hint: _context always returns str (JSON string)
+                # This helps FastMCP static analysis understand the return type
+                result: str = _context(action, data, level, tool_type, max_tokens, include_raw, items, budget_tokens, combine)
+                # Ensure we always return a JSON string (defensive check for FastMCP)
+                if isinstance(result, str):
+                    return result
+                else:
+                    return json.dumps(result, indent=2)
+            except Exception as e:
+                import traceback
+                logger.error(f"Context tool error: {e}")
+                traceback.print_exc()
+                return json.dumps({
+                    "success": False,
+                    "error": str(e)
+                }, indent=2)
 
         # NOTE: get_tool_help removed - use resource automation://tools for tool info
         # NOTE: project_overview removed - use generate_project_overview
@@ -2066,15 +2108,15 @@ if mcp:
         @mcp.tool()
         def recommend(
             action: str = "model",
-            task_description: str | None = None,
-            task_type: str | None = None,
+            task_description: Optional[str] = None,
+            task_type: Optional[str] = None,
             optimize_for: str = "quality",
             include_alternatives: bool = True,
-            task_id: str | None = None,
+            task_id: Optional[str] = None,
             include_rationale: bool = True,
-            metric: str | None = None,
-            tool: str | None = None,
-            stage: str | None = None,
+            metric: Optional[str] = None,
+            tool: Optional[str] = None,
+            stage: Optional[str] = None,
             score: float = 50.0,
             context: str = "",
             log: bool = True,
@@ -2118,7 +2160,8 @@ if mcp:
                 recommend(action="advisor", metric="security", score=75.0)
                 → Advisor wisdom for security metric
             """
-            return _recommend(
+            # Type hint: _recommend always returns str (JSON string)
+            result: str = _recommend(
                 action=action,
                 task_description=task_description,
                 task_type=task_type,
@@ -2134,6 +2177,10 @@ if mcp:
                 log=log,
                 session_mode=None  # Will be auto-detected in consolidated function
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # NOTE: get_advisor_briefing removed - use report(type="briefing")
 
@@ -2167,7 +2214,7 @@ if mcp:
         def analyze_alignment(
             action: str = "todo2",
             create_followup_tasks: bool = True,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
         ) -> str:
             """
             [HINT: Alignment analysis. action=todo2|prd. Unified alignment analysis tool.]
@@ -2199,14 +2246,19 @@ if mcp:
                     "success": False,
                     "error": "analyze_alignment tool not available - import failed"
                 }, indent=2)
-            return _analyze_alignment(action, create_followup_tasks, output_path)
+            # Type hint: _analyze_alignment always returns str (JSON string)
+            result: str = _analyze_alignment(action, create_followup_tasks, output_path)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def security(
             action: str = "report",
             repo: str = "davidl71/project-management-automation",
-            languages: list[str] | None = None,
-            config_path: str | None = None,
+            languages: Optional[List[str]] = None,
+            config_path: Optional[str] = None,
             state: str = "open",
             include_dismissed: bool = False,
             alert_critical: bool = False,
@@ -2222,18 +2274,23 @@ if mcp:
             📊 Output: Vulnerabilities by severity, remediation recommendations
             🔧 Side Effects: None (read-only)
             """
-            return _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
+            # Type hint: _security always returns str (JSON string)
+            result: str = _security(action, repo, languages, config_path, state, include_dismissed, alert_critical=alert_critical)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def generate_config(
             action: str = "rules",
-            rules: str | None = None,
+            rules: Optional[str] = None,
             overwrite: bool = False,
             analyze_only: bool = False,
             include_indexing: bool = True,
             analyze_project: bool = True,
-            rule_files: str | None = None,
-            output_dir: str | None = None,
+            rule_files: Optional[str] = None,
+            output_dir: Optional[str] = None,
             dry_run: bool = False,
         ) -> str:
             """
@@ -2247,18 +2304,23 @@ if mcp:
             📊 Output: Generated files, changes made
             🔧 Side Effects: Creates/updates config files (unless dry_run=True)
             """
-            return _generate_config(
+            # Type hint: _generate_config always returns str (JSON string)
+            result: str = _generate_config(
                 action, rules, overwrite, analyze_only,
                 include_indexing, analyze_project,
                 rule_files, output_dir, dry_run
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def setup_hooks(
             action: str = "git",
-            hooks: list[str] | None = None,
-            patterns: str | None = None,
-            config_path: str | None = None,
+            hooks: Optional[List[str]] = None,
+            patterns: Optional[str] = None,
+            config_path: Optional[str] = None,
             install: bool = True,
             dry_run: bool = False,
         ) -> str:
@@ -2272,15 +2334,20 @@ if mcp:
             📊 Output: Installation status, hooks configured
             🔧 Side Effects: Installs hooks (unless dry_run=True)
             """
-            return _setup_hooks(action, hooks, patterns, config_path, install, dry_run)
+            # Type hint: _setup_hooks always returns str (JSON string)
+            result: str = _setup_hooks(action, hooks, patterns, config_path, install, dry_run)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def prompt_tracking(
             action: str = "analyze",
-            prompt: str | None = None,
-            task_id: str | None = None,
-            mode: str | None = None,
-            outcome: str | None = None,
+            prompt: Optional[str] = None,
+            task_id: Optional[str] = None,
+            mode: Optional[str] = None,
+            outcome: Optional[str] = None,
             iteration: int = 1,
             days: int = 7,
         ) -> str:
@@ -2294,19 +2361,24 @@ if mcp:
             📊 Output: Log confirmation or iteration statistics
             🔧 Side Effects: Writes to .cursor/prompt_history/ (log action)
             """
-            return _prompt_tracking(action, prompt, task_id, mode, outcome, iteration, days)
+            # Type hint: _prompt_tracking always returns str (JSON string)
+            result: str = _prompt_tracking(action, prompt, task_id, mode, outcome, iteration, days)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def health(
             action: str = "server",
-            agent_name: str | None = None,
+            agent_name: Optional[str] = None,
             check_remote: bool = True,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
             create_tasks: bool = True,
-            task_id: str | None = None,
-            changed_files: str | None = None,
+            task_id: Optional[str] = None,
+            changed_files: Optional[str] = None,
             auto_check: bool = True,
-            workflow_path: str | None = None,
+            workflow_path: Optional[str] = None,
             check_runners: bool = True,
         ) -> str:
             """
@@ -2322,14 +2394,19 @@ if mcp:
             📊 Output: Health status and metrics
             🔧 Side Effects: Creates tasks (docs action with create_tasks=True)
             """
-            return _health(
+            # Type hint: _health always returns str (JSON string)
+            result: str = _health(
                 action, agent_name, check_remote, output_path, create_tasks,
                 task_id, changed_files, auto_check, workflow_path, check_runners
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def check_attribution(
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
             create_tasks: bool = True,
         ) -> str:
             """
@@ -2362,15 +2439,19 @@ if mcp:
                 check_attribution(output_path="custom_report.md")
                 → Custom report location
             """
-            result = _check_attribution_compliance(output_path, create_tasks)
-            # Result is already JSON string from tool wrapper
-            return result
+            # Type hint: _check_attribution_compliance always returns str (JSON string)
+            result: str = _check_attribution_compliance(output_path, create_tasks)
+            # Ensure we always return a JSON string (defensive check for FastMCP)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def report(
             action: str = "overview",
             output_format: str = "text",
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
             include_recommendations: bool = True,
             overall_score: float = 50.0,
             security_score: float = 50.0,
@@ -2378,7 +2459,7 @@ if mcp:
             documentation_score: float = 50.0,
             completion_score: float = 50.0,
             alignment_score: float = 50.0,
-            project_name: str | None = None,
+            project_name: Optional[str] = None,
             include_architecture: bool = True,
             include_metrics: bool = True,
             include_tasks: bool = True,
@@ -2395,9 +2476,9 @@ if mcp:
             📊 Output: Generated report in specified format
             🔧 Side Effects: Creates file (if output_path specified)
             """
+            # Type hint: _report always returns str (JSON string)
             # Explicitly ensure string return to avoid FastMCP async issues
-            # Call the underlying function and ensure it's a string
-            result = _report(
+            result: str = _report(
                 action, output_format, output_path, include_recommendations,
                 overall_score, security_score, testing_score,
                 documentation_score, completion_score, alignment_score,
@@ -2418,11 +2499,11 @@ if mcp:
             similarity_threshold: float = 0.85,
             auto_fix: bool = False,
             dry_run: bool = True,
-            custom_rules: str | None = None,
-            remove_tags: str | None = None,
+            custom_rules: Optional[str] = None,
+            remove_tags: Optional[str] = None,
             output_format: str = "text",
             include_recommendations: bool = True,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
         ) -> str:
             """
             [HINT: Task analysis. action=duplicates|tags|hierarchy|dependencies|parallelization. Task quality and structure.]
@@ -2437,26 +2518,31 @@ if mcp:
             📊 Output: Analysis results with recommendations
             🔧 Side Effects: Modifies tasks (duplicates with auto_fix, tags without dry_run)
             """
-            return _task_analysis(
+            # Type hint: _task_analysis always returns str (JSON string)
+            result: str = _task_analysis(
                 action, similarity_threshold, auto_fix, dry_run,
                 custom_rules, remove_tags, output_format,
                 include_recommendations, output_path
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def testing(
             action: str = "run",
-            test_path: str | None = None,
+            test_path: Optional[str] = None,
             test_framework: str = "auto",
             verbose: bool = True,
             coverage: bool = False,
-            coverage_file: str | None = None,
+            coverage_file: Optional[str] = None,
             min_coverage: int = 80,
             format: str = "html",
-            target_file: str | None = None,
+            target_file: Optional[str] = None,
             min_confidence: float = 0.7,
-            framework: str | None = None,
-            output_path: str | None = None,
+            framework: Optional[str] = None,
+            output_path: Optional[str] = None,
         ) -> str:
             """
             [HINT: Testing tool. action=run|coverage|suggest|validate. Execute tests, analyze coverage, suggest test cases, or validate test structure.]
@@ -2470,24 +2556,29 @@ if mcp:
             📊 Output: Test results, coverage analysis, test suggestions, or validation report
             🔧 Side Effects: May generate coverage reports, suggestion files, or validation reports
             """
-            return _testing(
+            # Type hint: _testing always returns str (JSON string)
+            result: str = _testing(
                 action, test_path, test_framework, verbose, coverage,
                 coverage_file, min_coverage, format, target_file, min_confidence,
                 framework, output_path
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def lint(
             action: str = "run",
-            path: str | None = None,
+            path: Optional[str] = None,
             linter: str = "ruff",
             fix: bool = False,
             analyze: bool = True,
-            select: str | None = None,
-            ignore: str | None = None,
-            problems_json: str | None = None,
+            select: Optional[str] = None,
+            ignore: Optional[str] = None,
+            problems_json: Optional[str] = None,
             include_hints: bool = True,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
         ) -> str:
             """
             [HINT: Linting tool. action=run|analyze. Run linter or analyze problems.]
@@ -2499,21 +2590,27 @@ if mcp:
             📊 Output: Linter results or problem analysis
             🔧 Side Effects: May auto-fix issues (with fix=true)
             """
-            return _lint(
+            # Type hint: _lint always returns str (JSON string)
+            result: str = _lint(
                 action, path, linter, fix, analyze, select, ignore,
                 problems_json, include_hints, output_path
             )
+            # Ensure we always return a JSON string (defensive check for FastMCP)
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def memory(
             action: str = "search",
-            title: str | None = None,
-            content: str | None = None,
+            title: Optional[str] = None,
+            content: Optional[str] = None,
             category: str = "insight",
-            task_id: str | None = None,
-            metadata: str | None = None,
+            task_id: Optional[str] = None,
+            metadata: Optional[str] = None,
             include_related: bool = True,
-            query: str | None = None,
+            query: Optional[str] = None,
             limit: int = 10,
         ) -> str:
             """
@@ -2529,18 +2626,23 @@ if mcp:
             📊 Output: Memory operation results
             🔧 Side Effects: Creates/retrieves memory files
             """
-            return _memory(
+            # Type hint: _memory always returns str (JSON string)
+            result: str = _memory(
                 action, title, content, category, task_id, metadata,
                 include_related, query, limit
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def task_discovery(
             action: str = "all",
-            file_patterns: str | None = None,
+            file_patterns: Optional[str] = None,
             include_fixme: bool = True,
-            doc_path: str | None = None,
-            output_path: str | None = None,
+            doc_path: Optional[str] = None,
+            output_path: Optional[str] = None,
             create_tasks: bool = False,
         ) -> str:
             """
@@ -2555,9 +2657,14 @@ if mcp:
             📊 Output: Discovered tasks with locations
             🔧 Side Effects: Can create Todo2 tasks (create_tasks=true)
             """
-            return _task_discovery(
+            # Type hint: _task_discovery always returns str (JSON string)
+            result: str = _task_discovery(
                 action, file_patterns, include_fixme, doc_path, output_path, create_tasks
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # NOTE: improve_task_clarity removed - use task_workflow(action="clarity")
         # NOTE: cleanup_stale_tasks removed - use task_workflow(action="cleanup")
@@ -2569,18 +2676,18 @@ if mcp:
             status: str = "Review",
             new_status: str = "Todo",
             clarification_none: bool = True,
-            filter_tag: str | None = None,
-            task_ids: str | None = None,
+            filter_tag: Optional[str] = None,
+            task_ids: Optional[str] = None,
             sub_action: str = "list",
-            task_id: str | None = None,
-            clarification_text: str | None = None,
-            decision: str | None = None,
-            decisions_json: str | None = None,
+            task_id: Optional[str] = None,
+            clarification_text: Optional[str] = None,
+            decision: Optional[str] = None,
+            decisions_json: Optional[str] = None,
             move_to_todo: bool = True,
             auto_apply: bool = False,
             output_format: str = "text",
             stale_threshold_hours: float = 2.0,
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
         ) -> str:
             """
             [HINT: Task workflow. action=sync|approve|clarify|clarity|cleanup. Manage task lifecycle.]
@@ -2632,7 +2739,8 @@ if mcp:
                     "success": False,
                     "error": "task_workflow tool not available - import failed"
                 }, indent=2)
-            return _task_workflow(
+            # Type hint: _task_workflow always returns str (JSON string)
+            result: str = _task_workflow(
                 action=action,
                 dry_run=dry_run,
                 status=status,
@@ -2651,6 +2759,10 @@ if mcp:
                 stale_threshold_hours=stale_threshold_hours,
                 output_path=output_path,
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # NOTE: estimate_task_duration, analyze_estimation_accuracy, get_estimation_statistics removed
         # Use estimation(action=estimate|analyze|stats) instead
@@ -2658,11 +2770,11 @@ if mcp:
         @mcp.tool()
         def estimation(
             action: str = "estimate",
-            name: str | None = None,
+            name: Optional[str] = None,
             details: str = "",
-            tags: str | None = None,
+            tags: Optional[str] = None,
             # BREAKING TEST: Add list[str] parameter like automation has
-            tag_list: list[str] | None = None,
+            tag_list: Optional[List[str]] = None,
             priority: str = "medium",
             use_historical: bool = True,
             detailed: bool = False,
@@ -2709,7 +2821,8 @@ if mcp:
                     "success": False,
                     "error": "estimation tool not available - import failed"
                 }, indent=2)
-            return _estimation(
+            # Type hint: _estimation always returns str (JSON string)
+            result: str = _estimation(
                 action=action,
                 name=name,
                 details=details,
@@ -2720,23 +2833,27 @@ if mcp:
                 use_mlx=use_mlx,
                 mlx_weight=mlx_weight,
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def ollama(
             action: str = "status",
-            host: str | None = None,
-            prompt: str | None = None,
+            host: Optional[str] = None,
+            prompt: Optional[str] = None,
             model: str = "llama3.2",
             stream: bool = False,
-            options: str | None = None,
-            num_gpu: int | None = None,
-            num_threads: int | None = None,
-            context_size: int | None = None,
-            file_path: str | None = None,
-            output_path: str | None = None,
+            options: Optional[str] = None,
+            num_gpu: Optional[int] = None,
+            num_threads: Optional[int] = None,
+            context_size: Optional[int] = None,
+            file_path: Optional[str] = None,
+            output_path: Optional[str] = None,
             style: str = "google",
             include_suggestions: bool = True,
-            data: str | None = None,
+            data: Optional[str] = None,
             level: str = "brief",
         ) -> str:
             """
@@ -2759,7 +2876,8 @@ if mcp:
                     "success": False,
                     "error": "ollama tool not available - import failed"
                 }, indent=2)
-            return _ollama(
+            # Type hint: _ollama always returns str (JSON string)
+            result: str = _ollama(
                 action=action,
                 host=host,
                 prompt=prompt,
@@ -2776,11 +2894,15 @@ if mcp:
                 data=data,
                 level=level,
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def mlx(
             action: str = "status",
-            prompt: str | None = None,
+            prompt: Optional[str] = None,
             model: str = "mlx-community/Phi-3.5-mini-instruct-4bit",
             max_tokens: int = 512,
             temperature: float = 0.7,
@@ -2802,7 +2924,8 @@ if mcp:
                     "success": False,
                     "error": "mlx tool not available - import failed"
                 }, indent=2)
-            return _mlx(
+            # Type hint: _mlx always returns str (JSON string)
+            result: str = _mlx(
                 action=action,
                 prompt=prompt,
                 model=model,
@@ -2810,22 +2933,26 @@ if mcp:
                 temperature=temperature,
                 verbose=verbose,
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def git_tools(
             action: str = "commits",
-            task_id: str | None = None,
-            branch: str | None = None,
+            task_id: Optional[str] = None,
+            branch: Optional[str] = None,
             limit: int = 50,
-            commit1: str | None = None,
-            commit2: str | None = None,
-            time1: str | None = None,
-            time2: str | None = None,
+            commit1: Optional[str] = None,
+            commit2: Optional[str] = None,
+            time1: Optional[str] = None,
+            time2: Optional[str] = None,
             format: str = "text",
-            output_path: str | None = None,
+            output_path: Optional[str] = None,
             max_commits: int = 50,
-            source_branch: str | None = None,
-            target_branch: str | None = None,
+            source_branch: Optional[str] = None,
+            target_branch: Optional[str] = None,
             conflict_strategy: str = "newer",
             author: str = "system",
             dry_run: bool = False,
@@ -2849,7 +2976,8 @@ if mcp:
                     "success": False,
                     "error": "git_tools not available - import failed"
                 }, indent=2)
-            return _git_tools(
+            # Type hint: _git_tools always returns str (JSON string)
+            result: str = _git_tools(
                 action=action,
                 task_id=task_id,
                 branch=branch,
@@ -2867,17 +2995,21 @@ if mcp:
                 author=author,
                 dry_run=dry_run,
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def session(
             action: str = "prime",
             include_hints: bool = True,
             include_tasks: bool = True,
-            override_mode: str | None = None,
-            task_id: str | None = None,
-            summary: str | None = None,
-            blockers: str | None = None,
-            next_steps: str | None = None,
+            override_mode: Optional[str] = None,
+            task_id: Optional[str] = None,
+            summary: Optional[str] = None,
+            blockers: Optional[str] = None,
+            next_steps: Optional[str] = None,
             unassign_my_tasks: bool = True,
             include_git_status: bool = True,
             limit: int = 5,
@@ -2885,14 +3017,14 @@ if mcp:
             direction: str = "both",
             prefer_agentic_tools: bool = True,
             auto_commit: bool = True,
-            mode: str | None = None,
-            category: str | None = None,
-            keywords: str | None = None,
-            assignee_name: str | None = None,
+            mode: Optional[str] = None,
+            category: Optional[str] = None,
+            keywords: Optional[str] = None,
+            assignee_name: Optional[str] = None,
             assignee_type: str = "agent",
-            hostname: str | None = None,
-            status_filter: str | None = None,
-            priority_filter: str | None = None,
+            hostname: Optional[str] = None,
+            status_filter: Optional[str] = None,
+            priority_filter: Optional[str] = None,
             include_unassigned: bool = False,
             max_tasks_per_agent: int = 5,
         ) -> str:
@@ -2912,8 +3044,8 @@ if mcp:
                     "success": False,
                     "error": "session tool not available - import failed"
                 }, indent=2)
-            # _session returns JSON string - return it directly
-            return _session(
+            # Type hint: _session always returns str (JSON string)
+            result: str = _session(
                 action=action,
                 include_hints=include_hints,
                 include_tasks=include_tasks,
@@ -2940,6 +3072,10 @@ if mcp:
                 include_unassigned=include_unassigned,
                 max_tasks_per_agent=max_tasks_per_agent,
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         @mcp.tool()
         def memory_maint(
@@ -2953,7 +3089,7 @@ if mcp:
             similarity_threshold: float = 0.85,
             merge_strategy: str = "newest",
             scope: str = "week",
-            advisors: str | None = None,
+            advisors: Optional[str] = None,
             generate_insights: bool = True,
             save_dream: bool = True,
             dry_run: bool = True,
@@ -2972,81 +3108,24 @@ if mcp:
             📊 Output: Maintenance results with recommendations
             🔧 Side Effects: Modifies memories (gc/prune/consolidate with dry_run=False)
             """
-            return _memory_maint(
+            # Type hint: _memory_maint always returns str (JSON string)
+            result: str = _memory_maint(
                 action, max_age_days, delete_orphaned, delete_duplicates,
                 scorecard_max_age_days, value_threshold, keep_minimum,
                 similarity_threshold, merge_strategy, scope, advisors,
                 generate_insights, save_dream, dry_run, interactive
             )
+            if isinstance(result, str):
+                return result
+            else:
+                return json.dumps(result, indent=2)
 
         # ═══════════════════════════════════════════════════════════════════════════════
         # MINIMAL TEST TOOLS - Simplest execution paths
         # ═══════════════════════════════════════════════════════════════════════════════
 
-        # Test 1: Absolute simplest - no decorators, direct return
-        @mcp.tool()
-        def test_minimal_simple() -> str:
-            """Minimal test - simplest possible execution path."""
-            return "simple test result"
-
-        # Test 2: With @ensure_json_string decorator
-        @mcp.tool()
-        def test_minimal_with_decorator() -> str:
-            """Minimal test with @ensure_json_string decorator."""
-            return "decorator test result"
-
-        # Test 3: Returns JSON string directly
-        @mcp.tool()
-        def test_minimal_json_string() -> str:
-            """Minimal test returning JSON string."""
-            import json
-            return json.dumps({"status": "ok", "test": "minimal"})
-
-        # Test 4: With @ensure_json_string, returns JSON string
-        @mcp.tool()
-        def test_minimal_decorator_json() -> str:
-            """Minimal test with decorator returning JSON string."""
-            import json
-            return json.dumps({"status": "ok", "test": "decorator_json"})
-
-        # Test 5: Calls underlying function (like our tools do)
-        def _test_underlying_function() -> str:
-            """Underlying function that returns string."""
-            return "underlying function result"
-
-        @mcp.tool()
-        def test_minimal_underlying_call() -> str:
-            """Minimal test calling underlying function."""
-            return _test_underlying_function()
-
-        # Test 6: Underlying function returns dict, converted to JSON
-        def _test_underlying_dict() -> dict:
-            """Underlying function that returns dict."""
-            return {"status": "ok", "from": "dict"}
-
-        @mcp.tool()
-        def test_minimal_dict_conversion() -> str:
-            """Minimal test with dict conversion."""
-            import json
-            result = _test_underlying_dict()
-            return json.dumps(result)
-
-        # Test 7: FastMCP example pattern (for comparison)
-        @mcp.tool
-        def test_batch_process(items: list[str]) -> str:
-            """Process multiple items - FastMCP example pattern test."""
-            import sys
-            print("DEBUG: test_batch_process ENTRY", file=sys.stderr, flush=True)
-            print(f"DEBUG: items={items}, type={type(items)}", file=sys.stderr, flush=True)
-
-            try:
-                result = f"Processed {len(items)} items"
-                print(f"DEBUG: result={result}, type={type(result)}", file=sys.stderr, flush=True)
-                print("DEBUG: test_batch_process RETURN", file=sys.stderr, flush=True)
-                return result
-            except Exception as e:
-                print(f"DEBUG: test_batch_process EXCEPTION: {e}", file=sys.stderr, flush=True)
-                raise
+        # NOTE: Test tools removed - they were for internal FastMCP return type testing
+        # and shouldn't be exposed to end users in production
 
         # ═══════════════════════════════════════════════════════════════════════════════
         # GIT-INSPIRED TASK MANAGEMENT TOOLS

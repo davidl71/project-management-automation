@@ -12,12 +12,12 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from ..utils import find_project_root
 
 
-def get_codeql_status(project_root: Path | None = None) -> dict[str, Any]:
+def get_codeql_status(project_root: Optional[Path] = None) -> Dict[str, Any]:
     """
     Get comprehensive CodeQL security status for the project.
 
@@ -91,7 +91,7 @@ def get_codeql_status(project_root: Path | None = None) -> dict[str, Any]:
     return result
 
 
-def _parse_codeql_languages(workflow_path: Path) -> list[str]:
+def _parse_codeql_languages(workflow_path: Path) -> List[str]:
     """Parse languages from CodeQL workflow file."""
     try:
         content = workflow_path.read_text()
@@ -114,7 +114,7 @@ def _parse_codeql_languages(workflow_path: Path) -> list[str]:
     return []
 
 
-def _parse_sarif_results(project_root: Path) -> dict[str, Any]:
+def _parse_sarif_results(project_root: Path) -> Dict[str, Any]:
     """
     Parse SARIF (Static Analysis Results Interchange Format) files.
 
@@ -388,7 +388,7 @@ def calculate_codeql_score(status: dict) -> float:
 
 
 # Convenience function for scorecard integration
-def get_codeql_security_metrics() -> dict[str, Any]:
+def get_codeql_security_metrics() -> Dict[str, Any]:
     """
     Get CodeQL metrics formatted for scorecard integration.
 

@@ -1,5 +1,12 @@
 # Done Tasks - Result Comment Audit Report
 
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me Python examples use context7"
+> - "Python best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Generated**: 2025-12-25  
 **Purpose**: Quality check to ensure all completed tasks are properly documented
 

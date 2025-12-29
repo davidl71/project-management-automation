@@ -14,17 +14,18 @@ import sys
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+# Import shared test helpers
+from tests.test_helpers import assert_success_response, assert_error_response, assert_custom_output_path
+
 
 class TestAutomationOpportunitiesTool:
     """Tests for automation opportunities tool."""
 
-    @patch('project_management_automation.utils.find_project_root')
+    @pytest.mark.usefixtures("mock_project_root")
     @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
-    def test_find_automation_opportunities_success(self, mock_finder_class, mock_find_root):
+    def test_find_automation_opportunities_success(self, mock_finder_class):
         """Test successful automation opportunity finding."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities
-
-        mock_find_root.return_value = Path("/test/project")
         
         # Mock finder instance
         mock_finder = Mock()
@@ -45,21 +46,19 @@ class TestAutomationOpportunitiesTool:
         mock_finder_class.return_value = mock_finder
         
         result_str = find_automation_opportunities(min_value_score=0.7)
-        result = json.loads(result_str)
+        result = assert_success_response(result_str, ['total_opportunities', 'filtered_opportunities'])
         
-        assert result['success'] is True
         assert result['data']['total_opportunities'] == 3
         assert result['data']['filtered_opportunities'] == 1  # Only scores >= 7.0 (8.5 >= 7.0, 6.0 < 7.0, 4.0 < 7.0)
         assert result['data']['high_priority_count'] == 1
         assert result['data']['existing_automations'] == 5
 
-    @patch('project_management_automation.utils.find_project_root')
+    @pytest.mark.usefixtures("mock_project_root")
     @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')
-    def test_find_automation_opportunities_custom_output_path(self, mock_finder_class, mock_find_root):
+    def test_find_automation_opportunities_custom_output_path(self, mock_finder_class):
         """Test with custom output path."""
         from project_management_automation.tools.automation_opportunities import find_automation_opportunities
 
-        mock_find_root.return_value = Path("/test/project")
         mock_finder = Mock()
         mock_finder.run.return_value = {
             'results': {
@@ -74,10 +73,7 @@ class TestAutomationOpportunitiesTool:
         mock_finder_class.return_value = mock_finder
         
         result_str = find_automation_opportunities(output_path="/custom/path/report.md")
-        result = json.loads(result_str)
-        
-        assert result['success'] is True
-        assert '/custom/path/report.md' in result['data']['report_path']
+        assert_custom_output_path(result_str, "/custom/path/report.md")
 
     @patch('project_management_automation.utils.find_project_root')
     @patch('project_management_automation.scripts.automate_automation_opportunities.AutomationOpportunityFinder')

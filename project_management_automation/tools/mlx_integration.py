@@ -14,7 +14,10 @@ import os
 import platform
 import subprocess
 import time
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mlx_lm import Model, Tokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +60,9 @@ try:
 except ImportError:
     MLX_AVAILABLE = False
     logger.warning("MLX package not available. Install with: uv sync")
+
+# Model cache: store loaded models to avoid reloading
+_MLX_MODEL_CACHE: dict[str, tuple[Any, Any]] = {}  # model_name -> (model_obj, tokenizer)
 
 # Import error handler
 try:
@@ -397,11 +403,23 @@ def generate_with_mlx(
         return json.dumps(error_response, indent=2)
 
     try:
-        # Load model (will download from Hugging Face if not cached)
-        if verbose:
-            logger.info(f"Loading MLX model: {model}")
+        # Check cache first
+        if model in _MLX_MODEL_CACHE:
+            if verbose:
+                logger.info(f"Using cached MLX model: {model}")
+            model_obj, tokenizer = _MLX_MODEL_CACHE[model]
+        else:
+            # Load model (will download from Hugging Face if not cached)
+            if verbose:
+                logger.info(f"Loading MLX model: {model} (first time, will cache)")
 
-        model_obj, tokenizer = load(model)
+            model_obj, tokenizer = load(model)
+            
+            # Cache the model for reuse
+            _MLX_MODEL_CACHE[model] = (model_obj, tokenizer)
+            
+            if verbose:
+                logger.info(f"Model cached for future use")
 
         if verbose:
             logger.info(f"Generating with max_tokens={max_tokens}, temperature={temperature}")

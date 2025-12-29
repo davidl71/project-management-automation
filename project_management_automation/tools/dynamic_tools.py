@@ -478,10 +478,10 @@ class DynamicToolManager:
     mode_inference: Optional[Any] = None  # SessionModeInference - lazy import to avoid circular deps
     inferred_mode: Optional[Any] = None  # ModeInferenceResult - lazy import
     mode_history: list[Any] = field(default_factory=list)  # List[ModeInferenceResult]
-    last_mode_update: float | None = None  # Timestamp of last mode update
+    last_mode_update: Optional[float] = None  # Timestamp of last mode update
 
     # Persistence path (optional)
-    persistence_path: Path | None = None
+    persistence_path: Optional[Path] = None
 
     def get_active_groups(self) -> set[ToolGroup]:
         """Get currently active tool groups."""
@@ -791,7 +791,7 @@ class DynamicToolManager:
     # PERSISTENCE
     # ═══════════════════════════════════════════════════════════════════════
 
-    def save_usage_data(self, path: Path | None = None) -> bool:
+    def save_usage_data(self, path: Optional[Path] = None) -> bool:
         """Save usage tracking data to disk."""
         save_path = path or self.persistence_path
         if not save_path:
@@ -813,7 +813,7 @@ class DynamicToolManager:
             logger.warning(f"Failed to save usage data: {e}")
             return False
 
-    def load_usage_data(self, path: Path | None = None) -> bool:
+    def load_usage_data(self, path: Optional[Path] = None) -> bool:
         """Load usage tracking data from disk."""
         load_path = path or self.persistence_path
         if not load_path:
@@ -956,7 +956,7 @@ class DynamicToolManager:
 
 
 # Global instance (singleton pattern for MCP server)
-_manager: DynamicToolManager | None = None
+_manager: Optional[DynamicToolManager] = None
 
 
 def get_tool_manager() -> DynamicToolManager:

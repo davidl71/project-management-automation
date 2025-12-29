@@ -248,7 +248,7 @@ def get_daily_wisdom(health_score: float, seed_date: bool = True) -> Optional[Di
     }
 
 
-def format_wisdom_ascii(wisdom: dict[str, Any]) -> str:
+def format_wisdom_ascii(wisdom: Dict[str, Any]) -> str:
     """Format wisdom as ASCII art for terminal display."""
     if wisdom is None:
         return ""
@@ -277,7 +277,7 @@ def format_wisdom_ascii(wisdom: dict[str, Any]) -> str:
 """
 
 
-def format_wisdom_markdown(wisdom: dict[str, Any]) -> str:
+def format_wisdom_markdown(wisdom: Dict[str, Any]) -> str:
     """Format wisdom as Markdown."""
     if wisdom is None:
         return ""

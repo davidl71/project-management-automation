@@ -1,0 +1,446 @@
+{
+  "status": "success",
+  "method": "mlx_enhanced_batch",
+  "generated": "2025-12-28T23:02:52.602915",
+  "total_tasks": 25,
+  "successful": 25,
+  "failed": 0,
+  "total_hours": 606.1,
+  "average_hours": 24.2,
+  "average_confidence": 87.6,
+  "comparison_stats": {
+    "tasks_compared": 25,
+    "mlx_average_hours": 24.2,
+    "statistical_average_hours": 32.4,
+    "average_difference": -8.1,
+    "average_difference_percent": -25.1
+  },
+  "tasks": [
+    {
+      "task_id": "T-SECURITY-RESEARCH-0fb905eb",
+      "name": "Implement Research RHDA implementation patterns for Exarp enhancement",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 3.3,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 9.6,
+      "statistical_estimate": {
+        "estimate_hours": 1.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 153.8
+    },
+    {
+      "task_id": "T-SECURITY-RESEARCH-c162d40f",
+      "name": "Integrate interactive-mcp for human-in-the-loop Exarp workflows",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.6,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 6.4,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.42,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -25.2
+    },
+    {
+      "task_id": "T-METRICS-20251126180006-08",
+      "name": "Add model selection recommendations to tool outputs",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 1.4,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 0.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 366.7
+    },
+    {
+      "task_id": "MODE-003",
+      "name": "Implement: Mode-aware advisor guidance",
+      "status": "Blocked",
+      "priority": "low",
+      "estimate_hours": 1.4,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 0.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 366.7
+    },
+    {
+      "task_id": "T-METRICS-MODE-005",
+      "name": "Implement: Auto-log mode in memory system",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 2.1,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 1.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 61.5
+    },
+    {
+      "task_id": "T-TESTING-MODE-006",
+      "name": "Add prompt template: mode-aware workflow selection",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 2.1,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 1.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 61.5
+    },
+    {
+      "task_id": "T-TESTING-GIT-20251130235805-003",
+      "name": "Add examples and documentation for Git-inspired features",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.7,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 6.4,
+      "upper_bound": 77.8,
+      "statistical_estimate": {
+        "estimate_hours": 49.0,
+        "confidence": 0.425,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -25.1
+    },
+    {
+      "task_id": "T-METRICS-DOC-20251201001656-002",
+      "name": "Improve documentation health score (currently 36%)",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.8,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 6.4,
+      "upper_bound": 78.0,
+      "statistical_estimate": {
+        "estimate_hours": 49.1,
+        "confidence": 0.42857142857142855,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -25.1
+    },
+    {
+      "task_id": "T-METRICS-AUTO-20251207212140-470354",
+      "name": "Create Automated Test Coverage Analyzer execution",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 35.4,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.51,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.6
+    },
+    {
+      "task_id": "T-TESTING-AUTO-20251210230639-396630",
+      "name": "Create Automated Test Runner execution",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 35.4,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.51,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.6
+    },
+    {
+      "task_id": "T-20251211010556-777762",
+      "name": "Implement: Automate check_tool_conditional_logic",
+      "status": "Todo",
+      "priority": "high",
+      "estimate_hours": 42.3,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 93.2,
+      "statistical_estimate": {
+        "estimate_hours": 58.7,
+        "confidence": 0.39,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.9
+    },
+    {
+      "task_id": "T-METRICS-AUTO-20251211010602-332024",
+      "name": "Automation: Test Coverage Analyzer",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 35.4,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.5433333333333333,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.6
+    },
+    {
+      "task_id": "T-METRICS-PERF-20251211011404-002",
+      "name": "Optimize Slow Automation Tools Performance",
+      "status": "Todo",
+      "priority": "high",
+      "estimate_hours": 42.3,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 93.2,
+      "statistical_estimate": {
+        "estimate_hours": 58.7,
+        "confidence": 0.39555555555555555,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.9
+    },
+    {
+      "task_id": "T-METRICS-PERF-20251211011404-003",
+      "name": "Fix Failed Tool Performance Tests (17 tools)",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.6,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 6.4,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.42,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -25.2
+    },
+    {
+      "task_id": "T-TESTING-PERF-20251211011404-004",
+      "name": "Set Up Performance Regression Testing",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 35.4,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.51,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.6
+    },
+    {
+      "task_id": "T-SECURITY-PERF-20251211011404-005",
+      "name": "Investigate Additional Performance Optimizations",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 2.4,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 6.0,
+      "statistical_estimate": {
+        "estimate_hours": 1.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 84.6
+    },
+    {
+      "task_id": "T-METRICS-NaN",
+      "name": "Parallel Research Work: Interactive-MCP Integration",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.2,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 4.8,
+      "upper_bound": 78.0,
+      "statistical_estimate": {
+        "estimate_hours": 49.1,
+        "confidence": 0.4252941176470588,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -26.3
+    },
+    {
+      "task_id": "T-TESTING-0",
+      "name": "Test Ollama Integration - Basic Tools",
+      "status": "Todo",
+      "priority": "high",
+      "estimate_hours": 1.7,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 0.7,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 142.9
+    },
+    {
+      "task_id": "T-TESTING-3",
+      "name": "Review and Update Ollama Documentation",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.6,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 6.4,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.4225531914893617,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -25.2
+    },
+    {
+      "task_id": "T-SECURITY-4",
+      "name": "Add error path tests for consolidated tools",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 36.0,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 4.8,
+      "upper_bound": 77.7,
+      "statistical_estimate": {
+        "estimate_hours": 48.9,
+        "confidence": 0.42,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -26.4
+    },
+    {
+      "task_id": "T-SECURITY-5",
+      "name": "Add async tool tests for consolidated tools",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 2.1,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 1.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 61.5
+    },
+    {
+      "task_id": "T-SECURITY-6",
+      "name": "Add parameter validation tests for consolidated tools",
+      "status": "Todo",
+      "priority": "low",
+      "estimate_hours": 2.1,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 0.5,
+      "upper_bound": 4.8,
+      "statistical_estimate": {
+        "estimate_hours": 1.3,
+        "confidence": 0.3,
+        "method": "keyword_heuristic"
+      },
+      "mlx_improvement": 61.5
+    },
+    {
+      "task_id": "T-TESTING-20251228213441-855280",
+      "name": "Implement: Automate check_duplicate_test_names",
+      "status": "todo",
+      "priority": "high",
+      "estimate_hours": 42.3,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 93.2,
+      "statistical_estimate": {
+        "estimate_hours": 58.7,
+        "confidence": 0.39,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.9
+    },
+    {
+      "task_id": "T-20251228213441-855228",
+      "name": "Implement: Automate check_tool_return_types",
+      "status": "todo",
+      "priority": "high",
+      "estimate_hours": 42.3,
+      "confidence": 0.85,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 3.2,
+      "upper_bound": 93.2,
+      "statistical_estimate": {
+        "estimate_hours": 58.7,
+        "confidence": 0.39,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -27.9
+    },
+    {
+      "task_id": "AUTO-20251228223640-999360",
+      "name": "Automation: Attribution Compliance Check",
+      "status": "Todo",
+      "priority": "medium",
+      "estimate_hours": 21.2,
+      "confidence": 0.9,
+      "method": "hybrid_statistical_mlx",
+      "lower_bound": 6.4,
+      "upper_bound": 42.7,
+      "statistical_estimate": {
+        "estimate_hours": 26.9,
+        "confidence": 0.6203333333333333,
+        "method": "historical_match"
+      },
+      "mlx_improvement": -21.2
+    }
+  ],
+  "errors": null
+}

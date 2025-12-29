@@ -1,5 +1,12 @@
 # Contributing to Exarp
 
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python and Git, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python best practices? use context7"
+> - "Show me Git workflow examples use context7"
+> - "Python testing frameworks 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 Thank you for your interest in contributing to Exarp! This guide will help you get started.
 
 ---

@@ -268,7 +268,7 @@ def get_log_path() -> Path:
     return log_dir / f"consultations_{datetime.now().strftime('%Y-%m')}.jsonl"
 
 
-def log_consultation(consultation: dict[str, Any]) -> None:
+def log_consultation(consultation: Dict[str, Any]) -> None:
     """Append consultation to log file (JSONL format for easy parsing)."""
     log_path = get_log_path()
     with open(log_path, 'a') as f:
@@ -280,7 +280,7 @@ def get_consultation_log(
     advisor: Optional[str] = None,
     metric: Optional[str] = None,
     stage: Optional[str] = None,
-) -> list[dict[str, Any]]:
+) -> list[Dict[str, Any]]:
     """
     Retrieve consultation log entries.
 
@@ -502,7 +502,7 @@ def consult_advisor(
     return json.dumps(result, indent=2)
 
 
-def format_consultation(consultation: dict[str, Any]) -> str:
+def format_consultation(consultation: Dict[str, Any]) -> str:
     """Format a consultation for display."""
     icon = consultation.get("advisor_icon", "📜")
     name = consultation.get("advisor_name", "Unknown")
@@ -593,7 +593,7 @@ def get_daily_briefing(overall_score: float, metric_scores: dict[str, float]) ->
 def export_for_podcast(
     days: int = 7,
     output_path: Path | None = None,
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """
     Export consultation data formatted for AI podcast/video generation.
 

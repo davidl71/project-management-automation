@@ -19,7 +19,7 @@ import random
 import urllib.error
 import urllib.request
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 # Sefaria API base URL
 SEFARIA_API = "https://www.sefaria.org/api"
@@ -315,7 +315,7 @@ def get_sefaria_wisdom(
     return result
 
 
-def format_rtl_text(text: str, width: int = 64) -> list[str]:
+def format_rtl_text(text: str, width: int = 64) -> List[str]:
     """
     Format RTL (Hebrew) text for terminal display.
 
@@ -352,7 +352,7 @@ def format_rtl_text(text: str, width: int = 64) -> list[str]:
     return lines
 
 
-def format_sefaria_wisdom(wisdom: dict[str, Any], show_hebrew: bool = True) -> str:
+def format_sefaria_wisdom(wisdom: Dict[str, Any], show_hebrew: bool = True) -> str:
     """
     Format Sefaria wisdom for terminal display.
 
@@ -431,7 +431,7 @@ def format_sefaria_wisdom(wisdom: dict[str, Any], show_hebrew: bool = True) -> s
     return "\n".join(lines)
 
 
-def format_hebrew_only_wisdom(wisdom: dict[str, Any]) -> str:
+def format_hebrew_only_wisdom(wisdom: Dict[str, Any]) -> str:
     """
     Format wisdom display for Hebrew-only mode.
     Uses Hebrew text as primary quote.

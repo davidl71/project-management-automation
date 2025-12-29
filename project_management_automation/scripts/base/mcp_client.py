@@ -35,7 +35,7 @@ except ImportError:
     from typing import Any
     ClientSession = Any
     StdioServerParameters = Any
-    logger.warning("MCP client library not available. Install with: uv sync (or uv pip install mcp>=1.0.0)")
+    logger.debug("MCP client library not available (optional - server uses FastMCP). Install with: uv sync (or uv pip install mcp>=1.0.0)")
 
 
 class MCPSessionPool:
@@ -385,7 +385,7 @@ class MCPClient:
             Parsed JSON response or None on failure
         """
         if not MCP_CLIENT_AVAILABLE:
-            logger.warning("MCP client library not available")
+            logger.debug("MCP client library not available (optional - server uses FastMCP)")
             return None
         
         server_params = self._get_agentic_tools_params()
@@ -582,7 +582,7 @@ class MCPClient:
             ], '/path')
         """
         if not MCP_CLIENT_AVAILABLE:
-            logger.warning("MCP client library not available")
+            logger.debug("MCP client library not available (optional - server uses FastMCP)")
             return [None] * len(operations)
         
         server_params = self._get_agentic_tools_params()

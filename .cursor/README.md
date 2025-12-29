@@ -37,6 +37,16 @@ If you want to use complementary MCP servers during development, create `.cursor
 ```json
 {
   "mcpServers": {
+    "todo2": {
+      "command": "node",
+      "args": [
+        "/Users/YOUR_USERNAME/.cursor/extensions/todo2.todo2-VERSION/dist/mcp-server.js"
+      ],
+      "env": {
+        "TODO2_WORKSPACE_PATH": "/path/to/your/project"
+      },
+      "description": "Todo2 MCP server for task management with workflow enforcement"
+    },
     "tractatus_thinking": {
       "command": "npx",
       "args": ["-y", "tractatus-thinking-mcp"],
@@ -55,6 +65,8 @@ If you want to use complementary MCP servers during development, create `.cursor
   }
 }
 ```
+
+**Note**: For Todo2 MCP server setup, see [Todo2 MCP Server Setup Guide](../docs/TODO2_MCP_SERVER_SETUP.md) for detailed instructions.
 
 ### 3. Configure Doc Resources (Optional)
 

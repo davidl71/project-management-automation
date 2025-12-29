@@ -21,7 +21,7 @@ try:
     MCP_CLIENT_AVAILABLE = True
 except ImportError:
     MCP_CLIENT_AVAILABLE = False
-    logger.warning("MCP client library not available. Install with: uv sync (or uv pip install mcp>=1.0.0)")
+    logger.debug("MCP client library not available (optional - server uses FastMCP). Install with: uv sync (or uv pip install mcp>=1.0.0)")
 
 # Import session pool from mcp_client if available
 try:

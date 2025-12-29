@@ -7,8 +7,9 @@ Run manually or via cron job.
 """
 
 import json
+import sys
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # Load pattern configuration
 CONFIG_FILE = Path(__file__).parent.parent / ".cursor" / "automa_patterns.json"
@@ -18,7 +19,7 @@ def load_patterns() -> Dict:
     if not CONFIG_FILE.exists():
         return {}
 
-    with open(CONFIG_FILE) as f:
+    with open(CONFIG_FILE, 'r') as f:
         config = json.load(f)
         return config.get("file_patterns", {})
 

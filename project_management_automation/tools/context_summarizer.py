@@ -14,7 +14,7 @@ Features:
 import json
 import logging
 import time
-from typing import Any, Optional
+from typing import Any, Optional, Union, List, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ TOKENS_PER_CHAR = 0.25
 
 
 def summarize_context(
-    data: str | dict | list,
+    data: Union[str, Dict[str, Any], List[Any]],
     level: str = "brief",
     tool_type: Optional[str] = None,
     max_tokens: Optional[int] = None,
@@ -196,7 +196,7 @@ def summarize_context(
 
 
 def batch_summarize(
-    items: list[dict[str, Any]],
+    items: List[Dict[str, Any]],
     level: str = "brief",
     combine: bool = True,
 ) -> str:
@@ -243,7 +243,7 @@ def batch_summarize(
 
 
 def estimate_context_budget(
-    items: list[Any],
+    items: List[Any],
     budget_tokens: int = 4000,
 ) -> str:
     """
@@ -509,7 +509,7 @@ def _get_budget_recommendation(tokens: int, budget: int) -> str:
         return "keep_full"
 
 
-def _suggest_reduction_strategy(analysis: list[dict], total: int, budget: int) -> str:
+def _suggest_reduction_strategy(analysis: List[Dict[str, Any]], total: int, budget: int) -> str:
     """Suggest overall reduction strategy."""
     if total <= budget:
         return "Within budget - no reduction needed"

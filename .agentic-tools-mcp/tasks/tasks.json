@@ -421,12 +421,12 @@
       "name": "Add pyyaml to test dependencies",
       "details": "Add pyyaml to test dependencies (requirements-test.txt or pyproject.toml test dependencies) to fix CI/CD validation tool test.\n\nPriority: Low\nEstimated: 15 minutes",
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
-      "completed": false,
+      "completed": true,
       "createdAt": "2025-11-25T07:45:25.899Z",
-      "updatedAt": "2025-11-25T07:45:25.899Z",
+      "updatedAt": "2025-12-28T22:59:27.346Z",
       "dependsOn": [],
       "priority": 5,
-      "status": "pending",
+      "status": "done",
       "tags": [
         "testing",
         "dependencies"
@@ -2269,10 +2269,10 @@
       "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
       "completed": false,
       "createdAt": "2025-12-10T22:35:56.645Z",
-      "updatedAt": "2025-12-10T22:35:56.645Z",
+      "updatedAt": "2025-12-28T23:57:20.308Z",
       "dependsOn": [],
       "priority": 9,
-      "status": "pending",
+      "status": "in-progress",
       "tags": [
         "testing",
         "coverage",
@@ -3133,6 +3133,625 @@
       "priority": 5,
       "status": "done",
       "tags": [],
+      "level": 0
+    },
+    {
+      "id": "23c916e1-9dcd-4e86-8019-6ac1b2e5a8c2",
+      "name": "Run task analysis tool",
+      "details": "Execute the exarp task_analysis tool to analyze tasks for duplicates, tags, hierarchy, dependencies, and parallelization opportunities.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T20:23:37.353Z",
+      "updatedAt": "2025-12-28T20:23:57.114Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "in-progress",
+      "tags": [],
+      "level": 0
+    },
+    {
+      "id": "6e6ef59d-d777-44b7-a9c9-0553e2835776",
+      "name": "Apply tag consolidation",
+      "details": "Apply the 5 tag consolidations identified in the task analysis: consolidate 'docs', 'todo2-alignment-analysis' → 'task-alignment', 'todo2-duplicate-detection' → 'duplicate-detect', 'documentation-health-analysis' → 'docs-health', and 'automation-opportunity-finder' → 'automation-finder'. This will affect 23 tasks and reduce tags from 92 to 87.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T20:24:39.986Z",
+      "updatedAt": "2025-12-28T20:24:43.004Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "in-progress",
+      "tags": [],
+      "level": 0
+    },
+    {
+      "id": "66ef8f66-2784-4545-96f0-2c9a48a636c1",
+      "name": "Implement task hierarchy with component prefixes",
+      "details": "Add hierarchical prefixes to tasks for Security (T-SECURITY-*), Metrics (T-METRICS-*), and Testing (T-TESTING-*) components. This will organize 33 pending tasks (6 security, 10 metrics, 17 testing) into a clearer hierarchy structure.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T20:25:07.902Z",
+      "updatedAt": "2025-12-28T20:25:47.359Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "in-progress",
+      "tags": [],
+      "level": 0
+    },
+    {
+      "id": "e5c5dd11-4f13-4752-a896-3a6c36ad12da",
+      "name": "Execute parallel tasks optimization",
+      "details": "Execute 2 parallelizable tasks (1 task already completed). Remaining tasks: T-METRICS-DOC-20251201001656-003 (Update stale documentation, 3h), T-20251211010550-374783 (Review skipped files, 1.3h). These can run in parallel to save time.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T20:27:04.062Z",
+      "updatedAt": "2025-12-28T20:27:46.044Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "in-progress",
+      "tags": [],
+      "level": 0
+    },
+    {
+      "id": "23ac10a3-0189-4e69-96a4-6c419a6f519e",
+      "name": "Update context cards (tool hints registry)",
+      "details": "Update the TOOL_HINTS_REGISTRY in context_primer.py to ensure all registered tools have accurate hints. Scan all tools in consolidated.py and server.py, compare with registry, and add/update missing or outdated hints.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T20:30:56.234Z",
+      "updatedAt": "2025-12-28T20:32:08.433Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "in-progress",
+      "tags": [],
+      "level": 0
+    },
+    {
+      "id": "13203d60-299a-4128-9f1b-86f080e3e605",
+      "name": "Install PyTorch for Core ML conversion",
+      "details": "Install PyTorch dependency required for CodeLlama to Core ML conversion. Currently missing from dependencies - needed for model loading and conversion process.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:36.463Z",
+      "updatedAt": "2025-12-28T22:50:36.463Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "dependencies",
+        "conversion"
+      ],
+      "level": 0
+    },
+    {
+      "id": "66f711bc-894f-4174-86d9-87166085a3ba",
+      "name": "Review Apple's Llama 3.1 Core ML research paper",
+      "details": "Read and analyze Apple's research on deploying Llama 3.1 with Core ML (https://machinelearning.apple.com/research/core-ml-on-device-llama). Understand their conversion techniques, quantization methods (q4_bitwise), and Neural Engine optimization strategies. Document key findings and adapt for CodeLlama.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:37.986Z",
+      "updatedAt": "2025-12-28T22:50:37.986Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "research",
+        "documentation",
+        "llama"
+      ],
+      "level": 0
+    },
+    {
+      "id": "9bbd70f7-d733-48ab-91ca-8d17ff457ad8",
+      "name": "Implement CodeLlama PyTorch to Core ML conversion",
+      "details": "Implement full conversion pipeline for CodeLlama models to Core ML format following Apple's research. Include quantization (q4_bitwise), Neural Engine optimization, and efficient token generation. Test with smaller models (1B-3B) first before attempting 7B conversion.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:38.783Z",
+      "updatedAt": "2025-12-28T22:50:38.783Z",
+      "dependsOn": [],
+      "priority": 7,
+      "complexity": 9,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "conversion",
+        "codellama",
+        "neural-engine"
+      ],
+      "estimatedHours": 8,
+      "level": 0
+    },
+    {
+      "id": "768cf9ab-d1ae-49f1-95c3-33477e6c9b7a",
+      "name": "Test Core ML test generation with converted model",
+      "details": "Once Core ML model is available, test the test generation tool with Neural Engine acceleration. Benchmark performance (tokens/second), compare with MLX GPU performance, verify test code quality, and ensure fallback mechanisms work correctly.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:39.971Z",
+      "updatedAt": "2025-12-28T22:50:39.971Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "testing",
+        "neural-engine",
+        "benchmark"
+      ],
+      "estimatedHours": 3,
+      "level": 0
+    },
+    {
+      "id": "4c00bb81-c854-4616-bb08-f3974a4aee93",
+      "name": "Search Hugging Face for pre-converted Core ML CodeLlama models",
+      "details": "Regularly search Hugging Face for community-converted Core ML CodeLlama models. Check for models tagged with 'coreml' and 'text-generation'. If found, download and test with our Core ML integration. Update documentation with findings.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:41.098Z",
+      "updatedAt": "2025-12-28T22:50:41.098Z",
+      "dependsOn": [],
+      "priority": 4,
+      "complexity": 2,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "huggingface",
+        "research",
+        "models"
+      ],
+      "level": 0
+    },
+    {
+      "id": "8e0d88a9-4bbe-40b2-9861-30a07e0011ec",
+      "name": "Optimize Core ML model for Neural Engine",
+      "details": "After successful conversion, optimize the Core ML model specifically for Neural Engine acceleration. Apply Apple's optimization techniques: efficient attention mechanisms, memory optimization, and token generation loop improvements. Benchmark before/after performance.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:42.191Z",
+      "updatedAt": "2025-12-28T22:50:42.191Z",
+      "dependsOn": [],
+      "priority": 6,
+      "complexity": 6,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "optimization",
+        "neural-engine",
+        "performance"
+      ],
+      "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "ddd88362-205f-47bd-88c2-94d959681d1d",
+      "name": "Update test generation documentation with Core ML usage",
+      "details": "Update documentation to include Core ML usage examples, performance benchmarks, and troubleshooting guide. Add examples showing how to use Core ML models, compare with MLX, and explain when to use each backend.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:43.209Z",
+      "updatedAt": "2025-12-28T22:50:43.209Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 3,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "documentation",
+        "test-generation"
+      ],
+      "level": 0
+    },
+    {
+      "id": "17d766e7-cac9-4859-bced-ce5e3db340f0",
+      "name": "Create Core ML model validation script",
+      "details": "Create a script to validate Core ML models for test generation. Check model compatibility, Neural Engine support, input/output specifications, and performance characteristics. Ensure models work correctly with our Core ML integration.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T22:50:44.323Z",
+      "updatedAt": "2025-12-28T22:50:44.323Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 4,
+      "status": "pending",
+      "tags": [
+        "coreml",
+        "validation",
+        "testing",
+        "scripts"
+      ],
+      "level": 0
+    },
+    {
+      "id": "b6052cc5-c10b-4f74-affb-59ba1c63a11d",
+      "name": "Add coreml_model_path parameter to testing tool",
+      "details": "Add coreml_model_path as an optional parameter to the testing tool's generate action. Currently hardcoded to None. This will allow users to specify a Core ML model path when available.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T22:53:36.292Z",
+      "updatedAt": "2025-12-28T22:59:26.980Z",
+      "dependsOn": [],
+      "priority": 5,
+      "complexity": 2,
+      "status": "done",
+      "tags": [
+        "coreml",
+        "testing",
+        "quick-fix"
+      ],
+      "estimatedHours": 0.5,
+      "level": 0
+    },
+    {
+      "id": "c2da760d-9ef9-4b24-9ffc-44b8e95bf59a",
+      "name": "Add Context7 hint to ESTIMATION_LEARNING.md",
+      "details": "Add Context7 hint to docs/ESTIMATION_LEARNING.md for Python and MLX references. This is a 315-line technical documentation file that would benefit from Context7 integration.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T22:53:38.288Z",
+      "updatedAt": "2025-12-28T22:59:25.234Z",
+      "dependsOn": [],
+      "priority": 4,
+      "complexity": 1,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "estimatedHours": 0.25,
+      "level": 0
+    },
+    {
+      "id": "cfbf3b52-055f-41e7-be89-86557b32ecac",
+      "name": "Add Context7 hint to CONTRIBUTING.md",
+      "details": "Add Context7 hint to CONTRIBUTING.md for Python and Git references. This is a 246-line contribution guide that would benefit from Context7 integration.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T22:53:39.955Z",
+      "updatedAt": "2025-12-28T22:59:26.285Z",
+      "dependsOn": [],
+      "priority": 4,
+      "complexity": 1,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "estimatedHours": 0.25,
+      "level": 0
+    },
+    {
+      "id": "708bc743-b34b-4e0e-a833-e202b193a75f",
+      "name": "Add Context7 hint to DEPENDENCY_GRAPH_DESIGN.md",
+      "details": "Add Context7 hint to docs/DEPENDENCY_GRAPH_DESIGN.md for Python and NetworkX references. This is a 437-line design documentation file that would benefit from Context7 integration.",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T22:53:43.684Z",
+      "updatedAt": "2025-12-28T22:59:26.632Z",
+      "dependsOn": [],
+      "priority": 4,
+      "complexity": 1,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "estimatedHours": 0.25,
+      "level": 0
+    },
+    {
+      "id": "665362a5-6983-47e2-a21e-495dc6f9ecd1",
+      "name": "Add Context7 hint to EXARP_IMPROVEMENTS_PROGRESS.md",
+      "details": "Add Context7 hint for Python and CMake references to EXARP_IMPROVEMENTS_PROGRESS.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:07:42.378Z",
+      "updatedAt": "2025-12-28T23:08:03.284Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "46868ec2-624e-4f56-87a0-60e2c7a1a113",
+      "name": "Add Context7 hint to EXARP_SELF_IMPROVEMENT.md",
+      "details": "Add Context7 hint for Python and Pydantic references to EXARP_SELF_IMPROVEMENT.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:07:43.050Z",
+      "updatedAt": "2025-12-28T23:08:03.832Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "1ecfde26-d3dc-4a06-996c-02d6e406b390",
+      "name": "Add Context7 hint to EXARP_SCRIPT_CONSOLIDATION.md",
+      "details": "Add Context7 hint for Python references to EXARP_SCRIPT_CONSOLIDATION.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:07:43.693Z",
+      "updatedAt": "2025-12-28T23:08:04.162Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "49e98f33-9a75-49bc-9e78-e2a8cb07aecb",
+      "name": "Add Context7 hint to DEVISDOM_GO_MIGRATION_LEFTovers.md",
+      "details": "Add Context7 hint for Go and Python references to DEVISDOM_GO_MIGRATION_LEFTovers.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:07:44.484Z",
+      "updatedAt": "2025-12-28T23:08:04.582Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "9fa81ec7-9081-410c-8afa-dce8d4703275",
+      "name": "Add Context7 hint to COVERAGE_AGGREGATION.md",
+      "details": "Add Context7 hint for Python and testing references to COVERAGE_AGGREGATION.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:07:45.514Z",
+      "updatedAt": "2025-12-28T23:08:04.946Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "8618b90f-5c99-4690-975e-4820be028ee5",
+      "name": "Add Context7 hint to EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md",
+      "details": "Add Context7 hint for Python references to EXARP_REPOSITORY_OPTIMIZATION_ANALYSIS.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:09:15.329Z",
+      "updatedAt": "2025-12-28T23:09:43.719Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "8ca131e5-8d17-4945-a37e-1932cb5a9f4e",
+      "name": "Add Context7 hint to DOCS_CLEANUP_PLAN.md",
+      "details": "Add Context7 hint for Python references to DOCS_CLEANUP_PLAN.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:09:16.179Z",
+      "updatedAt": "2025-12-28T23:09:44.322Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "6f24eee3-b66a-421d-86ae-36bee815f89c",
+      "name": "Add Context7 hint to DONE_TASKS_RESULT_COMMENT_AUDIT.md",
+      "details": "Add Context7 hint for Python references to DONE_TASKS_RESULT_COMMENT_AUDIT.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:09:16.961Z",
+      "updatedAt": "2025-12-28T23:09:44.741Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "1c71bc4e-791d-43f9-9bb4-52edec7eb5b2",
+      "name": "Add Context7 hint to EXARP_GITHUB_REPO_SETUP_COMPLETE.md",
+      "details": "Add Context7 hint for Python and Git references to EXARP_GITHUB_REPO_SETUP_COMPLETE.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:09:17.600Z",
+      "updatedAt": "2025-12-28T23:09:45.127Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "3ff0c6c1-a11a-4886-b652-61b6d21b6140",
+      "name": "Add Context7 hint to EXARP_QUICK_REFERENCE.md",
+      "details": "Add Context7 hint for Python references to EXARP_QUICK_REFERENCE.md documentation file",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": true,
+      "createdAt": "2025-12-28T23:09:18.086Z",
+      "updatedAt": "2025-12-28T23:09:45.470Z",
+      "dependsOn": [],
+      "priority": 5,
+      "status": "done",
+      "tags": [
+        "documentation",
+        "context7",
+        "quick-fix"
+      ],
+      "level": 0
+    },
+    {
+      "id": "696f7087-e695-4a65-afdb-8c9c3c5cc10e",
+      "name": "Fix failing tests and identify test gaps",
+      "details": "🎯 **Objective:** Identify and fix all failing tests, then analyze gaps to reach 30% coverage target.\n\n📋 **Acceptance Criteria:**\n- Run full test suite and identify all failing tests\n- Fix or skip failing tests with proper documentation\n- Generate coverage report showing current state\n- Identify top 10 files with lowest coverage\n- Document test gaps in coverage-report/\n\n🚫 **Scope Boundaries:**\n- **Included:** Fix test failures, generate coverage report, identify gaps\n- **Excluded:** Writing new tests (separate task)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use `uv run pytest` for test execution\n- Use `pytest-cov` for coverage analysis\n- Generate HTML and text coverage reports\n- Document findings in markdown\n\n📁 **Files/Components:**\n- Run: `uv run pytest tests/ -v --cov=project_management_automation --cov-report=html --cov-report=term`\n- Create: `docs/TEST_FAILURES_REPORT.md`\n- Update: `coverage-report/` directory\n\n🧪 **Testing Requirements:**\n- All tests must pass or be properly skipped\n- Coverage report must be generated\n- Gap analysis must identify specific files/functions\n\n⚠️ **Edge Cases:**\n- Tests that fail due to missing dependencies\n- Tests that require external services\n- Tests with flaky behavior\n\n📚 **Dependencies:** None",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T23:20:03.339Z",
+      "updatedAt": "2025-12-28T23:43:09.750Z",
+      "dependsOn": [],
+      "priority": 10,
+      "status": "done",
+      "tags": [
+        "testing",
+        "coverage",
+        "bug-fix",
+        "critical"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "f44692b8-f2ce-487d-aca4-f328693adc73",
+      "name": "Increase test coverage to 30% - Phase 1: Core Tools",
+      "details": "🎯 **Objective:** Add test coverage for critical core tools to reach 30% overall coverage.\n\n📋 **Acceptance Criteria:**\n- Add tests for consolidated.py core functions (report, health, security)\n- Add tests for missing tool wrappers (coreml_integration, mlx_integration)\n- Achieve minimum 30% coverage for project_management_automation/tools/\n- All new tests must pass\n- Coverage report shows 30%+ overall\n\n🚫 **Scope Boundaries:**\n- **Included:** Core tools in consolidated.py, missing tool tests\n- **Excluded:** Scripts, utilities (separate phases)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use pytest framework\n- Follow existing test patterns from test_consolidated_tools.py\n- Mock external dependencies (MCP clients, file system)\n- Use test fixtures from conftest.py\n\n📁 **Files/Components:**\n- Create: `tests/test_coreml_integration.py`\n- Create: `tests/test_mlx_integration.py`\n- Update: `tests/test_consolidated_tools.py` (add missing actions)\n- Target: `project_management_automation/tools/consolidated.py`\n\n🧪 **Testing Requirements:**\n- Test all action parameters for consolidated tools\n- Test error handling paths\n- Test dry_run modes\n- Test output_path handling\n\n⚠️ **Edge Cases:**\n- Missing dependencies (coremltools, mlx)\n- Network errors for MCP clients\n- Invalid input parameters\n\n📚 **Dependencies:** Task \"Fix failing tests and identify test gaps\"",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T23:20:06.980Z",
+      "updatedAt": "2025-12-28T23:20:19.798Z",
+      "dependsOn": [
+        "696f7087-e695-4a65-afdb-8c9c3c5cc10e"
+      ],
+      "priority": 9,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "coverage",
+        "core-tools",
+        "critical"
+      ],
+      "estimatedHours": 4,
+      "level": 0
+    },
+    {
+      "id": "6615b467-9db0-4d95-9200-ef3c0ffdf2bb",
+      "name": "Increase test coverage to 30% - Phase 2: Scripts and Utilities",
+      "details": "🎯 **Objective:** Add test coverage for automation scripts and utility modules to reach 30% overall.\n\n📋 **Acceptance Criteria:**\n- Add tests for key automation scripts (test_coverage, task_analysis, etc.)\n- Add tests for utility modules (todo2_utils, security_utils)\n- Achieve minimum 30% coverage for project_management_automation/scripts/\n- Achieve minimum 30% coverage for project_management_automation/utils/\n- All new tests must pass\n\n🚫 **Scope Boundaries:**\n- **Included:** Scripts in scripts/, utilities in utils/\n- **Excluded:** Tools (covered in Phase 1)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use pytest framework\n- Mock file system operations\n- Mock MCP client calls\n- Test both success and error paths\n\n📁 **Files/Components:**\n- Create: `tests/test_scripts_*.py` for key scripts\n- Create: `tests/test_utils_*.py` for utility modules\n- Target: `project_management_automation/scripts/` and `project_management_automation/utils/`\n\n🧪 **Testing Requirements:**\n- Test script execution paths\n- Test utility functions with various inputs\n- Test error handling\n- Test edge cases (empty files, missing data)\n\n⚠️ **Edge Cases:**\n- Missing .todo2/state.todo2.json\n- Corrupted JSON files\n- Missing project root\n- Permission errors\n\n📚 **Dependencies:** Task \"Increase test coverage to 30% - Phase 1: Core Tools\"",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T23:20:09.645Z",
+      "updatedAt": "2025-12-28T23:20:20.294Z",
+      "dependsOn": [
+        "f44692b8-f2ce-487d-aca4-f328693adc73"
+      ],
+      "priority": 8,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "coverage",
+        "scripts",
+        "utilities"
+      ],
+      "estimatedHours": 5,
+      "level": 0
+    },
+    {
+      "id": "d7418a27-25cf-47a8-ab45-7972872d1cb6",
+      "name": "Create shared test fixtures and helpers",
+      "details": "🎯 **Objective:** Create shared test infrastructure to reduce boilerplate and standardize test patterns.\n\n📋 **Acceptance Criteria:**\n- Create conftest.py with shared fixtures (mock_project_root, mock_mcp_client)\n- Create test_helpers.py with assertion helpers (assert_success_response, assert_error_response)\n- Update 3+ existing test files to use new infrastructure\n- Document usage in docs/TEST_ORGANIZATION_GUIDELINES.md\n- All tests still pass after refactoring\n\n🚫 **Scope Boundaries:**\n- **Included:** Shared fixtures, assertion helpers, documentation\n- **Excluded:** Major test restructuring (keep current structure)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use pytest fixtures\n- Follow patterns from ADDITIONAL_TEST_CONSOLIDATION_OPPORTUNITIES.md\n- Maintain backward compatibility\n- Use type hints\n\n📁 **Files/Components:**\n- Create: `tests/conftest.py` (if not exists, update if exists)\n- Create: `tests/test_helpers.py`\n- Update: `docs/TEST_ORGANIZATION_GUIDELINES.md`\n- Update: 3+ test files to use new infrastructure\n\n🧪 **Testing Requirements:**\n- Fixtures must work across all test files\n- Helpers must handle all common assertion patterns\n- Documentation must include examples\n\n⚠️ **Edge Cases:**\n- Tests that don't use fixtures\n- Custom mocking requirements\n- Async test patterns\n\n📚 **Dependencies:** None (can be done in parallel)",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T23:20:12.342Z",
+      "updatedAt": "2025-12-28T23:29:32.352Z",
+      "dependsOn": [],
+      "priority": 6,
+      "status": "done",
+      "tags": [
+        "testing",
+        "infrastructure",
+        "refactoring",
+        "documentation"
+      ],
+      "estimatedHours": 2,
+      "level": 0
+    },
+    {
+      "id": "a4eee0b8-6033-4327-a090-50385f6504ee",
+      "name": "Add CI/CD test coverage enforcement",
+      "details": "🎯 **Objective:** Enforce 30% minimum test coverage in CI/CD pipeline to prevent regression.\n\n📋 **Acceptance Criteria:**\n- Update GitHub Actions workflow to run coverage check\n- Set coverage threshold to 30% minimum\n- Fail CI if coverage drops below threshold\n- Add coverage badge to README\n- Document coverage requirements\n\n🚫 **Scope Boundaries:**\n- **Included:** CI/CD workflow updates, coverage enforcement\n- **Excluded:** Increasing coverage (separate tasks)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use pytest-cov for coverage\n- Use coverage.py for threshold checking\n- Update .github/workflows/test.yml\n- Add coverage badge using shields.io\n\n📁 **Files/Components:**\n- Update: `.github/workflows/test.yml`\n- Update: `README.md` (add badge)\n- Create: `pyproject.toml` coverage config (if needed)\n- Update: `docs/CI_CD.md` (document coverage requirements)\n\n🧪 **Testing Requirements:**\n- CI must fail if coverage < 30%\n- CI must pass if coverage >= 30%\n- Badge must update automatically\n\n⚠️ **Edge Cases:**\n- Coverage calculation differences (branch vs line)\n- Flaky tests affecting coverage\n- Coverage gaps in third-party code\n\n📚 **Dependencies:** Task \"Increase test coverage to 30% - Phase 2: Scripts and Utilities\"",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T23:20:14.759Z",
+      "updatedAt": "2025-12-28T23:20:20.865Z",
+      "dependsOn": [
+        "6615b467-9db0-4d95-9200-ef3c0ffdf2bb"
+      ],
+      "priority": 7,
+      "status": "pending",
+      "tags": [
+        "testing",
+        "ci-cd",
+        "coverage",
+        "automation"
+      ],
+      "estimatedHours": 1,
+      "level": 0
+    },
+    {
+      "id": "700e423d-28dc-4414-aba7-568017962f14",
+      "name": "Use AI test generation for missing coverage",
+      "details": "🎯 **Objective:** Leverage AI-powered test generation (Core ML/MLX) to quickly add tests for uncovered code.\n\n📋 **Acceptance Criteria:**\n- Identify top 10 files with lowest coverage\n- Use testing(action='generate') to generate test code for each\n- Review and refine generated tests\n- Add generated tests to test suite\n- Verify tests pass and increase coverage\n\n🚫 **Scope Boundaries:**\n- **Included:** AI-generated test code, review and refinement\n- **Excluded:** Manual test writing (use AI generation)\n- **Clarification Required:** None\n\n🔧 **Technical Requirements:**\n- Use exarp testing(action='generate') tool\n- Use Core ML or MLX for generation\n- Review generated code for quality\n- Follow existing test patterns\n\n📁 **Files/Components:**\n- Create: `tests/test_ai_generated_*.py` (or integrate into existing)\n- Target: Top 10 uncovered files from coverage report\n- Update: Coverage report after adding tests\n\n🧪 **Testing Requirements:**\n- Generated tests must pass\n- Tests must increase coverage by at least 5%\n- Tests must follow project patterns\n\n⚠️ **Edge Cases:**\n- AI generates invalid test code\n- Generated tests don't increase coverage\n- Tests require manual refinement\n\n📚 **Dependencies:** Task \"Fix failing tests and identify test gaps\"",
+      "projectId": "514c2160-9f81-4c4f-b4de-bad0938d57d6",
+      "completed": false,
+      "createdAt": "2025-12-28T23:20:17.324Z",
+      "updatedAt": "2025-12-28T23:55:59.358Z",
+      "dependsOn": [
+        "696f7087-e695-4a65-afdb-8c9c3c5cc10e"
+      ],
+      "priority": 8,
+      "status": "done",
+      "tags": [
+        "testing",
+        "ai-generation",
+        "coverage",
+        "automation"
+      ],
+      "estimatedHours": 3,
       "level": 0
     }
   ],

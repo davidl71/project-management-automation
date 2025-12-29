@@ -1,5 +1,12 @@
 # Agentic-Tools MCP Integration Analysis for Exarp
 
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python, TypeScript, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use Python patterns? use context7"
+> - "Show me TypeScript examples use context7"
+> - "Python TypeScript best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **P25-12-25  
 **Purpose**: Analyze how Exarp can leverage `infer_task_progress` and `generate_research_queries` from agentic-tools MCP
 

@@ -578,7 +578,7 @@ def get_config_path() -> Path:
     return project_root / '.exarp_wisdom_config'
 
 
-def load_config() -> dict[str, Any]:
+def load_config() -> Dict[str, Any]:
     """Load wisdom configuration."""
     config = {
         "source": os.environ.get("EXARP_WISDOM_SOURCE", "pistis_sophia"),
@@ -603,7 +603,7 @@ def load_config() -> dict[str, Any]:
     return config
 
 
-def save_config(config: dict[str, Any]) -> None:
+def save_config(config: Dict[str, Any]) -> None:
     """Save wisdom configuration."""
     config_path = get_config_path()
     with open(config_path, 'w') as f:
@@ -791,7 +791,7 @@ def get_wisdom(
     return result
 
 
-def format_wisdom_text(wisdom: dict[str, Any]) -> str:
+def format_wisdom_text(wisdom: Dict[str, Any]) -> str:
     """Format wisdom as ASCII art for terminal display."""
     if wisdom is None:
         return ""

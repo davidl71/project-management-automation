@@ -20,7 +20,7 @@ try:
     MCP_CLIENT_AVAILABLE = True
 except ImportError:
     MCP_CLIENT_AVAILABLE = False
-    logger.warning("MCP client library not available. Install with: uv sync (or uv pip install mcp>=1.0.0)")
+    logger.debug("MCP client library not available (optional - server uses FastMCP). Install with: uv sync (or uv pip install mcp>=1.0.0)")
 
 # Import session pool from mcp_client
 try:
@@ -49,7 +49,7 @@ def _load_mcp_config(project_root: Path) -> dict:
 async def _call_wisdom_tool(tool_name: str, arguments: dict, project_root: Path) -> Optional[dict]:
     """Call a wisdom tool via MCP with connection pooling."""
     if not MCP_CLIENT_AVAILABLE:
-        logger.warning("MCP client library not available")
+        logger.debug("MCP client library not available (optional - server uses FastMCP)")
         return None
     
     mcp_config = _load_mcp_config(project_root)
@@ -107,7 +107,7 @@ async def _call_wisdom_tool(tool_name: str, arguments: dict, project_root: Path)
 async def _read_wisdom_resource(uri: str, project_root: Path) -> Optional[str]:
     """Read a wisdom resource via MCP with connection pooling."""
     if not MCP_CLIENT_AVAILABLE:
-        logger.warning("MCP client library not available")
+        logger.debug("MCP client library not available (optional - server uses FastMCP)")
         return None
     
     mcp_config = _load_mcp_config(project_root)

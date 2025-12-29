@@ -1,5 +1,12 @@
 # Dependency Graph Design
 
+> 💡 **AI Assistant Hint:** For up-to-date, version-specific documentation on Python and NetworkX, use the Context7 MCP server by appending `use context7` to your prompts. For example:
+> - "How do I use NetworkX for graph algorithms? use context7"
+> - "Show me Python graph data structure examples use context7"
+> - "Python NetworkX best practices 2025 use context7"
+>
+> Context7 provides current documentation (2025), version-specific API references, and real code examples without hallucinations.
+
 **Date**: 2025-12-21  
 **Status**: Design Complete  
 **Task**: Design dependency graph structure for cache invalidation
